@@ -40,14 +40,19 @@ jobs:
           flutter-version: 3.47.7
           cache: true
       - run: flutter pub get
-      - run: flutter build apk --debug
+      # Numero di build crescente: ogni APK si installa sopra il precedente.
+      - run: flutter build apk --release --build-number=${{ github.run_number }}
+      - run: mv build/app/outputs/flutter-apk/app-release.apk iron-oath.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: iron-oath-debug-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          name: iron-oath-android
+          path: iron-oath.apk
 
+  # IPA non firmata: si installa su iPhone da Windows con Sideloadly e un
+  # Apple ID gratuito. Gira su macOS (minuti costosi), quindi solo su main o
+  # a mano da Actions → CI → Run workflow.
   ios:
-    if: github.event_name == 'workflow_dispatch' && inputs.ios
+    if: (github.event_name == 'workflow_dispatch' && inputs.ios) || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     needs: test
     runs-on: macos-latest
     steps:
@@ -58,4 +63,13 @@ jobs:
           flutter-version: 3.47.7
           cache: true
       - run: flutter pub get
-      - run: flutter build ios --debug --no-codesign
+      - run: flutter build ios --release --no-codesign --build-number=${{ github.run_number }}
+      - name: Crea l'IPA
+        run: |
+          mkdir -p Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/
+          zip -qr iron-oath.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iron-oath-ios
+          path: iron-oath.ipa

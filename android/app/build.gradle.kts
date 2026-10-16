@@ -30,11 +30,26 @@ android {
         versionName = flutter.versionName
     }
 
+    // Chiave di TEST, salvata nel repository apposta: ogni APK della CI è
+    // firmato allo stesso modo, così si aggiorna sopra la versione già
+    // installata senza perdere i salvataggi. Per il Play Store serve una
+    // chiave di caricamento vera, tenuta fuori dal repository.
+    signingConfigs {
+        create("test") {
+            storeFile = file("iron-oath-test.jks")
+            storePassword = "ironoath-test"
+            keyAlias = "ironoath"
+            keyPassword = "ironoath-test"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("test")
+        }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("test")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }

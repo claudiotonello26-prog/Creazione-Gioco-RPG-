@@ -48,9 +48,29 @@ flutter run           # su un telefono collegato
 Su emulatore la fotocamera spesso non c'è: in **Profilo → Conta le rep con la
 fotocamera** passa all'inserimento manuale.
 
-La CI (GitHub Actions) esegue analisi e test e compila un APK di debug
-scaricabile dagli artifact della run. La compilazione iOS senza firma si
-lancia a mano da *Actions → CI → Run workflow*.
+La CI (GitHub Actions) esegue analisi e test e compila l'APK Android
+(artifact `iron-oath-android`). Tutti gli APK sono firmati con la stessa
+chiave di test (`android/app/iron-oath-test.jks`) e hanno un numero di build
+crescente, quindi ogni nuova versione si installa sopra la precedente senza
+perdere i salvataggi. Per il Play Store servirà una chiave vera, fuori dal
+repository.
+
+### Provare su Android
+
+1. Apri la run più recente in *Actions → CI* e scarica l'artifact
+   `iron-oath-android` (è uno zip con dentro `iron-oath.apk`).
+2. Copia l'APK sul telefono, aprilo e consenti l'installazione da questa
+   fonte quando Android lo chiede.
+3. Per aggiornare ripeti gli stessi passaggi: l'app si aggiorna e tiene i
+   progressi.
+
+### Provare su iPhone senza Mac
+
+La CI può creare un'IPA non firmata (artifact `iron-oath-ios`): parte da sola
+sui push su `main`, oppure a mano da *Actions → CI → Run workflow* con
+l'opzione iOS. Da Windows la installi con **Sideloadly** e un Apple ID
+gratuito. Con un account gratuito l'app va reinstallata ogni 7 giorni; con
+l'Apple Developer Program (99 €/anno) si passa a TestFlight.
 
 ## Struttura
 
