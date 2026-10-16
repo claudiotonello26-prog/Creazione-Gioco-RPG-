@@ -49,6 +49,11 @@ android {
         }
         release {
             signingConfig = signingConfigs.getByName("test")
+            // R8 toglieva classi caricate per riflessione (WorkDatabase di
+            // WorkManager) e l'app si chiudeva all'avvio: niente riduzione
+            // del codice finché non serve un APK più piccolo.
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
