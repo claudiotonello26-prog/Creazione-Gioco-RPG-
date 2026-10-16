@@ -62,6 +62,49 @@ jobs:
           name: iron-oath-android
           path: iron-oath.apk
 
+  # Avvia l'APK vero su emulatori Android (vecchio e recente) e fallisce se
+  # l'app si chiude all'avvio. Il logcat resta come artefatto.
+  android-smoke:
+    needs: android
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [24, 29, 34]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: iron-oath-android
+      - name: Abilita KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          target: ${{ matrix.api-level == 34 && 'google_apis' || 'default' }}
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-front emulated
+          script: |
+            adb install -r iron-oath.apk
+            adb logcat -c
+            adb shell am start -W -n com.ironoath.iron_oath/.MainActivity
+            sleep 20
+            adb logcat -d > logcat.txt || true
+            adb shell screencap -p /sdcard/s.png && adb pull /sdcard/s.png screen.png || true
+            grep -E "FATAL EXCEPTION|AndroidRuntime|E/flutter|libc  |DEBUG   " logcat.txt | head -80 || true
+            adb shell pidof com.ironoath.iron_oath
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-api-${{ matrix.api-level }}
+          path: |
+            logcat.txt
+            screen.png
+          if-no-files-found: ignore
+
   # IPA non firmata: si installa su iPhone da Windows con Sideloadly e un
   # Apple ID gratuito. Gira su macOS (minuti costosi), quindi solo su main o
   # a mano da Actions → CI → Run workflow.
