@@ -5,6 +5,7 @@ import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/character.dart';
 import '../../domain/exercise.dart';
+import '../../online/nakama_client.dart';
 import '../widgets/common.dart';
 import 'onboarding.dart';
 
@@ -110,6 +111,15 @@ class ProfileTab extends StatelessWidget {
               style: TextStyle(color: Palette.ash)),
         ),
         ListTile(
+          title: const Text('Server dell\'Arena live'),
+          subtitle: Text(
+            s.serverAddress.isEmpty ? 'Non impostato' : s.serverAddress,
+            style: const TextStyle(color: Palette.ash),
+          ),
+          trailing: const Icon(Icons.edit),
+          onTap: () => _editServer(context, s),
+        ),
+        ListTile(
           title: const Text('Modalità di gioco'),
           trailing: SegmentedButton<PlayMode>(
             segments: [
@@ -133,6 +143,39 @@ class ProfileTab extends StatelessWidget {
           onTap: () => _confirmReset(context, s),
         ),
       ],
+    );
+  }
+
+  void _editServer(BuildContext context, GameState s) {
+    final controller = TextEditingController(text: s.serverAddress);
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Palette.stone,
+        title: const Text('Server dell\'Arena'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          keyboardType: TextInputType.url,
+          decoration: const InputDecoration(
+            hintText: 'es. arena.iron-oath.it oppure 192.168.1.10:7350',
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annulla')),
+          FilledButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty &&
+                  ServerConfig.parse(controller.text) == null) {
+                return;
+              }
+              s.setServerAddress(controller.text);
+              Navigator.pop(ctx);
+            },
+            child: const Text('Salva'),
+          ),
+        ],
+      ),
     );
   }
 

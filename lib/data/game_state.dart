@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,6 +104,12 @@ class GameState extends ChangeNotifier {
   /// false = inserimento manuale delle rep (emulatori, accessibilità).
   bool useCamera = true;
 
+  /// Server dell'Arena live (Nakama), es. "arena.iron-oath.it" o "192.168.1.10:7350".
+  String serverAddress = '';
+
+  /// Identificativo anonimo del telefono per l'account online.
+  String deviceId = '';
+
   Map<ExerciseId, TestResult> test = {};
   DateTime? testDate;
   Map<ExerciseId, int> records = {};
@@ -139,8 +146,35 @@ class GameState extends ChangeNotifier {
         debugPrint('Salvataggio non leggibile, si riparte: $e');
       }
     }
+    if (deviceId.isEmpty) {
+      deviceId = _newDeviceId();
+      await _save();
+    }
     _rollDay();
     notifyListeners();
+  }
+
+  static String _newDeviceId() {
+    final r = Random.secure();
+    return List.generate(16, (_) => r.nextInt(256).toRadixString(16).padLeft(2, '0')).join();
+  }
+
+  void setServerAddress(String value) {
+    serverAddress = value.trim();
+    _changed();
+  }
+
+  /// Punti stagione ufficiali arrivati dal server dopo un duello live.
+  void applyLiveArena(ExerciseId id, String opponent, int outcome, int? serverPoints,
+      List<RepQuality> reps) {
+    if (serverPoints != null) {
+      arenaPoints = serverPoints;
+    } else {
+      arenaPoints = (arenaPoints + rankDelta(outcome)).clamp(0, 99999);
+    }
+    arenaHistory.insert(0, ArenaRecord(id, '$opponent (live)', outcome.sign, today));
+    if (arenaHistory.length > 30) arenaHistory.removeLast();
+    addTraining(id, reps, countsForQuest: false);
   }
 
   Future<void> _save() async {
@@ -160,6 +194,8 @@ class GameState extends ChangeNotifier {
         'days': daysPerWeek,
         'limits': limitations,
         'camera': useCamera,
+        'server': serverAddress,
+        'device': deviceId,
         'test': {for (final e in test.entries) e.key.name: e.value.toJson()},
         'testDate': testDate?.toIso8601String(),
         'records': {for (final e in records.entries) e.key.name: e.value},
@@ -187,6 +223,8 @@ class GameState extends ChangeNotifier {
     daysPerWeek = j['days'] as int;
     limitations = j['limits'] as String;
     useCamera = j['camera'] as bool? ?? true;
+    serverAddress = j['server'] as String? ?? '';
+    deviceId = j['device'] as String? ?? '';
     test = {
       for (final e in (j['test'] as Map).entries)
         ExerciseId.values.byName(e.key as String):

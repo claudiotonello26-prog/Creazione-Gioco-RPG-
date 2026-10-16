@@ -12,6 +12,7 @@ import '../../pose/rep_counter.dart';
 import '../../pose/rep_input.dart';
 import '../widgets/common.dart';
 import '../widgets/exercise_view.dart';
+import 'arena_live_screen.dart';
 
 class ArenaTab extends StatelessWidget {
   const ArenaTab({super.key});
@@ -46,7 +47,25 @@ class ArenaTab extends StatelessWidget {
             ),
           ),
         ),
-        const SectionTitle('Duello rapido 1v1'),
+        const SectionTitle('Duello live online'),
+        if (s.serverAddress.isEmpty || !s.useCamera)
+          Text(
+            s.serverAddress.isEmpty
+                ? 'Imposta il server dell\'Arena nel Profilo per sfidare persone vere.'
+                : 'Il live richiede la fotocamera: le rep devono essere verificate.',
+            style: const TextStyle(color: Palette.ash),
+          )
+        else
+          for (final c in arenaChallenges.values)
+            ActionTile(
+              icon: Icons.public,
+              title: '${exercises[c.exercise]!.name} · live',
+              subtitle: 'Contro una persona vera · ${c.description}',
+              color: Palette.goldBright,
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => ArenaLiveScreen(challenge: c))),
+            ),
+        const SectionTitle('Duello rapido 1v1 (allenamento)'),
         for (final c in arenaChallenges.values)
           ActionTile(
             icon: Icons.sports_kabaddi,

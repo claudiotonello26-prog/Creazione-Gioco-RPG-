@@ -30,10 +30,36 @@ class JointPoint {
 }
 
 class PoseFrame {
-  const PoseFrame(this.joints, {this.timestamp = Duration.zero});
+  const PoseFrame(this.joints, {this.timestamp = Duration.zero, this.scale = 1});
 
   final Map<Joint, JointPoint> joints;
   final Duration timestamp;
+
+  /// Lato maggiore dell'immagine in pixel: dividendo entrambe le coordinate
+  /// per lo stesso valore gli angoli non cambiano.
+  final double scale;
+
+  /// Scheletro compatto per la rete: [x, y, likelihood] per ogni Joint, in
+  /// ordine, normalizzato. Nessuna immagine lascia il telefono.
+  List<List<double>> toWire() => [
+        for (final j in Joint.values)
+          if (joints[j] case final p?)
+            [_r(p.x / scale), _r(p.y / scale), _r(p.likelihood)]
+          else
+            const [0.0, 0.0, 0.0],
+      ];
+
+  static double _r(double v) => (v * 1000).roundToDouble() / 1000;
+
+  factory PoseFrame.fromWire(List<dynamic> k) => PoseFrame({
+        for (var i = 0; i < k.length && i < Joint.values.length; i++)
+          if ((k[i] as List).length == 3 && ((k[i] as List)[2] as num) > 0)
+            Joint.values[i]: JointPoint(
+              ((k[i] as List)[0] as num).toDouble(),
+              ((k[i] as List)[1] as num).toDouble(),
+              ((k[i] as List)[2] as num).toDouble(),
+            ),
+      });
 
   JointPoint? operator [](Joint j) => joints[j];
 

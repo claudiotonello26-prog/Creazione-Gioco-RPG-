@@ -1,0 +1,44 @@
+# Server dell'Arena live: Nakama + PostgreSQL.
+#   npm ci && npm run build
+#   docker compose up -d
+# Poi nell'app: Profilo → Server dell'Arena live → indirizzo-del-server:7350
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nakama
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cambia-questa-password}
+    volumes:
+      - data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "nakama"]
+      interval: 5s
+      retries: 10
+    restart: unless-stopped
+
+  nakama:
+    image: heroiclabs/nakama:3.30.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - -ecx
+      - >
+        /nakama/nakama migrate up --database.address postgres:${POSTGRES_PASSWORD:-cambia-questa-password}@postgres:5432/nakama &&
+        exec /nakama/nakama
+        --name iron-oath
+        --database.address postgres:${POSTGRES_PASSWORD:-cambia-questa-password}@postgres:5432/nakama
+        --runtime.js_entrypoint index.js
+        --socket.server_key ${NAKAMA_SERVER_KEY:-defaultkey}
+        --session.token_expiry_sec 604800
+        --logger.level INFO
+    volumes:
+      - ./build:/nakama/data/modules
+    ports:
+      - "7350:7350"   # API e socket usati dall'app
+      - "127.0.0.1:7351:7351"   # console di amministrazione, solo in locale
+    restart: unless-stopped
+
+volumes:
+  data:
