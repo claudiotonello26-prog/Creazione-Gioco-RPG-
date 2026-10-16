@@ -32,19 +32,33 @@ class HomeTab extends StatelessWidget {
                     border: Border.all(color: Palette.gold, width: 2),
                     color: Palette.stoneLight,
                   ),
-                  child: const Icon(Icons.shield, color: Palette.goldBright, size: 34),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Image.asset('assets/images/helm.png'),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(c.name,
-                          style: const TextStyle(fontSize: 20, color: Palette.goldBright)),
-                      Text('Livello ${c.level} · ${c.weapon.displayName}',
-                          style: const TextStyle(color: Palette.ash)),
+                      Text(
+                        c.name,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Palette.goldBright,
+                        ),
+                      ),
+                      Text(
+                        'Livello ${c.level} · ${c.weapon.displayName}',
+                        style: const TextStyle(color: Palette.ash),
+                      ),
                       const SizedBox(height: 6),
-                      StatBar(value: xpIn / xpNeed, color: Palette.gold, label: '$xpIn / $xpNeed XP'),
+                      StatBar(
+                        value: xpIn / xpNeed,
+                        color: Palette.gold,
+                        label: '$xpIn / $xpNeed XP',
+                      ),
                     ],
                   ),
                 ),
@@ -57,12 +71,19 @@ class HomeTab extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            InfoChip(Icons.local_fire_department, 'Streak ${s.streak}', color: Palette.ember),
+            InfoChip(
+              Icons.local_fire_department,
+              'Streak ${s.streak}',
+              color: Palette.ember,
+            ),
             InfoChip(Icons.diamond_outlined, '${c.runes} rune'),
             InfoChip(Icons.vpn_key_outlined, '${s.expeditionKeys} chiavi'),
             if (c.availablePoints > 0)
-              InfoChip(Icons.add_circle_outline, '${c.availablePoints} punti da spendere',
-                  color: Palette.goldBright),
+              InfoChip(
+                Icons.add_circle_outline,
+                '${c.availablePoints} punti da spendere',
+                color: Palette.goldBright,
+              ),
           ],
         ),
         if (s.retestDue) ...[
@@ -72,13 +93,20 @@ class HomeTab extends StatelessWidget {
             title: 'Torneo della Prova',
             subtitle: 'Sono passate 4 settimane: rifai il test e guarda quanto sei migliorato.',
             color: Palette.goldBright,
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const FitnessTestScreen(isRetest: true))),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const FitnessTestScreen(isRetest: true),
+              ),
+            ),
           ),
         ],
-        SectionTitle('Quest giornaliera',
-            trailing: Text('${(s.questProgress * 100).round()}%',
-                style: const TextStyle(color: Palette.ash))),
+        SectionTitle(
+          'Quest giornaliera',
+          trailing: Text(
+            '${(s.questProgress * 100).round()}%',
+            style: const TextStyle(color: Palette.ash),
+          ),
+        ),
         if (s.mode == PlayMode.free)
           const Text(
             'Sei in modalità Libera: la quest è facoltativa ma dà la Chiave della Spedizione.',
@@ -90,7 +118,11 @@ class HomeTab extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                StatBar(value: s.questProgress, color: Palette.gold, height: 12),
+                StatBar(
+                  value: s.questProgress,
+                  color: Palette.gold,
+                  height: 12,
+                ),
                 const SizedBox(height: 10),
                 for (final q in s.quest)
                   Padding(
@@ -109,26 +141,36 @@ class HomeTab extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(child: Text(q.label)),
                         Text(
-                            '${s.questDoneFor(q.exercise).clamp(0, q.target)}/${q.target}'
-                            '${q.info.perLeg ? ' per gamba' : ''}',
-                            style: const TextStyle(color: Palette.ash)),
+                          '${s.questDoneFor(q.exercise).clamp(0, q.target)}/${q.target}'
+                          '${q.info.perLeg ? ' per gamba' : ''}',
+                          style: const TextStyle(color: Palette.ash),
+                        ),
                       ],
                     ),
                   ),
                 Row(
                   children: [
-                    Icon(s.daily.stretchingDone ? Icons.check_circle : Icons.radio_button_unchecked,
-                        size: 18,
-                        color: s.daily.stretchingDone ? Palette.goldBright : Palette.ash),
+                    Icon(
+                      s.daily.stretchingDone
+                          ? Icons.check_circle
+                          : Icons.radio_button_unchecked,
+                      size: 18,
+                      color: s.daily.stretchingDone
+                          ? Palette.goldBright
+                          : Palette.ash,
+                    ),
                     const SizedBox(width: 8),
                     const Expanded(child: Text('Stretching guidato (5 min)')),
                   ],
                 ),
                 const SizedBox(height: 12),
                 FilledButton(
-                  onPressed: () => Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => const QuestScreen())),
-                  child: Text(s.questComplete ? 'QUEST COMPLETATA' : 'CONTINUA LA QUEST'),
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const QuestScreen()),
+                  ),
+                  child: Text(
+                    s.questComplete ? 'QUEST COMPLETATA' : 'CONTINUA LA QUEST',
+                  ),
                 ),
                 if (s.questComplete)
                   const Padding(

@@ -27,53 +27,70 @@ class HealthWarningScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Spacer(),
-              const Icon(Icons.shield_moon_outlined, size: 64, color: Palette.gold),
-              const SizedBox(height: 16),
-              const Text(
-                'IRON OATH',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 34, letterSpacing: 8, color: Palette.goldBright),
-              ),
-              const Text(
-                'Il regno è caduto. Il tuo corpo è l\'ultima arma.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Palette.ash),
-              ),
-              const SizedBox(height: 32),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('Prima di iniziare',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      SizedBox(height: 8),
-                      Text(
-                        'Questo è un gioco, non un consiglio medico. Se hai problemi '
-                        'di salute, dolori o sei in gravidanza, senti un medico prima '
-                        'di allenarti. Fermati se senti dolore, vertigini o fiato '
-                        'corto.\n\nLa fotocamera serve solo a contare le rep: le '
-                        'immagini restano sul telefono.',
-                        style: TextStyle(color: Palette.ash, height: 1.4),
+        child: LayoutBuilder(
+          builder: (context, box) => SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: box.maxHeight - 48),
+              child: IntrinsicHeight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Spacer(),
+                    Image.asset('assets/images/helm.png', height: 120),
+                    const SizedBox(height: 18),
+                    Text(
+                      'IRON OATH',
+                      textAlign: TextAlign.center,
+                      style: titleStyle(size: 36, spacing: 8),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Il regno è caduto. Il tuo corpo è l\'ultima arma.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Palette.ash,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 17,
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 28),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(18),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'PRIMA DI INIZIARE',
+                              style: titleStyle(size: 14),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Questo è un gioco, non un consiglio medico. Se hai problemi '
+                              'di salute, dolori o sei in gravidanza, senti un medico prima '
+                              'di allenarti. Fermati se senti dolore, vertigini o fiato '
+                              'corto.\n\nLa fotocamera serve solo a contare le rep: le '
+                              'immagini restano sul telefono.',
+                              style: TextStyle(
+                                color: Palette.ash,
+                                height: 1.35,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    const SizedBox(height: 20),
+                    FilledButton(
+                      onPressed: () => context.read<GameState>().acceptHealth(),
+                      child: const Text('HO CAPITO, INIZIAMO'),
+                    ),
+                  ],
                 ),
               ),
-              const Spacer(),
-              FilledButton(
-                onPressed: () => context.read<GameState>().acceptHealth(),
-                child: const Text('HO CAPITO, INIZIAMO'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

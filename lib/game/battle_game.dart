@@ -106,7 +106,7 @@ class BattleGame extends FlameGame {
           color: color,
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
-          fontFamily: 'serif',
+          fontFamily: 'Cinzel',
         ),
       ),
     );

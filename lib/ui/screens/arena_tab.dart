@@ -65,7 +65,7 @@ class ArenaTab extends StatelessWidget {
               onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => ArenaLiveScreen(challenge: c))),
             ),
-        const SectionTitle('Duello rapido 1v1 (allenamento)'),
+        const SectionTitle('Duello rapido contro ombre'),
         for (final c in arenaChallenges.values)
           ActionTile(
             icon: Icons.sports_kabaddi,

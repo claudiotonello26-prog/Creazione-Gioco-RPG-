@@ -27,8 +27,10 @@ class IronOathApp extends StatelessWidget {
         title: 'Iron Oath',
         debugShowCheckedModeBanner: false,
         theme: buildTheme(),
+        builder: (context, child) => SoulsBackground(child: child!),
         home: Consumer<GameState>(
-          builder: (_, s, _) => s.onboarded ? const HomeShell() : const OnboardingFlow(),
+          builder: (_, s, _) =>
+              s.onboarded ? const HomeShell() : const OnboardingFlow(),
         ),
       ),
     );

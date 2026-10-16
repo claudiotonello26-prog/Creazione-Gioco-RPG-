@@ -10,24 +10,39 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 18, bottom: 6),
-      child: Row(
-        children: [
-          Container(width: 3, height: 16, color: Palette.gold),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              text.toUpperCase(),
-              style: const TextStyle(
-                letterSpacing: 2,
-                fontSize: 13,
-                color: Palette.goldBright,
-                fontWeight: FontWeight.bold,
+      padding: const EdgeInsets.only(top: 20, bottom: 8),
+      child: LayoutBuilder(
+        builder: (context, box) => Row(
+          children: [
+            Transform.rotate(
+              angle: 0.785398,
+              child: Container(width: 7, height: 7, color: Palette.gold),
+            ),
+            const SizedBox(width: 10),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: box.maxWidth * 0.8),
+              child: Text(
+                text.toUpperCase(),
+                style: titleStyle(size: 13, spacing: 1.6),
               ),
             ),
-          ),
-          ?trailing,
-        ],
+            const SizedBox(width: 10),
+            Expanded(
+              child: Container(
+                height: 1,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Palette.gold.withValues(alpha: 0.7),
+                      Palette.gold.withValues(alpha: 0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            if (trailing != null) ...[const SizedBox(width: 8), trailing!],
+          ],
+        ),
       ),
     );
   }
@@ -55,7 +70,10 @@ class StatBar extends StatelessWidget {
         if (label != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 3),
-            child: Text(label!, style: const TextStyle(fontSize: 12, color: Palette.ash)),
+            child: Text(
+              label!,
+              style: const TextStyle(fontSize: 12, color: Palette.ash),
+            ),
           ),
         ClipRRect(
           borderRadius: BorderRadius.circular(2),
@@ -129,8 +147,13 @@ class ActionTile extends StatelessWidget {
           title: Text(title),
           subtitle: subtitle == null
               ? null
-              : Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 13)),
-          trailing: trailing ?? (onTap != null ? const Icon(Icons.chevron_right) : null),
+              : Text(
+                  subtitle!,
+                  style: const TextStyle(color: Palette.ash, fontSize: 13),
+                ),
+          trailing:
+              trailing ??
+              (onTap != null ? const Icon(Icons.chevron_right) : null),
           onTap: enabled ? onTap : null,
         ),
       ),
@@ -141,9 +164,11 @@ class ActionTile extends StatelessWidget {
 void toast(BuildContext context, String message) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: Palette.stoneLight,
-      behavior: SnackBarBehavior.floating,
-    ));
+    ..showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Palette.stoneLight,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
 }

@@ -49,3 +49,4 @@ app.*.map.json
 
 # Server
 server/node_modules/
+screenshots/out/
