@@ -16,6 +16,8 @@ Lang appLang = Lang.it;
 
 const Map<String, String> _it = {
   // Abilità di combattimento.
+  'Trees': 'Alberi',
+  'Ores': 'Minerali',
   'Attack': 'Attacco',
   'Defence': 'Difesa',
   'Magic': 'Magia',
