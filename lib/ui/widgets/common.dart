@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/art.dart';
 import '../../core/theme.dart';
 
 class SectionTitle extends StatelessWidget {
@@ -16,28 +17,66 @@ class SectionTitle extends StatelessWidget {
           children: [
             Transform.rotate(
               angle: 0.785398,
-              child: Container(width: 7, height: 7, color: Palette.gold),
+              child: Container(
+                width: 9,
+                height: 9,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Palette.goldBright, width: 1.2),
+                  boxShadow: [BoxShadow(color: Palette.gold.withValues(alpha: 0.5), blurRadius: 6)],
+                ),
+                alignment: Alignment.center,
+                child: Container(width: 3, height: 3, color: Palette.goldBright),
+              ),
             ),
             const SizedBox(width: 10),
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: box.maxWidth * 0.8),
-              child: Text(
-                text.toUpperCase(),
-                style: titleStyle(size: 13, spacing: 1.6),
-              ),
+              child: Text(text.toUpperCase(), style: titleStyle(size: 13, spacing: 1.6)),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: Container(
-                height: 1,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Palette.gold.withValues(alpha: 0.7),
-                      Palette.gold.withValues(alpha: 0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 1,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Palette.gold.withValues(alpha: 0.8),
+                                Palette.gold.withValues(alpha: 0.15),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 3,
+                        height: 3,
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        decoration: BoxDecoration(
+                          color: Palette.gold.withValues(alpha: 0.5),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 2),
+                  Container(
+                    height: 1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Palette.gold.withValues(alpha: 0.3),
+                          Palette.gold.withValues(alpha: 0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             if (trailing != null) ...[const SizedBox(width: 8), trailing!],
@@ -70,10 +109,7 @@ class StatBar extends StatelessWidget {
         if (label != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 3),
-            child: Text(
-              label!,
-              style: const TextStyle(fontSize: 12, color: Palette.ash),
-            ),
+            child: Text(label!, style: const TextStyle(fontSize: 12, color: Palette.ash)),
           ),
         ClipRRect(
           borderRadius: BorderRadius.circular(2),
@@ -147,13 +183,8 @@ class ActionTile extends StatelessWidget {
           title: Text(title),
           subtitle: subtitle == null
               ? null
-              : Text(
-                  subtitle!,
-                  style: const TextStyle(color: Palette.ash, fontSize: 13),
-                ),
-          trailing:
-              trailing ??
-              (onTap != null ? const Icon(Icons.chevron_right) : null),
+              : Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 13)),
+          trailing: trailing ?? (onTap != null ? const Icon(Icons.chevron_right) : null),
           onTap: enabled ? onTap : null,
         ),
       ),
@@ -171,4 +202,55 @@ void toast(BuildContext context, String message) {
         behavior: SnackBarBehavior.floating,
       ),
     );
+}
+
+/// L'icona di un oggetto: l'immagine di Antigravity se c'è
+/// (`assets/art/items/<id>.png`), altrimenti un simbolo del suo tipo.
+class ItemIcon extends StatelessWidget {
+  const ItemIcon(this.id, {super.key, this.size = 40});
+  final String id;
+  final double size;
+
+  static (IconData, Color) symbolOf(String id) {
+    bool has(String s) => id.contains(s);
+    if (has('plank') || has('grip')) return (Icons.view_agenda, const Color(0xFFB08850));
+    if (has('wood')) return (Icons.forest, const Color(0xFF9C7A4B));
+    if (has('coal')) return (Icons.landscape, const Color(0xFF6B6B6B));
+    if (has('ore') || has('moon_silver')) return (Icons.landscape, Palette.frost);
+    if (has('ingot') || has('steel') || has('iron') || has('gold') || has('silver')) {
+      return (Icons.view_module, has('gold') ? Palette.goldBright : Palette.ash);
+    }
+    if (has('hide') || has('leather')) return (Icons.layers, const Color(0xFFA8714A));
+    if (has('bone')) return (Icons.spa, Palette.holy);
+    if (has('gem') ||
+        has('crystal') ||
+        has('pearl') ||
+        has('core') ||
+        has('heart') ||
+        has('eye') ||
+        has('tear')) {
+      return (Icons.diamond, const Color(0xFF9FD3FF));
+    }
+    if (has('stone') || has('shard')) return (Icons.hexagon, Palette.gold);
+    if (has('essence') || has('ink')) return (Icons.water_drop, const Color(0xFFB07ACC));
+    if (has('amulet')) return (Icons.brightness_7, Palette.goldBright);
+    if (has('axe') || has('pickaxe')) return (Icons.handyman, Palette.ash);
+    return (Icons.hexagon_outlined, Palette.gold);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final path = 'assets/art/items/$id.png';
+    if (Art.has(path)) return Image.asset(path, width: size, height: size);
+    final (icon, color) = symbolOf(id);
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(colors: [color.withValues(alpha: 0.28), Colors.transparent]),
+      ),
+      child: Icon(icon, color: color, size: size * 0.62),
+    );
+  }
 }

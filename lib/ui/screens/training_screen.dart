@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -54,10 +57,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
   @override
   void initState() {
     super.initState();
-    _input = createRepInput(
-      context.read<GameState>().useCamera,
-      widget.exercise,
-    );
+    _input = createRepInput(context.read<GameState>().useCamera, widget.exercise);
     _input.start();
     _sub = _input.reps.listen(_onRep);
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
@@ -85,17 +85,14 @@ class _TrainingScreenState extends State<TrainingScreen> {
   }
 
   /// Per gli affondi il target è per gamba: contano le coppie.
-  int get _countReps =>
-      exercises[widget.exercise]!.perLeg ? _reps.length ~/ 2 : _reps.length;
+  int get _countReps => exercises[widget.exercise]!.perLeg ? _reps.length ~/ 2 : _reps.length;
 
   void _finish() {
     if (_finished) return;
     _finished = true;
     _watch.stop();
     final perLeg = exercises[widget.exercise]!.perLeg;
-    final reps = perLeg
-        ? [for (var i = 0; i + 1 < _reps.length; i += 2) _reps[i]]
-        : List.of(_reps);
+    final reps = perLeg ? [for (var i = 0; i + 1 < _reps.length; i += 2) _reps[i]] : List.of(_reps);
     Navigator.of(context).pop(SetResult(reps, _input.held, _watch.elapsed));
   }
 
@@ -111,17 +108,13 @@ class _TrainingScreenState extends State<TrainingScreen> {
   Widget build(BuildContext context) {
     final perLeg = exercises[widget.exercise]!.perLeg;
     final limit = widget.timeLimit;
-    final remaining = limit == null
-        ? null
-        : (limit - _watch.elapsed).inSeconds.clamp(0, 9999);
+    final remaining = limit == null ? null : (limit - _watch.elapsed).inSeconds.clamp(0, 9999);
     final counterText = _input.isHold
         ? '${_input.held.inSeconds}s'
-        : (widget.target != null
-              ? '$_countReps/${widget.target}'
-              : '$_countReps');
+        : (widget.target != null ? '$_countReps/${widget.target}' : '$_countReps');
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: OathBar(title: Text(widget.title)),
       body: Column(
         children: [
           if (widget.subtitle != null)
@@ -145,16 +138,11 @@ class _TrainingScreenState extends State<TrainingScreen> {
                       right: 0,
                       child: Center(
                         child: _countdown > 0
-                            ? RepCounterBadge(
-                                text: '$_countdown',
-                                caption: 'Preparati',
-                              )
+                            ? RepCounterBadge(text: '$_countdown', caption: 'Preparati')
                             : ListenableBuilder(
                                 listenable: _input,
                                 builder: (_, _) => RepCounterBadge(
-                                  text: _input.isHold
-                                      ? '${_input.held.inSeconds}s'
-                                      : counterText,
+                                  text: _input.isHold ? '${_input.held.inSeconds}s' : counterText,
                                   caption: [
                                     if (perLeg) 'per gamba',
                                     if (remaining != null) '$remaining s',
@@ -167,9 +155,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     Positioned(
                       left: 12,
                       bottom: 12,
-                      child: ExerciseDemo(
-                        move: demoFor(widget.title, widget.exercise),
-                      ),
+                      child: ExerciseDemo(move: demoFor(widget.title, widget.exercise)),
                     ),
                   ],
                 ),
@@ -192,10 +178,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
               padding: const EdgeInsets.all(12),
               child: SizedBox(
                 width: double.infinity,
-                child: FilledButton(
-                  onPressed: _finish,
-                  child: const Text('TERMINA SERIE'),
-                ),
+                child: FilledButton(onPressed: _finish, child: const Text('TERMINA SERIE')),
               ),
             ),
           ),

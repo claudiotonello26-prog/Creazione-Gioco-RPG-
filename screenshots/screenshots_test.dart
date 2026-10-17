@@ -22,6 +22,8 @@ import 'package:iron_oath/ui/screens/gear_screens.dart';
 import 'package:iron_oath/ui/screens/train_tab.dart';
 import 'package:iron_oath/ui/screens/expedition_map.dart';
 import 'package:iron_oath/domain/enemies.dart';
+import 'package:iron_oath/domain/skills.dart';
+import 'package:iron_oath/ui/screens/guide_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFont(String family, List<String> paths) async {
@@ -35,8 +37,9 @@ Future<void> _loadFont(String family, List<String> paths) async {
 
 Future<void> _fonts() async {
   final flutterRoot = Platform.environment['FLUTTER_ROOT'] ?? '/opt/flutter';
-  await _loadFont('MaterialIcons',
-      ['$flutterRoot/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf']);
+  await _loadFont('MaterialIcons', [
+    '$flutterRoot/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
+  ]);
   await _loadFont('Cinzel', ['assets/fonts/Cinzel-Regular.ttf', 'assets/fonts/Cinzel-Bold.ttf']);
   await _loadFont('EBGaramond', [
     'assets/fonts/EBGaramond-Regular.ttf',
@@ -139,9 +142,11 @@ void main() {
     Navigator.of(t.element(find.byType(NavigationBar)))
         .push(MaterialPageRoute<void>(builder: (_) => const WalkScreen()));
     await _shot(t, '20_camminata');
-    await t.pumpWidget(const MaterialApp(
-      home: Scaffold(backgroundColor: Color(0xFF1C1712), body: YouDiedOverlay()),
-    ));
+    await t.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(backgroundColor: Color(0xFF1C1712), body: YouDiedOverlay()),
+      ),
+    );
     await _shot(t, '21_you_died');
   });
 
@@ -167,12 +172,54 @@ void main() {
     await _shot(t, '32_sentiero');
     nav.pop();
     await t.pumpAndSettle();
-    nav.push(MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.furnace)));
+    nav.push(
+      MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.furnace)),
+    );
     await _shot(t, '33_fornace');
     nav.pop();
     await t.pumpAndSettle();
-    nav.push(MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.enchant)));
+    nav.push(
+      MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.enchant)),
+    );
     await _shot(t, '34_incantamento');
+  });
+
+  testWidgets('risorsa, guida, bestiario', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    st.skillXp[Skill.woodcutting] = 30;
+    await t.pumpWidget(IronOathApp(state: st));
+    await t.pumpAndSettle();
+    final nav = Navigator.of(t.element(find.byType(NavigationBar)));
+    nav.push(
+      MaterialPageRoute<void>(
+        builder: (_) => GatherScreen(resource: resourceById('ash_wood'), stepsToday: 22),
+      ),
+    );
+    await _shot(t, '22_risorsa');
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(
+      MaterialPageRoute<void>(
+        builder: (_) => GatherScreen(resource: resourceById('ash_wood'), stepsToday: 100),
+      ),
+    );
+    await t.pumpAndSettle();
+    await t.tap(find.textContaining('CONSUMA I PASSI'));
+    await t.pump(const Duration(milliseconds: 600));
+    await _shot(t, '23_risorsa_bottino');
+    await t.pump(const Duration(seconds: 3));
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(MaterialPageRoute<void>(builder: (_) => const GuideScreen()));
+    await t.pumpAndSettle();
+    await t.tap(find.text('ATTACCO'));
+    await _shot(t, '24_guida');
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(MaterialPageRoute<void>(builder: (_) => const BestiaryScreen()));
+    await _shot(t, '25_bestiario');
   });
 
   testWidgets('equipaggiamento, inventario, mercato', (t) async {
@@ -213,8 +260,11 @@ void main() {
     await _shot(t, '60_gruppo_spinta');
     st.completeExpeditionStep('buried_forges', 0);
     st.completeExpeditionStep('buried_forges', 1);
-    nav.push(MaterialPageRoute<void>(
-        builder: (_) => ExpeditionMapScreen(expedition: expeditionById('buried_forges'))));
+    nav.push(
+      MaterialPageRoute<void>(
+        builder: (_) => ExpeditionMapScreen(expedition: expeditionById('buried_forges')),
+      ),
+    );
     await _shot(t, '61_spedizione');
     nav.pop();
     await t.pumpAndSettle();
@@ -233,7 +283,9 @@ void main() {
     nav.pop();
     nav.pop();
     await t.pumpAndSettle();
-    nav.push(MaterialPageRoute<void>(builder: (_) => const GroupScreen(group: MuscleGroup.stretching)));
+    nav.push(
+      MaterialPageRoute<void>(builder: (_) => const GroupScreen(group: MuscleGroup.stretching)),
+    );
     await _shot(t, '62_gruppo_stretching');
   });
 
@@ -263,29 +315,33 @@ void main() {
 
   testWidgets('dimostrazioni degli esercizi', (t) async {
     _phone(t);
-    await t.pumpWidget(MaterialApp(
-      home: Scaffold(
-        backgroundColor: const Color(0xFF0D0B09),
-        body: GridView.count(
-          crossAxisCount: 4,
-          padding: const EdgeInsets.fromLTRB(4, 60, 4, 4),
-          mainAxisSpacing: 4,
-          crossAxisSpacing: 4,
-          children: [
-            for (final m in DemoMove.values)
-              for (final f in [0.0, 1.0])
-                Container(
-                  color: const Color(0xFF17130F),
-                  child: Stack(children: [
-                    Positioned.fill(child: CustomPaint(painter: DemoPainter(m, f))),
-                    if (f == 0)
-                      Text(m.file, style: const TextStyle(color: Colors.white, fontSize: 9)),
-                  ]),
-                ),
-          ],
+    await t.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          backgroundColor: const Color(0xFF0D0B09),
+          body: GridView.count(
+            crossAxisCount: 4,
+            padding: const EdgeInsets.fromLTRB(4, 60, 4, 4),
+            mainAxisSpacing: 4,
+            crossAxisSpacing: 4,
+            children: [
+              for (final m in DemoMove.values)
+                for (final f in [0.0, 1.0])
+                  Container(
+                    color: const Color(0xFF17130F),
+                    child: Stack(
+                      children: [
+                        Positioned.fill(child: CustomPaint(painter: DemoPainter(m, f))),
+                        if (f == 0)
+                          Text(m.file, style: const TextStyle(color: Colors.white, fontSize: 9)),
+                      ],
+                    ),
+                  ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
     await _shot(t, '41_dimostrazioni');
   });
 }

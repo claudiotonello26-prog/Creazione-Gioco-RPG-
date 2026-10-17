@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -61,10 +64,7 @@ class HealthWarningScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'PRIMA DI INIZIARE',
-                              style: titleStyle(size: 14),
-                            ),
+                            Text('PRIMA DI INIZIARE', style: titleStyle(size: 14)),
                             const SizedBox(height: 10),
                             const Text(
                               'Questo è un gioco, non un consiglio medico. Se hai problemi '
@@ -72,10 +72,7 @@ class HealthWarningScreen extends StatelessWidget {
                               'di allenarti. Fermati se senti dolore, vertigini o fiato '
                               'corto.\n\nLa fotocamera serve solo a contare le rep: le '
                               'immagini restano sul telefono.',
-                              style: TextStyle(
-                                color: Palette.ash,
-                                height: 1.35,
-                              ),
+                              style: TextStyle(color: Palette.ash, height: 1.35),
                             ),
                           ],
                         ),
@@ -141,7 +138,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('IL TUO GIURAMENTO')),
+      appBar: OathBar(title: const Text('IL TUO GIURAMENTO')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -235,16 +232,18 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
   Future<void> _runCurrent() async {
     final ex = exercises[_current]!;
     final timed = ex.testMode == TestMode.repsIn60s;
-    final result = await Navigator.of(context).push<SetResult>(MaterialPageRoute(
-      builder: (_) => TrainingScreen(
-        exercise: _current,
-        title: ex.variant(_variant).name,
-        subtitle: timed
-            ? 'Più rep corrette possibili in 60 secondi'
-            : 'Massimo di rep corrette${ex.perLeg ? ' per gamba' : ''}. Fermati quando la forma cede.',
-        timeLimit: timed ? const Duration(seconds: 60) : null,
+    final result = await Navigator.of(context).push<SetResult>(
+      MaterialPageRoute(
+        builder: (_) => TrainingScreen(
+          exercise: _current,
+          title: ex.variant(_variant).name,
+          subtitle: timed
+              ? 'Più rep corrette possibili in 60 secondi'
+              : 'Massimo di rep corrette${ex.perLeg ? ' per gamba' : ''}. Fermati quando la forma cede.',
+          timeLimit: timed ? const Duration(seconds: 60) : null,
+        ),
       ),
-    ));
+    );
     if (!mounted || result == null) return;
     final reps = result.reps.length;
     if (reps == 0 && _variant < ex.easiestLevel) {
@@ -291,7 +290,7 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
     if (_done) return _Summary(results: _results, onConfirm: () => _complete(_results));
     final ex = exercises[_current]!;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.isRetest ? 'TORNEO DELLA PROVA' : 'TEST DELLA PROVA')),
+      appBar: OathBar(title: Text(widget.isRetest ? 'TORNEO DELLA PROVA' : 'TEST DELLA PROVA')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -301,18 +300,19 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
             label: 'Prova ${_index + 1} di ${baseExercises.length}',
           ),
           const SizedBox(height: 20),
-          Text(ex.variant(_variant).name,
-              style: const TextStyle(fontSize: 28, color: Palette.goldBright)),
+          Text(
+            ex.variant(_variant).name,
+            style: const TextStyle(fontSize: 28, color: Palette.goldBright),
+          ),
           const SizedBox(height: 8),
           Text(
-            switch (ex.testMode) {
-              TestMode.maxReps =>
-                'Fai il massimo di rep corrette${ex.perLeg ? ' per gamba' : ''}.',
-              TestMode.repsIn60s => 'Fai più rep corrette possibili in 60 secondi.',
-              TestMode.hold => 'Tieni la posizione il più a lungo possibile.',
-            },
-            style: const TextStyle(color: Palette.ash, fontSize: 16),
-          ),
+              switch (ex.testMode) {
+                TestMode.maxReps =>
+                  'Fai il massimo di rep corrette${ex.perLeg ? ' per gamba' : ''}.',
+                TestMode.repsIn60s => 'Fai più rep corrette possibili in 60 secondi.',
+                TestMode.hold => 'Tieni la posizione il più a lungo possibile.',
+              },
+              style: const TextStyle(color: Palette.ash, fontSize: 16)),
           const SizedBox(height: 16),
           const Card(
             child: Padding(
@@ -377,9 +377,11 @@ class _RestDialogState extends State<_RestDialog> {
     return AlertDialog(
       backgroundColor: Palette.stone,
       title: const Text('Riposo'),
-      content: Text('$_left s',
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 40, color: Palette.goldBright)),
+      content: Text(
+        '$_left s',
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 40, color: Palette.goldBright),
+      ),
       actions: [
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Salta')),
       ],
@@ -396,7 +398,7 @@ class _Summary extends StatelessWidget {
   Widget build(BuildContext context) {
     final quest = RoutineRules.dailyQuest(results);
     return Scaffold(
-      appBar: AppBar(title: const Text('IL TUO PUNTO DI PARTENZA')),
+      appBar: OathBar(title: const Text('IL TUO PUNTO DI PARTENZA')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -414,8 +416,10 @@ class _Summary extends StatelessWidget {
                   'Test: ${results[q.exercise]!.reps}${q.info.perLeg ? ' per gamba' : ''}',
                   style: const TextStyle(color: Palette.ash),
                 ),
-                trailing: Text('${q.target}',
-                    style: const TextStyle(fontSize: 22, color: Palette.goldBright)),
+                trailing: Text(
+                  '${q.target}',
+                  style: const TextStyle(fontSize: 22, color: Palette.goldBright),
+                ),
               ),
             ),
           const SizedBox(height: 20),

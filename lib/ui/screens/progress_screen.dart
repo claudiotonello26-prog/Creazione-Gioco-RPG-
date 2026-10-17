@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -54,15 +57,14 @@ class _ProgressCardState extends State<ProgressCard> {
               onSelectionChanged: (v) => setState(() => _span = v.first),
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              height: 160,
-              child: CustomPaint(painter: StrengthChartPainter(points)),
-            ),
+            SizedBox(height: 160, child: CustomPaint(painter: StrengthChartPainter(points))),
             const SizedBox(height: 10),
             Row(
               children: [
                 for (final r in BodyRegion.values)
-                  Expanded(child: _RegionStat(region: r, points: points)),
+                  Expanded(
+                    child: _RegionStat(region: r, points: points),
+                  ),
               ],
             ),
             const SizedBox(height: 8),
@@ -74,14 +76,14 @@ class _ProgressCardState extends State<ProgressCard> {
             ),
             if (widget.showDetails)
               Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                onPressed: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => const ProgressScreen())),
-                icon: const Icon(Icons.list_alt, size: 18),
-                label: const Text('Ogni esercizio e i record'),
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => const ProgressScreen())),
+                  icon: const Icon(Icons.list_alt, size: 18),
+                  label: const Text('Ogni esercizio e i record'),
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -102,22 +104,28 @@ class _RegionStat extends StatelessWidget {
     final delta = last == null ? null : last - 100;
     return Column(
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-          const SizedBox(width: 6),
-          Text(region.label, style: const TextStyle(color: Palette.ash, fontSize: 13)),
-        ]),
-        Text(last == null ? '–' : '${last.round()}',
-            style: titleStyle(size: 22).copyWith(color: color)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+            const SizedBox(width: 6),
+            Text(region.label, style: const TextStyle(color: Palette.ash, fontSize: 13)),
+          ],
+        ),
         Text(
-          delta == null
-              ? 'da allenare'
-              : '${delta >= 0 ? '+' : ''}${delta.round()}% dall\'inizio',
+          last == null ? '–' : '${last.round()}',
+          style: titleStyle(size: 22).copyWith(color: color),
+        ),
+        Text(
+          delta == null ? 'da allenare' : '${delta >= 0 ? '+' : ''}${delta.round()}% dall\'inizio',
           style: TextStyle(
-              color: delta == null
-                  ? Palette.ash
-                  : (delta >= 0 ? Palette.moss : Palette.blood),
-              fontSize: 12),
+            color: delta == null ? Palette.ash : (delta >= 0 ? Palette.moss : Palette.blood),
+            fontSize: 12,
+          ),
         ),
       ],
     );
@@ -149,10 +157,15 @@ class StrengthChartPainter extends CustomPainter {
       ..color = Palette.iron
       ..strokeWidth = 1;
     final label = TextStyle(
-        color: Palette.ash.withValues(alpha: 0.8), fontSize: 11, fontFamily: 'EBGaramond');
+      color: Palette.ash.withValues(alpha: 0.8),
+      fontSize: 11,
+      fontFamily: 'EBGaramond',
+    );
     void text(String t, Offset at, {bool center = false}) {
-      final tp = TextPainter(text: TextSpan(text: t, style: label), textDirection: TextDirection.ltr)
-        ..layout();
+      final tp = TextPainter(
+        text: TextSpan(text: t, style: label),
+        textDirection: TextDirection.ltr,
+      )..layout();
       tp.paint(canvas, at - Offset(center ? tp.width / 2 : 0, tp.height / 2));
     }
 
@@ -160,7 +173,13 @@ class StrengthChartPainter extends CustomPainter {
       final yy = y(v);
       if (v == 100) {
         for (var xx = left; xx < size.width; xx += 8) {
-          canvas.drawLine(Offset(xx, yy), Offset(xx + 4, yy), Paint()..color = Palette.gold..strokeWidth = 1);
+          canvas.drawLine(
+            Offset(xx, yy),
+            Offset(xx + 4, yy),
+            Paint()
+              ..color = Palette.gold
+              ..strokeWidth = 1,
+          );
         }
       } else {
         canvas.drawLine(Offset(left, yy), Offset(size.width, yy), grid);
@@ -189,12 +208,13 @@ class StrengthChartPainter extends CustomPainter {
         canvas.drawCircle(o, 3, Paint()..color = color);
       }
       canvas.drawPath(
-          path,
-          Paint()
-            ..color = color
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2.2
-            ..strokeJoin = StrokeJoin.round);
+        path,
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.2
+          ..strokeJoin = StrokeJoin.round,
+      );
     }
   }
 
@@ -219,12 +239,16 @@ class _ProgressScreenState extends State<ProgressScreen> {
     final now = DateTime.now();
     final from = switch (_span) {
       ProgressSpan.day => DateTime(now.year, now.month, now.day),
-      ProgressSpan.week => DateTime(now.year, now.month, now.day).subtract(Duration(days: now.weekday - 1)),
+      ProgressSpan.week => DateTime(
+          now.year,
+          now.month,
+          now.day,
+        ).subtract(Duration(days: now.weekday - 1)),
       ProgressSpan.month => DateTime(now.year, now.month),
     };
     final list = exerciseSummaries(s.history, from);
     return Scaffold(
-      appBar: AppBar(title: const Text('IL TUO ANDAMENTO')),
+      appBar: OathBar(title: const Text('IL TUO ANDAMENTO')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -243,8 +267,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
           ),
           const SizedBox(height: 8),
           if (list.isEmpty)
-            const Text('Ancora nessuna serie registrata: allenati e qui vedrai tutto.',
-                style: TextStyle(color: Palette.ash)),
+            const Text(
+              'Ancora nessuna serie registrata: allenati e qui vedrai tutto.',
+              style: TextStyle(color: Palette.ash),
+            ),
           for (final e in list) _ExerciseRow(e),
         ],
       ),
@@ -266,11 +292,13 @@ class _ExerciseRow extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              Expanded(child: Text(e.name, style: titleStyle(size: 16))),
-              if (e.record > 0 && e.lastBest >= e.record && e.lastDay == e.recordDay)
-                const InfoChip(Icons.emoji_events, 'RECORD', color: Palette.goldBright),
-            ]),
+            Row(
+              children: [
+                Expanded(child: Text(e.name, style: titleStyle(size: 16))),
+                if (e.record > 0 && e.lastBest >= e.record && e.lastDay == e.recordDay)
+                  const InfoChip(Icons.emoji_events, 'RECORD', color: Palette.goldBright),
+              ],
+            ),
             const SizedBox(height: 4),
             Text(
               'Nel periodo: ${e.repsInPeriod}$unit in ${e.daysInPeriod} giorni · '
@@ -282,10 +310,10 @@ class _ExerciseRow extends StatelessWidget {
               '${vsUsual == null ? '' : ' · di solito ${e.usualBest.toStringAsFixed(0)}$unit '
                   '(${vsUsual >= 0 ? '+' : ''}${vsUsual.round()})'}',
               style: TextStyle(
-                  color: vsUsual == null
-                      ? Palette.ash
-                      : (vsUsual >= 0 ? Palette.moss : Palette.blood),
-                  fontSize: 13),
+                color:
+                    vsUsual == null ? Palette.ash : (vsUsual >= 0 ? Palette.moss : Palette.blood),
+                fontSize: 13,
+              ),
             ),
           ],
         ),

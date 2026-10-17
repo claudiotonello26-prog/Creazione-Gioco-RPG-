@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -51,16 +54,15 @@ class TrainTab extends StatelessWidget {
         ActionTile(
           icon: Icons.assignment_outlined,
           title: 'Quest giornaliera',
-          subtitle:
-              '${(s.questProgress * 100).round()}% completata · dà una chiave che raddoppia '
+          subtitle: '${(s.questProgress * 100).round()}% completata · dà una chiave che raddoppia '
               'il bottino di una spedizione (hai ${s.expeditionKeys} chiavi)',
           onTap: () =>
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QuestScreen())),
         ),
-        const SectionTitle('Scegli il gruppo'),
+        const SectionTitle('Spedizioni: scegli il gruppo muscolare'),
         const Text(
-          'Ogni gruppo ha il suo sentiero, quattro spedizioni con mostro e boss, e materiali '
-          'che si trovano solo lì.',
+          'Le spedizioni fanno salire di livello. Scegli il gruppo da allenare: ognuno ha quattro '
+          'spedizioni a mappa con boss e forziere, e materiali che si trovano solo lì.',
           style: TextStyle(color: Palette.ash, fontSize: 13),
         ),
         const SizedBox(height: 8),
@@ -69,19 +71,27 @@ class TrainTab extends StatelessWidget {
             group: g,
             cleared: expeditionsOf(g).where((e) => s.clearedExpeditions.contains(e.id)).length,
             trainedThisWeek: trainedThisWeek.contains(g),
-            onTap: () =>
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
           ),
-        const SectionTitle('Caccia'),
+        const SectionTitle('Caccia: allenamento libero'),
         const Text(
-          'Animali dei boschi: lasciano pelle, ossa ed essenza. Rinascono dopo ogni uccisione, '
-          'vai avanti finché ne hai e ritiri tutto alla fine.',
+          'Scegli un nemico e allenati quanto vuoi: rinasce dopo ogni uccisione e il bottino lo '
+          'ritiri alla fine. Questi cinque sono sempre alla tua portata.',
           style: TextStyle(color: Palette.ash, fontSize: 13),
         ),
         const SizedBox(height: 6),
-        for (final a in huntAnimals)
+        for (final a in baseAnimals)
           _FreeFightTile(enemy: a, playerLevel: s.character.level, icon: Icons.pets),
+        ActionTile(
+          icon: Icons.menu_book,
+          title: 'Tutti i nemici (${bestiary.length})',
+          subtitle: 'Animali, mostri e boss per livello. Nessuno è bloccato: sopra il tuo livello '
+              'si muore, ma puoi provarci.',
+          color: Palette.goldBright,
+          onTap: () =>
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BestiaryScreen())),
+        ),
         const SizedBox(height: 6),
         Text(
           'Piano per ${s.daysPerWeek} giorni: ${plan.map((d) => d.map((g) => g.label).join(' + ')).join(' · ')}',
@@ -93,13 +103,13 @@ class TrainTab extends StatelessWidget {
 }
 
 IconData groupIcon(MuscleGroup g) => switch (g) {
-  MuscleGroup.push => Icons.fitness_center,
-  MuscleGroup.stretching => Icons.self_improvement,
-  MuscleGroup.core => Icons.adjust,
-  MuscleGroup.legs => Icons.directions_walk,
-  MuscleGroup.cardio => Icons.favorite,
-  MuscleGroup.mobility => Icons.accessibility_new,
-};
+      MuscleGroup.push => Icons.fitness_center,
+      MuscleGroup.stretching => Icons.self_improvement,
+      MuscleGroup.core => Icons.adjust,
+      MuscleGroup.legs => Icons.directions_walk,
+      MuscleGroup.cardio => Icons.favorite,
+      MuscleGroup.mobility => Icons.accessibility_new,
+    };
 
 class _GroupCard extends StatelessWidget {
   const _GroupCard({
@@ -189,16 +199,16 @@ class GroupScreen extends StatelessWidget {
     final s = context.watch<GameState>();
     final list = expeditionsOf(group);
     return Scaffold(
-      appBar: AppBar(title: Text(group.label.toUpperCase())),
+      appBar: OathBar(title: Text(group.label.toUpperCase())),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Text(
             group == MuscleGroup.stretching
                 ? 'Qui non si combatte: gli spiriti si calmano se tieni la posa. Non c\'è giusto o '
-                      'sbagliato, conta restare fermi. ${groupMaterials[group]}. Ogni mappa finisce con un forziere.'
+                    'sbagliato, conta restare fermi. ${groupMaterials[group]}. Ogni mappa finisce con un forziere.'
                 : '${groupMaterials[group]}. Ogni spedizione è una mappa: quattro tappe, il boss in cima '
-                      'e un forziere. Sotto il livello consigliato, senza l\'equipaggiamento giusto, si muore.',
+                    'e un forziere. Sotto il livello consigliato, senza l\'equipaggiamento giusto, si muore.',
             style: const TextStyle(color: Palette.ash),
           ),
           const SizedBox(height: 8),
@@ -208,9 +218,8 @@ class GroupScreen extends StatelessWidget {
               expedition: e,
               cleared: s.clearedExpeditions.contains(e.id),
               underLevel: s.character.level < e.level,
-              onTap: () =>
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => ExpeditionMapScreen(expedition: e))),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => ExpeditionMapScreen(expedition: e))),
             ),
           if (group != MuscleGroup.stretching) ...[
             const SectionTitle('Combattimenti liberi'),
@@ -222,19 +231,84 @@ class GroupScreen extends StatelessWidget {
             const SizedBox(height: 6),
             for (final m in {for (final e in list) ...e.monsters})
               _FreeFightTile(enemy: m, playerLevel: s.character.level),
-            for (final e in list.where((e) => s.clearedExpeditions.contains(e.id)))
+            for (final e in list)
               _FreeFightTile(enemy: e.boss, playerLevel: s.character.level, icon: Icons.castle),
             const SectionTitle('Caccia infinita'),
             ActionTile(
               icon: Icons.all_inclusive,
               title: 'Caccia: ${list.first.monster.name}',
-              subtitle:
-                  'Ogni nemico abbattuto ne chiama uno più forte. Più resisti, più è '
+              subtitle: 'Ogni nemico abbattuto ne chiama uno più forte. Più resisti, più è '
                   'probabile un drop raro${s.bestHuntWave > 0 ? ' · record ${s.bestHuntWave}' : ''}',
               color: Palette.ember,
               onTap: () => startFreeFight(context, list.first.monster, endless: true),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Tutti i nemici dell'allenamento libero, per livello, filtrabili.
+class BestiaryScreen extends StatefulWidget {
+  const BestiaryScreen({super.key});
+
+  @override
+  State<BestiaryScreen> createState() => _BestiaryScreenState();
+}
+
+class _BestiaryScreenState extends State<BestiaryScreen> {
+  /// null = tutti; 'animals' = solo animali; altrimenti un gruppo.
+  Object? _filter;
+
+  bool _keep(EnemyDef e) => switch (_filter) {
+        null => true,
+        'animals' => e.isAnimal,
+        final MuscleGroup g => !e.isAnimal && e.group == g,
+        _ => true,
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final list = bestiary.where(_keep).toList();
+    Widget chip(String label, Object? value) => Padding(
+          padding: const EdgeInsets.only(right: 6),
+          child: ChoiceChip(
+            label: Text(label),
+            selected: _filter == value,
+            onSelected: (_) => setState(() => _filter = value),
+          ),
+        );
+    return Scaffold(
+      appBar: OathBar(title: const Text('CACCIA')),
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+            child: Row(
+              children: [
+                chip('Tutti', null),
+                chip('Animali', 'animals'),
+                for (final g in worldGroups.where((g) => g != MuscleGroup.stretching))
+                  chip(g.label, g),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              children: [
+                for (final e in list)
+                  _FreeFightTile(
+                    enemy: e,
+                    playerLevel: s.character.level,
+                    icon: e.isAnimal ? Icons.pets : (e.isBoss ? Icons.castle : null),
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -429,13 +503,16 @@ class _FightSetupState extends State<_FightSetup> {
             onSelectionChanged: (v) => setState(() => _stance = v.first),
           ),
           const SizedBox(height: 6),
-          Text(switch (_stance) {
-            Stance.aggressive =>
-              'Colpi più penetranti, ma subisci più danni. Ogni rep fa salire Attacco.',
-            Stance.balanced =>
-              'Nessun vantaggio né svantaggio. Le rep vanno metà ad Attacco, metà a Difesa.',
-            Stance.defensive => 'Subisci un quarto di danni in meno, colpi meno penetranti. Ogni rep fa salire Difesa.',
-          }, style: const TextStyle(color: Palette.ash)),
+          Text(
+              switch (_stance) {
+                Stance.aggressive =>
+                  'Colpi più penetranti, ma subisci più danni. Ogni rep fa salire Attacco.',
+                Stance.balanced =>
+                  'Nessun vantaggio né svantaggio. Le rep vanno metà ad Attacco, metà a Difesa.',
+                Stance.defensive =>
+                  'Subisci un quarto di danni in meno, colpi meno penetranti. Ogni rep fa salire Difesa.',
+              },
+              style: const TextStyle(color: Palette.ash)),
           const SizedBox(height: 16),
           FilledButton(
             onPressed: () => Navigator.of(context).pop((_move, _stance)),

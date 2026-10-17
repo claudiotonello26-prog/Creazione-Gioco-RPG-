@@ -3,6 +3,9 @@ import 'dart:math';
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/art.dart';
@@ -108,8 +111,9 @@ class _CombatScreenState extends State<CombatScreen> {
           ? _aura(state)!.color.withValues(alpha: 0.6)
           : state.character.weapon.visualTier == 0
               ? null
-              : state.character.weapon.def.affinity.color
-                  .withValues(alpha: [0.0, 0.35, 0.6, 0.7][state.character.weapon.visualTier]),
+              : state.character.weapon.def.affinity.color.withValues(
+                  alpha: [0.0, 0.35, 0.6, 0.7][state.character.weapon.visualTier],
+                ),
     );
     // La fotocamera parte subito: i 5 secondi servono a mettersi in posizione.
     _input = createRepInput(state.useCamera, widget.exercise);
@@ -130,7 +134,8 @@ class _CombatScreenState extends State<CombatScreen> {
   CombatEngine _newEngine(GameState state) => CombatEngine(
         enemy: widget.enemy,
         character: state.character,
-        testReps: max(3, (state.testRepsFor(widget.exercise) / (widget.move?.difficulty ?? 1)).round()),
+        testReps:
+            max(3, (state.testRepsFor(widget.exercise) / (widget.move?.difficulty ?? 1)).round()),
         stance: widget.stance,
         wave: _wave,
         attackLevel: state.attackLevel,
@@ -191,10 +196,13 @@ class _CombatScreenState extends State<CombatScreen> {
         rareWeapon: rewards.rareWeapon,
       );
     }
-    final (xp, granted, fatigue) = context
-        .read<GameState>()
-        .applyCombatRewards(rewards, widget.exercise, List.of(_reps),
-            victory: victory, stance: widget.stance);
+    final (xp, granted, fatigue) = context.read<GameState>().applyCombatRewards(
+          rewards,
+          widget.exercise,
+          List.of(_reps),
+          victory: victory,
+          stance: widget.stance,
+        );
     if (victory && fatigue < 1) _minFatigue = fatigue < _minFatigue ? fatigue : _minFatigue;
     _totalReps += _reps.length;
     _totalXp += xp;
@@ -310,7 +318,7 @@ class _CombatScreenState extends State<CombatScreen> {
       child: Stack(
         children: [
           Scaffold(
-            appBar: AppBar(title: Text(title)),
+            appBar: OathBar(title: Text(title)),
             body: Column(
               children: [
                 Padding(
@@ -404,10 +412,11 @@ class _CombatScreenState extends State<CombatScreen> {
                   onPressed: _phase == _Phase.ended ? null : _flee,
                   icon: const Icon(Icons.directions_run, color: Palette.ash),
                   label: Text(
-                      widget.looping && _kills > 0
-                          ? 'Ritirati col bottino'
-                          : 'Fuggi (tieni gli XP delle rep fatte)',
-                      style: const TextStyle(color: Palette.ash)),
+                    widget.looping && _kills > 0
+                        ? 'Ritirati col bottino'
+                        : 'Fuggi (tieni gli XP delle rep fatte)',
+                    style: const TextStyle(color: Palette.ash),
+                  ),
                 ),
               ],
             ),
@@ -440,13 +449,17 @@ class _CountdownOverlay extends StatelessWidget {
             duration: const Duration(milliseconds: 350),
             curve: Curves.easeOut,
             builder: (_, scale, child) => Transform.scale(scale: scale, child: child),
-            child: Text('${seconds.clamp(1, 99)}',
-                style: titleStyle(size: 72, color: Palette.holy, spacing: 0)),
+            child: Text(
+              '${seconds.clamp(1, 99)}',
+              style: titleStyle(size: 72, color: Palette.holy, spacing: 0),
+            ),
           ),
           const SizedBox(height: 8),
-          Text(subtitle,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Palette.ash, fontSize: 14)),
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Palette.ash, fontSize: 14),
+          ),
         ],
       ),
     );
@@ -556,11 +569,14 @@ class _ResultDialog extends StatelessWidget {
           };
     return AlertDialog(
       backgroundColor: Palette.stone,
-      title: Text(title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: victory || (endless && wavesCleared > 0) ? Palette.goldBright : Palette.blood,
-              letterSpacing: 3)),
+      title: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: victory || (endless && wavesCleared > 0) ? Palette.goldBright : Palette.blood,
+          letterSpacing: 3,
+        ),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -568,26 +584,29 @@ class _ResultDialog extends StatelessWidget {
           if (endless) Text('Nemici abbattuti: $wavesCleared'),
           Text('$reps rep · +$xp XP'),
           if (runes > 0) Text('+$runes rune'),
-          for (final m in materials.entries)
-            Text('+${m.value} ${materialNames[m.key] ?? m.key}'),
+          for (final m in materials.entries) Text('+${m.value} ${materialNames[m.key] ?? m.key}'),
           for (final w in rareWeapons)
-            Text('ARMA RARA: ${weaponDefs[w]!.name}',
-                style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold)),
+            Text(
+              'ARMA RARA: ${weaponDefs[w]!.name}',
+              style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold),
+            ),
           if (fatigue < 1)
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Text(
-                  'Gruppo muscolare affaticato: bottino al ${(fatigue * 100).round()}%. '
-                  'Cambia gruppo per tornare al pieno, gli XP restano interi.',
-                  style: const TextStyle(color: Palette.ember)),
+                'Gruppo muscolare affaticato: bottino al ${(fatigue * 100).round()}%. '
+                'Cambia gruppo per tornare al pieno, gli XP restano interi.',
+                style: const TextStyle(color: Palette.ember),
+              ),
             ),
           if (status == CombatStatus.defeated)
             const Padding(
               padding: EdgeInsets.only(top: 8),
               child: Text(
-                  'Tieni il ritmo: se rallenti il nemico si rimette in forze. '
-                  'Più Vigore e un\'arma potenziata ti fanno resistere di più.',
-                  style: TextStyle(color: Palette.ash)),
+                'Tieni il ritmo: se rallenti il nemico si rimette in forze. '
+                'Più Vigore e un\'arma potenziata ti fanno resistere di più.',
+                style: TextStyle(color: Palette.ash),
+              ),
             ),
         ],
       ),

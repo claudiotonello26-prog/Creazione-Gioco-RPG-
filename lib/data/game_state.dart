@@ -82,13 +82,17 @@ class DailyState {
       ..goodForm = j['good'] as bool? ?? true
       ..claimedSteps = j['steps'] as int? ?? 0;
     (j['quest'] as Map).forEach(
-        (k, v) => d.questDone[ExerciseId.values.byName(k as String)] = v as int);
+      (k, v) => d.questDone[ExerciseId.values.byName(k as String)] = v as int,
+    );
     (j['variety'] as Map).forEach(
-        (k, v) => d.varietyUsed[MuscleGroup.parse(k as String)] = v as int);
+      (k, v) => d.varietyUsed[MuscleGroup.parse(k as String)] = v as int,
+    );
     ((j['combat'] as Map?) ?? const {}).forEach(
-        (k, v) => d.combatReps[MuscleGroup.parse(k as String)] = v as int);
+      (k, v) => d.combatReps[MuscleGroup.parse(k as String)] = v as int,
+    );
     ((j['path'] as Map?) ?? const {}).forEach(
-        (k, v) => d.pathDone[MuscleGroup.parse(k as String)] = v as int);
+      (k, v) => d.pathDone[MuscleGroup.parse(k as String)] = v as int,
+    );
     ((j['map'] as Map?) ?? const {}).forEach((k, v) => d.expeditionStep[k as String] = v as int);
     return d;
   }
@@ -101,13 +105,13 @@ class ArenaRecord {
   final int won; // 1 vittoria, 0 pareggio, -1 sconfitta
   final String day;
 
-  Map<String, dynamic> toJson() =>
-      {'ex': exercise.name, 'opp': opponent, 'won': won, 'day': day};
+  Map<String, dynamic> toJson() => {'ex': exercise.name, 'opp': opponent, 'won': won, 'day': day};
   factory ArenaRecord.fromJson(Map<String, dynamic> j) => ArenaRecord(
-      ExerciseId.values.byName(j['ex'] as String),
-      j['opp'] as String,
-      j['won'] as int,
-      j['day'] as String);
+        ExerciseId.values.byName(j['ex'] as String),
+        j['opp'] as String,
+        j['won'] as int,
+        j['day'] as String,
+      );
 }
 
 class GameState extends ChangeNotifier {
@@ -237,8 +241,13 @@ class GameState extends ChangeNotifier {
   }
 
   /// Punti stagione ufficiali arrivati dal server dopo un duello live.
-  void applyLiveArena(ExerciseId id, String opponent, int outcome, int? serverPoints,
-      List<RepQuality> reps) {
+  void applyLiveArena(
+    ExerciseId id,
+    String opponent,
+    int outcome,
+    int? serverPoints,
+    List<RepQuality> reps,
+  ) {
     if (serverPoints != null) {
       arenaPoints = serverPoints;
     } else {
@@ -286,8 +295,7 @@ class GameState extends ChangeNotifier {
         'keys': expeditionKeys,
         'cleared': clearedExpeditions.toList(),
         'trained': {
-          for (final e in trainedGroups.entries)
-            e.key: [for (final g in e.value) g.name],
+          for (final e in trainedGroups.entries) e.key: [for (final g in e.value) g.name],
         },
         'arena': arenaPoints,
         'arenaHistory': [for (final r in arenaHistory) r.toJson()],
@@ -320,8 +328,9 @@ class GameState extends ChangeNotifier {
     deviceId = j['device'] as String? ?? '';
     test = {
       for (final e in (j['test'] as Map).entries)
-        ExerciseId.values.byName(e.key as String):
-            TestResult.fromJson(e.value as Map<String, dynamic>),
+        ExerciseId.values.byName(e.key as String): TestResult.fromJson(
+          e.value as Map<String, dynamic>,
+        ),
     };
     testDate = j['testDate'] == null ? null : DateTime.parse(j['testDate'] as String);
     history = {
@@ -353,14 +362,11 @@ class GameState extends ChangeNotifier {
     clearedExpeditions = {...(j['cleared'] as List? ?? const []).cast<String>()};
     trainedGroups = {
       for (final e in (j['trained'] as Map).entries)
-        e.key as String: {
-          for (final g in e.value as List) MuscleGroup.parse(g as String),
-        },
+        e.key as String: {for (final g in e.value as List) MuscleGroup.parse(g as String)},
     };
     arenaPoints = j['arena'] as int;
     arenaHistory = [
-      for (final r in j['arenaHistory'] as List)
-        ArenaRecord.fromJson(r as Map<String, dynamic>),
+      for (final r in j['arenaHistory'] as List) ArenaRecord.fromJson(r as Map<String, dynamic>),
     ];
     daily = DailyState.fromJson(j['daily'] as Map<String, dynamic>);
     bestHuntWave = j['bestHunt'] as int? ?? 0;
@@ -525,15 +531,23 @@ class GameState extends ChangeNotifier {
 
   /// Registra una serie nello storico. [difficulty] rispetto alla versione
   /// base: 2.5 = vale due rep e mezzo di quella base.
-  void logSet(String name, ExerciseId trackAs, int reps,
-      {required double difficulty, MuscleGroup? group}) {
+  void logSet(
+    String name,
+    ExerciseId trackAs,
+    int reps, {
+    required double difficulty,
+    MuscleGroup? group,
+  }) {
     if (reps <= 0) return;
     final day = history.putIfAbsent(today, () => {});
     day
         .putIfAbsent(
-            name,
-            () => ExerciseDay(
-                trackAs: trackAs, region: BodyRegion.of(trackAs, group: group)))
+          name,
+          () => ExerciseDay(
+            trackAs: trackAs,
+            region: BodyRegion.of(trackAs, group: group),
+          ),
+        )
         .add(reps, difficulty);
     if (history.length > 400) {
       final keys = history.keys.toList()..sort();
@@ -542,13 +556,11 @@ class GameState extends ChangeNotifier {
   }
 
   bool get retestDue =>
-      testDate != null &&
-      _clock().difference(testDate!).inDays >= RoutineRules.retestEveryDays;
+      testDate != null && _clock().difference(testDate!).inDays >= RoutineRules.retestEveryDays;
 
   // -------------------------------------------------------------- quest
 
-  List<QuestItem> get quest =>
-      RoutineRules.dailyQuest(test, progression: progression);
+  List<QuestItem> get quest => RoutineRules.dailyQuest(test, progression: progression);
 
   int questDoneFor(ExerciseId id) => daily.questDone[id] ?? 0;
 
@@ -582,17 +594,19 @@ class GameState extends ChangeNotifier {
   }
 
   /// Registra rep fatte (quest, sfida o allenamento libero).
-  int addTraining(ExerciseId id, List<RepQuality> reps,
-      {bool countsForQuest = true,
-      bool inCombat = false,
-      String? name,
-      double? difficulty,
-      MuscleGroup? pathGroup}) {
+  int addTraining(
+    ExerciseId id,
+    List<RepQuality> reps, {
+    bool countsForQuest = true,
+    bool inCombat = false,
+    String? name,
+    double? difficulty,
+    MuscleGroup? pathGroup,
+  }) {
     if (reps.isEmpty) return 0;
     _rollDay();
     final usual = _usualVariant(id);
-    logSet(name ?? usual.$1, id, reps.length,
-        difficulty: difficulty ?? usual.$2, group: pathGroup);
+    logSet(name ?? usual.$1, id, reps.length, difficulty: difficulty ?? usual.$2, group: pathGroup);
     final group = exercises[id]!.group;
     final xp = xpFor(id, reps, inCombat: inCombat);
     daily.varietyUsed[group] = (daily.varietyUsed[group] ?? 0) + reps.length;
@@ -658,7 +672,13 @@ class GameState extends ChangeNotifier {
     if (value > (records[id] ?? 0)) records[id] = value;
   }
 
-  void recordBest(ExerciseId id, int value, {String? name, double difficulty = 1, MuscleGroup? group}) {
+  void recordBest(
+    ExerciseId id,
+    int value, {
+    String? name,
+    double difficulty = 1,
+    MuscleGroup? group,
+  }) {
     _updateRecord(id, value);
     if (id == ExerciseId.plank) {
       logSet(name ?? 'Plank', id, value, difficulty: difficulty, group: group);
@@ -694,14 +714,18 @@ class GameState extends ChangeNotifier {
   /// Ritorna gli XP guadagnati (rep con Bonus Varietà + bonus vittoria) e le
   /// ricompense effettivamente date dopo la fatica.
   (int, CombatRewards, double) applyCombatRewards(
-      CombatRewards r, ExerciseId exercise, List<RepQuality> reps,
-      {required bool victory, Stance stance = Stance.balanced, Random? random}) {
+    CombatRewards r,
+    ExerciseId exercise,
+    List<RepQuality> reps, {
+    required bool victory,
+    Stance stance = Stance.balanced,
+    Random? random,
+  }) {
     _rollDay();
     // La postura decide dove va l'esperienza di combattimento.
     final combatXp = reps.length * 4;
     // Il bastone e il catalizzatore allenano la Magia; spade e archi l'Attacco.
-    final offense =
-        character.weapon.def.style == WeaponStyle.magic ? Skill.magic : Skill.attack;
+    final offense = character.weapon.def.style == WeaponStyle.magic ? Skill.magic : Skill.attack;
     switch (stance) {
       case Stance.aggressive:
         _gainSkill(offense, combatXp);
@@ -1088,7 +1112,7 @@ class GameState extends ChangeNotifier {
   void wearPiece(ArmorSlot slot, String? id) {
     if (id == null) {
       character.worn.remove(slot);
-    } else if (character.armors.contains(id)) {
+    } else if (character.armors.contains(id) && canWear(id)) {
       character.worn[slot] = id;
     }
     _changed();
@@ -1126,8 +1150,14 @@ class GameState extends ChangeNotifier {
     return true;
   }
 
+  /// Livello richiesto per impugnare l'arma è raggiunto?
+  bool canWield(WeaponDef d) =>
+      skillLevel(d.usesMagic ? Skill.magic : Skill.attack) >= d.wieldLevel;
+
+  bool canWear(String armorId) => defenseLevel >= armorDefs[armorId]!.wearLevel;
+
   void equip(WeaponInstance w) {
-    if (identical(w, character.weapon)) return;
+    if (identical(w, character.weapon) || !canWield(w.def)) return;
     character.weapons.remove(w);
     character.weapons.add(character.weapon);
     character.weapon = w;
@@ -1204,8 +1234,13 @@ class GameState extends ChangeNotifier {
 
   Division divisionOf(ExerciseId id) => divisionFor(id, records[id] ?? 0);
 
-  void recordArena(ExerciseId id, String opponent, int comparison, ArenaResult mine,
-      List<RepQuality> reps) {
+  void recordArena(
+    ExerciseId id,
+    String opponent,
+    int comparison,
+    ArenaResult mine,
+    List<RepQuality> reps,
+  ) {
     arenaPoints = (arenaPoints + rankDelta(comparison)).clamp(0, 99999);
     arenaHistory.insert(0, ArenaRecord(id, opponent, comparison.sign, today));
     if (arenaHistory.length > 30) arenaHistory.removeLast();

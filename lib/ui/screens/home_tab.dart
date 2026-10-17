@@ -13,7 +13,6 @@ import 'onboarding.dart';
 import 'progress_screen.dart';
 import 'quest_screen.dart';
 import 'attributes_tab.dart';
-import 'settings_screen.dart';
 
 /// La schermata del personaggio: il cavaliere e i suoi numeri, i mestieri,
 /// gli attributi, il Cammino del Novizio, la quest e l'andamento.
@@ -29,17 +28,6 @@ class HomeTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       children: [
-        Row(
-          children: [
-            Expanded(child: Text('GYM OATH', style: titleStyle(size: 16, spacing: 6))),
-            IconButton(
-              tooltip: 'Impostazioni',
-              icon: const Icon(Icons.settings_outlined, color: Palette.ash),
-              onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
-            ),
-          ],
-        ),
         Card(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
@@ -83,10 +71,12 @@ class HomeTab extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(c.name.toUpperCase(), style: titleStyle(size: 22, spacing: 4)),
-                Text('Livello ${c.level} · ${c.weapon.displayName}'
-                    '${c.offhand != null ? ' · ${c.offhand!.name}' : ''}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Palette.ash)),
+                Text(
+                  'Livello ${c.level} · ${c.weapon.displayName}'
+                  '${c.offhand != null ? ' · ${c.offhand!.name}' : ''}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Palette.ash),
+                ),
                 const SizedBox(height: 10),
                 StatBar(value: xpIn / xpNeed, color: Palette.gold, label: '$xpIn / $xpNeed XP'),
                 const SizedBox(height: 12),
@@ -94,8 +84,12 @@ class HomeTab extends StatelessWidget {
                   children: [
                     _Stat('Vita', '${c.maxHp}', Icons.favorite, Palette.blood),
                     _Stat('Attacco', '${s.attackValue}', Icons.gavel, Palette.goldBright),
-                    _Stat('Difesa', '${(s.defenseValue * 100).round()}%',
-                        Icons.shield_outlined, Palette.frost),
+                    _Stat(
+                      'Difesa',
+                      '${(s.defenseValue * 100).round()}%',
+                      Icons.shield_outlined,
+                      Palette.frost,
+                    ),
                     _Stat('Rune', '${c.runes}', Icons.diamond_outlined, Palette.gold),
                   ],
                 ),
@@ -128,11 +122,7 @@ class HomeTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  StatBar(
-                    value: s.questProgress,
-                    color: Palette.gold,
-                    height: 12,
-                  ),
+                  StatBar(value: s.questProgress, color: Palette.gold, height: 12),
                   const SizedBox(height: 10),
                   for (final q in s.quest)
                     Padding(
@@ -161,13 +151,9 @@ class HomeTab extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        s.daily.stretchingDone
-                            ? Icons.check_circle
-                            : Icons.radio_button_unchecked,
+                        s.daily.stretchingDone ? Icons.check_circle : Icons.radio_button_unchecked,
                         size: 18,
-                        color: s.daily.stretchingDone
-                            ? Palette.goldBright
-                            : Palette.ash,
+                        color: s.daily.stretchingDone ? Palette.goldBright : Palette.ash,
                       ),
                       const SizedBox(width: 8),
                       const Expanded(child: Text('Stretching guidato (5 min)')),
@@ -175,12 +161,9 @@ class HomeTab extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   FilledButton(
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const QuestScreen()),
-                    ),
-                    child: Text(
-                      s.questComplete ? 'QUEST COMPLETATA' : 'CONTINUA LA QUEST',
-                    ),
+                    onPressed: () => Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (_) => const QuestScreen())),
+                    child: Text(s.questComplete ? 'QUEST COMPLETATA' : 'CONTINUA LA QUEST'),
                   ),
                   if (s.questComplete)
                     const Padding(
@@ -196,8 +179,10 @@ class HomeTab extends StatelessWidget {
             ),
           ),
         ] else ...[
-          SectionTitle('Quest completata',
-              trailing: Text('Streak ${s.streak}', style: const TextStyle(color: Palette.ember))),
+          SectionTitle(
+            'Quest completata',
+            trailing: Text('Streak ${s.streak}', style: const TextStyle(color: Palette.ember)),
+          ),
           _QuestCalendar(today: DateTime.now(), active: s.activeDays, quests: s.questDays),
           const SizedBox(height: 6),
           const Text(
@@ -212,11 +197,8 @@ class HomeTab extends StatelessWidget {
             title: 'Torneo della Prova',
             subtitle: 'Sono passate 4 settimane: rifai il test e guarda quanto sei migliorato.',
             color: Palette.goldBright,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const FitnessTestScreen(isRetest: true),
-              ),
-            ),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const FitnessTestScreen(isRetest: true))),
           ),
         ],
         const SectionTitle('Il tuo andamento'),
@@ -255,12 +237,15 @@ class _GearButton extends StatelessWidget {
               FittedBox(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Text(label,
-                      style: const TextStyle(
-                          color: Palette.night,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
-                          letterSpacing: 0.4)),
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      color: Palette.night,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                      letterSpacing: 0.4,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -280,23 +265,31 @@ class _SkillRows extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const gap = 6.0;
-    return LayoutBuilder(builder: (context, box) {
-      final w = (box.maxWidth - gap * (Skill.crafts.length - 1)) / Skill.crafts.length;
-      Widget row(List<Skill> skills) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (final (i, k) in skills.indexed) ...[
-                if (i > 0) const SizedBox(width: gap),
-                SizedBox(width: w, height: 86, child: _SkillTile(skill: k, progress: progress(k))),
+    return LayoutBuilder(
+      builder: (context, box) {
+        final w = (box.maxWidth - gap * (Skill.crafts.length - 1)) / Skill.crafts.length;
+        Widget row(List<Skill> skills) => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (final (i, k) in skills.indexed) ...[
+                  if (i > 0) const SizedBox(width: gap),
+                  SizedBox(
+                    width: w,
+                    height: 86,
+                    child: _SkillTile(skill: k, progress: progress(k)),
+                  ),
+                ],
               ],
-            ],
-          );
-      return Column(children: [
-        row(Skill.combatSkills),
-        const SizedBox(height: gap),
-        row(Skill.crafts),
-      ]);
-    });
+            );
+        return Column(
+          children: [
+            row(Skill.combatSkills),
+            const SizedBox(height: gap),
+            row(Skill.crafts),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -335,8 +328,10 @@ class _AttributePanelState extends State<_AttributePanel> {
         SectionTitle(
           'Attributi',
           trailing: allocating
-              ? Text('$left ${left == 1 ? 'punto' : 'punti'} da spendere',
-                  style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold))
+              ? Text(
+                  '$left ${left == 1 ? 'punto' : 'punti'} da spendere',
+                  style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold),
+                )
               : TextButton(
                   onPressed: () => Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => const AttributesScreen())),
@@ -368,22 +363,24 @@ class _AttributePanelState extends State<_AttributePanel> {
         ),
         if (allocating) ...[
           const SizedBox(height: 8),
-          Row(children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: _spent > 0 ? () => setState(_pending.clear) : null,
-                child: const FittedBox(child: Text('ANNULLA')),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: _spent > 0 ? () => setState(_pending.clear) : null,
+                  child: const FittedBox(child: Text('ANNULLA')),
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              flex: 2,
-              child: FilledButton(
-                onPressed: _spent > 0 ? () => _confirm(s) : null,
-                child: const Text('CONFERMA'),
+              const SizedBox(width: 8),
+              Expanded(
+                flex: 2,
+                child: FilledButton(
+                  onPressed: _spent > 0 ? () => _confirm(s) : null,
+                  child: const Text('CONFERMA'),
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ],
       ],
     );
@@ -421,8 +418,7 @@ class _SkillTile extends StatelessWidget {
             Icon(skillIcon(skill), color: color, size: 22),
             Text('$lvl', style: titleStyle(size: 18, color: Palette.holy, spacing: 0)),
             FittedBox(
-              child: Text(skill.label,
-                  style: const TextStyle(color: Palette.ash, fontSize: 11)),
+              child: Text(skill.label, style: const TextStyle(color: Palette.ash, fontSize: 11)),
             ),
             const SizedBox(height: 3),
             StatBar(value: xpNeed == 0 ? 1 : xpIn / xpNeed, color: color, height: 4),
@@ -466,11 +462,19 @@ class _AttrTile extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('$value',
-                style: titleStyle(
-                    size: 20, color: added > 0 ? Palette.holy : Palette.goldBright, spacing: 0)),
+            Text(
+              '$value',
+              style: titleStyle(
+                size: 20,
+                color: added > 0 ? Palette.holy : Palette.goldBright,
+                spacing: 0,
+              ),
+            ),
             FittedBox(
-              child: Text(attribute.label, style: const TextStyle(color: Palette.ash, fontSize: 12)),
+              child: Text(
+                attribute.label,
+                style: const TextStyle(color: Palette.ash, fontSize: 12),
+              ),
             ),
             if (allocating) ...[
               const SizedBox(height: 4),
@@ -503,8 +507,10 @@ class _Stat extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: 18),
           Text(value, style: titleStyle(size: 17, color: Palette.holy, spacing: 0)),
-          Text(label.toUpperCase(),
-              style: const TextStyle(color: Palette.ash, fontSize: 11, letterSpacing: 1)),
+          Text(
+            label.toUpperCase(),
+            style: const TextStyle(color: Palette.ash, fontSize: 11, letterSpacing: 1),
+          ),
         ],
       ),
     );
@@ -537,7 +543,8 @@ class _QuestCalendar extends StatelessWidget {
                 for (final n in names)
                   Expanded(
                     child: Center(
-                        child: Text(n, style: const TextStyle(color: Palette.ash, fontSize: 12))),
+                      child: Text(n, style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                    ),
                   ),
               ],
             ),
@@ -587,12 +594,14 @@ class _QuestCalendar extends StatelessWidget {
             width: isToday ? 2 : 1,
           ),
         ),
-        child: Text('${d.day}',
-            style: TextStyle(
-              fontSize: 12,
-              color: quest ? Palette.night : (future ? Palette.iron : Palette.ash),
-              fontWeight: quest ? FontWeight.bold : FontWeight.normal,
-            )),
+        child: Text(
+          '${d.day}',
+          style: TextStyle(
+            fontSize: 12,
+            color: quest ? Palette.night : (future ? Palette.iron : Palette.ash),
+            fontWeight: quest ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
       ),
     );
   }

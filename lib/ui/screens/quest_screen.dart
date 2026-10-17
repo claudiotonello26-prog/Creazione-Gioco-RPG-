@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -23,14 +26,16 @@ const Map<ExerciseId, String> lowImpactAlternatives = {
 Future<void> runQuestItem(BuildContext context, QuestItem q) async {
   final s = context.read<GameState>();
   final remaining = (q.target - s.questDoneFor(q.exercise)).clamp(1, 9999);
-  final result = await Navigator.of(context).push<SetResult>(MaterialPageRoute(
-    builder: (_) => TrainingScreen(
-      exercise: q.exercise,
-      title: q.label,
-      target: remaining,
-      subtitle: 'Puoi dividere la quest in più serie durante la giornata: conta il totale.',
+  final result = await Navigator.of(context).push<SetResult>(
+    MaterialPageRoute(
+      builder: (_) => TrainingScreen(
+        exercise: q.exercise,
+        title: q.label,
+        target: remaining,
+        subtitle: 'Puoi dividere la quest in più serie durante la giornata: conta il totale.',
+      ),
     ),
-  ));
+  );
   if (result == null || !context.mounted) return;
   final xp = s.addTraining(q.exercise, result.reps);
   if (result.reps.isNotEmpty) toast(context, '+$xp XP');
@@ -43,7 +48,7 @@ class QuestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     return Scaffold(
-      appBar: AppBar(title: const Text('QUEST GIORNALIERA')),
+      appBar: OathBar(title: const Text('QUEST GIORNALIERA')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -100,8 +105,10 @@ class _QuestRow extends StatelessWidget {
     final substitute = s.substitutions[item.exercise];
     return Card(
       child: ListTile(
-        leading: Icon(complete ? Icons.check_circle : Icons.fitness_center,
-            color: complete ? Palette.goldBright : Palette.gold),
+        leading: Icon(
+          complete ? Icons.check_circle : Icons.fitness_center,
+          color: complete ? Palette.goldBright : Palette.gold,
+        ),
         title: Text(substitute ?? item.label),
         subtitle: Text(
           '${done.clamp(0, item.target)}/${item.target}${item.info.perLeg ? ' per gamba' : ''}'
@@ -164,7 +171,10 @@ class StretchingScreen extends StatefulWidget {
 
 class _StretchingScreenState extends State<StretchingScreen> {
   static const _poses = [
-    ('Allungamento dei quadricipiti', 'In piedi, tira il tallone verso il gluteo. Cambia gamba a metà.'),
+    (
+      'Allungamento dei quadricipiti',
+      'In piedi, tira il tallone verso il gluteo. Cambia gamba a metà.',
+    ),
     ('Piegamento in avanti', 'Gambe tese, scendi con il busto senza forzare.'),
     ('Affondo basso con anca aperta', 'Ginocchio dietro a terra, spingi il bacino in avanti.'),
     ('Allungamento del petto', 'Mani intrecciate dietro la schiena, apri le spalle.'),
@@ -214,7 +224,7 @@ class _StretchingScreenState extends State<StretchingScreen> {
   Widget build(BuildContext context) {
     final (name, how) = _poses[_index];
     return Scaffold(
-      appBar: AppBar(title: const Text('STRETCHING')),
+      appBar: OathBar(title: const Text('STRETCHING')),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -226,15 +236,23 @@ class _StretchingScreenState extends State<StretchingScreen> {
               label: 'Posizione ${_index + 1} di ${_poses.length}',
             ),
             const Spacer(),
-            Text(name,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 24, color: Palette.goldBright)),
+            Text(
+              name,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 24, color: Palette.goldBright),
+            ),
             const SizedBox(height: 8),
-            Text(how, textAlign: TextAlign.center, style: const TextStyle(color: Palette.ash)),
+            Text(
+              how,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Palette.ash),
+            ),
             const SizedBox(height: 24),
-            Text('$_left',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 72, color: Palette.holy)),
+            Text(
+              '$_left',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 72, color: Palette.holy),
+            ),
             const Spacer(),
             FilledButton(onPressed: _toggle, child: Text(_running ? 'PAUSA' : 'VIA')),
           ],

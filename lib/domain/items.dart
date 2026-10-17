@@ -62,6 +62,12 @@ class WeaponDef {
   /// Archi e bastoni nascono in Carpenteria, il resto all'Incudine.
   Station get station => style == WeaponStyle.melee ? Station.anvil : Station.carpentry;
 
+  /// Livello di Attacco (o di Magia per i bastoni) per impugnarla.
+  int get wieldLevel => rare ? 25 : wieldLevelFor(craftLevel);
+
+  /// I bastoni crescono con la Magia, il resto con l'Attacco.
+  bool get usesMagic => style == WeaponStyle.magic;
+
   /// Le armi a una mano lasciano libera la sinistra per scudo o seconda lama.
   bool get oneHanded => style == WeaponStyle.melee && !heavy;
 
@@ -117,8 +123,14 @@ enum Affinity {
 /// Lavorazione di un materiale in un altro (Fornace e Carpenteria), sbloccata
 /// dal livello della postazione.
 class MaterialRecipe {
-  const MaterialRecipe(this.output, this.station, this.inputs,
-      {this.level = 1, this.qty = 1, this.tool = false});
+  const MaterialRecipe(
+    this.output,
+    this.station,
+    this.inputs, {
+    this.level = 1,
+    this.qty = 1,
+    this.tool = false,
+  });
 
   /// Attrezzo: se ne costruisce uno solo.
   final bool tool;
@@ -132,11 +144,42 @@ class MaterialRecipe {
 const List<MaterialRecipe> materialRecipes = [
   MaterialRecipe('ash_plank', Station.carpentry, {'ash_wood': 20}),
   MaterialRecipe('ash_pickaxe', Station.carpentry, {'ash_plank': 1, 'ash_wood': 20}, tool: true),
-  MaterialRecipe('iron_axe', Station.anvil, {'iron_ingot': 2, 'ash_plank': 1}, level: 4, tool: true),
-  MaterialRecipe('iron_pickaxe', Station.anvil, {'iron_ingot': 3, 'oak_plank': 1}, level: 6, tool: true),
-  MaterialRecipe('steel_axe', Station.anvil, {'steel_ingot': 2, 'oak_plank': 1}, level: 10, tool: true),
-  MaterialRecipe('steel_pickaxe', Station.anvil, {'steel_ingot': 3, 'yew_plank': 1}, level: 12, tool: true),
-  MaterialRecipe('reinforced_grip', Station.carpentry, {'ash_plank': 1, 'beast_essence': 1}, level: 2),
+  MaterialRecipe(
+    'iron_axe',
+    Station.anvil,
+    {'iron_ingot': 2, 'ash_plank': 1},
+    level: 4,
+    tool: true,
+  ),
+  MaterialRecipe(
+    'iron_pickaxe',
+    Station.anvil,
+    {'iron_ingot': 3, 'oak_plank': 1},
+    level: 6,
+    tool: true,
+  ),
+  MaterialRecipe(
+    'steel_axe',
+    Station.anvil,
+    {'steel_ingot': 2, 'oak_plank': 1},
+    level: 10,
+    tool: true,
+  ),
+  MaterialRecipe(
+    'steel_pickaxe',
+    Station.anvil,
+    {'steel_ingot': 3, 'yew_plank': 1},
+    level: 12,
+    tool: true,
+  ),
+  MaterialRecipe(
+      'reinforced_grip',
+      Station.carpentry,
+      {
+        'ash_plank': 1,
+        'beast_essence': 1,
+      },
+      level: 2),
   MaterialRecipe('oak_plank', Station.carpentry, {'oak_wood': 20}, level: 5),
   MaterialRecipe('yew_plank', Station.carpentry, {'yew_wood': 20}, level: 12),
   MaterialRecipe('ebony_plank', Station.carpentry, {'ebony_wood': 20}, level: 20),
@@ -145,9 +188,26 @@ const List<MaterialRecipe> materialRecipes = [
   MaterialRecipe('steel_ingot', Station.furnace, {'iron_ingot': 2, 'coal': 20}, level: 6),
   MaterialRecipe('forge_stone_2', Station.furnace, {'forge_stone_1': 2, 'holy_shard': 1}, level: 8),
   MaterialRecipe('silver_ingot', Station.furnace, {'moon_silver': 20, 'coal': 10}, level: 10),
-  MaterialRecipe('forge_stone_3', Station.furnace, {'forge_stone_2': 2, 'beast_essence': 3}, level: 14),
+  MaterialRecipe(
+      'forge_stone_3',
+      Station.furnace,
+      {
+        'forge_stone_2': 2,
+        'beast_essence': 3,
+      },
+      level: 14),
   MaterialRecipe('star_ingot', Station.furnace, {'star_ore': 20, 'coal': 20}, level: 18),
 ];
+
+/// Requisito per usare ciò che si forgia a un certo livello di postazione:
+/// gli oggetti base subito, poi a 5, 10 e 20.
+int wieldLevelFor(int craftLevel) => craftLevel < 5
+    ? 1
+    : craftLevel < 10
+        ? 5
+        : craftLevel < 20
+            ? 10
+            : 20;
 
 /// Pezzi d'armatura: ogni armatura forgiata si indossa pezzo per pezzo, e
 /// ogni pezzo pesa per una quota della sua protezione.
@@ -188,6 +248,9 @@ class ArmorDef {
 
   /// 0 stoffa, 1 maglia, 2 piastre: decide come appare il cavaliere.
   final int look;
+
+  /// Livello di Difesa per indossarla.
+  int get wearLevel => wieldLevelFor(craftLevel);
 }
 
 const Map<String, ArmorDef> armorDefs = {
@@ -692,27 +755,60 @@ class AmuletEffect {
 }
 
 const Map<String, Amulet> amuletDefs = {
-  'fervent': Amulet('fervent', 'Amuleto del Fervente', '+10% danno sacro',
-      AmuletEffect(holyDamage: 0.10)),
-  'colossus_seal': Amulet('colossus_seal', 'Sigillo del Colosso',
-      '+8% danno con armi pesanti', AmuletEffect(heavyDamage: 0.08)),
-  'hunter_heart': Amulet('hunter_heart', 'Cuore del Cacciatore',
-      '+10% probabilità di bottino raro contro le bestie',
-      AmuletEffect(rareLoot: 0.10)),
-  'martyr_relic': Amulet('martyr_relic', 'Reliquia del Martire',
-      '+15% danno quando la vita è sotto il 30%',
-      AmuletEffect(lowHpDamage: 0.15)),
-  'ember_amulet': Amulet('ember_amulet', 'Amuleto della Brace',
-      'L\'arma prende l\'aura di fuoco rosso, +5% danno',
-      AmuletEffect(damage: 0.05, aura: Affinity.fire)),
-  'gale_amulet': Amulet('gale_amulet', 'Amuleto della Bufera',
-      'Aura di vento verde, +5% danno', AmuletEffect(damage: 0.05, aura: Affinity.wind)),
-  'holy_amulet': Amulet('holy_amulet', 'Amuleto della Luce',
-      'Aura di luce dorata, +5% danno', AmuletEffect(damage: 0.05, aura: Affinity.holy)),
-  'abyss_amulet': Amulet('abyss_amulet', 'Amuleto dell\'Abisso',
-      'Aura neon azzurra, +5% danno', AmuletEffect(damage: 0.05, aura: Affinity.arcane)),
-  'sleepless_seal': Amulet('sleepless_seal', 'Sigillo dell\'Insonne',
-      '+10% rune e materiali da ogni vittoria', AmuletEffect(lootBonus: 0.10)),
+  'fervent': Amulet(
+    'fervent',
+    'Amuleto del Fervente',
+    '+10% danno sacro',
+    AmuletEffect(holyDamage: 0.10),
+  ),
+  'colossus_seal': Amulet(
+    'colossus_seal',
+    'Sigillo del Colosso',
+    '+8% danno con armi pesanti',
+    AmuletEffect(heavyDamage: 0.08),
+  ),
+  'hunter_heart': Amulet(
+    'hunter_heart',
+    'Cuore del Cacciatore',
+    '+10% probabilità di bottino raro contro le bestie',
+    AmuletEffect(rareLoot: 0.10),
+  ),
+  'martyr_relic': Amulet(
+    'martyr_relic',
+    'Reliquia del Martire',
+    '+15% danno quando la vita è sotto il 30%',
+    AmuletEffect(lowHpDamage: 0.15),
+  ),
+  'ember_amulet': Amulet(
+    'ember_amulet',
+    'Amuleto della Brace',
+    'L\'arma prende l\'aura di fuoco rosso, +5% danno',
+    AmuletEffect(damage: 0.05, aura: Affinity.fire),
+  ),
+  'gale_amulet': Amulet(
+    'gale_amulet',
+    'Amuleto della Bufera',
+    'Aura di vento verde, +5% danno',
+    AmuletEffect(damage: 0.05, aura: Affinity.wind),
+  ),
+  'holy_amulet': Amulet(
+    'holy_amulet',
+    'Amuleto della Luce',
+    'Aura di luce dorata, +5% danno',
+    AmuletEffect(damage: 0.05, aura: Affinity.holy),
+  ),
+  'abyss_amulet': Amulet(
+    'abyss_amulet',
+    'Amuleto dell\'Abisso',
+    'Aura neon azzurra, +5% danno',
+    AmuletEffect(damage: 0.05, aura: Affinity.arcane),
+  ),
+  'sleepless_seal': Amulet(
+    'sleepless_seal',
+    'Sigillo dell\'Insonne',
+    '+10% rune e materiali da ogni vittoria',
+    AmuletEffect(lootBonus: 0.10),
+  ),
 };
 
 /// Gli amuleti d'aura si incantano con il cuore della build.

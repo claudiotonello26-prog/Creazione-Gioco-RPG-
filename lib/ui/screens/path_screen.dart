@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -114,34 +117,45 @@ class _PathScreenState extends State<PathScreen> {
 
   bool get _stretch => widget.group == MuscleGroup.stretching;
 
-  List<PathExercise> get _steps =>
-      (_weighted ? weightedPaths : bodyweightPaths)[widget.group]!;
+  List<PathExercise> get _steps => (_weighted ? weightedPaths : bodyweightPaths)[widget.group]!;
 
   int _target(GameState s, PathExercise e) =>
       (s.testRepsFor(e.trackAs) * e.ratio).round().clamp(3, 999);
 
   Future<void> _run(PathExercise e, int index) async {
     final s = context.read<GameState>();
-    final result = await Navigator.of(context).push<SetResult>(MaterialPageRoute(
-      builder: (_) => TrainingScreen(
-        exercise: e.trackAs,
-        title: e.name,
-        subtitle: 'Tappa ${index + 1} del sentiero',
-        target: e.hold ? null : _target(s, e),
-        timeLimit: e.hold ? const Duration(seconds: 60) : null,
+    final result = await Navigator.of(context).push<SetResult>(
+      MaterialPageRoute(
+        builder: (_) => TrainingScreen(
+          exercise: e.trackAs,
+          title: e.name,
+          subtitle: 'Tappa ${index + 1} del sentiero',
+          target: e.hold ? null : _target(s, e),
+          timeLimit: e.hold ? const Duration(seconds: 60) : null,
+        ),
       ),
-    ));
+    );
     if (result == null || !mounted) return;
-    final ok = e.hold
-        ? result.held.inSeconds >= 20
-        : result.reps.length >= (_target(s, e) * 0.8).floor();
+    final ok =
+        e.hold ? result.held.inSeconds >= 20 : result.reps.length >= (_target(s, e) * 0.8).floor();
     if (result.reps.isNotEmpty) {
-      s.addTraining(e.trackAs, result.reps,
-          countsForQuest: false, name: e.name, difficulty: s.usualDifficulty(e.trackAs) / e.ratio, pathGroup: widget.group);
+      s.addTraining(
+        e.trackAs,
+        result.reps,
+        countsForQuest: false,
+        name: e.name,
+        difficulty: s.usualDifficulty(e.trackAs) / e.ratio,
+        pathGroup: widget.group,
+      );
     }
     if (e.trackAs == ExerciseId.plank) {
-      s.recordBest(ExerciseId.plank, result.held.inSeconds,
-          name: e.name, difficulty: _weighted ? 1.5 : 1, group: widget.group);
+      s.recordBest(
+        ExerciseId.plank,
+        result.held.inSeconds,
+        name: e.name,
+        difficulty: _weighted ? 1.5 : 1,
+        group: widget.group,
+      );
     }
     if (ok) {
       s.completePathStep(widget.group, index);
@@ -158,23 +172,31 @@ class _PathScreenState extends State<PathScreen> {
     final steps = _steps;
     for (var i = 0; i < steps.length; i++) {
       final e = steps[i];
-      final r = await Navigator.of(context).push<SetResult>(MaterialPageRoute(
-        builder: (_) => TrainingScreen(
-          exercise: e.trackAs,
-          title: e.name,
-          subtitle: '${pathBosses[widget.group]} · esercizio ${i + 1}/${steps.length} · '
-              '$bossSeconds secondi a sfinimento',
-          timeLimit: const Duration(seconds: bossSeconds),
+      final r = await Navigator.of(context).push<SetResult>(
+        MaterialPageRoute(
+          builder: (_) => TrainingScreen(
+            exercise: e.trackAs,
+            title: e.name,
+            subtitle: '${pathBosses[widget.group]} · esercizio ${i + 1}/${steps.length} · '
+                '$bossSeconds secondi a sfinimento',
+            timeLimit: const Duration(seconds: bossSeconds),
+          ),
         ),
-      ));
+      );
       if (!mounted) return;
       if (r == null) {
         toast(context, 'Il guardiano resta in piedi. Riprova quando vuoi.');
         return;
       }
       if (r.reps.isNotEmpty) {
-        s.addTraining(e.trackAs, r.reps,
-            countsForQuest: false, name: e.name, difficulty: s.usualDifficulty(e.trackAs) / e.ratio, pathGroup: widget.group);
+        s.addTraining(
+          e.trackAs,
+          r.reps,
+          countsForQuest: false,
+          name: e.name,
+          difficulty: s.usualDifficulty(e.trackAs) / e.ratio,
+          pathGroup: widget.group,
+        );
       }
     }
     final loot = s.bossLoot(widget.group, weighted: _weighted);
@@ -183,7 +205,11 @@ class _PathScreenState extends State<PathScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Palette.stone,
-        title: Text('GUARDIANO ABBATTUTO', textAlign: TextAlign.center, style: titleStyle(size: 18)),
+        title: Text(
+          'GUARDIANO ABBATTUTO',
+          textAlign: TextAlign.center,
+          style: titleStyle(size: 18),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,16 +217,17 @@ class _PathScreenState extends State<PathScreen> {
             Text('${pathBosses[widget.group]} è caduto.'),
             const SizedBox(height: 8),
             for (final e in loot.entries)
-              Text('+${e.value} ${materialNames[e.key] ?? e.key}',
-                  style: TextStyle(
-                      color: const {'ancient_stone', 'somber_stone', 'holy_shard'}.contains(e.key)
-                          ? Palette.goldBright
-                          : Palette.holy)),
+              Text(
+                '+${e.value} ${materialNames[e.key] ?? e.key}',
+                style: TextStyle(
+                  color: const {'ancient_stone', 'somber_stone', 'holy_shard'}.contains(e.key)
+                      ? Palette.goldBright
+                      : Palette.holy,
+                ),
+              ),
           ],
         ),
-        actions: [
-          FilledButton(onPressed: () => Navigator.pop(ctx), child: const Text('CONTINUA')),
-        ],
+        actions: [FilledButton(onPressed: () => Navigator.pop(ctx), child: const Text('CONTINUA'))],
       ),
     );
   }
@@ -211,7 +238,7 @@ class _PathScreenState extends State<PathScreen> {
     final progress = s.pathProgress(widget.group);
     final steps = _steps;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.group.label.toUpperCase())),
+      appBar: OathBar(title: Text(widget.group.label.toUpperCase())),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -236,48 +263,49 @@ class _PathScreenState extends State<PathScreen> {
             style: const TextStyle(color: Palette.ash, fontSize: 13),
           ),
           const SizedBox(height: 8),
-          LayoutBuilder(builder: (context, box) {
-            final w = box.maxWidth;
-            const h = 620.0;
-            // Dal basso verso l'alto, a serpentina.
-            final xs = [0.25, 0.72, 0.28, 0.7, 0.5];
-            final ys = [0.86, 0.68, 0.5, 0.32, 0.1];
-            final points = [for (var i = 0; i < 5; i++) Offset(xs[i] * w, ys[i] * h)];
-            return SizedBox(
-              height: h,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned.fill(
-                    child: CustomPaint(painter: _TrailPainter(points, progress)),
-                  ),
-                  for (var i = 0; i < 5; i++)
-                    Positioned(
-                      left: points[i].dx - 70,
-                      top: points[i].dy - 38,
-                      width: 140,
-                      child: _Node(
-                        index: i,
-                        boss: i == 4,
-                        state: i < progress
-                            ? _NodeState.done
-                            : (i == progress ? _NodeState.open : _NodeState.locked),
-                        title: i == 4 ? pathBosses[widget.group]! : steps[i].name,
-                        subtitle: i == 4
-                            ? 'Circuito ${steps.length}×$bossSeconds s'
-                            : (steps[i].hold ? 'Tieni 20 s' : '${_target(s, steps[i])} rep'),
-                        onTap: i != progress
-                            ? null
-                            : (i == 4 ? _boss : () => _run(steps[i], i)),
+          LayoutBuilder(
+            builder: (context, box) {
+              final w = box.maxWidth;
+              const h = 620.0;
+              // Dal basso verso l'alto, a serpentina.
+              final xs = [0.25, 0.72, 0.28, 0.7, 0.5];
+              final ys = [0.86, 0.68, 0.5, 0.32, 0.1];
+              final points = [for (var i = 0; i < 5; i++) Offset(xs[i] * w, ys[i] * h)];
+              return SizedBox(
+                height: h,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned.fill(child: CustomPaint(painter: _TrailPainter(points, progress))),
+                    for (var i = 0; i < 5; i++)
+                      Positioned(
+                        left: points[i].dx - 70,
+                        top: points[i].dy - 38,
+                        width: 140,
+                        child: _Node(
+                          index: i,
+                          boss: i == 4,
+                          state: i < progress
+                              ? _NodeState.done
+                              : (i == progress ? _NodeState.open : _NodeState.locked),
+                          title: i == 4 ? pathBosses[widget.group]! : steps[i].name,
+                          subtitle: i == 4
+                              ? 'Circuito ${steps.length}×$bossSeconds s'
+                              : (steps[i].hold ? 'Tieni 20 s' : '${_target(s, steps[i])} rep'),
+                          onTap: i != progress ? null : (i == 4 ? _boss : () => _run(steps[i], i)),
+                        ),
                       ),
-                    ),
-                ],
-              ),
-            );
-          }),
+                  ],
+                ),
+              );
+            },
+          ),
           if (progress >= 5)
-            const Text('Sentiero completato oggi. Domani il guardiano torna più affamato.',
-                textAlign: TextAlign.center, style: TextStyle(color: Palette.goldBright)),
+            const Text(
+              'Sentiero completato oggi. Domani il guardiano torna più affamato.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Palette.goldBright),
+            ),
         ],
       ),
     );
@@ -323,15 +351,17 @@ class _Node extends StatelessWidget {
               shape: BoxShape.circle,
               color: state == _NodeState.done ? Palette.gold : Palette.stone,
               border: Border.all(color: color, width: open ? 3 : 2),
-              boxShadow: open
-                  ? [BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 18)]
-                  : null,
+              boxShadow:
+                  open ? [BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 18)] : null,
             ),
             child: Center(
               child: switch (state) {
                 _NodeState.done => const Icon(Icons.check, color: Palette.night, size: 30),
-                _NodeState.locked => Icon(boss ? Icons.castle : Icons.lock_outline,
-                    color: Palette.iron, size: boss ? 34 : 24),
+                _NodeState.locked => Icon(
+                    boss ? Icons.castle : Icons.lock_outline,
+                    color: Palette.iron,
+                    size: boss ? 34 : 24,
+                  ),
                 _NodeState.open => boss
                     ? const Icon(Icons.castle, color: Palette.holy, size: 36)
                     : Text('${index + 1}', style: titleStyle(size: 24, color: Palette.holy)),
@@ -339,13 +369,16 @@ class _Node extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(title,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              style: TextStyle(
-                  color: state == _NodeState.locked ? Palette.ash : Palette.holy,
-                  fontWeight: open ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 13)),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            style: TextStyle(
+              color: state == _NodeState.locked ? Palette.ash : Palette.holy,
+              fontWeight: open ? FontWeight.bold : FontWeight.normal,
+              fontSize: 13,
+            ),
+          ),
           Text(subtitle, style: const TextStyle(color: Palette.ash, fontSize: 11)),
         ],
       ),

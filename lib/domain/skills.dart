@@ -57,8 +57,15 @@ int skillXpForLevel(int level) => (40 * pow(level, 1.5)).round();
 
 /// Materia prima che si raccoglie camminando.
 class Resource {
-  const Resource(this.id, this.skill, this.level, this.stepsPerUnit, this.xp, this.where,
-      {this.tool});
+  const Resource(
+    this.id,
+    this.skill,
+    this.level,
+    this.stepsPerUnit,
+    this.xp,
+    this.where, {
+    this.tool,
+  });
   final String id;
   final Skill skill;
 
@@ -79,14 +86,22 @@ class Resource {
 }
 
 const List<Resource> resources = [
-  Resource('ash_wood', Skill.woodcutting, 1, 40, 1, 'Boschi di cenere'),
-  Resource('oak_wood', Skill.woodcutting, 5, 70, 2, 'Querceto nero', tool: 'iron_axe'),
-  Resource('yew_wood', Skill.woodcutting, 12, 110, 3, 'Cimitero dei tassi', tool: 'steel_axe'),
-  Resource('ebony_wood', Skill.woodcutting, 20, 180, 5, 'Selva del crepuscolo', tool: 'steel_axe'),
-  Resource('coal', Skill.mining, 1, 30, 1, 'Cave di carbone'),
-  Resource('iron_ore', Skill.mining, 1, 50, 1, 'Miniera del pellegrino', tool: 'ash_pickaxe'),
-  Resource('moon_silver', Skill.mining, 8, 90, 2, 'Grotte lunari', tool: 'iron_pickaxe'),
-  Resource('star_ore', Skill.mining, 16, 150, 4, 'Cratere della stella caduta', tool: 'steel_pickaxe'),
+  Resource('ash_wood', Skill.woodcutting, 1, 40, 10, 'Boschi di cenere'),
+  Resource('oak_wood', Skill.woodcutting, 5, 70, 18, 'Querceto nero', tool: 'iron_axe'),
+  Resource('yew_wood', Skill.woodcutting, 12, 110, 30, 'Cimitero dei tassi', tool: 'steel_axe'),
+  Resource('ebony_wood', Skill.woodcutting, 20, 180, 50, 'Selva del crepuscolo', tool: 'steel_axe'),
+  Resource('coal', Skill.mining, 1, 30, 8, 'Cave di carbone'),
+  Resource('iron_ore', Skill.mining, 1, 50, 12, 'Miniera del pellegrino', tool: 'ash_pickaxe'),
+  Resource('moon_silver', Skill.mining, 8, 90, 24, 'Grotte lunari', tool: 'iron_pickaxe'),
+  Resource(
+    'star_ore',
+    Skill.mining,
+    16,
+    150,
+    40,
+    'Cratere della stella caduta',
+    tool: 'steel_pickaxe',
+  ),
 ];
 
 /// Attrezzi in ordine di qualità: uno migliore vale anche per ciò che

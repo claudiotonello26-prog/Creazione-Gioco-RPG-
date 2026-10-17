@@ -73,6 +73,7 @@ flutter:
     - assets/art/animals/
     - assets/art/maps/
     - assets/art/chests/
+    - assets/art/items/
 
   fonts:
     - family: Cinzel

@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/art.dart';
@@ -116,8 +119,7 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
           builder: (_) => TrainingScreen(
             exercise: m.trackAs,
             title: m.name,
-            subtitle:
-                '${_e.boss.name} · esercizio ${i + 1}/${moves.length} · '
+            subtitle: '${_e.boss.name} · esercizio ${i + 1}/${moves.length} · '
                 '${m.hold ? 'tieni la posa' : 'a sfinimento'} 30 secondi',
             timeLimit: const Duration(seconds: 30),
           ),
@@ -180,15 +182,13 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
     final under = s.character.level < _e.level;
     final (top, bottom) = _mapTints[_e.group]!;
     return Scaffold(
-      appBar: AppBar(title: Text('${_e.roman} · ${_e.name.toUpperCase()}')),
+      appBar: OathBar(title: Text('${_e.roman} · ${_e.name.toUpperCase()}')),
       body: LayoutBuilder(
         builder: (context, box) {
           final w = box.maxWidth, h = box.maxHeight;
           // In alto restano le opzioni: le tappe stanno nello spazio sotto.
           final top0 = under ? 120.0 : 70.0;
-          final pts = [
-            for (final p in mapStops) Offset(p.dx * w, top0 + p.dy * (h - top0)),
-          ];
+          final pts = [for (final p in mapStops) Offset(p.dx * w, top0 + p.dy * (h - top0))];
           return Stack(
             children: [
               Positioned.fill(
@@ -252,9 +252,8 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
                 child: _MapOptions(
                   stretching: _stretching,
                   weighted: _weighted,
-                  onWeighted: progress >= GameState.mapChest
-                      ? null
-                      : (v) => setState(() => _weighted = v),
+                  onWeighted:
+                      progress >= GameState.mapChest ? null : (v) => setState(() => _weighted = v),
                   keys: s.expeditionKeys,
                   useKey: _useKey || _keyUsed,
                   onKey: _keyUsed || (s.expeditionKeys == 0 && !_useKey)
@@ -375,21 +374,20 @@ class _StepNode extends StatelessWidget {
                 color: step.veteran && state != _NodeState.done ? const Color(0xFF7A1010) : ring,
                 width: open ? 3 : 2,
               ),
-              boxShadow: open
-                  ? [BoxShadow(color: ring.withValues(alpha: 0.6), blurRadius: 18)]
-                  : null,
+              boxShadow:
+                  open ? [BoxShadow(color: ring.withValues(alpha: 0.6), blurRadius: 18)] : null,
             ),
             clipBehavior: Clip.antiAlias,
             child: switch (state) {
               _NodeState.done => const Icon(Icons.check, color: Palette.night, size: 30),
               _ when Art.has(art) => Opacity(
-                opacity: state == _NodeState.locked ? 0.4 : 1,
-                child: Image.asset(art, fit: BoxFit.cover),
-              ),
+                  opacity: state == _NodeState.locked ? 0.4 : 1,
+                  child: Image.asset(art, fit: BoxFit.cover),
+                ),
               _NodeState.locked => const Icon(Icons.lock_outline, color: Palette.iron),
               _NodeState.open => Center(
-                child: Text('${index + 1}', style: titleStyle(size: 24, color: Palette.holy)),
-              ),
+                  child: Text('${index + 1}', style: titleStyle(size: 24, color: Palette.holy)),
+                ),
             },
           ),
           const SizedBox(height: 3),
@@ -446,15 +444,15 @@ class _BossNode extends StatelessWidget {
             child: progress == GameState.mapDone
                 ? const Icon(Icons.check, color: Palette.night, size: 36)
                 : Art.has(art)
-                ? Opacity(
-                    opacity: open ? 1 : 0.45,
-                    child: Image.asset(art, fit: BoxFit.cover),
-                  )
-                : Icon(
-                    chest ? Icons.inventory_2 : Icons.castle,
-                    size: 38,
-                    color: open ? Palette.goldBright : Palette.iron,
-                  ),
+                    ? Opacity(
+                        opacity: open ? 1 : 0.45,
+                        child: Image.asset(art, fit: BoxFit.cover),
+                      )
+                    : Icon(
+                        chest ? Icons.inventory_2 : Icons.castle,
+                        size: 38,
+                        color: open ? Palette.goldBright : Palette.iron,
+                      ),
           ),
           const SizedBox(height: 3),
           _Label(

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -10,11 +13,11 @@ import '../widgets/knight_view.dart';
 import 'gear_screens.dart';
 
 IconData stationIcon(Station s) => switch (s) {
-      Station.carpentry => Icons.carpenter,
-      Station.furnace => Icons.local_fire_department,
-      Station.anvil => Icons.hardware,
-      Station.enchant => Icons.auto_awesome,
-    };
+  Station.carpentry => Icons.carpenter,
+  Station.furnace => Icons.local_fire_department,
+  Station.anvil => Icons.hardware,
+  Station.enchant => Icons.auto_awesome,
+};
 
 /// La Forgia: quattro postazioni come su Gymscape, poi equipaggiamento e mercato.
 class ForgeTab extends StatelessWidget {
@@ -38,8 +41,9 @@ class ForgeTab extends StatelessWidget {
               _StationButton(
                 station: st,
                 level: st == Station.enchant ? null : s.stationLevel(st),
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => StationScreen(station: st))),
+                onTap: () =>
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (_) => StationScreen(station: st))),
               ),
           ],
         ),
@@ -91,8 +95,10 @@ class _StationButton extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               FittedBox(child: Text(station.label.toUpperCase(), style: titleStyle(size: 14))),
-              Text(level == null ? 'Potenzia l\'arma' : 'Livello $level',
-                  style: const TextStyle(color: Palette.ash, fontSize: 13)),
+              Text(
+                level == null ? 'Potenzia l\'arma' : 'Livello $level',
+                style: const TextStyle(color: Palette.ash, fontSize: 13),
+              ),
             ],
           ),
         ),
@@ -110,7 +116,7 @@ class StationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     return Scaffold(
-      appBar: AppBar(title: Text(station.label.toUpperCase())),
+      appBar: OathBar(title: Text(station.label.toUpperCase())),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: station == Station.enchant ? _enchant(context, s) : _crafting(context, s),
@@ -122,10 +128,9 @@ class StationScreen extends StatelessWidget {
     final skill = Skill.forStation(station);
     final (lvl, xpIn, xpNeed) = skillProgress(s.skillXp[skill] ?? 0);
     final mats = materialRecipes.where((r) => r.station == station).toList();
-    final weapons = weaponDefs.values
-        .where((d) => d.recipe.isNotEmpty && d.station == station)
-        .toList()
-      ..sort((a, b) => a.craftLevel.compareTo(b.craftLevel));
+    final weapons =
+        weaponDefs.values.where((d) => d.recipe.isNotEmpty && d.station == station).toList()
+          ..sort((a, b) => a.craftLevel.compareTo(b.craftLevel));
     final armors = station == Station.anvil ? armorDefs.values.toList() : <ArmorDef>[];
     final offhands = offhandDefs.values.where((o) => o.station == station).toList();
     return [
@@ -133,11 +138,17 @@ class StationScreen extends StatelessWidget {
         children: [
           Icon(stationIcon(station), color: Palette.goldBright, size: 36),
           const SizedBox(width: 12),
-          Expanded(child: Text(station.description, style: const TextStyle(color: Palette.ash))),
+          Expanded(
+            child: Text(station.description, style: const TextStyle(color: Palette.ash)),
+          ),
         ],
       ),
       const SizedBox(height: 10),
-      StatBar(value: xpIn / xpNeed, color: Palette.gold, label: 'Livello $lvl · $xpIn / $xpNeed XP'),
+      StatBar(
+        value: xpIn / xpNeed,
+        color: Palette.gold,
+        label: 'Livello $lvl · $xpIn / $xpNeed XP',
+      ),
       if (mats.isNotEmpty) const SectionTitle('Lavorazioni'),
       for (final r in mats)
         _RecipeTile(
@@ -166,7 +177,9 @@ class StationScreen extends StatelessWidget {
           },
           icon: Icons.gavel,
           stationLabel: station.label,
-          note: '${d.style.label} · aura di ${d.affinity.label.toLowerCase()}',
+          note:
+              '${d.style.label} · aura di ${d.affinity.label.toLowerCase()}'
+              '${d.wieldLevel > 1 ? ' · si impugna con ${d.usesMagic ? 'Magia' : 'Attacco'} ${d.wieldLevel}' : ''}',
         ),
       if (armors.isNotEmpty) const SectionTitle('Armature'),
       for (final a in armors)
@@ -183,7 +196,9 @@ class StationScreen extends StatelessWidget {
           },
           icon: Icons.shield_outlined,
           stationLabel: station.label,
-          note: 'Assorbe il ${(a.reduction * 100).round()}% dei colpi',
+          note:
+              'Assorbe il ${(a.reduction * 100).round()}% dei colpi'
+              '${a.wearLevel > 1 ? ' · si indossa con Difesa ${a.wearLevel}' : ''}',
         ),
       if (offhands.isNotEmpty) const SectionTitle('Mano sinistra'),
       for (final o in offhands)
@@ -208,7 +223,10 @@ class StationScreen extends StatelessWidget {
   List<Widget> _enchant(BuildContext context, GameState s) {
     final c = s.character;
     final w = c.weapon;
-    final next = WeaponInstance(weaponId: w.weaponId, upgrade: (w.upgrade + 1).clamp(0, w.def.maxUpgrade));
+    final next = WeaponInstance(
+      weaponId: w.weaponId,
+      upgrade: (w.upgrade + 1).clamp(0, w.def.maxUpgrade),
+    );
     final aff = w.def.affinity;
     final stone = w.nextStone;
     return [
@@ -221,24 +239,30 @@ class StationScreen extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Column(children: [
-            WeaponPreview(weapon: w, size: 130),
-            Text(w.displayName, style: const TextStyle(color: Palette.holy)),
-          ]),
+          Column(
+            children: [
+              WeaponPreview(weapon: w, size: 130),
+              Text(w.displayName, style: const TextStyle(color: Palette.holy)),
+            ],
+          ),
           if (stone != null) const Icon(Icons.arrow_forward, color: Palette.gold),
           if (stone != null)
-            Column(children: [
-              WeaponPreview(weapon: next, size: 130),
-              Text('+${next.upgrade}', style: titleStyle(size: 16)),
-            ]),
+            Column(
+              children: [
+                WeaponPreview(weapon: next, size: 130),
+                Text('+${next.upgrade}', style: titleStyle(size: 16)),
+              ],
+            ),
         ],
       ),
       const SizedBox(height: 12),
       _UpgradePreview(level: w.upgrade, max: w.def.maxUpgrade),
       const SizedBox(height: 12),
-      Text('Potere d\'attacco ${w.attackRating(c).round()}'
-          '${stone != null ? ' → ${next.attackRating(c).round()}' : ''}',
-          textAlign: TextAlign.center),
+      Text(
+        'Potere d\'attacco ${w.attackRating(c).round()}'
+        '${stone != null ? ' → ${next.attackRating(c).round()}' : ''}',
+        textAlign: TextAlign.center,
+      ),
       const SizedBox(height: 12),
       if (stone != null)
         FilledButton(
@@ -248,12 +272,17 @@ class StationScreen extends StatelessWidget {
                   toast(context, '${w.displayName}: l\'acciaio canta.');
                 }
               : null,
-          child: Text('INCANTA A +${w.upgrade + 1} '
-              '(${w.nextStoneCost}× ${materialNames[stone]}, hai ${c.materials[stone] ?? 0})'),
+          child: Text(
+            'INCANTA A +${w.upgrade + 1} '
+            '(${w.nextStoneCost}× ${materialNames[stone]}, hai ${c.materials[stone] ?? 0})',
+          ),
         )
       else
-        const Text('Potenziamento massimo raggiunto',
-            textAlign: TextAlign.center, style: TextStyle(color: Palette.goldBright)),
+        const Text(
+          'Potenziamento massimo raggiunto',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Palette.goldBright),
+        ),
       const SectionTitle('Le quattro aure'),
       for (final a in Affinity.values)
         ActionTile(
@@ -308,9 +337,7 @@ class _RecipeTile extends StatelessWidget {
       icon: unlocked ? icon : Icons.lock_outline,
       color: unlocked ? Palette.gold : Palette.iron,
       title: '$title${have != null && have! > 0 ? '  ·  hai $have' : ''}',
-      subtitle: unlocked
-          ? [?note, needs].join('\n')
-          : 'Si sblocca a $stationLabel livello $level',
+      subtitle: unlocked ? [?note, needs].join('\n') : 'Si sblocca a $stationLabel livello $level',
       enabled: unlocked,
       trailing: done
           ? const Icon(Icons.check, color: Palette.goldBright)

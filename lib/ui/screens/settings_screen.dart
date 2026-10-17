@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -15,67 +18,71 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     return Scaffold(
-      appBar: AppBar(title: const Text('IMPOSTAZIONI')),
+      appBar: const OathBar(title: Text('IMPOSTAZIONI'), tools: false),
       body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        SwitchListTile(
-          value: s.useCamera,
-          onChanged: s.setUseCamera,
-          title: const Text('Conta le rep con la fotocamera'),
-          subtitle: const Text('Spento: inserimento manuale, rep non verificate',
-              style: TextStyle(color: Palette.ash)),
-        ),
-        SwitchListTile(
-          value: s.trainerEnabled,
-          onChanged: s.setTrainerEnabled,
-          title: const Text('Consigli di Ser Corvino'),
-          subtitle: const Text('Riaccendendolo, rivedi tutti i consigli dall\'inizio',
-              style: TextStyle(color: Palette.ash)),
-        ),
-        ListTile(
-          title: const Text('Server dell\'Arena live'),
-          subtitle: Text(
-            s.serverAddress.isEmpty ? 'Non impostato' : s.serverAddress,
-            style: const TextStyle(color: Palette.ash),
+        padding: const EdgeInsets.all(16),
+        children: [
+          SwitchListTile(
+            value: s.useCamera,
+            onChanged: s.setUseCamera,
+            title: const Text('Conta le rep con la fotocamera'),
+            subtitle: const Text(
+              'Spento: inserimento manuale, rep non verificate',
+              style: TextStyle(color: Palette.ash),
+            ),
           ),
-          trailing: const Icon(Icons.edit),
-          onTap: () => _editServer(context, s),
-        ),
-        ListTile(
-          title: const Text('Lingua / Language'),
-          trailing: SegmentedButton<Lang>(
-            segments: [
-              for (final l in Lang.values) ButtonSegment(value: l, label: Text(l.label)),
-            ],
-            selected: {s.lang},
-            onSelectionChanged: (v) => s.setLang(v.first),
+          SwitchListTile(
+            value: s.trainerEnabled,
+            onChanged: s.setTrainerEnabled,
+            title: const Text('Consigli di Ser Corvino'),
+            subtitle: const Text(
+              'Riaccendendolo, rivedi tutti i consigli dall\'inizio',
+              style: TextStyle(color: Palette.ash),
+            ),
           ),
-        ),
-        ListTile(
-          title: const Text('Modalità di gioco'),
-          trailing: SegmentedButton<PlayMode>(
-            segments: [
-              for (final m in PlayMode.values) ButtonSegment(value: m, label: Text(m.label)),
-            ],
-            selected: {s.mode},
-            onSelectionChanged: (v) => s.setMode(v.first),
+          ListTile(
+            title: const Text('Server dell\'Arena live'),
+            subtitle: Text(
+              s.serverAddress.isEmpty ? 'Non impostato' : s.serverAddress,
+              style: const TextStyle(color: Palette.ash),
+            ),
+            trailing: const Icon(Icons.edit),
+            onTap: () => _editServer(context, s),
           ),
-        ),
-        ActionTile(
-          icon: Icons.emoji_events_outlined,
-          title: 'Rifai il test',
-          subtitle: 'Ricalcola la quest sui tuoi numeri di oggi',
-          onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const FitnessTestScreen(isRetest: true))),
-        ),
-        ActionTile(
-          icon: Icons.delete_forever_outlined,
-          title: 'Ricomincia da capo',
-          color: Palette.blood,
-          onTap: () => _confirmReset(context, s),
-        ),
-      ],
+          ListTile(
+            title: const Text('Lingua / Language'),
+            trailing: SegmentedButton<Lang>(
+              segments: [
+                for (final l in Lang.values) ButtonSegment(value: l, label: Text(l.label)),
+              ],
+              selected: {s.lang},
+              onSelectionChanged: (v) => s.setLang(v.first),
+            ),
+          ),
+          ListTile(
+            title: const Text('Modalità di gioco'),
+            trailing: SegmentedButton<PlayMode>(
+              segments: [
+                for (final m in PlayMode.values) ButtonSegment(value: m, label: Text(m.label)),
+              ],
+              selected: {s.mode},
+              onSelectionChanged: (v) => s.setMode(v.first),
+            ),
+          ),
+          ActionTile(
+            icon: Icons.emoji_events_outlined,
+            title: 'Rifai il test',
+            subtitle: 'Ricalcola la quest sui tuoi numeri di oggi',
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const FitnessTestScreen(isRetest: true))),
+          ),
+          ActionTile(
+            icon: Icons.delete_forever_outlined,
+            title: 'Ricomincia da capo',
+            color: Palette.blood,
+            onTap: () => _confirmReset(context, s),
+          ),
+        ],
       ),
     );
   }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -94,15 +97,18 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
         if (!didPop) _confirmLeave();
       },
       child: Scaffold(
-        appBar: AppBar(title: Text('LIVE · ${exercises[c.exercise]!.name.toUpperCase()}')),
+        appBar: OathBar(title: Text('LIVE · ${exercises[c.exercise]!.name.toUpperCase()}')),
         body: Column(
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-              child: Text(_phaseText,
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: s.phase == LivePhase.error ? Palette.blood : Palette.goldBright)),
+              child: Text(
+                _phaseText,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: s.phase == LivePhase.error ? Palette.blood : Palette.goldBright,
+                ),
+              ),
             ),
             Expanded(
               flex: 4,
@@ -137,10 +143,13 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
               ),
             ),
             if (s.rejected > 0)
-              Text('${s.rejected} rep non valide per il server (movimento incompleto)',
-                  style: const TextStyle(color: Palette.ember, fontSize: 12)),
+              Text(
+                '${s.rejected} rep non valide per il server (movimento incompleto)',
+                style: const TextStyle(color: Palette.ember, fontSize: 12),
+              ),
             if (s.phase == LivePhase.finished && s.result != null) _ResultCard(result: s.result!),
-            if (s.phase != LivePhase.finished) Expanded(flex: 3, child: ExerciseView(input: _input)),
+            if (s.phase != LivePhase.finished)
+              Expanded(flex: 3, child: ExerciseView(input: _input)),
             SafeArea(
               top: false,
               child: Padding(
@@ -151,7 +160,8 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
                       ? OutlinedButton(onPressed: _confirmLeave, child: const Text('Abbandona'))
                       : FilledButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('TORNA ALL\'ARENA')),
+                          child: const Text('TORNA ALL\'ARENA'),
+                        ),
                 ),
               ),
             ),
@@ -212,7 +222,11 @@ class _PlayerPanel extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(6),
-            child: Text(name, overflow: TextOverflow.ellipsis, style: TextStyle(color: color)),
+            child: Text(
+              name,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: color),
+            ),
           ),
           Expanded(child: child),
           Padding(
@@ -241,17 +255,24 @@ class _ResultCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Text(title,
-                style: TextStyle(
-                    fontSize: 24,
-                    letterSpacing: 4,
-                    color: result.outcome > 0 ? Palette.goldBright : Palette.ash)),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 24,
+                letterSpacing: 4,
+                color: result.outcome > 0 ? Palette.goldBright : Palette.ash,
+              ),
+            ),
             const SizedBox(height: 6),
-            Text('Punti stagione ${result.delta >= 0 ? '+' : ''}${result.delta}'
-                '${result.points != null ? ' · totale ${result.points}' : ''}'),
+            Text(
+              'Punti stagione ${result.delta >= 0 ? '+' : ''}${result.delta}'
+              '${result.points != null ? ' · totale ${result.points}' : ''}',
+            ),
             const SizedBox(height: 4),
-            const Text('Risultato verificato dal server sulle rep valide.',
-                style: TextStyle(color: Palette.ash, fontSize: 12)),
+            const Text(
+              'Risultato verificato dal server sulle rep valide.',
+              style: TextStyle(color: Palette.ash, fontSize: 12),
+            ),
           ],
         ),
       ),
@@ -285,7 +306,10 @@ class AvatarPainter extends CustomPainter {
     final p = pose;
     if (p == null) {
       final tp = TextPainter(
-        text: const TextSpan(text: 'In attesa…', style: TextStyle(color: Palette.ash)),
+        text: const TextSpan(
+          text: 'In attesa…',
+          style: TextStyle(color: Palette.ash),
+        ),
         textDirection: TextDirection.ltr,
       )..layout();
       tp.paint(canvas, Offset((size.width - tp.width) / 2, (size.height - tp.height) / 2));
@@ -328,10 +352,13 @@ class AvatarPainter extends CustomPainter {
       final head = mid.translate(0, -shoulder * 0.55);
       final r = (shoulder * 0.3).clamp(8.0, 40.0);
       canvas.drawCircle(head, r, Paint()..color = const Color(0xFF4A423A));
-      canvas.drawLine(head.translate(-r * 0.6, 0), head.translate(r * 0.6, 0),
-          Paint()
-            ..color = Palette.ember
-            ..strokeWidth = 3);
+      canvas.drawLine(
+        head.translate(-r * 0.6, 0),
+        head.translate(r * 0.6, 0),
+        Paint()
+          ..color = Palette.ember
+          ..strokeWidth = 3,
+      );
     }
   }
 
