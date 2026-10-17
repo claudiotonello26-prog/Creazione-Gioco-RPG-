@@ -11,16 +11,8 @@ import '../widgets/common.dart';
 import '../widgets/trainer.dart';
 import 'training_screen.dart';
 
-/// Esercizio di un sentiero: [trackAs] è il modello di movimento usato dal
-/// contatore (es. tutti i push-up usano l'angolo del gomito).
-class PathExercise {
-  const PathExercise(this.name, this.trackAs, {this.ratio = 0.5});
-  final String name;
-  final ExerciseId trackAs;
-  final double ratio;
-
-  bool get hold => trackAs == ExerciseId.plank;
-}
+/// Esercizio di un sentiero: è un [Move].
+typedef PathExercise = Move;
 
 /// Sentieri a corpo libero: nessun attrezzo, si fanno ovunque.
 const Map<MuscleGroup, List<PathExercise>> bodyweightPaths = {
@@ -30,11 +22,11 @@ const Map<MuscleGroup, List<PathExercise>> bodyweightPaths = {
     PathExercise('Pike push-up', ExerciseId.pushUp, ratio: 0.4),
     PathExercise('Diamond push-up', ExerciseId.pushUp, ratio: 0.4),
   ],
-  MuscleGroup.back: [
-    PathExercise('Superman', ExerciseId.legRaise, ratio: 0.8),
-    PathExercise('Superman a Y', ExerciseId.legRaise, ratio: 0.7),
-    PathExercise('Plank con tocco spalle', ExerciseId.plank),
-    PathExercise('Reverse snow angel', ExerciseId.legRaise, ratio: 0.6),
+  MuscleGroup.stretching: [
+    PathExercise('Piegamento in avanti', ExerciseId.stretch),
+    PathExercise('Affondo statico', ExerciseId.stretch),
+    PathExercise('Farfalla', ExerciseId.stretch),
+    PathExercise('Cobra', ExerciseId.stretch),
   ],
   MuscleGroup.core: [
     PathExercise('Crunch', ExerciseId.crunch),
@@ -64,11 +56,11 @@ const Map<MuscleGroup, List<PathExercise>> weightedPaths = {
     PathExercise('Pike push-up piedi sulla sedia', ExerciseId.pushUp, ratio: 0.35),
     PathExercise('Floor press con manubri', ExerciseId.pushUp),
   ],
-  MuscleGroup.back: [
-    PathExercise('Rematore sotto il tavolo', ExerciseId.pushUp, ratio: 0.6),
-    PathExercise('Rematore con manubrio', ExerciseId.pushUp),
-    PathExercise('Rematore con zaino', ExerciseId.pushUp),
-    PathExercise('Plank con zaino', ExerciseId.plank),
+  MuscleGroup.stretching: [
+    PathExercise('Posizione del piccione', ExerciseId.stretch),
+    PathExercise('Posizione del bambino', ExerciseId.stretch),
+    PathExercise('Torsione da seduto', ExerciseId.stretch),
+    PathExercise('Piegamento in avanti a gambe larghe', ExerciseId.stretch),
   ],
   MuscleGroup.core: [
     PathExercise('Crunch con manubrio', ExerciseId.crunch, ratio: 0.45),
@@ -93,7 +85,7 @@ const Map<MuscleGroup, List<PathExercise>> weightedPaths = {
 /// Nome del guardiano in cima a ogni sentiero.
 const Map<MuscleGroup, String> pathBosses = {
   MuscleGroup.push: 'Il Muro di Ferro',
-  MuscleGroup.back: 'Il Gobbo del Campanile',
+  MuscleGroup.stretching: 'Il Monaco Contorto',
   MuscleGroup.core: 'Il Nodo di Serpi',
   MuscleGroup.legs: 'Il Colosso delle Paludi',
   MuscleGroup.cardio: 'Il Corridore Cinereo',
@@ -120,6 +112,8 @@ class _PathScreenState extends State<PathScreen> {
     maybeShowHint(context, 'path');
   }
 
+  bool get _stretch => widget.group == MuscleGroup.stretching;
+
   List<PathExercise> get _steps =>
       (_weighted ? weightedPaths : bodyweightPaths)[widget.group]!;
 
@@ -145,7 +139,7 @@ class _PathScreenState extends State<PathScreen> {
       s.addTraining(e.trackAs, result.reps,
           countsForQuest: false, name: e.name, difficulty: s.usualDifficulty(e.trackAs) / e.ratio, pathGroup: widget.group);
     }
-    if (e.hold) {
+    if (e.trackAs == ExerciseId.plank) {
       s.recordBest(ExerciseId.plank, result.held.inSeconds,
           name: e.name, difficulty: _weighted ? 1.5 : 1, group: widget.group);
     }
@@ -222,18 +216,22 @@ class _PathScreenState extends State<PathScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           SegmentedButton<bool>(
-            segments: const [
-              ButtonSegment(value: false, label: Text('Corpo libero')),
-              ButtonSegment(value: true, label: Text('Zavorrato')),
+            segments: [
+              ButtonSegment(value: false, label: Text(_stretch ? 'Base' : 'Corpo libero')),
+              ButtonSegment(value: true, label: Text(_stretch ? 'Profondo' : 'Zavorrato')),
             ],
             selected: {_weighted},
             onSelectionChanged: (v) => setState(() => _weighted = v.first),
           ),
           const SizedBox(height: 6),
           Text(
-            _weighted
-                ? 'Con sedia, zaino o manubri. Il guardiano lascia il doppio del bottino.'
-                : 'Nessun attrezzo: solo il tuo corpo.',
+            _stretch
+                ? (_weighted
+                    ? 'Pose più profonde. Il guardiano lascia il doppio del bottino.'
+                    : 'Tieni ogni posa: conta restare fermi, non quanto arrivi giù.')
+                : _weighted
+                    ? 'Con sedia, zaino o manubri. Il guardiano lascia il doppio del bottino.'
+                    : 'Nessun attrezzo: solo il tuo corpo.',
             textAlign: TextAlign.center,
             style: const TextStyle(color: Palette.ash, fontSize: 13),
           ),

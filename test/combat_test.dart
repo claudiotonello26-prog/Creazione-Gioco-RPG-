@@ -14,15 +14,15 @@ void main() {
         },
       );
 
-  test('rep richieste dal documento: 12 / 15 / 20 con test di 20', () {
+  test('rep richieste per gradino: 12 / 14 / 20 con test di 20', () {
     int reps(String id) => CombatEngine(
           enemy: enemyDefs[id]!,
           character: Character(),
           testReps: 20,
         ).expectedReps;
     expect(reps('hollow_goblin'), 12);
-    expect(reps('fallen_knight'), 15);
-    expect(reps('ash_wyrm'), 20);
+    expect(reps('carrion_hound'), 14);
+    expect(reps('forge_servant'), 20);
   });
 
   test('con rep perfette e build sufficiente il nemico cade al numero previsto', () {
@@ -77,7 +77,7 @@ void main() {
 
   test('build troppo debole: i colpi rimbalzano', () {
     final e = CombatEngine(
-      enemy: enemyDefs['ash_wyrm']!,
+      enemy: enemyDefs['forge_servant']!,
       character: Character(),
       testReps: 20,
     );
@@ -88,7 +88,7 @@ void main() {
 
   test('il nemico attacca a tempo e a vita zero si muore', () {
     final e = CombatEngine(
-      enemy: enemyDefs['ash_wyrm']!,
+      enemy: enemyDefs['forge_servant']!,
       character: Character(),
       testReps: 20,
     );
@@ -103,7 +103,7 @@ void main() {
 
   test('il Rampage sale con rep senza pause e dà fino a +20%', () {
     final e = CombatEngine(
-      enemy: enemyDefs['ash_wyrm']!,
+      enemy: enemyDefs['forge_servant']!,
       character: strongHero(),
       testReps: 100,
     );

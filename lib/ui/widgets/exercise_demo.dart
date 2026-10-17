@@ -30,7 +30,13 @@ enum DemoMove {
   highKnees,
   mountainClimber,
   burpee,
-  jumpSquat;
+  jumpSquat,
+  forwardFold,
+  lungeHold,
+  butterfly,
+  cobra,
+  childPose,
+  seatedTwist;
 
   /// Nome del file: push_up, knee_push_up...
   String get file => name.replaceAllMapped(RegExp('[A-Z]'), (m) => '_${m[0]!.toLowerCase()}');
@@ -41,6 +47,13 @@ enum DemoMove {
 DemoMove demoFor(String name, ExerciseId trackAs) {
   final n = name.toLowerCase();
   const byWord = [
+    ('piegamento', DemoMove.forwardFold),
+    ('affondo statico', DemoMove.lungeHold),
+    ('piccione', DemoMove.lungeHold),
+    ('farfalla', DemoMove.butterfly),
+    ('cobra', DemoMove.cobra),
+    ('bambino', DemoMove.childPose),
+    ('torsione', DemoMove.seatedTwist),
     ('ginocchia piegate', DemoMove.legRaise),
     ('ginocchia', DemoMove.kneePushUp),
     ('inclinat', DemoMove.inclinePushUp),
@@ -81,6 +94,7 @@ DemoMove demoFor(String name, ExerciseId trackAs) {
     ExerciseId.lunge => DemoMove.lunge,
     ExerciseId.jumpingJack => DemoMove.jumpingJack,
     ExerciseId.plank => DemoMove.plank,
+    ExerciseId.stretch => DemoMove.forwardFold,
   };
 }
 
@@ -286,6 +300,51 @@ const _squatDown = _Pose([
           _Pose(p, far: [p[2], p[3], const Offset(0.6, 0.78), const Offset(0.5, 0.86)]), null);
     case DemoMove.burpee:
       return (_stand, _plankHigh, null);
+    case DemoMove.forwardFold:
+      return (const _Pose([
+        Offset(0.58, 0.5), Offset(0.55, 0.4), Offset(0.58, 0.55), Offset(0.58, 0.7),
+        Offset(0.48, 0.55), Offset(0.49, 0.73), Offset(0.48, 0.9),
+      ]), const _Pose([
+        Offset(0.55, 0.76), Offset(0.53, 0.64), Offset(0.54, 0.77), Offset(0.53, 0.89),
+        Offset(0.47, 0.52), Offset(0.48, 0.71), Offset(0.48, 0.9),
+      ]), null);
+    case DemoMove.lungeHold:
+      const low = _Pose([
+        Offset(0.5, 0.36), Offset(0.5, 0.47), Offset(0.6, 0.6), Offset(0.66, 0.7),
+        Offset(0.49, 0.7), Offset(0.66, 0.74), Offset(0.68, 0.9),
+      ], far: [Offset(0.6, 0.6), Offset(0.66, 0.7), Offset(0.32, 0.88), Offset(0.16, 0.9)]);
+      const lower = _Pose([
+        Offset(0.51, 0.39), Offset(0.51, 0.5), Offset(0.61, 0.62), Offset(0.66, 0.72),
+        Offset(0.5, 0.74), Offset(0.67, 0.76), Offset(0.68, 0.9),
+      ], far: [Offset(0.61, 0.62), Offset(0.66, 0.72), Offset(0.32, 0.89), Offset(0.15, 0.9)]);
+      return (low, lower, null);
+    case DemoMove.butterfly:
+      return (const _Pose([
+        Offset(0.5, 0.4), Offset(0.5, 0.52), Offset(0.56, 0.66), Offset(0.53, 0.8),
+        Offset(0.5, 0.82), Offset(0.66, 0.8), Offset(0.52, 0.88),
+      ], mirror: true), const _Pose([
+        Offset(0.5, 0.45), Offset(0.5, 0.56), Offset(0.56, 0.7), Offset(0.53, 0.83),
+        Offset(0.5, 0.82), Offset(0.7, 0.86), Offset(0.52, 0.88),
+      ], mirror: true), null);
+    case DemoMove.cobra:
+      return (_lying(_o(0.74, 0.9), _o(0.79, 0.9), _o(0.3, 0.88), _o(0.15, 0.88), sh: _o(0.7, 0.86), head: _o(0.8, 0.84)),
+          _lying(_o(0.72, 0.8), _o(0.74, 0.89), _o(0.3, 0.88), _o(0.15, 0.88), hip: _o(0.47, 0.86), sh: _o(0.66, 0.7), head: _o(0.74, 0.6)), null);
+    case DemoMove.childPose:
+      return (const _Pose([
+        Offset(0.72, 0.8), Offset(0.62, 0.76), Offset(0.76, 0.82), Offset(0.86, 0.87),
+        Offset(0.4, 0.78), Offset(0.58, 0.88), Offset(0.3, 0.9),
+      ]), const _Pose([
+        Offset(0.74, 0.84), Offset(0.63, 0.79), Offset(0.78, 0.85), Offset(0.89, 0.88),
+        Offset(0.39, 0.8), Offset(0.58, 0.88), Offset(0.3, 0.9),
+      ]), null);
+    case DemoMove.seatedTwist:
+      return (const _Pose([
+        Offset(0.5, 0.42), Offset(0.5, 0.54), Offset(0.58, 0.66), Offset(0.62, 0.74),
+        Offset(0.45, 0.84), Offset(0.62, 0.72), Offset(0.62, 0.88),
+      ]), const _Pose([
+        Offset(0.48, 0.42), Offset(0.48, 0.54), Offset(0.38, 0.62), Offset(0.3, 0.78),
+        Offset(0.45, 0.84), Offset(0.62, 0.72), Offset(0.62, 0.88),
+      ]), null);
     case DemoMove.jumpSquat:
       return (_squatDown, const _Pose([
         Offset(0.5, 0.07), Offset(0.5, 0.19), Offset(0.54, 0.08), Offset(0.56, -0.02),

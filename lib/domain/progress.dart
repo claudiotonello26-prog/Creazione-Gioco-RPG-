@@ -20,13 +20,13 @@ enum BodyRegion {
   final String label;
 
   static BodyRegion? of(ExerciseId id, {MuscleGroup? group}) {
-    if (group == MuscleGroup.push || group == MuscleGroup.back) return upper;
-    if (group == MuscleGroup.cardio) return null;
+    if (group == MuscleGroup.push) return upper;
+    if (group == MuscleGroup.cardio || group == MuscleGroup.stretching) return null;
     return switch (id) {
       ExerciseId.pushUp => upper,
       ExerciseId.crunch || ExerciseId.legRaise || ExerciseId.plank => core,
       ExerciseId.squat || ExerciseId.lunge => legs,
-      ExerciseId.jumpingJack => null,
+      ExerciseId.jumpingJack || ExerciseId.stretch => null,
     };
   }
 }

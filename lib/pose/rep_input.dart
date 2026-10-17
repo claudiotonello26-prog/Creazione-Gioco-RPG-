@@ -26,7 +26,7 @@ abstract class RepInput extends ChangeNotifier {
   FormHint get hint;
   int get count;
   Duration get held;
-  bool get isHold => exercise == ExerciseId.plank;
+  bool get isHold => exercise.isHold;
   String? get error;
 
   Future<void> start();

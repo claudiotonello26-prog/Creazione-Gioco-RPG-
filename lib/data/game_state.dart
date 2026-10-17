@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../domain/character.dart';
 import '../domain/combat.dart';
+import '../domain/enemies.dart';
 import '../domain/exercise.dart';
 import '../domain/items.dart';
 import '../domain/market.dart';
@@ -77,11 +78,11 @@ class DailyState {
     (j['quest'] as Map).forEach(
         (k, v) => d.questDone[ExerciseId.values.byName(k as String)] = v as int);
     (j['variety'] as Map).forEach(
-        (k, v) => d.varietyUsed[MuscleGroup.values.byName(k as String)] = v as int);
+        (k, v) => d.varietyUsed[MuscleGroup.parse(k as String)] = v as int);
     ((j['combat'] as Map?) ?? const {}).forEach(
-        (k, v) => d.combatReps[MuscleGroup.values.byName(k as String)] = v as int);
+        (k, v) => d.combatReps[MuscleGroup.parse(k as String)] = v as int);
     ((j['path'] as Map?) ?? const {}).forEach(
-        (k, v) => d.pathDone[MuscleGroup.values.byName(k as String)] = v as int);
+        (k, v) => d.pathDone[MuscleGroup.parse(k as String)] = v as int);
     return d;
   }
 }
@@ -161,6 +162,9 @@ class GameState extends ChangeNotifier {
 
   /// Record di nemici abbattuti di fila nella Caccia infinita.
   int bestHuntWave = 0;
+
+  /// Spedizioni di cui è caduto il boss.
+  Set<String> clearedExpeditions = {};
 
   /// Giorni (yyyy-mm-dd) in cui hai aperto l'app e in cui hai chiuso la quest.
   Set<String> activeDays = {};
@@ -269,6 +273,7 @@ class GameState extends ChangeNotifier {
         'streak': streak,
         'lastDay': lastActiveDay,
         'keys': expeditionKeys,
+        'cleared': clearedExpeditions.toList(),
         'trained': {
           for (final e in trainedGroups.entries)
             e.key: [for (final g in e.value) g.name],
@@ -333,10 +338,11 @@ class GameState extends ChangeNotifier {
     streak = j['streak'] as int;
     lastActiveDay = j['lastDay'] as String?;
     expeditionKeys = j['keys'] as int;
+    clearedExpeditions = {...(j['cleared'] as List? ?? const []).cast<String>()};
     trainedGroups = {
       for (final e in (j['trained'] as Map).entries)
         e.key as String: {
-          for (final g in e.value as List) MuscleGroup.values.byName(g as String),
+          for (final g in e.value as List) MuscleGroup.parse(g as String),
         },
     };
     arenaPoints = j['arena'] as int;
@@ -381,6 +387,7 @@ class GameState extends ChangeNotifier {
     streak = 0;
     lastActiveDay = null;
     expeditionKeys = 0;
+    clearedExpeditions = {};
     trainedGroups = {};
     arenaPoints = 1000;
     arenaHistory = [];
@@ -727,10 +734,16 @@ class GameState extends ChangeNotifier {
   Map<String, int> bossLoot(MuscleGroup g, {required bool weighted, Random? random}) {
     final r = random ?? Random();
     final m = weighted ? 2 : 1;
+    // Il guardiano lascia i materiali base del suo gruppo.
+    final base = switch (g) {
+      MuscleGroup.push => {'iron_ore': 3, 'coal': 2},
+      MuscleGroup.legs => {'ash_wood': 3, 'raw_hide': 2},
+      MuscleGroup.core => {'bronze_ingot': 2, 'bone': 2},
+      MuscleGroup.cardio => {'moon_silver': 2, 'beast_essence': 2},
+      MuscleGroup.stretching || MuscleGroup.mobility => {'gem_rough': 1, 'beast_essence': 2},
+    };
     final loot = <String, int>{
-      'beast_essence': 3 * m,
-      'iron_ore': 3 * m,
-      'coal': 2 * m,
+      for (final e in base.entries) e.key: e.value * m,
       'forge_stone_1': 1 * m,
     };
     if (r.nextDouble() < (weighted ? 0.5 : 0.3)) loot['holy_shard'] = 1;
@@ -816,13 +829,41 @@ class GameState extends ChangeNotifier {
     _changed();
   }
 
+  /// Una chiave raddoppia il bottino di una spedizione.
   bool useExpeditionKey() {
     _rollDay();
-    if (expeditionKeys <= 0 || daily.expeditionDone) return false;
+    if (expeditionKeys <= 0) return false;
     expeditionKeys--;
     daily.expeditionDone = true;
     _changed();
     return true;
+  }
+
+  /// Il boss della spedizione è caduto.
+  void clearExpedition(String id) {
+    clearedExpeditions.add(id);
+    _count('expeditions');
+    _changed();
+  }
+
+  /// Vittoria nello Stretching: lo spirito si calma se tieni la posa. Paga
+  /// come un combattimento vinto, senza danni né fatica.
+  CombatRewards holdVictory(EnemyDef e, {required int seconds, double lootMultiplier = 1}) {
+    _rollDay();
+    final materials = {
+      for (final l in e.loot.entries) l.key: max(1, (l.value * lootMultiplier).round()),
+    };
+    materials.forEach(character.addMaterial);
+    final runes = (e.runeReward * lootMultiplier).round();
+    character.runes += runes;
+    final xp = seconds * 4 + (e.isBoss ? 60 : 25);
+    _gainXp(xp);
+    _gainSkill(Skill.defense, seconds);
+    trainedGroups.putIfAbsent(today, () => {}).add(MuscleGroup.stretching);
+    _count('wins');
+    _markActive();
+    _changed();
+    return CombatRewards(xp: xp, runes: runes, materials: materials);
   }
 
   // ------------------------------------------------------------------ forgia
@@ -840,8 +881,10 @@ class GameState extends ChangeNotifier {
   int get defenseLevel => skillLevel(Skill.defense);
 
   /// Potere d'attacco mostrato nella Home: arma, attributi e livello di Attacco.
-  int get attackValue =>
-      (character.weapon.attackRating(character) * (1 + CombatEngine.attackBonus(attackLevel))).round();
+  int get attackValue => (character.weapon.attackRating(character) *
+          (1 + CombatEngine.attackBonus(attackLevel)) *
+          (1 + (character.offhand?.damageBonus ?? 0) + character.armorAttributeBonus))
+      .round();
 
   /// Colpi assorbiti: armatura, scudo e livello di Difesa.
   double get defenseValue =>

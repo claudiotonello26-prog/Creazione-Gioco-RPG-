@@ -6,6 +6,7 @@ import '../../data/game_state.dart';
 import '../../domain/combat.dart';
 import '../../domain/enemies.dart';
 import '../../domain/exercise.dart';
+import '../../domain/items.dart';
 import '../../domain/routine.dart';
 import '../widgets/common.dart';
 import '../widgets/trainer.dart';
@@ -13,6 +14,26 @@ import 'combat_screen.dart';
 import 'novice_card.dart';
 import 'path_screen.dart';
 import 'quest_screen.dart';
+import 'training_screen.dart';
+
+/// I cinque gruppi in cui si allena: ognuno ha il suo sentiero, le sue
+/// quattro spedizioni e i suoi materiali.
+const List<MuscleGroup> worldGroups = [
+  MuscleGroup.push,
+  MuscleGroup.legs,
+  MuscleGroup.core,
+  MuscleGroup.cardio,
+  MuscleGroup.stretching,
+];
+
+/// Cosa si trova in ogni gruppo, in breve.
+const Map<MuscleGroup, String> groupMaterials = {
+  MuscleGroup.push: 'Ferro, acciaio e la linea della Forza',
+  MuscleGroup.legs: 'Legno, pelle e la linea della Destrezza',
+  MuscleGroup.core: 'Bronzo, oro e la linea della Fede',
+  MuscleGroup.cardio: 'Argento lunare, inchiostro e la linea dell\'Intelligenza',
+  MuscleGroup.stretching: 'Pietre di forgia e gemme',
+};
 
 class TrainTab extends StatelessWidget {
   const TrainTab({super.key, this.onNavigate});
@@ -30,156 +51,244 @@ class TrainTab extends StatelessWidget {
         ActionTile(
           icon: Icons.assignment_outlined,
           title: 'Quest giornaliera',
-          subtitle: '${(s.questProgress * 100).round()}% completata',
+          subtitle: '${(s.questProgress * 100).round()}% completata · dà una chiave che raddoppia '
+              'il bottino di una spedizione (hai ${s.expeditionKeys} chiavi)',
           onTap: () => Navigator.of(context)
               .push(MaterialPageRoute(builder: (_) => const QuestScreen())),
         ),
-        const SectionTitle('Sentieri di allenamento'),
+        const SectionTitle('Scegli il gruppo'),
         const Text(
-          'Scegli un gruppo muscolare: quattro tappe a corpo libero e un guardiano in cima.',
+          'Ogni gruppo ha il suo sentiero, quattro spedizioni con mostro e boss, e materiali '
+          'che si trovano solo lì.',
           style: TextStyle(color: Palette.ash, fontSize: 13),
         ),
         const SizedBox(height: 8),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1.35,
-          children: [
-            for (final g in bodyweightPaths.keys)
-              _PathCard(
-                group: g,
-                progress: s.pathProgress(g),
-                trainedThisWeek: trainedThisWeek.contains(g),
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => PathScreen(group: g))),
-              ),
-          ],
-        ),
+        for (final g in worldGroups)
+          _GroupCard(
+            group: g,
+            cleared: expeditionsOf(g).where((e) => s.clearedExpeditions.contains(e.id)).length,
+            trainedThisWeek: trainedThisWeek.contains(g),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
+          ),
+        const SizedBox(height: 6),
         Text(
           'Piano per ${s.daysPerWeek} giorni: ${plan.map((d) => d.map((g) => g.label).join(' + ')).join(' · ')}',
           style: const TextStyle(color: Palette.ash, fontSize: 12),
         ),
-        const SectionTitle('Spedizioni'),
-        for (final e in expeditions.values)
-          ActionTile(
-            icon: Icons.explore_outlined,
-            title: e.name,
-            subtitle: 'Gruppo ${e.group.label} · 4 nemici e un boss · serve una chiave',
-            enabled: s.expeditionKeys > 0 && !s.daily.expeditionDone,
-            onTap: () => _startExpedition(context, e),
-          ),
-        if (s.daily.expeditionDone)
-          const Text('Una spedizione al giorno: torna domani.',
-              style: TextStyle(color: Palette.ash)),
-        const SectionTitle('Caccia infinita'),
-        ActionTile(
-          icon: Icons.all_inclusive,
-          title: 'Caccia nelle Cattedrali',
-          subtitle: 'Ogni nemico abbattuto ne arriva uno più forte, finché resisti'
-              '${s.bestHuntWave > 0 ? ' · record ${s.bestHuntWave}' : ''}',
-          color: Palette.ember,
-          onTap: () => startFreeFight(context, enemyDefs['hollow_goblin']!, endless: true),
-        ),
-        const SectionTitle('Combattimenti liberi'),
-        for (final e in enemyDefs.values.where((e) => e.region == regionCathedral))
-          ActionTile(
-            icon: Icons.whatshot,
-            title: e.name,
-            subtitle: 'Gradino ${e.tier} · ${e.exercises.map((x) => exercises[x]!.name).join(' o ')}'
-                '${e.weakTo != null ? ' · debole a ${e.weakTo!.label.toLowerCase()}' : ''}',
-            onTap: () => startFreeFight(context, e),
-          ),
       ],
     );
   }
-
-  Future<void> _startExpedition(BuildContext context, Expedition e) async {
-    final s = context.read<GameState>();
-    if (!s.useExpeditionKey()) {
-      toast(context, 'Serve una Chiave della Spedizione (completa la quest).');
-      return;
-    }
-    await Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => ExpeditionScreen(expedition: e)));
-  }
 }
 
-/// Un combattimento libero: si sceglie l'esercizio del mostro e la postura.
-Future<void> startFreeFight(BuildContext context, EnemyDef enemy, {bool endless = false}) async {
-  final st = context.read<GameState>();
-  if (endless && st.trainerEnabled && st.markHint('hunt')) {
-    await showTrainer(context, trainerHints['hunt']!);
-    if (!context.mounted) return;
-  }
-  final choice = await showModalBottomSheet<(ExerciseId, Stance)>(
-    context: context,
-    backgroundColor: Palette.stone,
-    builder: (_) => _FightSetup(enemy: enemy),
-  );
-  if (choice == null || !context.mounted) return;
-  await Navigator.of(context).push(MaterialPageRoute(
-    builder: (_) => CombatScreen(
-        enemy: enemy, exercise: choice.$1, stance: choice.$2, endless: endless),
-  ));
-}
+IconData groupIcon(MuscleGroup g) => switch (g) {
+      MuscleGroup.push => Icons.fitness_center,
+      MuscleGroup.stretching => Icons.self_improvement,
+      MuscleGroup.core => Icons.adjust,
+      MuscleGroup.legs => Icons.directions_walk,
+      MuscleGroup.cardio => Icons.favorite,
+      MuscleGroup.mobility => Icons.accessibility_new,
+    };
 
-class _PathCard extends StatelessWidget {
-  const _PathCard({
+class _GroupCard extends StatelessWidget {
+  const _GroupCard({
     required this.group,
-    required this.progress,
+    required this.cleared,
     required this.trainedThisWeek,
     required this.onTap,
   });
   final MuscleGroup group;
-  final int progress;
+  final int cleared;
   final bool trainedThisWeek;
   final VoidCallback onTap;
 
-  static IconData iconFor(MuscleGroup g) => switch (g) {
-        MuscleGroup.push => Icons.fitness_center,
-        MuscleGroup.back => Icons.accessibility_new,
-        MuscleGroup.core => Icons.adjust,
-        MuscleGroup.legs => Icons.directions_walk,
-        MuscleGroup.cardio => Icons.favorite,
-        MuscleGroup.mobility => Icons.self_improvement,
-      };
-
   @override
   Widget build(BuildContext context) {
-    final done = progress >= 5;
     return Card(
-      margin: EdgeInsets.zero,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.all(12),
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Icon(iconFor(group), color: done ? Palette.goldBright : Palette.gold),
-                  const Spacer(),
-                  Text(done ? 'FATTO' : '$progress/5',
-                      style: TextStyle(color: done ? Palette.goldBright : Palette.ash, fontSize: 12)),
-                ],
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Palette.gold, width: 1.5),
+                  gradient: const RadialGradient(colors: [Color(0xFF3A2C16), Palette.night]),
+                ),
+                child: Icon(groupIcon(group), color: Palette.goldBright),
               ),
-              const Spacer(),
-              Text(group.label, style: titleStyle(size: 14)),
-              Text(trainedThisWeek ? 'Allenato questa settimana' : 'Bonus Varietà attivo',
-                  style: TextStyle(
-                      color: trainedThisWeek ? Palette.ash : Palette.ember, fontSize: 11)),
-              const SizedBox(height: 4),
-              StatBar(value: progress / 5, color: Palette.gold, height: 5),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [
+                      Expanded(child: Text(group.label.toUpperCase(), style: titleStyle(size: 15))),
+                      Text('$cleared/4', style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                    ]),
+                    Text(groupMaterials[group]!,
+                        style: const TextStyle(color: Palette.ash, fontSize: 13)),
+                    const SizedBox(height: 4),
+                    Row(children: [
+                      Expanded(child: StatBar(value: cleared / 4, color: Palette.gold, height: 5)),
+                      const SizedBox(width: 8),
+                      Text(trainedThisWeek ? 'Fatto questa settimana' : 'Bonus Varietà',
+                          style: TextStyle(
+                              color: trainedThisWeek ? Palette.ash : Palette.ember, fontSize: 11)),
+                    ]),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+/// Un gruppo: il sentiero, le quattro spedizioni e la caccia infinita.
+class GroupScreen extends StatelessWidget {
+  const GroupScreen({super.key, required this.group});
+  final MuscleGroup group;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final list = expeditionsOf(group);
+    return Scaffold(
+      appBar: AppBar(title: Text(group.label.toUpperCase())),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Text(
+            group == MuscleGroup.stretching
+                ? 'Qui non si combatte: gli spiriti si calmano se tieni la posa. Non c\'è giusto o '
+                    'sbagliato, conta restare fermi. ${groupMaterials[group]}.'
+                : '${groupMaterials[group]}. Ogni spedizione ha un mostro e un boss: sotto il livello '
+                    'consigliato, senza l\'equipaggiamento giusto, si muore.',
+            style: const TextStyle(color: Palette.ash),
+          ),
+          const SizedBox(height: 8),
+          ActionTile(
+            icon: Icons.route,
+            title: 'Sentiero di allenamento',
+            subtitle: 'Quattro tappe e un guardiano in cima · ${s.pathProgress(group)}/5',
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => PathScreen(group: group))),
+          ),
+          const SectionTitle('Spedizioni'),
+          for (final e in list)
+            _ExpeditionCard(
+              expedition: e,
+              cleared: s.clearedExpeditions.contains(e.id),
+              underLevel: s.character.level < e.level,
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => ExpeditionScreen(expedition: e))),
+            ),
+          if (group != MuscleGroup.stretching) ...[
+            const SectionTitle('Caccia infinita'),
+            ActionTile(
+              icon: Icons.all_inclusive,
+              title: 'Caccia: ${list.first.monster.name}',
+              subtitle: 'Ogni nemico abbattuto ne chiama uno più forte. Più resisti, più è '
+                  'probabile un drop raro${s.bestHuntWave > 0 ? ' · record ${s.bestHuntWave}' : ''}',
+              color: Palette.ember,
+              onTap: () => startFreeFight(context, list.first.monster, endless: true),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ExpeditionCard extends StatelessWidget {
+  const _ExpeditionCard({
+    required this.expedition,
+    required this.cleared,
+    required this.underLevel,
+    required this.onTap,
+  });
+  final Expedition expedition;
+  final bool cleared;
+  final bool underLevel;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final e = expedition;
+    return Card(
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                Expanded(child: Text(e.name, style: titleStyle(size: 16))),
+                if (cleared) const Icon(Icons.check_circle, color: Palette.goldBright, size: 20),
+                const SizedBox(width: 6),
+                Text('LV ${e.level}',
+                    style: TextStyle(
+                        color: underLevel ? Palette.blood : Palette.goldBright,
+                        fontWeight: FontWeight.bold)),
+              ]),
+              Text(e.blurb, style: const TextStyle(color: Palette.ash, fontSize: 13)),
+              const SizedBox(height: 6),
+              Text('${e.monster.name} · ${e.monster.moves.map((m) => m.name).join(' o ')}',
+                  style: const TextStyle(fontSize: 14)),
+              Text('Boss: ${e.boss.name} · ${e.boss.moves.map((m) => m.name).join(', ')}',
+                  style: const TextStyle(color: Palette.ember, fontSize: 14)),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final d in e.drops)
+                    InfoChip(Icons.hexagon_outlined, materialNames[d] ?? d,
+                        color: Palette.goldBright),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Un combattimento: si sceglie l'esercizio del mostro e la postura. Ritorna
+/// true se il nemico cade.
+Future<bool> startFreeFight(BuildContext context, EnemyDef enemy,
+    {bool endless = false, double lootMultiplier = 1}) async {
+  final st = context.read<GameState>();
+  if (endless && st.trainerEnabled && st.markHint('hunt')) {
+    await showTrainer(context, trainerHints['hunt']!);
+    if (!context.mounted) return false;
+  }
+  final choice = await showModalBottomSheet<(Move, Stance)>(
+    context: context,
+    backgroundColor: Palette.stone,
+    builder: (_) => _FightSetup(enemy: enemy),
+  );
+  if (choice == null || !context.mounted) return false;
+  final won = await Navigator.of(context).push<bool>(MaterialPageRoute(
+    builder: (_) => CombatScreen(
+      enemy: enemy,
+      exercise: choice.$1.trackAs,
+      move: choice.$1,
+      stance: choice.$2,
+      endless: endless,
+      lootMultiplier: lootMultiplier,
+    ),
+  ));
+  return won == true;
 }
 
 class _FightSetup extends StatefulWidget {
@@ -191,7 +300,7 @@ class _FightSetup extends StatefulWidget {
 }
 
 class _FightSetupState extends State<_FightSetup> {
-  late ExerciseId _exercise = widget.enemy.exercises.first;
+  late Move _move = widget.enemy.moves.first;
   Stance _stance = Stance.balanced;
 
   @override
@@ -202,18 +311,18 @@ class _FightSetupState extends State<_FightSetup> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SectionTitle(widget.enemy.exercises.length > 1
+          SectionTitle(widget.enemy.moves.length > 1
               ? '${widget.enemy.name}: scegli l\'esercizio'
               : '${widget.enemy.name} si batte con'),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
-              for (final id in widget.enemy.exercises)
+              for (final m in widget.enemy.moves)
                 ChoiceChip(
-                  label: Text(exercises[id]!.name),
-                  selected: _exercise == id,
-                  onSelected: (_) => setState(() => _exercise = id),
+                  label: Text(m.name),
+                  selected: _move == m,
+                  onSelected: (_) => setState(() => _move = m),
                 ),
             ],
           ),
@@ -238,7 +347,7 @@ class _FightSetupState extends State<_FightSetup> {
           ),
           const SizedBox(height: 16),
           FilledButton(
-            onPressed: () => Navigator.of(context).pop((_exercise, _stance)),
+            onPressed: () => Navigator.of(context).pop((_move, _stance)),
             child: const Text('COMBATTI'),
           ),
         ],
@@ -247,7 +356,8 @@ class _FightSetupState extends State<_FightSetup> {
   }
 }
 
-/// Spedizione: quattro tappe con esercizi fissi e un boss finale.
+/// Una spedizione: prima il mostro, poi il boss. Nello Stretching si tiene
+/// la posa invece di combattere.
 class ExpeditionScreen extends StatefulWidget {
   const ExpeditionScreen({super.key, required this.expedition});
   final Expedition expedition;
@@ -259,77 +369,161 @@ class ExpeditionScreen extends StatefulWidget {
 class _ExpeditionScreenState extends State<ExpeditionScreen> {
   int _stage = 0;
   bool _failed = false;
+  bool _useKey = false;
+  bool _keyUsed = false;
 
-  Future<void> _fight() async {
-    final stage = widget.expedition.stages[_stage];
-    final enemy = enemyDefs[stage.enemyId]!;
-    final exercise = stage.exercises[_stage == widget.expedition.stages.length - 1
-        ? DateTime.now().second % stage.exercises.length
-        : 0];
-    final label = widget.expedition.id == 'penitent_keep'
-        ? pushStageExerciseLabel[stage.enemyId]
-        : null;
-    final won = await Navigator.of(context).push<bool>(MaterialPageRoute(
-      builder: (_) => CombatScreen(enemy: enemy, exercise: exercise, exerciseLabel: label),
-    ));
+  List<EnemyDef> get _enemies => [widget.expedition.monster, widget.expedition.boss];
+  bool get _stretching => widget.expedition.group == MuscleGroup.stretching;
+
+  /// Secondi da tenere ogni posa: salgono con la spedizione.
+  int get _holdSeconds => switch (widget.expedition.level) {
+        < 10 => 20,
+        < 25 => 30,
+        < 45 => 40,
+        _ => 60,
+      };
+
+  double _multiplier(GameState s) {
+    if (_keyUsed) return 2;
+    if (_useKey && s.useExpeditionKey()) {
+      _keyUsed = true;
+      return 2;
+    }
+    return 1;
+  }
+
+  Future<void> _go() async {
+    final s = context.read<GameState>();
+    final enemy = _enemies[_stage];
+    final m = _multiplier(s);
+    final won = _stretching ? await _hold(s, enemy, m) : await startFreeFight(context, enemy, lootMultiplier: m);
     if (!mounted) return;
     setState(() {
-      if (won == true) {
+      if (won) {
         _stage++;
+        if (_stage == 2) s.clearExpedition(widget.expedition.id);
       } else {
         _failed = true;
       }
     });
   }
 
+  /// Tutte le pose dello spirito, una dopo l'altra, tenute per [_holdSeconds].
+  Future<bool> _hold(GameState s, EnemyDef enemy, double m) async {
+    var total = 0;
+    for (final (i, move) in enemy.moves.indexed) {
+      final r = await Navigator.of(context).push<SetResult>(MaterialPageRoute(
+        builder: (_) => TrainingScreen(
+          exercise: ExerciseId.stretch,
+          title: move.name,
+          subtitle: '${enemy.name} · posa ${i + 1}/${enemy.moves.length} · '
+              'tienila $_holdSeconds secondi',
+          timeLimit: Duration(seconds: _holdSeconds + 15),
+        ),
+      ));
+      if (!mounted || r == null || r.held.inSeconds < _holdSeconds) {
+        if (mounted) toast(context, 'Lo spirito si agita ancora. Riprova la posa.');
+        return false;
+      }
+      total += r.held.inSeconds;
+    }
+    final loot = s.holdVictory(enemy, seconds: total, lootMultiplier: m);
+    if (!mounted) return true;
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Palette.stone,
+        title: Text('${enemy.name.toUpperCase()} SI CALMA',
+            textAlign: TextAlign.center, style: titleStyle(size: 17)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('+${loot.xp} XP · +${loot.runes} rune'),
+            for (final e in loot.materials.entries)
+              Text('+${e.value} ${materialNames[e.key] ?? e.key}',
+                  style: const TextStyle(color: Palette.goldBright)),
+          ],
+        ),
+        actions: [FilledButton(onPressed: () => Navigator.pop(ctx), child: const Text('CONTINUA'))],
+      ),
+    );
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
     final e = widget.expedition;
-    final done = _stage >= e.stages.length;
+    final done = _stage >= 2;
     return Scaffold(
       appBar: AppBar(title: Text(e.name.toUpperCase())),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          for (var i = 0; i < e.stages.length; i++)
+          Text(e.blurb, style: const TextStyle(color: Palette.ash)),
+          if (s.character.level < e.level)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                'Livello consigliato ${e.level}: tu sei al ${s.character.level}. '
+                '${_stretching ? 'Le pose saranno lunghe.' : 'Senza armi e armature migliori rischi di cadere.'}',
+                style: const TextStyle(color: Palette.blood),
+              ),
+            ),
+          const SizedBox(height: 8),
+          for (var i = 0; i < 2; i++)
             Card(
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: i < _stage ? Palette.gold : Palette.iron,
                   foregroundColor: Palette.night,
-                  child: Text(i == e.stages.length - 1 ? 'B' : '${i + 1}'),
+                  child: Text(i == 1 ? 'B' : '1'),
                 ),
-                title: Text(enemyDefs[e.stages[i].enemyId]!.name),
+                title: Text(_enemies[i].name),
                 subtitle: Text(
-                  e.id == 'penitent_keep'
-                      ? pushStageExerciseLabel[e.stages[i].enemyId]!
-                      : e.stages[i].exercises.map((x) => exercises[x]!.name).join(' / '),
+                  '${_enemies[i].moves.map((m) => m.name).join(_stretching ? ', poi ' : ' o ')}'
+                  '${_stretching ? ' · $_holdSeconds s per posa' : ''}\n'
+                  'Lascia: ${_enemies[i].loot.keys.map((k) => materialNames[k] ?? k).join(', ')}',
                   style: const TextStyle(color: Palette.ash),
                 ),
+                isThreeLine: true,
                 trailing: i < _stage ? const Icon(Icons.check, color: Palette.goldBright) : null,
               ),
             ),
+          if (!done && (s.expeditionKeys > 0 || _keyUsed))
+            SwitchListTile(
+              value: _useKey || _keyUsed,
+              onChanged: _keyUsed ? null : (v) => setState(() => _useKey = v),
+              title: const Text('Usa una chiave: bottino doppio'),
+              subtitle: Text(_keyUsed ? 'Chiave usata' : 'Ne hai ${s.expeditionKeys}',
+                  style: const TextStyle(color: Palette.ash)),
+            ),
           const SizedBox(height: 16),
           if (done)
-            const Text('Spedizione completata. Il boss è caduto.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Palette.goldBright, fontSize: 18))
+            Text(
+              _stretching ? 'Spedizione completata. Il chiostro è in pace.' : 'Spedizione completata. Il boss è caduto.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Palette.goldBright, fontSize: 18),
+            )
           else if (_failed)
             Column(
               children: [
-                const Text('Sei caduto. Il bottino raccolto resta tuo.',
-                    style: TextStyle(color: Palette.ash)),
+                Text(_stretching ? 'Lo spirito non si è calmato.' : 'Sei caduto. Il bottino raccolto resta tuo.',
+                    style: const TextStyle(color: Palette.ash)),
                 const SizedBox(height: 8),
                 OutlinedButton(
                   onPressed: () => setState(() => _failed = false),
-                  child: const Text('Riprova la tappa'),
+                  child: const Text('Riprova'),
                 ),
               ],
             )
           else
             FilledButton(
-              onPressed: _fight,
-              child: Text(_stage == e.stages.length - 1 ? 'AFFRONTA IL BOSS' : 'AFFRONTA LA TAPPA ${_stage + 1}'),
+              onPressed: _go,
+              child: Text(_stage == 1
+                  ? (_stretching ? 'CALMA IL BOSS' : 'AFFRONTA IL BOSS')
+                  : (_stretching ? 'CALMA LO SPIRITO' : 'AFFRONTA ${_enemies[0].name.toUpperCase()}')),
             ),
         ],
       ),

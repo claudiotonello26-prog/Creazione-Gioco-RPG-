@@ -82,6 +82,17 @@ class Character {
     return r + (offhand?.reduction ?? 0);
   }
 
+  /// Danno in più dai pezzi d'armatura dei materiali di build: +5% ogni 10
+  /// punti dell'attributo legato, in proporzione al pezzo.
+  double get armorAttributeBonus {
+    var b = 0.0;
+    for (final slot in ArmorSlot.values) {
+      final a = piece(slot)?.attribute;
+      if (a != null) b += slot.weight * attr(a) / 10 * 0.05;
+    }
+    return b;
+  }
+
   static const int maxAmuletSlots = 3;
 
   /// XP necessari per passare dal livello [level] al successivo.

@@ -174,7 +174,7 @@ class CombatEngine {
     var power = weapon.attackRating(character, amuletBonus: bonus) *
         stance.penetrationMult *
         (1 + attackBonus(attackLevel));
-    power *= 1 + (character.offhand?.damageBonus ?? 0);
+    power *= 1 + (character.offhand?.damageBonus ?? 0) + character.armorAttributeBonus;
     if (enemy.weakTo == weapon.def.style) power *= 1.25;
     if (enemy.strongAgainst == weapon.def.style) power *= 0.75;
     return power;

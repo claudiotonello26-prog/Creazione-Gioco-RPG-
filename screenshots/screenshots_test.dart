@@ -19,6 +19,8 @@ import 'package:iron_oath/ui/widgets/exercise_demo.dart';
 import 'package:iron_oath/ui/screens/forge_tab.dart';
 import 'package:iron_oath/domain/items.dart';
 import 'package:iron_oath/ui/screens/gear_screens.dart';
+import 'package:iron_oath/ui/screens/train_tab.dart';
+import 'package:iron_oath/domain/enemies.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFont(String family, List<String> paths) async {
@@ -175,6 +177,26 @@ void main() {
     await t.pumpAndSettle();
     nav.push(MaterialPageRoute<void>(builder: (_) => const MarketScreen()));
     await _shot(t, '52_mercato');
+  });
+
+  testWidgets('gruppi e spedizioni', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    st.clearedExpeditions.add('buried_forges');
+    st.expeditionKeys = 2;
+    await t.pumpWidget(IronOathApp(state: st));
+    await t.pumpAndSettle();
+    final nav = Navigator.of(t.element(find.byType(NavigationBar)));
+    nav.push(MaterialPageRoute<void>(builder: (_) => const GroupScreen(group: MuscleGroup.push)));
+    await _shot(t, '60_gruppo_spinta');
+    nav.push(MaterialPageRoute<void>(builder: (_) => ExpeditionScreen(expedition: expeditionById('giants_furnace'))));
+    await _shot(t, '61_spedizione');
+    nav.pop();
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(MaterialPageRoute<void>(builder: (_) => const GroupScreen(group: MuscleGroup.stretching)));
+    await _shot(t, '62_gruppo_stretching');
   });
 
   testWidgets('andamento della forza', (t) async {

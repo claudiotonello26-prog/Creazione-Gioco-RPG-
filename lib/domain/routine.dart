@@ -82,30 +82,30 @@ List<List<MuscleGroup>> weeklyPlan(int daysPerWeek) {
   switch (daysPerWeek) {
     case <= 2:
       return [
-        [MuscleGroup.push, MuscleGroup.back],
+        [MuscleGroup.push, MuscleGroup.stretching],
         [MuscleGroup.legs, MuscleGroup.core],
       ];
     case 3:
       return [
         [MuscleGroup.push],
         [MuscleGroup.legs],
-        [MuscleGroup.core, MuscleGroup.back],
+        [MuscleGroup.core, MuscleGroup.stretching],
       ];
     case 4:
       return [
         [MuscleGroup.push],
         [MuscleGroup.legs],
-        [MuscleGroup.back, MuscleGroup.core],
+        [MuscleGroup.stretching, MuscleGroup.core],
         [MuscleGroup.cardio],
       ];
     default:
       return [
         [MuscleGroup.push],
         [MuscleGroup.legs],
-        [MuscleGroup.back, MuscleGroup.core],
+        [MuscleGroup.stretching, MuscleGroup.core],
         [MuscleGroup.cardio],
         [MuscleGroup.mobility],
-        if (daysPerWeek >= 6) [MuscleGroup.push, MuscleGroup.back],
+        if (daysPerWeek >= 6) [MuscleGroup.push, MuscleGroup.stretching],
       ];
   }
 }

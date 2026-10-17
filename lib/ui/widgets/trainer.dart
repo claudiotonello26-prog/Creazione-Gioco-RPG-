@@ -25,9 +25,11 @@ const Map<String, List<TrainerLine>> trainerHints = {
   ],
   'training': [
     TrainerLine(TrainerPose.pointing,
-        'Qui si suda. Ogni gruppo muscolare ha il suo sentiero: quattro tappe a corpo libero e un guardiano in cima.'),
+        'Qui si suda. Scegli il gruppo: ognuno ha quattro spedizioni, con un mostro e un boss, e materiali che trovi solo lì.'),
     TrainerLine(TrainerPose.thinking,
-        'Hai una sedia, uno zaino o dei manubri? Allora prova lo Zavorrato: fatica doppia, bottino doppio.'),
+        'Vuoi la Forza? Spinta. Destrezza? Gambe. Fede? Core. Intelligenza? Cardio. E lo Stretching ti dà le pietre per incantare.'),
+    TrainerLine(TrainerPose.crossed,
+        'Guarda il livello consigliato. Sotto, senza armi e armature migliori, torni a casa in una cassa.'),
   ],
   'path': [
     TrainerLine(TrainerPose.crossed,

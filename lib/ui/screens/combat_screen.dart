@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,15 @@ class CombatScreen extends StatefulWidget {
     this.stance = Stance.balanced,
     this.exerciseLabel,
     this.endless = false,
+    this.move,
+    this.lootMultiplier = 1,
   });
+
+  /// L'esercizio come lo vede il giocatore: nome e difficoltà.
+  final Move? move;
+
+  /// Bottino doppio con la chiave della spedizione.
+  final double lootMultiplier;
 
   final EnemyDef enemy;
   final ExerciseId exercise;
@@ -102,7 +111,7 @@ class _CombatScreenState extends State<CombatScreen> {
   CombatEngine _newEngine(GameState state) => CombatEngine(
         enemy: widget.enemy,
         character: state.character,
-        testReps: state.testRepsFor(widget.exercise),
+        testReps: max(3, (state.testRepsFor(widget.exercise) / (widget.move?.difficulty ?? 1)).round()),
         stance: widget.stance,
         wave: _wave,
         attackLevel: state.attackLevel,
@@ -154,6 +163,15 @@ class _CombatScreenState extends State<CombatScreen> {
 
   /// Applica le ricompense di questo nemico e le somma al totale della caccia.
   int _collect(CombatRewards rewards, {required bool victory}) {
+    final m = widget.lootMultiplier;
+    if (victory && m != 1) {
+      rewards = CombatRewards(
+        xp: rewards.xp,
+        runes: (rewards.runes * m).round(),
+        materials: {for (final e in rewards.materials.entries) e.key: (e.value * m).round()},
+        rareWeapon: rewards.rareWeapon,
+      );
+    }
     final (xp, granted, fatigue) = context
         .read<GameState>()
         .applyCombatRewards(rewards, widget.exercise, List.of(_reps),
@@ -256,7 +274,7 @@ class _CombatScreenState extends State<CombatScreen> {
   @override
   Widget build(BuildContext context) {
     final e = _engine;
-    final label = widget.exerciseLabel ?? exercises[widget.exercise]!.name;
+    final label = widget.move?.name ?? widget.exerciseLabel ?? exercises[widget.exercise]!.name;
     final title = widget.endless
         ? 'CACCIA · ONDATA ${_wave + 1}'
         : widget.enemy.name.toUpperCase();
@@ -278,7 +296,7 @@ class _CombatScreenState extends State<CombatScreen> {
                       StatBar(
                         value: e.enemyHp / e.enemyMaxHp,
                         color: Palette.blood,
-                        label: '${widget.enemy.name} · gradino ${widget.enemy.tier}'
+                        label: '${widget.enemy.name} · livello ${widget.enemy.level}'
                             '${widget.enemy.isBoss ? ' · BOSS' : ''}'
                             '${_wave > 0 ? ' · +${(_wave * CombatEngine.waveHpStep * 100).round()}% vita' : ''}',
                         height: 12,

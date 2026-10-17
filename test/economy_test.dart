@@ -21,8 +21,8 @@ double runesPerRep(String enemyId, {int test = 20, int wave = 0, RepQuality q = 
 
 void main() {
   test('nemici più duri pagano di più per ogni rep', () {
-    expect(runesPerRep('ash_wyrm'), greaterThan(runesPerRep('fallen_knight')));
-    expect(runesPerRep('fallen_knight'), greaterThan(runesPerRep('hollow_goblin')));
+    expect(runesPerRep('forge_servant'), greaterThan(runesPerRep('carrion_hound')));
+    expect(runesPerRep('carrion_hound'), greaterThan(runesPerRep('hollow_goblin')));
   });
 
   test('nella caccia ogni ondata paga di più per rep', () {
@@ -49,7 +49,7 @@ void main() {
   });
 
   test('tabella di bilanciamento', () {
-    for (final id in ['hollow_goblin', 'carrion_hound', 'fallen_knight', 'ash_wyrm', 'lord_of_the_keep']) {
+    for (final id in ['hollow_goblin', 'carrion_hound', 'ember_giant', 'forge_servant', 'fallen_smith_god']) {
       final e = CombatEngine(enemy: enemyDefs[id]!, character: Character(), testReps: 20);
       // ignore: avoid_print
       print('$id hp=${e.enemyMaxHp.toStringAsFixed(1)} hit=${e.hitDamage.toStringAsFixed(1)}/${enemyDefs[id]!.attackInterval}s '
