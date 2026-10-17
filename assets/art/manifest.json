@@ -516,7 +516,9 @@
     "references": [
       "knight_s1_idle.png"
     ],
-    "status": "done"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "hollow_goblin_attack",
@@ -541,7 +543,8 @@
       "knight_s1_idle.png"
     ],
     "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "version": 2
   },
   {
     "id": "carrion_hound_attack",
@@ -566,7 +569,8 @@
       "knight_s1_idle.png"
     ],
     "status": "done",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "version": 2
   },
   {
     "id": "fallen_knight_attack",
@@ -591,7 +595,8 @@
       "knight_s1_idle.png"
     ],
     "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "version": 2
   },
   {
     "id": "ash_wyrm_attack",
@@ -616,7 +621,8 @@
       "knight_s1_idle.png"
     ],
     "status": "done",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "version": 2
   },
   {
     "id": "keep_sentinel_attack",
@@ -641,7 +647,8 @@
       "knight_s1_idle.png"
     ],
     "status": "done",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "version": 2
   },
   {
     "id": "wall_archer_attack",
@@ -666,7 +673,8 @@
       "knight_s1_idle.png"
     ],
     "status": "done",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "version": 2
   },
   {
     "id": "keep_brute_attack",
@@ -691,7 +699,8 @@
       "knight_s1_idle.png"
     ],
     "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "version": 2
   },
   {
     "id": "lord_of_the_keep_attack",
@@ -715,8 +724,9 @@
     "references": [
       "knight_s1_idle.png"
     ],
-    "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "status": "done",
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "version": 2
   },
   {
     "id": "marsh_matron_attack",
@@ -1860,405 +1870,521 @@
     "file": "assets/art/enemies/slag_goblin_idle.png",
     "type": "cutout",
     "prompt": "Enemy: small hunched goblin crusted with black slag and soot, cracked grey skin with thin glowing ember seams, a burned-through leather apron, holding a dented pair of iron forge tongs like a weapon, mean toothy grin, menacing idle stance, facing left.",
-    "status": "done"
+    "status": "done",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "hollow_apprentice_idle",
     "file": "assets/art/enemies/hollow_apprentice_idle.png",
     "type": "cutout",
     "prompt": "Enemy: thin hollow undead blacksmith apprentice, sunken pale glowing eyes, scorched leather apron and soot-stained rags, dragging a heavy rusted forge hammer, iron rings hanging from his belt, menacing idle stance, facing left.",
-    "status": "done"
+    "status": "done",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "hollow_smith_idle",
     "file": "assets/art/bosses/hollow_smith_idle.png",
     "type": "cutout",
     "prompt": "Boss: hulking hollow undead blacksmith with skin like cooled grey slag, one forearm fused with a fragment of red-hot anvil, a giant two-handed forge hammer, smouldering leather apron, a faint furnace glow from cracks in his chest, epic low angle, imposing idle stance, facing left.",
-    "status": "done"
+    "status": "done",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "iron_castellan_idle",
     "file": "assets/art/bosses/iron_castellan_idle.png",
     "type": "cutout",
     "prompt": "Boss: massive castellan in thick layered iron plate scarred by a hundred sieges, a tower shield bolted to his left arm, a giant flanged mace, a ring of huge iron keys at his belt, a visor shaped like a fortress portcullis, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "done",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "ember_giant_idle",
     "file": "assets/art/enemies/ember_giant_idle.png",
     "type": "cutout",
     "prompt": "Enemy: hulking giant (whole body visible) with skin of cracked black rock and molten orange seams, a broken iron collar with chains, carrying a slab of furnace brick as a club, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "done",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "chained_stoker_idle",
     "file": "assets/art/enemies/chained_stoker_idle.png",
     "type": "cutout",
     "prompt": "Enemy: gaunt undead stoker chained to a small iron coal cart, holding a shovel heaped with glowing coals, face wrapped in burned cloth, ember eyes, scorched bare arms, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "done",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "living_bellows_idle",
     "file": "assets/art/bosses/living_bellows_idle.png",
     "type": "cutout",
     "prompt": "Boss: colossal living forge-bellows creature: a body of stitched black leather and iron bands that heaves like lungs, wooden ribs, a glowing furnace mouth breathing fire, several long iron arms ending in forge tongs, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "forge_servant_idle",
     "file": "assets/art/enemies/forge_servant_idle.png",
     "type": "cutout",
     "prompt": "Enemy: towering animated construct of dark god-forged steel with gold rivets, a faceless mask with a single slit of white-gold light, carrying an enormous chisel-like blade, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "done",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "anvil_golem_idle",
     "file": "assets/art/enemies/anvil_golem_idle.png",
     "type": "cutout",
     "prompt": "Enemy: squat massive golem whose torso is a giant ancient anvil, arms built from stacked iron ingots, small head of riveted iron, faint gold runes on the anvil face, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "fallen_smith_god_idle",
     "file": "assets/art/bosses/fallen_smith_god_idle.png",
     "type": "cutout",
     "prompt": "Boss: fallen god of smithing, a gaunt giant divine body cracked like old porcelain with molten gold in the cracks, a broken iron halo, a colossal hammer whose head is a star-metal anvil, a tattered ceremonial leather apron with gold embroidery, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "ash_scarecrow_idle",
     "file": "assets/art/enemies/ash_scarecrow_idle.png",
     "type": "cutout",
     "prompt": "Enemy: scarecrow made of burned ash-wood branches and torn sackcloth, a crow skull for a head with small ember eyes, a rusted sickle in one hand, crows' feathers stuck in the straw, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "hollow_stag_idle",
     "file": "assets/art/bosses/hollow_stag_idle.png",
     "type": "cutout",
     "prompt": "Boss: huge undead stag with a hollow ribcage full of ash and drifting embers, enormous antlers like burned branches, patchy grey hide, pale glowing eyes, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "done",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "bog_drowned_idle",
     "file": "assets/art/enemies/bog_drowned_idle.png",
     "type": "cutout",
     "prompt": "Enemy: drowned hunter corpse rising from the bog, waterlogged leather armor, a rusty boar spear, moss and reeds hanging from his body, pale green eyes, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "gorge_harpy_idle",
     "file": "assets/art/enemies/gorge_harpy_idle.png",
     "type": "cutout",
     "prompt": "Enemy: lean harpy with ragged grey-green feathered wings for arms, bird talons, a cracked bone mask, long wind-whipped hair, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "cliff_raider_idle",
     "file": "assets/art/enemies/cliff_raider_idle.png",
     "type": "cutout",
     "prompt": "Enemy: agile masked raider in wind-torn leather and feathers, two curved daggers, coiled rope and climbing hooks, crouched and ready to leap, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "weightless_knight_idle",
     "file": "assets/art/bosses/weightless_knight_idle.png",
     "type": "cutout",
     "prompt": "Boss: slender knight in elegant tarnished silver armor with green-grey patina, floating just above the ground, long tattered scarves flowing in the wind, a thin long rapier, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "wind_sentinel_idle",
     "file": "assets/art/enemies/wind_sentinel_idle.png",
     "type": "cutout",
     "prompt": "Enemy: tall weathered stone-and-bronze statue sentinel come alive, folded wings of steel feathers, a long spear, a cracked face with storm-grey eyes, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "thunder_ram_idle",
     "file": "assets/art/enemies/thunder_ram_idle.png",
     "type": "cutout",
     "prompt": "Enemy: massive mountain ram beast with huge spiralling stone horns, shaggy frost-covered fur, small sparks crackling between the horns, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "storm_king_idle",
     "file": "assets/art/bosses/storm_king_idle.png",
     "type": "cutout",
     "prompt": "Boss: gigantic storm king, a gaunt bearded giant in ancient bronze-and-steel armor, a crown of jagged steel feathers, a cloak made of storm clouds, a great spear, lit by lightning, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "bronze_skeleton_idle",
     "file": "assets/art/enemies/bronze_skeleton_idle.png",
     "type": "cutout",
     "prompt": "Enemy: skeleton warrior with bones stained green-bronze, a dented bronze helmet, a round bronze shield and a short bronze sword, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "tomb_crawler_idle",
     "file": "assets/art/enemies/tomb_crawler_idle.png",
     "type": "cutout",
     "prompt": "Enemy: long segmented crypt crawler, centipede-like, with a skull-shaped head, bronze funeral rings embedded in its pale carapace, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "crypt_keeper_idle",
     "file": "assets/art/bosses/crypt_keeper_idle.png",
     "type": "cutout",
     "prompt": "Boss: towering skeletal keeper in a green-bronze funeral mask and tattered burial robes, a ring of huge bronze keys, a stone sarcophagus lid used as a shield, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "gilded_acolyte_idle",
     "file": "assets/art/enemies/gilded_acolyte_idle.png",
     "type": "cutout",
     "prompt": "Enemy: gaunt temple acolyte with gold leaf peeling from his skin, a smooth gold mask, cream robes stained with soot, a censer on a chain swung like a flail, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "golden_priest_idle",
     "file": "assets/art/bosses/golden_priest_idle.png",
     "type": "cutout",
     "prompt": "Boss: tall emaciated high priest fused with a golden reliquary on his back, a tall golden mitre, a golden staff topped by a sun disc, gold dripping from him like wax, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "penitent_idle",
     "file": "assets/art/enemies/penitent_idle.png",
     "type": "cutout",
     "prompt": "Enemy: hooded penitent flagellant with a scarred bare back, a heavy iron cage around his head, a whip with small golden hooks, chains around his waist, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "censer_bearer_idle",
     "file": "assets/art/enemies/censer_bearer_idle.png",
     "type": "cutout",
     "prompt": "Enemy: massive hunched monk carrying a giant golden censer on a chain, thick holy smoke pouring out, face hidden under a tall pointed hood, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "chained_maiden_idle",
     "file": "assets/art/bosses/chained_maiden_idle.png",
     "type": "cutout",
     "prompt": "Boss: tall sorrowful armored maiden in worn white-gold plate, bound by heavy golden chains to a broken altar slab on her back, face covered by a veil, a long holy blade, tears of molten gold, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "black_inquisitor_idle",
     "file": "assets/art/enemies/black_inquisitor_idle.png",
     "type": "cutout",
     "prompt": "Enemy: inquisitor in black and gold robes, a tall pointed black hat, an iron mask, a branding iron in one hand and a heavy book chained to his wrist, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "cathedral_gargoyle_idle",
     "file": "assets/art/enemies/cathedral_gargoyle_idle.png",
     "type": "cutout",
     "prompt": "Enemy: black stone gargoyle with gold-veined cracks, bat-like stone wings, crouched on a broken fragment of cathedral column, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "eternal_martyr_idle",
     "file": "assets/art/bosses/eternal_martyr_idle.png",
     "type": "cutout",
     "prompt": "Boss: gigantic martyr saint pierced by many gold-tipped spears, ornate black-and-gold armor, an obsidian halo, rising from one knee, a colossal halberd, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "spectral_archer_idle",
     "file": "assets/art/enemies/spectral_archer_idle.png",
     "type": "cutout",
     "prompt": "Enemy: translucent pale-blue ghostly archer in a tattered hood, a silver bow, faint mist trailing below the knees, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "lunar_wisp_idle",
     "file": "assets/art/enemies/lunar_wisp_idle.png",
     "type": "cutout",
     "prompt": "Enemy: small floating will-o-the-wisp spirit: a pale silver-blue flame with a tiny skull-like face inside, trailing two ragged moth wings, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "moon_moth_idle",
     "file": "assets/art/bosses/moon_moth_idle.png",
     "type": "cutout",
     "prompt": "Boss: giant moth with huge silver-white wings patterned like the phases of the moon, a furry pale body, glowing pale blue eyes, silver dust falling from the wings, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "drowned_scribe_idle",
     "file": "assets/art/enemies/drowned_scribe_idle.png",
     "type": "cutout",
     "prompt": "Enemy: drowned scribe in soaked dark robes, black ink dripping from his fingers and mouth, a giant sharpened quill used as a weapon, wet scrolls tied to his belt, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "living_tome_idle",
     "file": "assets/art/enemies/living_tome_idle.png",
     "type": "cutout",
     "prompt": "Enemy: floating giant ancient book with teeth along the edges of its pages, tentacles of black ink, a broken padlock and chain, one large eye on the cover, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "eyeless_librarian_idle",
     "file": "assets/art/bosses/eyeless_librarian_idle.png",
     "type": "cutout",
     "prompt": "Boss: towering gaunt librarian with empty eye sockets weeping ink, many long thin arms holding books and candles, a tall wooden ladder strapped to his back, soaked robes, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "mad_astrologer_idle",
     "file": "assets/art/enemies/mad_astrologer_idle.png",
     "type": "cutout",
     "prompt": "Enemy: wild-haired old astrologer in star-embroidered dark-blue robes, cracked spectacles, a small brass armillary sphere floating above his open hand, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "brass_automaton_idle",
     "file": "assets/art/enemies/brass_automaton_idle.png",
     "type": "cutout",
     "prompt": "Enemy: tall clockwork brass automaton with a telescope lens for one eye, exposed gear joints, a small blue crystal core in its chest, long thin limbs, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "star_eye_idle",
     "file": "assets/art/bosses/star_eye_idle.png",
     "type": "cutout",
     "prompt": "Boss: enormous floating eye creature inside a broken brass orrery, rotating metal rings around it, a pupil like a star, dangling cables and small telescopes, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "star_shard_idle",
     "file": "assets/art/enemies/star_shard_idle.png",
     "type": "cutout",
     "prompt": "Enemy: humanoid figure made of jagged dark star-iron crystals with azure cracks, small crystal fragments hovering around it, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "void_stalker_idle",
     "file": "assets/art/enemies/void_stalker_idle.png",
     "type": "cutout",
     "prompt": "Enemy: lean four-legged void beast whose body shows a starry night sky inside its silhouette, long jaws, azure eyes, smoky edges, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "star_devourer_idle",
     "file": "assets/art/bosses/star_devourer_idle.png",
     "type": "cutout",
     "prompt": "Boss: colossal cosmic serpent-like devourer coiling out of a well, a gaping mouth swallowing falling stars, a body of star-iron plates and void, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "restless_spirit_idle",
     "file": "assets/art/enemies/restless_spirit_idle.png",
     "type": "cutout",
     "prompt": "Enemy: small hunched restless ghost wrapped in a faded shroud, a long sad pale face, floating above the ground, wisps of mist, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "wandering_lantern_idle",
     "file": "assets/art/enemies/wandering_lantern_idle.png",
     "type": "cutout",
     "prompt": "Enemy: old mossy stone garden lantern come alive, walking on short stone legs, a pale ghost flame flickering inside, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "mute_gardener_idle",
     "file": "assets/art/bosses/mute_gardener_idle.png",
     "type": "cutout",
     "prompt": "Boss: tall silent gardener with his mouth sewn shut, a wide straw hat, body overgrown with moss and vines, holding huge rusted pruning shears, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "broken_monk_idle",
     "file": "assets/art/enemies/broken_monk_idle.png",
     "type": "cutout",
     "prompt": "Enemy: bent old monk with a twisted spine, prayer beads made of bone, a ragged ochre robe, leaning on a long wooden staff, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "bell_wraith_idle",
     "file": "assets/art/enemies/bell_wraith_idle.png",
     "type": "cutout",
     "prompt": "Enemy: ghost whose lower body is a cracked bronze temple bell, long pale arms, a hooded skull face, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "twisted_abbot_idle",
     "file": "assets/art/bosses/twisted_abbot_idle.png",
     "type": "cutout",
     "prompt": "Boss: giant abbot whose limbs bend in impossible directions, ornate ochre-and-gold vestments, many strings of prayer beads, a serene and terrifying face, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "steam_nymph_idle",
     "file": "assets/art/enemies/steam_nymph_idle.png",
     "type": "cutout",
     "prompt": "Enemy: graceful nymph formed of swirling steam and pale stone, small gems on her forehead, a long veil of vapour covering her body, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "bath_serpent_idle",
     "file": "assets/art/enemies/bath_serpent_idle.png",
     "type": "cutout",
     "prompt": "Enemy: large pale serpent with marble-like scales and small gems embedded along its back, coiled around a broken column, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "baths_queen_idle",
     "file": "assets/art/bosses/baths_queen_idle.png",
     "type": "cutout",
     "prompt": "Boss: ancient queen statue come alive, marble body with gold-filled cracks, a crown of gems, a long serpent-like lower body rising from a steaming pool, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "dreamer_idle",
     "file": "assets/art/enemies/dreamer_idle.png",
     "type": "cutout",
     "prompt": "Enemy: sleeping figure floating upright inside a cocoon of pale sheets, eyes closed, peaceful face, dark violet dream mist around, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "sleepwalker_idle",
     "file": "assets/art/enemies/sleepwalker_idle.png",
     "type": "cutout",
     "prompt": "Enemy: tall gaunt sleepwalker in a long grey nightgown, eyes and lips stitched closed, arms stretched forward, a candle lantern hanging from one hand, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "sleepless_one_idle",
     "file": "assets/art/bosses/sleepless_one_idle.png",
     "type": "cutout",
     "prompt": "Boss: gigantic gaunt figure with dozens of open eyes all over its body, tattered grey robes, huge long-fingered hands, a crown of extinguished candles, epic low angle, imposing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "ash_deer_idle",
     "file": "assets/art/animals/ash_deer_idle.png",
     "type": "cutout",
     "prompt": "Wild animal: wild deer with ash-grey fur and short burned-looking antlers, alert stance, a few embers caught in its fur, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "tusk_boar_idle",
     "file": "assets/art/animals/tusk_boar_idle.png",
     "type": "cutout",
     "prompt": "Wild animal: big angry black boar with long yellowed tusks, bristly scarred hide, head lowered to charge, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "grave_wolf_idle",
     "file": "assets/art/animals/grave_wolf_idle.png",
     "type": "cutout",
     "prompt": "Wild animal: large lean grey wolf with pale eyes, a torn ear and scars, snarling, a broken grave chain around its neck, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
     "id": "dusk_bear_idle",
     "file": "assets/art/animals/dusk_bear_idle.png",
     "type": "cutout",
     "prompt": "Wild animal: huge dark-brown bear rearing up on its hind legs, scarred muzzle, broken arrows stuck in its shoulder, dusk light on its fur, menacing idle stance, facing left.",
-    "status": "pending"
+    "status": "pending",
+    "version": 2,
+    "note": "In attesa di rigenerazione con Color Variety V2"
   }
 ]
