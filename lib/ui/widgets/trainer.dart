@@ -135,24 +135,32 @@ class _TrainerOverlayState extends State<_TrainerOverlay> {
                   // Nuvoletta.
                   Container(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                    // Oro pieno con testo nero: stacca dal resto dell'app.
                     decoration: BoxDecoration(
-                      color: Palette.stone,
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Palette.goldBright, Palette.gold],
+                      ),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Palette.gold),
-                      boxShadow: [BoxShadow(color: Palette.gold.withValues(alpha: 0.2), blurRadius: 16)],
+                      border: Border.all(color: const Color(0xFF6B5320), width: 1.5),
+                      boxShadow: [BoxShadow(color: Palette.gold.withValues(alpha: 0.35), blurRadius: 18)],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(trainerName.toUpperCase(), style: titleStyle(size: 13, spacing: 3)),
+                        Text(trainerName.toUpperCase(),
+                            style: titleStyle(size: 13, spacing: 3, color: const Color(0xFF3A2A10))),
                         const SizedBox(height: 6),
-                        Text(line.text, style: const TextStyle(fontSize: 16, color: Palette.holy, height: 1.3)),
+                        Text(line.text,
+                            style: const TextStyle(
+                                fontSize: 17, color: Color(0xFF14100A), height: 1.3, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 8),
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
                             last ? 'HO CAPITO' : 'AVANTI  ${_i + 1}/${widget.lines.length}',
-                            style: titleStyle(size: 12, color: Palette.gold),
+                            style: titleStyle(size: 12, color: const Color(0xFF3A2A10)),
                           ),
                         ),
                       ],
@@ -193,9 +201,7 @@ class _Tail extends CustomPainter {
       ..lineTo(size.width, 0)
       ..lineTo(size.width * 0.3, size.height)
       ..close();
-    canvas.drawPath(p, Paint()..color = Palette.stone);
-    canvas.drawLine(Offset.zero, Offset(size.width * 0.3, size.height), Paint()..color = Palette.gold);
-    canvas.drawLine(Offset(size.width, 0), Offset(size.width * 0.3, size.height), Paint()..color = Palette.gold);
+    canvas.drawPath(p, Paint()..color = Palette.gold);
   }
 
   @override

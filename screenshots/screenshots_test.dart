@@ -15,6 +15,7 @@ import 'package:iron_oath/ui/screens/walk_screen.dart';
 import 'package:iron_oath/ui/screens/path_screen.dart';
 import 'package:iron_oath/ui/screens/progress_screen.dart';
 import 'package:iron_oath/domain/progress.dart';
+import 'package:iron_oath/ui/widgets/exercise_demo.dart';
 import 'package:iron_oath/ui/screens/forge_tab.dart';
 import 'package:iron_oath/domain/items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -163,5 +164,33 @@ void main() {
     Navigator.of(t.element(find.byType(NavigationBar)))
         .push(MaterialPageRoute<void>(builder: (_) => const ProgressScreen()));
     await _shot(t, '40_andamento');
+  });
+
+  testWidgets('dimostrazioni degli esercizi', (t) async {
+    _phone(t);
+    await t.pumpWidget(MaterialApp(
+      home: Scaffold(
+        backgroundColor: const Color(0xFF0D0B09),
+        body: GridView.count(
+          crossAxisCount: 4,
+          padding: const EdgeInsets.fromLTRB(4, 60, 4, 4),
+          mainAxisSpacing: 4,
+          crossAxisSpacing: 4,
+          children: [
+            for (final m in DemoMove.values)
+              for (final f in [0.0, 1.0])
+                Container(
+                  color: const Color(0xFF17130F),
+                  child: Stack(children: [
+                    Positioned.fill(child: CustomPaint(painter: DemoPainter(m, f))),
+                    if (f == 0)
+                      Text(m.file, style: const TextStyle(color: Colors.white, fontSize: 9)),
+                  ]),
+                ),
+          ],
+        ),
+      ),
+    ));
+    await _shot(t, '41_dimostrazioni');
   });
 }

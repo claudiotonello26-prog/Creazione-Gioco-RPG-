@@ -15,6 +15,7 @@ import '../../game/battle_game.dart';
 import '../../pose/rep_counter.dart';
 import '../../pose/rep_input.dart';
 import '../widgets/common.dart';
+import '../widgets/exercise_demo.dart';
 import '../widgets/exercise_view.dart';
 import '../widgets/knight_view.dart';
 
@@ -337,7 +338,17 @@ class _CombatScreenState extends State<CombatScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                Expanded(flex: 4, child: ExerciseView(input: _input)),
+                Expanded(
+                  flex: 4,
+                  child: ExerciseView(
+                    input: _input,
+                    overlay: Positioned(
+                      left: 10,
+                      bottom: 10,
+                      child: ExerciseDemo(move: demoFor(label, widget.exercise), size: 96),
+                    ),
+                  ),
+                ),
                 TextButton.icon(
                   onPressed: _phase == _Phase.ended ? null : _flee,
                   icon: const Icon(Icons.directions_run, color: Palette.ash),

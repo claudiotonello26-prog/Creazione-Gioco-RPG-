@@ -9,6 +9,7 @@ import '../../domain/combat.dart';
 import '../../domain/exercise.dart';
 import '../../pose/rep_counter.dart';
 import '../../pose/rep_input.dart';
+import '../widgets/exercise_demo.dart';
 import '../widgets/exercise_view.dart';
 
 /// Esito di una serie.
@@ -53,7 +54,10 @@ class _TrainingScreenState extends State<TrainingScreen> {
   @override
   void initState() {
     super.initState();
-    _input = createRepInput(context.read<GameState>().useCamera, widget.exercise);
+    _input = createRepInput(
+      context.read<GameState>().useCamera,
+      widget.exercise,
+    );
     _input.start();
     _sub = _input.reps.listen(_onRep);
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
@@ -107,11 +111,14 @@ class _TrainingScreenState extends State<TrainingScreen> {
   Widget build(BuildContext context) {
     final perLeg = exercises[widget.exercise]!.perLeg;
     final limit = widget.timeLimit;
-    final remaining =
-        limit == null ? null : (limit - _watch.elapsed).inSeconds.clamp(0, 9999);
+    final remaining = limit == null
+        ? null
+        : (limit - _watch.elapsed).inSeconds.clamp(0, 9999);
     final counterText = _input.isHold
         ? '${_input.held.inSeconds}s'
-        : (widget.target != null ? '$_countReps/${widget.target}' : '$_countReps');
+        : (widget.target != null
+              ? '$_countReps/${widget.target}'
+              : '$_countReps');
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
@@ -120,30 +127,51 @@ class _TrainingScreenState extends State<TrainingScreen> {
           if (widget.subtitle != null)
             Padding(
               padding: const EdgeInsets.all(8),
-              child: Text(widget.subtitle!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Palette.ash)),
+              child: Text(
+                widget.subtitle!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Palette.ash),
+              ),
             ),
           Expanded(
             child: ExerciseView(
               input: _input,
-              overlay: Positioned(
-                top: 12,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: _countdown > 0
-                      ? RepCounterBadge(text: '$_countdown', caption: 'Preparati')
-                      : ListenableBuilder(
-                          listenable: _input,
-                          builder: (_, _) => RepCounterBadge(
-                            text: _input.isHold ? '${_input.held.inSeconds}s' : counterText,
-                            caption: [
-                              if (perLeg) 'per gamba',
-                              if (remaining != null) '$remaining s',
-                            ].join(' · '),
-                          ),
-                        ),
+              overlay: Positioned.fill(
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 12,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: _countdown > 0
+                            ? RepCounterBadge(
+                                text: '$_countdown',
+                                caption: 'Preparati',
+                              )
+                            : ListenableBuilder(
+                                listenable: _input,
+                                builder: (_, _) => RepCounterBadge(
+                                  text: _input.isHold
+                                      ? '${_input.held.inSeconds}s'
+                                      : counterText,
+                                  caption: [
+                                    if (perLeg) 'per gamba',
+                                    if (remaining != null) '$remaining s',
+                                  ].join(' · '),
+                                ),
+                              ),
+                      ),
+                    ),
+                    // Come si fa l'esercizio: due pose in loop.
+                    Positioned(
+                      left: 12,
+                      bottom: 12,
+                      child: ExerciseDemo(
+                        move: demoFor(widget.title, widget.exercise),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
