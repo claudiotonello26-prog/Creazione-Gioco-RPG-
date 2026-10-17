@@ -48,7 +48,8 @@ void main() {
     expect(forBuild('abyss_crystal', Attribute.strength), 'ember_iron');
     expect(forBuild('star_core', Attribute.faith), 'martyr_tear');
     expect(forBuild('iron_ingot', Attribute.faith), 'iron_ingot');
-    expect(lootForBuild({'abyss_crystal': 2, 'ember_iron': 1}, Attribute.strength), {'ember_iron': 3});
+    expect(
+        lootForBuild({'abyss_crystal': 2, 'ember_iron': 1}, Attribute.strength), {'ember_iron': 3});
   });
 
   test('il Giuramento automatico segue l\'attributo più alto', () async {
@@ -68,7 +69,8 @@ void main() {
       expect(foe!.$2.trackAs, id);
       expect(foe.$1.isBoss, isFalse);
     }
-    expect(questFoe(ExerciseId.pushUp, 30)!.$1.level, greaterThan(questFoe(ExerciseId.pushUp, 1)!.$1.level));
+    expect(questFoe(ExerciseId.pushUp, 30)!.$1.level,
+        greaterThan(questFoe(ExerciseId.pushUp, 1)!.$1.level));
   });
 
   test('il forziere della quest dà materiali e, più avanti, i componenti di build', () {
@@ -88,7 +90,46 @@ void main() {
     expect(s.claimStepMilestones(4500), 40);
     expect(s.claimStepMilestones(4500), 0);
     expect(s.pendingStepMilestones(12000), 2);
-    expect(s.claimStepMilestones(12000), 46);
-    expect(s.character.runes - start, 86);
+    expect(s.claimStepMilestones(12000), 60);
+    expect(s.character.runes - start, 100);
+  });
+
+  test('ogni livello ha la sua pietra', () {
+    final normal = weaponDefs['pilgrim_blade']!;
+    final rare = weaponDefs['lord_of_the_keep_blade']!;
+    expect([
+      for (var l = 1; l <= 10; l++) stoneFor(normal, l)
+    ], [
+      'forge_stone_1',
+      'forge_stone_1',
+      'forge_stone_1',
+      'forge_stone_2',
+      'forge_stone_2',
+      'forge_stone_2',
+      'forge_stone_3',
+      'forge_stone_3',
+      'forge_stone_3',
+      'ancient_stone',
+    ]);
+    expect([for (var l = 1; l <= 5; l++) stoneFor(rare, l)],
+        ['somber_stone', 'somber_stone_2', 'somber_stone_3', 'somber_stone_4', 'epic_stone']);
+  });
+
+  test('gli amuleti si incastonano nell\'arma e tornano nella borsa', () async {
+    SharedPreferences.setMockInitialValues({});
+    final s = GameState();
+    await s.load();
+    final w = s.character.weapon;
+    s.character.addMaterial('amulet_ember_amulet', 1);
+    s.character.addMaterial('amulet_fang_charm', 1);
+    expect(s.socketAmulet(w, 1, 'ember_amulet'), isFalse);
+    expect(s.socketAmulet(w, 0, 'fang_charm'), isFalse);
+    expect(s.socketAmulet(w, 0, 'ember_amulet'), isTrue);
+    expect(s.socketAmulet(w, 2, 'fang_charm'), isTrue);
+    expect(w.aura, Affinity.fire);
+    expect(s.amuletCount('ember_amulet'), 0);
+    s.unsocketAmulet(w, 0);
+    expect(w.aura, isNull);
+    expect(s.amuletCount('ember_amulet'), 1);
   });
 }

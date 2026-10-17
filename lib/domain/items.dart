@@ -207,6 +207,16 @@ const List<MaterialRecipe> materialRecipes = [
       },
       level: 14),
   MaterialRecipe('star_ingot', Station.furnace, {'star_ore': 20, 'coal': 20}, level: 18),
+  // Il binario delle armi speciali: Tenebre I cade dai nemici, le altre si
+  // fondono dalla precedente; l'Epica chiude a +5.
+  MaterialRecipe('somber_stone_2', Station.furnace, {'somber_stone': 2, 'holy_shard': 1},
+      level: 10),
+  MaterialRecipe('somber_stone_3', Station.furnace, {'somber_stone_2': 2, 'beast_essence': 3},
+      level: 14),
+  MaterialRecipe('somber_stone_4', Station.furnace, {'somber_stone_3': 2, 'gem_cut': 1},
+      level: 18),
+  MaterialRecipe('epic_stone', Station.furnace, {'somber_stone_4': 2, 'gem_perfect': 1},
+      level: 22),
 ];
 
 /// Requisito per usare ciò che si forgia a un certo livello di postazione:
@@ -683,7 +693,10 @@ const Map<String, WeaponDef> weaponDefs = {
 };
 
 class WeaponInstance {
-  WeaponInstance({required this.weaponId, this.upgrade = 0});
+  WeaponInstance({required this.weaponId, this.upgrade = 0, List<String?>? sockets})
+      : sockets = sockets == null || sockets.length != 3
+            ? List<String?>.filled(3, null)
+            : List<String?>.of(sockets);
 
   final String weaponId;
   int upgrade;
@@ -709,27 +722,61 @@ class WeaponInstance {
           grade.coefficient *
           (1 + 0.05 * upgrade);
     });
+    // L'amuleto d'affinità aggiunge uno scaling C sul suo attributo.
+    final aura = this.aura;
+    if (aura != null) {
+      final attr = Affinity.attributes.entries.firstWhere((e) => e.value == aura).key;
+      scaled += (c.attr(attr) - Character.baseAttribute).clamp(0, 99) *
+          ScalingGrade.c.coefficient *
+          (1 + 0.05 * upgrade);
+    }
     return (base + scaled) * (1 + amuletBonus);
   }
 
-  /// Pietra richiesta per il prossimo potenziamento.
-  String? get nextStone {
-    if (upgrade >= def.maxUpgrade) return null;
-    if (def.rare) return 'somber_stone';
-    final next = upgrade + 1;
-    if (next <= 3) return 'forge_stone_1';
-    if (next <= 6) return 'forge_stone_2';
-    if (next <= 9) return 'forge_stone_3';
-    return 'ancient_stone';
-  }
+  /// Pietra richiesta per il prossimo potenziamento: Forgia I fino a +3, II
+  /// fino a +6, III fino a +9, Astrale per il +10. Le armi speciali hanno le
+  /// Tenebre I-IV per +1..+4 e l'Epica per il +5.
+  String? get nextStone => stoneFor(def, upgrade + 1);
 
-  int get nextStoneCost => def.rare ? upgrade + 1 : (upgrade % 3) + 1;
+  int get nextStoneCost => nextStone == null ? 0 : stoneCostFor(def, upgrade + 1);
 
-  Map<String, dynamic> toJson() => {'id': weaponId, 'up': upgrade};
+  /// Tre incastonature: [0] l'amuleto d'affinità (colore, aura e scaling),
+  /// [1] e [2] amuleti passivi.
+  final List<String?> sockets;
 
-  factory WeaponInstance.fromJson(Map<String, dynamic> j) =>
-      WeaponInstance(weaponId: j['id'] as String, upgrade: j['up'] as int);
+  /// L'aura viene solo dall'amuleto d'affinità: senza, acciaio nudo.
+  Affinity? get aura => amuletDefs[sockets[0]]?.apply.aura;
+
+  /// Livello visivo dell'aura: tinta a +3, luce a +6, aura piena a +10.
+  int get glowTier => aura == null ? 0 : visualTier;
+
+  Iterable<Amulet> get amulets => sockets.map((id) => amuletDefs[id]).whereType<Amulet>();
+
+  Map<String, dynamic> toJson() => {'id': weaponId, 'up': upgrade, 'am': sockets};
+
+  factory WeaponInstance.fromJson(Map<String, dynamic> j) => WeaponInstance(
+        weaponId: j['id'] as String,
+        upgrade: j['up'] as int,
+        sockets: (j['am'] as List?)?.cast<String?>(),
+      );
 }
+
+/// Pietra per arrivare al livello [level].
+String? stoneFor(WeaponDef def, int level) {
+  if (level > def.maxUpgrade || level < 1) return null;
+  if (def.rare) {
+    return level == 5 ? 'epic_stone' : level == 1 ? 'somber_stone' : 'somber_stone_$level';
+  }
+  if (level <= 3) return 'forge_stone_1';
+  if (level <= 6) return 'forge_stone_2';
+  if (level <= 9) return 'forge_stone_3';
+  return 'ancient_stone';
+}
+
+/// Quante pietre: 1, 2, 3 dentro ogni gradino; una sola per Astrale,
+/// Tenebre ed Epica.
+int stoneCostFor(WeaponDef def, int level) =>
+    def.rare || level == 10 ? 1 : ((level - 1) % 3) + 1;
 
 class Amulet {
   const Amulet(this.id, this.name, this.description, this.apply);
@@ -737,6 +784,10 @@ class Amulet {
   final String name;
   final String description;
   final AmuletEffect apply;
+
+  /// Gli amuleti d'affinità vanno nella prima incastonatura, gli altri nelle
+  /// due passive.
+  bool get isAffinity => apply.aura != null;
 }
 
 class AmuletEffect {
@@ -747,8 +798,16 @@ class AmuletEffect {
     this.lowHpDamage = 0,
     this.damage = 0,
     this.lootBonus = 0,
+    this.bossDamage = 0,
+    this.critDamage = 0,
     this.aura,
   });
+
+  /// Danno in più contro i boss.
+  final double bossDamage;
+
+  /// Danno in più delle rep perfette (i critici).
+  final double critDamage;
   final double holyDamage;
   final double heavyDamage;
   final double rareLoot;
@@ -792,26 +851,44 @@ const Map<String, Amulet> amuletDefs = {
   'ember_amulet': Amulet(
     'ember_amulet',
     'Amuleto della Brace',
-    'L\'arma prende l\'aura di fuoco rosso, +5% danno',
+    'Fuoco: l\'arma cresce con la Forza',
     AmuletEffect(damage: 0.05, aura: Affinity.fire),
   ),
   'gale_amulet': Amulet(
     'gale_amulet',
     'Amuleto della Bufera',
-    'Aura di vento verde, +5% danno',
+    'Vento: l\'arma cresce con la Destrezza',
     AmuletEffect(damage: 0.05, aura: Affinity.wind),
   ),
   'holy_amulet': Amulet(
     'holy_amulet',
     'Amuleto della Luce',
-    'Aura di luce dorata, +5% danno',
+    'Luce divina: l\'arma cresce con la Fede',
     AmuletEffect(damage: 0.05, aura: Affinity.holy),
   ),
   'abyss_amulet': Amulet(
     'abyss_amulet',
     'Amuleto dell\'Abisso',
-    'Aura neon azzurra, +5% danno',
+    'Arcano: l\'arma cresce con l\'Intelligenza',
     AmuletEffect(damage: 0.05, aura: Affinity.arcane),
+  ),
+  'regicide_seal': Amulet(
+    'regicide_seal',
+    'Sigillo del Regicida',
+    '+5% danno contro i boss',
+    AmuletEffect(bossDamage: 0.05),
+  ),
+  'fang_charm': Amulet(
+    'fang_charm',
+    'Zanna del Lupo Grigio',
+    '+10% danno dei critici',
+    AmuletEffect(critDamage: 0.10),
+  ),
+  'oath_sigil': Amulet(
+    'oath_sigil',
+    'Sigillo del Giuramento',
+    '+5% danno',
+    AmuletEffect(damage: 0.05),
   ),
   'sleepless_seal': Amulet(
     'sleepless_seal',
@@ -849,8 +926,12 @@ const Map<String, String> materialNames = {
   'forge_stone_1': 'Pietra di forgia I',
   'forge_stone_2': 'Pietra di forgia II',
   'forge_stone_3': 'Pietra di forgia III',
-  'ancient_stone': 'Pietra antica',
-  'somber_stone': 'Pietra cupa',
+  'ancient_stone': 'Pietra di forgia astrale',
+  'somber_stone': 'Pietra delle Tenebre I',
+  'somber_stone_2': 'Pietra delle Tenebre II',
+  'somber_stone_3': 'Pietra delle Tenebre III',
+  'somber_stone_4': 'Pietra delle Tenebre IV',
+  'epic_stone': 'Pietra Epica dell\'Eclissi',
   'iron_ingot': 'Lingotto di ferro',
   'ash_plank': 'Asse di frassino',
   'reinforced_grip': 'Impugnatura rinforzata',

@@ -392,6 +392,7 @@ class GameState extends ChangeNotifier {
         ExerciseId.values.byName(e.key as String): e.value as String,
     };
     character = Character.fromJson(j['character'] as Map<String, dynamic>);
+    _migrateAmulets();
     streak = j['streak'] as int;
     lastActiveDay = j['lastDay'] as String?;
     expeditionKeys = j['keys'] as int;
@@ -1232,19 +1233,58 @@ class GameState extends ChangeNotifier {
     _changed();
   }
 
-  void toggleAmulet(String id) {
-    if (character.amulets.contains(id)) {
-      character.amulets.remove(id);
-    } else if (character.amulets.length < Character.maxAmuletSlots) {
-      character.amulets.add(id);
+  /// Prima gli amuleti si indossavano sul personaggio: ora vanno
+  /// incastonati nell'arma impugnata.
+  void _migrateAmulets() {
+    for (final id in List.of(character.amulets)) {
+      final a = amuletDefs[id];
+      if (a == null) continue;
+      final slots = a.isAffinity ? const [0] : const [1, 2];
+      final free = slots.where((i) => character.weapon.sockets[i] == null);
+      if (free.isNotEmpty) socketAmulet(character.weapon, free.first, id, notify: false);
     }
+    character.amulets.clear();
+  }
+
+  int amuletCount(String id) => character.materials['amulet_$id'] ?? 0;
+
+  /// Incastona un amuleto nell'arma: la prima incastonatura accetta solo
+  /// quelli d'affinità, le altre due solo i passivi. Quello che c'era torna
+  /// nella borsa.
+  bool socketAmulet(WeaponInstance w, int slot, String id, {bool notify = true}) {
+    final a = amuletDefs[id];
+    if (a == null || a.isAffinity != (slot == 0) || amuletCount(id) <= 0) return false;
+    final old = w.sockets[slot];
+    character.spendMaterial('amulet_$id', 1);
+    if (old != null) character.addMaterial('amulet_$old', 1);
+    w.sockets[slot] = id;
+    if (notify) _changed();
+    return true;
+  }
+
+  void unsocketAmulet(WeaponInstance w, int slot) {
+    final old = w.sockets[slot];
+    if (old == null) return;
+    character.addMaterial('amulet_$old', 1);
+    w.sockets[slot] = null;
     _changed();
   }
 
+  bool canCraftAmulet(String id) =>
+      amuletRecipes[id] != null && hasMaterials(amuletRecipes[id]!);
+
+  /// La Fattucchiera incanta gli amuleti d'affinità con il cuore della build.
+  bool craftAmulet(String id) {
+    if (!canCraftAmulet(id)) return false;
+    amuletRecipes[id]!.forEach(character.spendMaterial);
+    character.addMaterial('amulet_$id', 1);
+    _count('craft:amulet_$id', 1);
+    _changed();
+    return true;
+  }
+
   bool buyAmulet(String id, int price) {
-    if (character.runes < price || character.materials['amulet_$id'] != null) {
-      return false;
-    }
+    if (character.runes < price) return false;
     character.runes -= price;
     character.addMaterial('amulet_$id', 1);
     _changed();

@@ -144,11 +144,14 @@ class CombatEngine {
 
   double get attackTimerProgress => 1 - _attackTimer / enemy.attackInterval;
 
+  /// Gli amuleti incastonati nell'arma impugnata.
   AmuletEffect get _amulets {
     var holy = 0.0, heavy = 0.0, rare = 0.0, lowHp = 0.0, damage = 0.0, loot = 0.0;
-    for (final id in character.amulets) {
-      final a = amuletDefs[id]?.apply;
-      if (a == null) continue;
+    var boss = 0.0, crit = 0.0;
+    for (final amulet in character.weapon.amulets) {
+      final a = amulet.apply;
+      boss += a.bossDamage;
+      crit += a.critDamage;
       holy += a.holyDamage;
       heavy += a.heavyDamage;
       rare += a.rareLoot;
@@ -162,7 +165,9 @@ class CombatEngine {
         rareLoot: rare,
         lowHpDamage: lowHp,
         damage: damage,
-        lootBonus: loot);
+        lootBonus: loot,
+        bossDamage: boss,
+        critDamage: crit);
   }
 
   /// Potere d'attacco effettivo contro questo nemico.
@@ -173,6 +178,7 @@ class CombatEngine {
     if (weapon.def.damageType == DamageType.holy) bonus += a.holyDamage;
     if (weapon.def.heavy) bonus += a.heavyDamage;
     if (heroHp < heroMaxHp * 0.3) bonus += a.lowHpDamage;
+    if (enemy.isBoss) bonus += a.bossDamage;
     if (character.perks.contains('judgement') &&
         weapon.def.damageType == DamageType.holy &&
         enemyHp < enemyMaxHp / 2) {
@@ -220,7 +226,8 @@ class CombatEngine {
     var damage = quality.multiplier *
         penetration *
         (1 + rampage * rampageMaxBonus) *
-        (charged ? 1.5 : 1.0);
+        (charged ? 1.5 : 1.0) *
+        (critical ? 1 + _amulets.critDamage : 1.0);
     // Una rep valida fa sempre almeno un minimo di danno: il combattimento
     // non si blocca mai.
     damage = max(damage, 0.1);

@@ -22,8 +22,8 @@ WeaponShape shapeOf(WeaponDef d) {
 /// con l'aura completa a +10.
 Color bladeColor(WeaponInstance w) {
   const steel = Color(0xFFB9BEC6);
-  final a = w.def.affinity.color;
-  return switch (w.visualTier) {
+  final a = (w.aura ?? Affinity.fire).color;
+  return switch (w.glowTier) {
     0 => steel,
     1 => Color.lerp(steel, a, 0.4)!,
     2 => Color.lerp(steel, a, 0.75)!,
@@ -97,8 +97,8 @@ class _TintedWeapon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tier = weapon.visualTier;
-    final color = weapon.def.affinity.color;
+    final tier = weapon.glowTier;
+    final color = (weapon.aura ?? Affinity.fire).color;
     Widget img = Image.asset(path, fit: BoxFit.contain);
     if (tier == 0) return img;
     img = ColorFiltered(
@@ -111,7 +111,7 @@ class _TintedWeapon extends StatelessWidget {
         imageFilter: ImageFilter.blur(sigmaX: tier * 5.0, sigmaY: tier * 5.0),
         child: ColorFiltered(
           colorFilter: ColorFilter.mode(
-              weapon.def.affinity.glow.withValues(alpha: [0.0, 0.4, 0.7, 1.0][tier]),
+              (weapon.aura ?? Affinity.fire).glow.withValues(alpha: [0.0, 0.4, 0.7, 1.0][tier]),
               BlendMode.srcIn),
           child: Image.asset(path, fit: BoxFit.contain),
         ),
@@ -168,8 +168,8 @@ class KnightPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final w = size.width, h = size.height;
     final cx = w / 2;
-    final tier = weapon.visualTier;
-    final aff = weapon.def.affinity;
+    final tier = weapon.glowTier;
+    final aff = (weapon.aura ?? Affinity.fire);
 
     // Luce a terra e aura alle spalle.
     canvas.drawOval(
@@ -533,8 +533,8 @@ class KnightPainter extends CustomPainter {
 
   void _weapon(Canvas canvas, Size size) {
     final w = size.width, h = size.height, cx = w / 2;
-    final tier = weapon.visualTier;
-    final aff = weapon.def.affinity;
+    final tier = weapon.glowTier;
+    final aff = (weapon.aura ?? Affinity.fire);
     final color = bladeColor(weapon);
     final shape = shapeOf(weapon.def);
     final metal = Paint()..color = color;

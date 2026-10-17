@@ -103,34 +103,24 @@ class _CombatScreenState extends State<CombatScreen> {
     _engine = _newEngine(state);
     _game = BattleGame(
       enemy: widget.enemy,
-      weaponTier: state.character.weapon.visualTier,
+      weaponTier: state.character.weapon.glowTier,
       style: state.character.weapon.def.style,
       heroLayers: [
         if (Art.has('assets/art/knight/attack/base.png'))
           ...knightLayers(state.character, KnightPose.attack),
       ],
-      weaponTint: _aura(state) != null
-          ? _aura(state)!.color.withValues(alpha: 0.6)
-          : state.character.weapon.visualTier == 0
-              ? null
-              : state.character.weapon.def.affinity.color.withValues(
-                  alpha: [0.0, 0.35, 0.6, 0.7][state.character.weapon.visualTier],
-                ),
+      // Il colore lo dà solo l'amuleto d'affinità incastonato.
+      weaponTint: state.character.weapon.glowTier == 0
+          ? null
+          : state.character.weapon.aura!.color.withValues(
+              alpha: [0.0, 0.35, 0.6, 0.7][state.character.weapon.glowTier],
+            ),
     );
     // La fotocamera parte subito: i 5 secondi servono a mettersi in posizione.
     _input = createRepInput(state.useCamera, widget.exercise);
     _input.start();
     _sub = _input.reps.listen(_onRep);
     _startCountdown(prepareSeconds);
-  }
-
-  /// Un amuleto d'aura colora l'arma, qualunque sia il suo scaling.
-  static Affinity? _aura(GameState state) {
-    for (final id in state.character.amulets) {
-      final a = amuletDefs[id]?.apply.aura;
-      if (a != null) return a;
-    }
-    return null;
   }
 
   CombatEngine _newEngine(GameState state) => CombatEngine(

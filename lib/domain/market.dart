@@ -31,6 +31,10 @@ const Map<String, int> materialValues = {
   'holy_shard': 60,
   'ancient_stone': 250,
   'somber_stone': 250,
+  'somber_stone_2': 450,
+  'somber_stone_3': 800,
+  'somber_stone_4': 1300,
+  'epic_stone': 2000,
   'raw_hide': 6,
   'tanned_leather': 14,
   'bronze_ingot': 12,
@@ -81,6 +85,10 @@ int weaponValue(WeaponInstance w) {
 }
 
 const Map<String, int> amuletPrices = {
+  'regicide_seal': 700,
+  'fang_charm': 650,
+  'oath_sigil': 500,
+  'sleepless_seal': 900,
   'fervent': 600,
   'colossus_seal': 600,
   'hunter_heart': 450,

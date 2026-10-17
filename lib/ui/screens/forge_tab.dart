@@ -9,6 +9,7 @@ import '../../data/game_state.dart';
 import '../../domain/items.dart';
 import '../../domain/skills.dart';
 import '../widgets/common.dart';
+import '../widgets/weapon_sockets.dart';
 import '../widgets/knight_view.dart';
 import 'gear_screens.dart';
 import '../../core/sound.dart';
@@ -283,25 +284,23 @@ class StationScreen extends StatelessWidget {
       ),
       const SizedBox(height: 12),
       if (stone != null)
-        FilledButton(
-          onPressed: (c.materials[stone] ?? 0) >= w.nextStoneCost
-              ? () async {
-                  final ok = await craftCountdown(
-                    context,
-                    title: 'Incanta a +${w.upgrade + 1}',
-                    itemId: stone,
-                    color: Station.enchant.accent,
-                    sound: Sfx.craftEnchant,
-                  );
-                  if (!ok || !context.mounted) return;
-                  s.upgradeWeapon(w);
-                  toast(context, '${w.displayName}: l\'acciaio canta.');
-                }
-              : null,
-          child: Text(
-            'INCANTA A +${w.upgrade + 1} '
-            '(${w.nextStoneCost}× ${materialNames[stone]}, hai ${c.materials[stone] ?? 0})',
-          ),
+        _StoneButton(
+          stone: stone,
+          cost: w.nextStoneCost,
+          have: c.materials[stone] ?? 0,
+          level: w.upgrade + 1,
+          onTap: () async {
+            final ok = await craftCountdown(
+              context,
+              title: '${w.def.name} +${w.upgrade + 1}',
+              itemId: stone,
+              color: Station.enchant.accent,
+              sound: Sfx.craftEnchant,
+            );
+            if (!ok || !context.mounted) return;
+            s.upgradeWeapon(w);
+            toast(context, '${w.displayName}: l\'acciaio canta.');
+          },
         )
       else
         const Text(
@@ -309,19 +308,8 @@ class StationScreen extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(color: Palette.goldBright),
         ),
-      const SectionTitle('Le quattro aure'),
-      for (final a in Affinity.values)
-        ActionTile(
-          icon: Icons.blur_on,
-          color: a.color,
-          title: '${a.label} · ${a.attributeLabel}',
-          subtitle: switch (a) {
-            Affinity.fire => 'Lama rossa, a +10 avvolta dal fuoco',
-            Affinity.wind => 'Lama verde, a +10 vortici di vento',
-            Affinity.arcane => 'Lama blu, a +10 neon azzurro e puntini di luce',
-            Affinity.holy => 'Lama d\'oro, a +10 aura luminosa e fulmini oro-azzurri',
-          },
-        ),
+      const SectionTitle('Amuleti'),
+      WeaponSockets(weapon: w),
     ];
   }
 }
@@ -425,3 +413,63 @@ Sfx stationSound(Station s) => switch (s) {
       Station.anvil => Sfx.craftAnvil,
       Station.enchant => Sfx.craftEnchant,
     };
+
+/// Il potenziamento è la pietra stessa: si tocca la pietra per salire di
+/// un livello.
+class _StoneButton extends StatelessWidget {
+  const _StoneButton({
+    required this.stone,
+    required this.cost,
+    required this.have,
+    required this.level,
+    required this.onTap,
+  });
+  final String stone;
+  final int cost;
+  final int have;
+  final int level;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ok = have >= cost;
+    final accent = Station.enchant.accent;
+    return Opacity(
+      opacity: ok ? 1 : 0.55,
+      child: Material(
+        color: Palette.stoneLight,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: ok ? accent : Palette.iron, width: 1.6),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: ok ? onTap : () => toast(context, 'Ti servono $cost× ${itemName(stone)}.'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            child: Row(
+              children: [
+                ItemIcon(stone, size: 52),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      OneLine(itemName(stone), style: titleStyle(size: 14, spacing: 1)),
+                      const SizedBox(height: 4),
+                      Text(
+                        '$cost× · ne hai $have',
+                        style: TextStyle(color: ok ? Palette.holy : Palette.ash),
+                      ),
+                    ],
+                  ),
+                ),
+                Text('+$level', style: titleStyle(size: 28, color: ok ? accent : Palette.ash)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

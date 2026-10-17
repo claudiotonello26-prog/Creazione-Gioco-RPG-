@@ -35,7 +35,8 @@ class GuideScreen extends StatelessWidget {
             ),
           ),
           const SectionTitle('Come funziona'),
-          for (final (icon, title, text) in _rules) _RuleChapter(icon: icon, title: title, text: text),
+          for (final (icon, title, text) in _rules)
+            _RuleChapter(icon: icon, title: title, text: text),
           const SectionTitle('Abilità'),
           for (final k in Skill.values)
             _SkillChapter(
@@ -98,20 +99,33 @@ class GuideScreen extends StatelessWidget {
       Icons.directions_run,
       'Traguardi di passi',
       'Nella Home vedi i passi totali di oggi. A 2.000, 4.000 e 6.000 passi ricevi 20 rune, '
-          'a 10.000 (l\'obiettivo consigliato) 26 rune. Si riscattano una volta al giorno e '
+          'a 10.000 (l\'obiettivo consigliato) 40 rune, il doppio. Si riscattano una volta al giorno e '
           'sono a parte dalla quest giornaliera.',
     ),
     (
       Icons.blur_on,
-      'Aure delle armi',
-      'Ogni arma ha un\'aura. A +3 la lama si tinge, a +6 si accende, a +10 ha l\'aura '
-          'completa. Un amuleto d\'affinità cambia l\'aura dell\'arma.',
+      'Incantamento',
+      'Ogni livello si fa con la sua pietra. Armi normali: Pietra di forgia I fino a +3, '
+          'II da +4 a +6, III da +7 a +9, la Pietra di forgia astrale per il +10. Armi speciali '
+          '(più rare, con effetti diversi): Pietra delle Tenebre I, II, III, IV per +1..+4 e la '
+          'Pietra Epica dell\'Eclissi per il +5. Le pietre delle Tenebre si fondono alla '
+          'Fornace partendo dalla precedente.',
+    ),
+    (
+      Icons.auto_awesome,
+      'Amuleti dell\'arma',
+      'Ogni arma ha tre incastri. Il primo è per un amuleto d\'affinità (fuoco, vento, '
+          'arcano, luce): dà colore e aura alla lama e la fa crescere con un attributo. A +3 '
+          'la lama si tinge, a +6 si accende, a +10 ha l\'aura completa; senza amuleto resta '
+          'acciaio. Gli altri due sono passivi (contro i boss, critici, danno). Si mettono e '
+          'tolgono dalla Fattucchiera, dall\'Armeria o dall\'Incantamento: quello tolto torna '
+          'nella borsa.',
     ),
     (
       Icons.storefront,
       'Mercato',
-      'Il mercante compra a metà prezzo e vende al doppio. La fattucchiera vende amuleti: '
-          'se ne portano tre.',
+      'Il mercante compra a metà prezzo e vende al doppio. La fattucchiera crea gli amuleti '
+          'd\'affinità, vende i passivi e li incastra nell\'arma.',
     ),
     (
       Icons.sports_kabaddi,

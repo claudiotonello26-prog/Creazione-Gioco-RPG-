@@ -6,13 +6,13 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
-import '../../domain/character.dart';
 import '../../domain/items.dart';
 import '../../domain/market.dart';
 import '../../domain/skills.dart';
 import '../widgets/common.dart';
 import '../widgets/knight_view.dart';
 import '../../core/sound.dart';
+import '../widgets/weapon_sockets.dart';
 
 void openEquipment(BuildContext context) =>
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EquipmentScreen()));
@@ -101,23 +101,8 @@ class EquipmentScreen extends StatelessWidget {
               color: c.offhandId == id ? Palette.goldBright : Palette.gold,
               onTap: () => s.holdOffhand(c.offhandId == id ? null : id),
             ),
-          SectionTitle('Amuleti (${c.amulets.length}/${Character.maxAmuletSlots})'),
-          if (!amuletDefs.keys.any(s.ownsAmulet))
-            const Text(
-              'Nessun amuleto. Li vende la Fattucchiera al Mercato.',
-              style: TextStyle(color: Palette.ash),
-            ),
-          for (final a in amuletDefs.values.where((a) => s.ownsAmulet(a.id)))
-            ActionTile(
-              icon: Icons.brightness_7_outlined,
-              title: a.name,
-              subtitle: a.description,
-              color: c.amulets.contains(a.id) ? Palette.goldBright : Palette.ash,
-              trailing: Switch(
-                value: c.amulets.contains(a.id),
-                onChanged: (_) => s.toggleAmulet(a.id),
-              ),
-            ),
+          const SectionTitle('Amuleti dell\'arma'),
+          WeaponSockets(weapon: c.weapon),
           const SizedBox(height: 8),
           OutlinedButton.icon(
             onPressed: () => openMarket(context, tab: 1),
@@ -416,25 +401,55 @@ class _Witch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
+    final w = s.character.weapon;
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        for (final a in amuletDefs.values)
+        SectionTitle(w.displayName),
+        WeaponSockets(weapon: w),
+        const SectionTitle('Affinità'),
+        for (final e in amuletRecipes.entries)
+          ActionTile(
+            icon: Icons.brightness_7,
+            color: amuletDefs[e.key]!.apply.aura!.color,
+            title: amuletDefs[e.key]!.name,
+            subtitle: e.value.entries
+                .map((m) => '${m.value}× ${itemName(m.key)} (${s.character.materials[m.key] ?? 0})')
+                .join(' · '),
+            trailing: FilledButton(
+              onPressed: s.canCraftAmulet(e.key)
+                  ? () async {
+                      final ok = await craftCountdown(
+                        context,
+                        title: amuletDefs[e.key]!.name,
+                        itemId: 'amulet_${e.key}',
+                        color: amuletDefs[e.key]!.apply.aura!.color,
+                        sound: Sfx.craftEnchant,
+                      );
+                      if (ok && context.mounted) s.craftAmulet(e.key);
+                    }
+                  : null,
+              child: const Text('CREA'),
+            ),
+          ),
+        const SectionTitle('Passivi'),
+        for (final a in amuletDefs.values.where((a) => !a.isAffinity && amuletPrices[a.id] != null))
           ActionTile(
             icon: Icons.brightness_7_outlined,
             title: a.name,
-            subtitle: a.description,
-            color: s.ownsAmulet(a.id) ? Palette.goldBright : Palette.gold,
-            trailing: s.ownsAmulet(a.id)
-                ? const Icon(Icons.check, color: Palette.goldBright)
-                : TextButton(
-                    onPressed: () {
-                      if (!s.buyAmulet(a.id, amuletPrices[a.id]!)) {
-                        toast(context, 'Rune insufficienti');
-                      }
-                    },
-                    child: Text('${amuletPrices[a.id]} rune'),
-                  ),
+            subtitle: '${a.description}'
+                '${s.amuletCount(a.id) > 0 ? ' · ne hai ${s.amuletCount(a.id)}' : ''}',
+            trailing: TextButton(
+              onPressed: () {
+                if (s.buyAmulet(a.id, amuletPrices[a.id]!)) {
+                  Sound.play(Sfx.buy);
+                } else {
+                  Sound.play(Sfx.locked);
+                  toast(context, 'Rune insufficienti');
+                }
+              },
+              child: Text('${amuletPrices[a.id]} rune'),
+            ),
           ),
       ],
     );

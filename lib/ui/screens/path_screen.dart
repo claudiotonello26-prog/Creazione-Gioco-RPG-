@@ -220,7 +220,15 @@ class _PathScreenState extends State<PathScreen> {
               Text(
                 '+${e.value} ${materialNames[e.key] ?? e.key}',
                 style: TextStyle(
-                  color: const {'ancient_stone', 'somber_stone', 'holy_shard'}.contains(e.key)
+                  color: const {
+                    'ancient_stone',
+                    'somber_stone',
+                    'somber_stone_2',
+                    'somber_stone_3',
+                    'somber_stone_4',
+                    'epic_stone',
+                    'holy_shard',
+                  }.contains(e.key)
                       ? Palette.goldBright
                       : Palette.holy,
                 ),

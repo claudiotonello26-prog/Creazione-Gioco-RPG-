@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../core/sound.dart';
+import '../../domain/items.dart';
 
 /// Titolo di sezione al centro, fra due fili d'oro simmetrici; l'eventuale
 /// dettaglio ([trailing]) va sotto, sempre al centro.
@@ -203,6 +204,13 @@ class ItemIcon extends StatelessWidget {
 
   static (IconData, Color) symbolOf(String id) {
     bool has(String s) => id.contains(s);
+    if (id.startsWith('amulet_')) {
+      final aura = amuletDefs[id.substring(7)]?.apply.aura;
+      return (Icons.brightness_7, aura?.color ?? Palette.goldBright);
+    }
+    if (has('somber')) return (Icons.hexagon, const Color(0xFF9B6BE0));
+    if (id == 'epic_stone') return (Icons.auto_awesome, const Color(0xFFFF8A3D));
+    if (id == 'ancient_stone') return (Icons.hexagon, const Color(0xFF8FE3FF));
     if (has('plank') || has('grip')) return (Icons.view_agenda, const Color(0xFFB08850));
     if (has('wood')) return (Icons.forest, const Color(0xFF9C7A4B));
     if (has('coal')) return (Icons.landscape, const Color(0xFF6B6B6B));

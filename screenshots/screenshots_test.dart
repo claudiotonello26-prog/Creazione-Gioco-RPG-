@@ -184,6 +184,8 @@ void main() {
     await _shot(t, '33_fornace');
     nav.pop();
     await t.pumpAndSettle();
+    st.character.weapon.upgrade = 2;
+    st.character.addMaterial('forge_stone_1', 4);
     nav.push(
       MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.enchant)),
     );
@@ -253,7 +255,8 @@ void main() {
     await t.pump(const Duration(milliseconds: 400));
     await t.pump(const Duration(milliseconds: 1200));
     expect(find.text('ANNULLA'), findsOneWidget);
-    await expectLater(find.byType(MaterialApp), matchesGoldenFile('out/36_creazione_countdown.png'));
+    await expectLater(
+        find.byType(MaterialApp), matchesGoldenFile('out/36_creazione_countdown.png'));
     await t.tap(find.text('ANNULLA'));
     await t.pumpAndSettle();
   });
@@ -306,7 +309,8 @@ void main() {
     ));
     await t.pump();
     await t.pump(const Duration(milliseconds: 600));
-    await expectLater(find.byType(MaterialApp), matchesGoldenFile('out/37_pausa_sposta_telefono.png'));
+    await expectLater(
+        find.byType(MaterialApp), matchesGoldenFile('out/37_pausa_sposta_telefono.png'));
     nav.pop();
     await t.pump(const Duration(seconds: 1));
   });
@@ -321,6 +325,11 @@ void main() {
     st.character.addMaterial('holy_shard', 1);
     st.character.armors.add('gambeson');
     st.character.worn[ArmorSlot.chest] = 'gambeson';
+    st.character.addMaterial('amulet_ember_amulet', 1);
+    st.character.addMaterial('amulet_regicide_seal', 1);
+    st.character.addMaterial('beast_essence', 4);
+    st.socketAmulet(st.character.weapon, 0, 'ember_amulet');
+    st.socketAmulet(st.character.weapon, 1, 'regicide_seal');
     await t.pumpWidget(IronOathApp(state: st));
     await t.pumpAndSettle();
     final nav = Navigator.of(t.element(find.byType(NavigationBar)));
@@ -334,6 +343,9 @@ void main() {
     await t.pumpAndSettle();
     nav.push(MaterialPageRoute<void>(builder: (_) => const MarketScreen()));
     await _shot(t, '52_mercato');
+    await t.tap(find.text('Fattucchiera'));
+    await t.pumpAndSettle();
+    await _shot(t, '53_fattucchiera');
   });
 
   testWidgets('gruppi e spedizioni', (t) async {
