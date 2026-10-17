@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../domain/character.dart';
 import '../../domain/items.dart';
@@ -46,14 +47,11 @@ class KnightView extends StatelessWidget {
         armorLook: character.armor?.look ?? -1,
       ),
     );
+    final art = 'assets/art/knight/knight_s${stage}_idle.png';
     return SizedBox(
       height: height,
       width: height * 0.8,
-      child: Image.asset(
-        'assets/art/knight/knight_s${stage}_idle.png',
-        fit: BoxFit.contain,
-        errorBuilder: (_, _, _) => painted,
-      ),
+      child: Art.has(art) ? Image.asset(art, fit: BoxFit.contain) : painted,
     );
   }
 }
@@ -386,23 +384,8 @@ class WeaponPreview extends StatelessWidget {
   final double size;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: ClipRect(
-        child: OverflowBox(
-          maxWidth: size * 1.6,
-          maxHeight: size * 2.4,
-          alignment: const Alignment(0, 0.55),
-          child: CustomPaint(
-            size: Size(size * 1.6, size * 2.4),
-            painter: _WeaponOnly(weapon),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      CustomPaint(size: Size(size, size), painter: _WeaponOnly(weapon));
 }
 
 class _WeaponOnly extends KnightPainter {
@@ -410,11 +393,140 @@ class _WeaponOnly extends KnightPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Arco e bastone sono disegnati di lato: li riporta al centro.
+    // Ingrandisce la sola fascia del disegno dove sta l'arma.
     final side = shapeOf(weapon.def);
-    if (side == WeaponShape.bow || side == WeaponShape.staff) {
-      canvas.translate(-size.width * 0.33, 0);
+    final sideways = side == WeaponShape.bow || side == WeaponShape.staff;
+    final (top, bottom) = sideways ? (0.1, 0.98) : (0.47, 0.98);
+    final vh = size.height / (bottom - top);
+    final vw = vh * 0.8;
+    final dx = sideways ? -vw * 0.33 : 0.0;
+    canvas.translate((size.width - vw) / 2 + dx, -top * vh);
+    _weapon(canvas, Size(vw, vh));
+  }
+}
+
+/// Pose del trainer, Ser Corvino. Le illustrazioni arriveranno da
+/// Antigravity (`assets/art/trainer/trainer_<posa>.png`); fino ad allora lo
+/// disegna questo painter.
+enum TrainerPose { crossed, pointing, cheering, facepalm, thinking, goofy }
+
+class TrainerPainter extends KnightPainter {
+  TrainerPainter(this.pose)
+      : super(weapon: WeaponInstance(weaponId: 'pilgrim_blade'), armorLook: 2);
+  final TrainerPose pose;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width, h = size.height, cx = w / 2;
+    const steel = Color(0xFF3B3F46);
+    final dark = Color.lerp(steel, Colors.black, 0.5)!;
+    final trim = Palette.gold;
+    final line = Paint()
+      ..color = trim
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = w * 0.012
+      ..strokeJoin = StrokeJoin.round;
+    Paint metal(Rect r) => Paint()
+      ..shader = LinearGradient(colors: [
+        Color.lerp(steel, Colors.black, 0.5)!,
+        Color.lerp(steel, Colors.white, 0.3)!,
+        Color.lerp(steel, Colors.black, 0.6)!,
+      ]).createShader(r);
+
+    // Mantello logoro con collo di pelliccia.
+    final cape = Path()
+      ..moveTo(cx - w * 0.3, h * 0.3)
+      ..quadraticBezierTo(cx - w * 0.48, h * 0.7, cx - w * 0.42, h)
+      ..lineTo(cx + w * 0.42, h)
+      ..quadraticBezierTo(cx + w * 0.48, h * 0.7, cx + w * 0.3, h * 0.3)
+      ..close();
+    canvas.drawPath(cape, Paint()..color = const Color(0xFF2A1210));
+    // Busto.
+    final torso = Rect.fromLTWH(cx - w * 0.27, h * 0.33, w * 0.54, h * 0.67);
+    canvas.drawRRect(RRect.fromRectAndCorners(torso, topLeft: Radius.circular(w * 0.1),
+        topRight: Radius.circular(w * 0.1)), metal(torso));
+    canvas.drawRRect(RRect.fromRectAndCorners(torso, topLeft: Radius.circular(w * 0.1),
+        topRight: Radius.circular(w * 0.1)), line);
+    // Croce sul petto.
+    final cross = Paint()..color = const Color(0xFF7E1F1A);
+    canvas.drawRect(Rect.fromLTWH(cx - w * 0.03, h * 0.42, w * 0.06, h * 0.3), cross);
+    canvas.drawRect(Rect.fromLTWH(cx - w * 0.12, h * 0.5, w * 0.24, h * 0.055), cross);
+    // Spallacci.
+    for (final side in [-1, 1]) {
+      final p = Rect.fromCenter(center: Offset(cx + side * w * 0.3, h * 0.38), width: w * 0.3, height: h * 0.16);
+      canvas.drawOval(p, metal(p));
+      canvas.drawArc(p, pi, pi, false, line);
     }
-    _weapon(canvas, size);
+    canvas.drawOval(Rect.fromCenter(center: Offset(cx, h * 0.32), width: w * 0.5, height: h * 0.09),
+        Paint()..color = const Color(0xFF4A3B2C));
+
+    // Braccia secondo la posa.
+    final arm = Paint()
+      ..color = dark
+      ..strokeWidth = w * 0.12
+      ..strokeCap = StrokeCap.round;
+    final gauntlet = Paint()..color = Color.lerp(steel, Colors.white, 0.2)!;
+    void limb(Offset a, Offset b, Offset hand) {
+      canvas.drawLine(a, b, arm);
+      canvas.drawLine(b, hand, arm);
+      canvas.drawCircle(hand, w * 0.065, gauntlet);
+    }
+
+    final ls = Offset(cx - w * 0.33, h * 0.42), rs = Offset(cx + w * 0.33, h * 0.42);
+    switch (pose) {
+      case TrainerPose.crossed:
+        limb(ls, Offset(cx - w * 0.3, h * 0.68), Offset(cx + w * 0.18, h * 0.64));
+        limb(rs, Offset(cx + w * 0.3, h * 0.72), Offset(cx - w * 0.18, h * 0.69));
+      case TrainerPose.pointing:
+        limb(ls, Offset(cx - w * 0.36, h * 0.7), Offset(cx - w * 0.26, h * 0.86));
+        limb(rs, Offset(cx + w * 0.42, h * 0.36), Offset(cx + w * 0.5, h * 0.22));
+      case TrainerPose.cheering:
+        limb(ls, Offset(cx - w * 0.42, h * 0.26), Offset(cx - w * 0.4, h * 0.06));
+        limb(rs, Offset(cx + w * 0.42, h * 0.26), Offset(cx + w * 0.4, h * 0.06));
+      case TrainerPose.facepalm:
+        limb(ls, Offset(cx - w * 0.36, h * 0.7), Offset(cx - w * 0.26, h * 0.86));
+        limb(rs, Offset(cx + w * 0.3, h * 0.42), Offset(cx + w * 0.06, h * 0.2));
+      case TrainerPose.thinking:
+        limb(ls, Offset(cx - w * 0.3, h * 0.68), Offset(cx + w * 0.1, h * 0.66));
+        limb(rs, Offset(cx + w * 0.3, h * 0.66), Offset(cx + w * 0.08, h * 0.3));
+      case TrainerPose.goofy:
+        limb(ls, Offset(cx - w * 0.46, h * 0.5), Offset(cx - w * 0.5, h * 0.3));
+        limb(rs, Offset(cx + w * 0.46, h * 0.56), Offset(cx + w * 0.48, h * 0.76));
+    }
+
+    // Elmo: storto nella posa buffa.
+    canvas.save();
+    final head = Offset(cx, h * 0.19);
+    if (pose == TrainerPose.goofy) {
+      canvas.translate(head.dx, head.dy);
+      canvas.rotate(-0.25);
+      canvas.translate(-head.dx, -head.dy);
+    }
+    _helm(canvas, head, w * 0.17, steel, trim);
+    canvas.restore();
+    if (pose == TrainerPose.facepalm) {
+      canvas.drawCircle(Offset(cx + w * 0.06, h * 0.2), w * 0.07, gauntlet);
+    }
+  }
+
+  @override
+  bool shouldRepaint(TrainerPainter old) => old.pose != pose;
+}
+
+class TrainerFigure extends StatelessWidget {
+  const TrainerFigure({super.key, required this.pose, this.height = 170});
+  final TrainerPose pose;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final art = 'assets/art/trainer/trainer_${pose.name}.png';
+    return SizedBox(
+      width: height * 0.8,
+      height: height,
+      child: Art.has(art)
+          ? Image.asset(art, fit: BoxFit.contain)
+          : CustomPaint(size: Size(height * 0.8, height), painter: TrainerPainter(pose)),
+    );
   }
 }

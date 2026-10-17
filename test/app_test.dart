@@ -26,15 +26,35 @@ void main() {
     state.completeTest({
       for (final id in baseExercises) id: const TestResult(reps: 10, variantLevel: 0),
     });
+    state.trainerEnabled = false;
     await tester.pumpWidget(IronOathApp(state: state));
     await tester.pumpAndSettle();
-    for (final label in ['Home', 'Allenati', 'Forgia', 'Arena', 'Eroe']) {
+    for (final label in ['Home', 'Training', 'Forgia', 'Arena', 'Attributi']) {
       expect(find.text(label), findsWidgets);
     }
-    for (final label in ['Allenati', 'Forgia', 'Arena', 'Eroe']) {
+    for (final label in ['Training', 'Forgia', 'Arena', 'Attributi']) {
       await tester.tap(find.widgetWithText(NavigationDestination, label));
       await tester.pumpAndSettle();
     }
-    expect(find.text('VALORI'), findsOneWidget);
+    expect(find.text('VIGORE'), findsOneWidget);
+  });
+
+  testWidgets('Ser Corvino si presenta alla prima apertura', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final state = GameState();
+    await state.load();
+    state.acceptHealth();
+    state.completeTest({
+      for (final id in baseExercises) id: const TestResult(reps: 10, variantLevel: 0),
+    });
+    await tester.pumpWidget(IronOathApp(state: state));
+    await tester.pumpAndSettle();
+    expect(find.text('SER CORVINO'), findsOneWidget);
+    for (var i = 0; i < 3; i++) {
+      await tester.tap(find.text('SER CORVINO'));
+      await tester.pumpAndSettle();
+    }
+    expect(find.text('SER CORVINO'), findsNothing);
+    expect(state.seenHints, contains('home'));
   });
 }

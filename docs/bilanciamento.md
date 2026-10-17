@@ -64,19 +64,37 @@ Per ogni gruppo muscolare (spinta, gambe, core…) si contano le rep di combatti
 - A fine combattimento appare un avviso arancione quando il bottino è stato ridotto.
 - Si aggiunge al Bonus Varietà già esistente: le prime 20 rep di ogni gruppo al giorno valgono XP doppi.
 
-## 4. Camminata
+## 4. Camminata: raccolta dei materiali
 
-| Passi di oggi | Ricompensa |
-|---|---|
-| Ogni 1000 | 1 Minerale di ferro |
-| Ogni 2500 | 1 Legno di frassino cenere |
-| 5000 | Pietra di forgia I |
-| 10000 | Pietra di forgia I e Scheggia sacra |
-| 15000 | Pietra di forgia II |
-| 20000 | Pietra antica |
+Come su Gymscape, i passi si accumulano in una riserva e si convertono nel materiale che scegli. Ogni materiale ha un livello minimo di mestiere.
 
-- Il tetto è 25.000 passi al giorno.
-- Si conta dal totale del giorno, quindi riscuotere più volte non raddoppia nulla.
+| Materiale | Mestiere | Livello | Passi per unità |
+|---|---|---|---|
+| Legno di frassino | Taglialegna | 1 | 400 |
+| Legno di quercia | Taglialegna | 5 | 700 |
+| Legno di tasso | Taglialegna | 12 | 1100 |
+| Legno d'ebano | Taglialegna | 20 | 1800 |
+| Carbone | Minatore | 1 | 300 |
+| Minerale di ferro | Minatore | 1 | 500 |
+| Argento lunare | Minatore | 8 | 900 |
+| Minerale stellare | Minatore | 16 | 1500 |
+
+- Il tetto è 25.000 passi al giorno; i passi già riscossi non si contano due volte.
+- Raccogliere dà XP al mestiere. XP per livello: 40 × livello^1,5, fino al livello 30.
+
+## 5. Mestieri e forgia
+
+- Quattro stazioni: Carpenteria (assi, impugnature, archi, bastoni), Fornace (lingotti, pietre di forgia), Incudine (spade, armature) e Incantamento.
+- Ogni ricetta ha un livello minimo del mestiere della stazione. Creare dà 8 + 3 × livello della ricetta in XP di mestiere.
+- Le armature riducono il danno subito: Gambeson 8%, Cotta di Maglia 15%, Piastre del Templare 22%, Armatura Stellare 30%.
+- Incantamento: con le pietre speciali l'arma sale di livello. Cambia colore a +3 e a +6; a +10 prende anche l'aura della sua build (Forza fuoco rosso, Destrezza vento verde, Intelligenza neon azzurro, Fede luce divina).
+
+## 6. Sentieri di allenamento e boss
+
+- Ogni gruppo muscolare ha un sentiero di 4 esercizi a corpo libero e poi il boss. Il livello Zavorrato usa sedia o manubri.
+- Un esercizio passa all'80% delle rep richieste.
+- Boss: circuito dei 4 esercizi, 30 secondi ciascuno fino allo sfinimento. Il premio arriva sempre, indipendentemente dalle rep.
+- Premio boss (doppio nello Zavorrato): 3 Essenze di bestia, 3 Minerali di ferro, 2 Carboni, 1 Pietra di forgia I e 150 XP. Rari: Scheggia sacra 30% (50%), Pietra antica 6% (12%), Pietra cupa 3% (6%).
 
 ## Dove sta nel codice
 
@@ -85,5 +103,7 @@ Per ogni gruppo muscolare (spinta, gambe, core…) si contano le rep di combatti
   - per le ricompense: `effortFactor`, `averageQuality`, `waveBonus` e `lootBonus`.
 - `lib/domain/enemies.dart`: `pressure` e `runeReward`.
 - `lib/data/game_state.dart`: `fatigueAt` e `applyCombatRewards`.
-- `lib/domain/walking.dart`: la Camminata.
+- `lib/domain/skills.dart`: materiali raccoglibili e curva dei mestieri.
+- `lib/domain/items.dart`: ricette, stazioni e armature.
+- `lib/data/game_state.dart`: `claimSteps`, `craftMaterial` e `bossLoot`.
 - Test: `test/combat_test.dart`, `test/economy_test.dart` e `test/walking_test.dart`. La tabella qui sopra la stampa il test "tabella di bilanciamento".

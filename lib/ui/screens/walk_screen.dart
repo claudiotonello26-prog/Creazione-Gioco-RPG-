@@ -10,6 +10,7 @@ import '../../domain/skills.dart';
 import '../../domain/walking.dart';
 import '../../health/step_source.dart';
 import '../widgets/common.dart';
+import '../widgets/trainer.dart';
 
 /// La Camminata: i passi di oggi (Samsung Health, Google Fit, smartwatch,
 /// tramite Health Connect o Salute) diventano minerale, legno e pietre.
@@ -30,6 +31,7 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    maybeShowHint(context, 'walk');
     _refresh();
   }
 

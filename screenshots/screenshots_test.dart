@@ -12,6 +12,9 @@ import 'package:iron_oath/domain/routine.dart';
 import 'package:iron_oath/main.dart';
 import 'package:iron_oath/ui/screens/combat_screen.dart';
 import 'package:iron_oath/ui/screens/walk_screen.dart';
+import 'package:iron_oath/ui/screens/path_screen.dart';
+import 'package:iron_oath/ui/screens/forge_tab.dart';
+import 'package:iron_oath/domain/items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFont(String family, List<String> paths) async {
@@ -81,9 +84,11 @@ void main() {
 
   testWidgets('schede', (t) async {
     _phone(t);
-    await t.pumpWidget(IronOathApp(state: await _state()));
+    final st = await _state();
+    st.trainerEnabled = false;
+    await t.pumpWidget(IronOathApp(state: st));
     await _shot(t, '10_home');
-    for (final (i, label) in ['Allenati', 'Forgia', 'Arena', 'Eroe'].indexed) {
+    for (final (i, label) in ['Training', 'Forgia', 'Arena', 'Attributi'].indexed) {
       await t.tap(find.widgetWithText(NavigationDestination, label));
       await _shot(t, '1${i + 1}_${label.toLowerCase()}');
     }
@@ -91,7 +96,9 @@ void main() {
 
   testWidgets('camminata e YOU DIED', (t) async {
     _phone(t);
-    await t.pumpWidget(IronOathApp(state: await _state()));
+    final st = await _state();
+    st.trainerEnabled = false;
+    await t.pumpWidget(IronOathApp(state: st));
     await t.pumpAndSettle();
     Navigator.of(t.element(find.byType(NavigationBar)))
         .push(MaterialPageRoute<void>(builder: (_) => const WalkScreen()));
@@ -100,5 +107,33 @@ void main() {
       home: Scaffold(backgroundColor: Color(0xFF1C1712), body: YouDiedOverlay()),
     ));
     await _shot(t, '21_you_died');
+  });
+
+  testWidgets('trainer, sentiero, forgia', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.character.addMaterial('forge_stone_1', 3);
+    st.character.addMaterial('iron_ore', 6);
+    st.character.addMaterial('coal', 3);
+    st.character.weapon.upgrade = 10;
+    st.character.armors.add('templar_plate');
+    st.character.armorId = 'templar_plate';
+    await t.pumpWidget(IronOathApp(state: st));
+    await _shot(t, '30_trainer');
+    await t.tapAt(const Offset(10, 10));
+    await t.pumpAndSettle();
+    await _shot(t, '31_home_cavaliere');
+    st.trainerEnabled = false;
+    final nav = Navigator.of(t.element(find.byType(NavigationBar)));
+    nav.push(MaterialPageRoute<void>(builder: (_) => const PathScreen(group: MuscleGroup.push)));
+    await _shot(t, '32_sentiero');
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.furnace)));
+    await _shot(t, '33_fornace');
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.enchant)));
+    await _shot(t, '34_incantamento');
   });
 }

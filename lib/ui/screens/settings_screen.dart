@@ -25,6 +25,13 @@ class SettingsScreen extends StatelessWidget {
           subtitle: const Text('Spento: inserimento manuale, rep non verificate',
               style: TextStyle(color: Palette.ash)),
         ),
+        SwitchListTile(
+          value: s.trainerEnabled,
+          onChanged: s.setTrainerEnabled,
+          title: const Text('Consigli di Ser Corvino'),
+          subtitle: const Text('Riaccendendolo, rivedi tutti i consigli dall\'inizio',
+              style: TextStyle(color: Palette.ash)),
+        ),
         ListTile(
           title: const Text('Server dell\'Arena live'),
           subtitle: Text(

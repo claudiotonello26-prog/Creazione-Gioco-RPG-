@@ -6,7 +6,9 @@ import '../../data/game_state.dart';
 import '../widgets/common.dart';
 import 'onboarding.dart';
 import '../../domain/items.dart';
+import '../../domain/novice.dart';
 import '../widgets/knight_view.dart';
+import '../widgets/trainer.dart';
 import 'quest_screen.dart';
 import 'settings_screen.dart';
 import 'walk_screen.dart';
@@ -76,6 +78,7 @@ class HomeTab extends StatelessWidget {
             ),
           ),
         ),
+        if (s.noviceQuest != null) _NoviceCard(state: s),
         if (c.availablePoints > 0)
           ActionTile(
             icon: Icons.add_circle,
@@ -258,6 +261,71 @@ class HomeTab extends StatelessWidget {
             ],
           ),
       ],
+    );
+  }
+}
+
+/// Il Cammino del Novizio: una missione guidata alla volta.
+class _NoviceCard extends StatelessWidget {
+  const _NoviceCard({required this.state});
+  final GameState state;
+
+  Future<void> _claim(BuildContext context) async {
+    final done = state.claimNovice();
+    if (done == null) return;
+    final next = state.noviceQuest;
+    await showTrainer(context, [
+      TrainerLine(
+        TrainerPose.cheering,
+        'Missione "${done.title}" compiuta! '
+        '${[if (done.runes > 0) '+${done.runes} rune', for (final e in done.loot.entries) '+${e.value} ${materialNames[e.key]}'].join(', ')}.',
+      ),
+      if (next != null)
+        TrainerLine(TrainerPose.pointing, next.trainer)
+      else
+        const TrainerLine(TrainerPose.crossed,
+            'Il Cammino del Novizio è finito. Non sei più un novizio. Sei... appena accettabile. Continua così.'),
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final q = state.noviceQuest!;
+    final have = state.stat(q.stat).clamp(0, q.target);
+    final ready = state.noviceReady;
+    return Card(
+      child: InkWell(
+        onTap: () => ready
+            ? _claim(context)
+            : showTrainer(context, [TrainerLine(TrainerPose.pointing, q.trainer)]),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              const TrainerFigure(pose: TrainerPose.crossed, height: 84),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('CAMMINO DEL NOVIZIO · ${state.noviceStep + 1}/${noviceQuests.length}',
+                        style: titleStyle(size: 11, color: Palette.gold, spacing: 1.5)),
+                    const SizedBox(height: 2),
+                    Text(q.title, style: titleStyle(size: 17, color: Palette.holy, spacing: 0.5)),
+                    Text(q.goal, style: const TextStyle(color: Palette.ash, fontSize: 13)),
+                    const SizedBox(height: 6),
+                    StatBar(value: have / q.target, color: Palette.gold, label: '$have / ${q.target}'),
+                    if (ready) ...[
+                      const SizedBox(height: 6),
+                      FilledButton(onPressed: () => _claim(context), child: const Text('RISCUOTI')),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

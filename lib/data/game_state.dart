@@ -172,8 +172,15 @@ class GameState extends ChangeNotifier {
   /// Missione del Novizio in corso (== noviceQuests.length: finito).
   int noviceStep = 0;
 
-  /// Consigli del trainer già visti.
+  /// Consigli del trainer già visti, e se il trainer appare.
   Set<String> seenHints = {};
+  bool trainerEnabled = true;
+
+  void setTrainerEnabled(bool v) {
+    trainerEnabled = v;
+    if (v) seenHints = {};
+    _changed();
+  }
 
   late DailyState daily;
 
@@ -266,6 +273,7 @@ class GameState extends ChangeNotifier {
         'stats': stats,
         'novice': noviceStep,
         'hints': seenHints.toList(),
+        'trainer': trainerEnabled,
       };
 
   /// Bastano gli ultimi 120 giorni per il calendario.
@@ -325,6 +333,7 @@ class GameState extends ChangeNotifier {
     stats = Map<String, int>.from(j['stats'] as Map? ?? const {});
     noviceStep = j['novice'] as int? ?? 0;
     seenHints = Set<String>.from(j['hints'] as List? ?? const []);
+    trainerEnabled = j['trainer'] as bool? ?? true;
   }
 
   Future<void> resetAll() async {

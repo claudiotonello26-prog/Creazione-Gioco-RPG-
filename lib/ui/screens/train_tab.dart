@@ -8,56 +8,10 @@ import '../../domain/enemies.dart';
 import '../../domain/exercise.dart';
 import '../../domain/routine.dart';
 import '../widgets/common.dart';
+import '../widgets/trainer.dart';
 import 'combat_screen.dart';
+import 'path_screen.dart';
 import 'quest_screen.dart';
-import 'training_screen.dart';
-
-/// Esercizio di una sfida: [trackAs] è il modello di movimento usato dal
-/// contatore (es. tutti i push-up usano l'angolo del gomito).
-class ChallengeExercise {
-  const ChallengeExercise(this.name, this.trackAs, {this.advanced = false, this.ratio = 0.5});
-  final String name;
-  final ExerciseId trackAs;
-  final bool advanced;
-  final double ratio;
-}
-
-const Map<MuscleGroup, List<ChallengeExercise>> muscleChallenges = {
-  MuscleGroup.push: [
-    ChallengeExercise('Push-up', ExerciseId.pushUp),
-    ChallengeExercise('Push-up larghi', ExerciseId.pushUp),
-    ChallengeExercise('Dip su sedia', ExerciseId.pushUp),
-    ChallengeExercise('Pike push-up', ExerciseId.pushUp, ratio: 0.4),
-    ChallengeExercise('Diamond push-up', ExerciseId.pushUp, advanced: true, ratio: 0.4),
-    ChallengeExercise('Archer push-up', ExerciseId.pushUp, advanced: true, ratio: 0.3),
-    ChallengeExercise('Push-up esplosivi', ExerciseId.pushUp, advanced: true, ratio: 0.35),
-  ],
-  MuscleGroup.back: [
-    ChallengeExercise('Superman', ExerciseId.legRaise, ratio: 0.8),
-    ChallengeExercise('Rematore sotto il tavolo', ExerciseId.pushUp, ratio: 0.6),
-    ChallengeExercise('Plank con tocco spalle', ExerciseId.plank),
-    ChallengeExercise('Rematore a un braccio', ExerciseId.pushUp, advanced: true, ratio: 0.4),
-  ],
-  MuscleGroup.core: [
-    ChallengeExercise('Crunch', ExerciseId.crunch),
-    ChallengeExercise('Leg raise', ExerciseId.legRaise),
-    ChallengeExercise('Plank', ExerciseId.plank),
-    ChallengeExercise('V-up', ExerciseId.legRaise, advanced: true, ratio: 0.4),
-    ChallengeExercise('Leg raise completi', ExerciseId.legRaise, advanced: true, ratio: 0.6),
-  ],
-  MuscleGroup.legs: [
-    ChallengeExercise('Squat', ExerciseId.squat),
-    ChallengeExercise('Affondi', ExerciseId.lunge),
-    ChallengeExercise('Ponte per glutei', ExerciseId.squat, ratio: 0.6),
-    ChallengeExercise('Jump squat', ExerciseId.squat, advanced: true, ratio: 0.35),
-    ChallengeExercise('Squat bulgaro', ExerciseId.lunge, advanced: true, ratio: 0.5),
-  ],
-  MuscleGroup.cardio: [
-    ChallengeExercise('Jumping jack', ExerciseId.jumpingJack),
-    ChallengeExercise('High knees', ExerciseId.jumpingJack, ratio: 0.6),
-    ChallengeExercise('Burpee completi', ExerciseId.squat, advanced: true, ratio: 0.25),
-  ],
-};
 
 class TrainTab extends StatelessWidget {
   const TrainTab({super.key});
@@ -77,6 +31,34 @@ class TrainTab extends StatelessWidget {
           onTap: () => Navigator.of(context)
               .push(MaterialPageRoute(builder: (_) => const QuestScreen())),
         ),
+        const SectionTitle('Sentieri di allenamento'),
+        const Text(
+          'Scegli un gruppo muscolare: quattro tappe a corpo libero e un guardiano in cima.',
+          style: TextStyle(color: Palette.ash, fontSize: 13),
+        ),
+        const SizedBox(height: 8),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 1.35,
+          children: [
+            for (final g in bodyweightPaths.keys)
+              _PathCard(
+                group: g,
+                progress: s.pathProgress(g),
+                trainedThisWeek: trainedThisWeek.contains(g),
+                onTap: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => PathScreen(group: g))),
+              ),
+          ],
+        ),
+        Text(
+          'Piano per ${s.daysPerWeek} giorni: ${plan.map((d) => d.map((g) => g.label).join(' + ')).join(' · ')}',
+          style: const TextStyle(color: Palette.ash, fontSize: 12),
+        ),
         const SectionTitle('Spedizioni'),
         for (final e in expeditions.values)
           ActionTile(
@@ -89,23 +71,6 @@ class TrainTab extends StatelessWidget {
         if (s.daily.expeditionDone)
           const Text('Una spedizione al giorno: torna domani.',
               style: TextStyle(color: Palette.ash)),
-        const SectionTitle('Sfide per gruppo muscolare'),
-        Text(
-          'Piano per ${s.daysPerWeek} giorni: ${plan.map((d) => d.map((g) => g.label).join(' + ')).join(' · ')}',
-          style: const TextStyle(color: Palette.ash, fontSize: 13),
-        ),
-        const SizedBox(height: 6),
-        for (final g in muscleChallenges.keys)
-          ActionTile(
-            icon: Icons.bolt,
-            title: g.label,
-            subtitle: trainedThisWeek.contains(g)
-                ? 'Allenato questa settimana'
-                : 'Non ancora allenato questa settimana · Bonus Varietà attivo',
-            color: trainedThisWeek.contains(g) ? Palette.gold : Palette.ember,
-            onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => ChallengeScreen(group: g))),
-          ),
         const SectionTitle('Caccia infinita'),
         ActionTile(
           icon: Icons.all_inclusive,
@@ -129,6 +94,11 @@ class TrainTab extends StatelessWidget {
   }
 
   Future<void> _freeFight(BuildContext context, EnemyDef enemy, {bool endless = false}) async {
+    final st = context.read<GameState>();
+    if (endless && st.trainerEnabled && st.markHint('hunt')) {
+      await showTrainer(context, trainerHints['hunt']!);
+      if (!context.mounted) return;
+    }
     final choice = await showModalBottomSheet<(ExerciseId, Stance)>(
       context: context,
       backgroundColor: Palette.stone,
@@ -149,6 +119,62 @@ class TrainTab extends StatelessWidget {
     }
     await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => ExpeditionScreen(expedition: e)));
+  }
+}
+
+class _PathCard extends StatelessWidget {
+  const _PathCard({
+    required this.group,
+    required this.progress,
+    required this.trainedThisWeek,
+    required this.onTap,
+  });
+  final MuscleGroup group;
+  final int progress;
+  final bool trainedThisWeek;
+  final VoidCallback onTap;
+
+  static IconData iconFor(MuscleGroup g) => switch (g) {
+        MuscleGroup.push => Icons.fitness_center,
+        MuscleGroup.back => Icons.accessibility_new,
+        MuscleGroup.core => Icons.adjust,
+        MuscleGroup.legs => Icons.directions_walk,
+        MuscleGroup.cardio => Icons.favorite,
+        MuscleGroup.mobility => Icons.self_improvement,
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final done = progress >= 5;
+    return Card(
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(iconFor(group), color: done ? Palette.goldBright : Palette.gold),
+                  const Spacer(),
+                  Text(done ? 'FATTO' : '$progress/5',
+                      style: TextStyle(color: done ? Palette.goldBright : Palette.ash, fontSize: 12)),
+                ],
+              ),
+              const Spacer(),
+              Text(group.label, style: titleStyle(size: 14)),
+              Text(trainedThisWeek ? 'Allenato questa settimana' : 'Bonus Varietà attivo',
+                  style: TextStyle(
+                      color: trainedThisWeek ? Palette.ash : Palette.ember, fontSize: 11)),
+              const SizedBox(height: 4),
+              StatBar(value: progress / 5, color: Palette.gold, height: 5),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -209,82 +235,6 @@ class _FightSetupState extends State<_FightSetup> {
         ],
       ),
     );
-  }
-}
-
-class ChallengeScreen extends StatefulWidget {
-  const ChallengeScreen({super.key, required this.group});
-  final MuscleGroup group;
-
-  @override
-  State<ChallengeScreen> createState() => _ChallengeScreenState();
-}
-
-class _ChallengeScreenState extends State<ChallengeScreen> {
-  bool _advanced = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final s = context.watch<GameState>();
-    final list = muscleChallenges[widget.group]!.where((c) => c.advanced == _advanced).toList();
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.group.label.toUpperCase())),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          SwitchListTile(
-            value: _advanced,
-            onChanged: (v) => setState(() => _advanced = v),
-            title: const Text('Livello avanzato'),
-            subtitle: const Text('Versioni più dure e più volume',
-                style: TextStyle(color: Palette.ash)),
-          ),
-          if (widget.group == MuscleGroup.back)
-            const Padding(
-              padding: EdgeInsets.only(bottom: 8),
-              child: Text(
-                'La sfida Dorso bilancia la spinta della quest e protegge la postura.',
-                style: TextStyle(color: Palette.ash),
-              ),
-            ),
-          for (final c in list)
-            ActionTile(
-              icon: Icons.fitness_center,
-              title: c.name,
-              subtitle: c.trackAs == ExerciseId.plank
-                  ? 'Tieni la posizione'
-                  : '${_target(s, c)} rep',
-              onTap: () => _run(context, c),
-            ),
-        ],
-      ),
-    );
-  }
-
-  int _target(GameState s, ChallengeExercise c) {
-    final base = s.testRepsFor(c.trackAs) * c.ratio * (_advanced ? 1.2 : 1.0);
-    return base.round().clamp(3, 999);
-  }
-
-  Future<void> _run(BuildContext context, ChallengeExercise c) async {
-    final s = context.read<GameState>();
-    final hold = c.trackAs == ExerciseId.plank;
-    final result = await Navigator.of(context).push<SetResult>(MaterialPageRoute(
-      builder: (_) => TrainingScreen(
-        exercise: c.trackAs,
-        title: c.name,
-        target: hold ? null : _target(s, c),
-        timeLimit: hold ? const Duration(minutes: 3) : null,
-      ),
-    ));
-    if (result == null || !context.mounted) return;
-    if (hold) {
-      s.recordBest(ExerciseId.plank, result.held.inSeconds);
-      toast(context, 'Tenuto ${result.held.inSeconds} secondi');
-      return;
-    }
-    final xp = s.addTraining(c.trackAs, result.reps, countsForQuest: false);
-    toast(context, '+$xp XP');
   }
 }
 
