@@ -147,3 +147,76 @@ test('duello live di push-up tra due giocatori', { skip: !BASE, timeout: 120000 
   assert.ok(board.records.some((r) => r.name === `alda${run}` && r.score === 1025));
 
 });
+
+async function api(token, method, path, body) {
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const text = await res.text();
+  assert.strictEqual(res.status, 200, `${method} ${path}: ${text}`);
+  return text ? JSON.parse(text) : {};
+}
+
+const rpcCall = async (token, id, payload) =>
+  JSON.parse((await api(token, 'POST', `/v2/rpc/${id}`, JSON.stringify(payload))).payload || '{}');
+
+test('gilda: inviti, sfida tra amici e allenamento insieme', { skip: !BASE, timeout: 60000 }, async (t) => {
+  const run = Date.now();
+  const tA = await auth(`device-ga-${run}`, `gilda_a${run}`);
+  const tB = await auth(`device-gb-${run}`, `gilda_b${run}`);
+  const idA = userIdOf(tA), idB = userIdOf(tB);
+
+  // A crea la gilda e invita B (amicizia + aggiunta al gruppo).
+  const guild = await api(tA, 'POST', '/v2/group', { name: `Ordine ${run}`, description: 'Prova', open: false, max_count: 50 });
+  await api(tA, 'POST', `/v2/friend?usernames=gilda_b${run}`);
+  await api(tA, 'POST', `/v2/group/${guild.id}/add?user_ids=${idB}`);
+  const mine = await api(tB, 'GET', `/v2/user/${idB}/group?limit=10`);
+  assert.ok(mine.user_groups.some((g) => g.group.id === guild.id), 'B è nella gilda');
+  const members = await api(tB, 'GET', `/v2/group/${guild.id}/user?limit=50`);
+  assert.strictEqual(members.group_users.length, 2);
+
+  // A sfida B: B riceve la notifica e vede la sfida tra le sessioni.
+  const duel = await rpcCall(tA, 'guild_session_create', { guild: guild.id, mode: 'friendly', exercise: 'squat', opponent: idB });
+  assert.ok(duel.matchId);
+  const notes = await api(tB, 'GET', '/v2/notification?limit=10');
+  const note = notes.notifications.find((n) => n.code === 100);
+  assert.ok(note, 'B riceve la sfida');
+  assert.strictEqual(JSON.parse(note.content).matchId, duel.matchId);
+
+  // A apre un allenamento di gilda: B lo vede, un estraneo no.
+  const group = await rpcCall(tA, 'guild_session_create', { guild: guild.id, mode: 'group', exercise: 'pushUp' });
+  await sleep(1500); // Nakama indicizza le etichette ogni secondo.
+  const seen = await rpcCall(tB, 'guild_sessions', { guild: guild.id });
+  assert.deepStrictEqual(seen.sessions.map((s) => s.matchId).sort(), [duel.matchId, group.matchId].sort());
+  assert.ok(seen.sessions.every((s) => s.hostName === `gilda_a${run}`));
+  const tC = await auth(`device-gc-${run}`, `gilda_c${run}`);
+  const denied = await fetch(`${BASE}/v2/rpc/guild_sessions`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${tC}` },
+    body: JSON.stringify(JSON.stringify({ guild: guild.id })),
+  });
+  assert.notStrictEqual(denied.status, 200, 'chi non è nella gilda non vede gli allenamenti');
+
+  // B entra nell'allenamento: al via di A parte, e la lista non lo mostra più.
+  const a = await connect(tA);
+  const b = await connect(tB);
+  t.after(() => {
+    a.ws.close();
+    b.ws.close();
+  });
+  a.send({ cid: '1', match_join: { match_id: group.matchId } });
+  b.send({ cid: '1', match_join: { match_id: group.matchId } });
+  await a.wait((m) => m.match);
+  await b.wait((m) => m.match);
+  a.data(group.matchId, 1, {});
+  b.data(group.matchId, 1, {});
+  await sleep(500);
+  a.data(group.matchId, 4, {});
+  await b.wait((m) => m.match_data && m.match_data.op_code === '10' && decode(m).phase === 'countdown', 10000);
+  await sleep(1500);
+  const after = await rpcCall(tB, 'guild_sessions', { guild: guild.id });
+  assert.ok(!after.sessions.some((s) => s.matchId === group.matchId));
+  assert.ok(idA);
+});

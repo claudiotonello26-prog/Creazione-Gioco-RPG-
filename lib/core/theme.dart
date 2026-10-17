@@ -23,11 +23,12 @@ class Palette {
 /// la barra in alto, l'alone dello sfondo e i pulsanti principali.
 class Sections {
   static const home = Palette.gold;
-  static const training = Color(0xFFD0603A);
+  static const training = Color(0xFFC0433A);
   static const gathering = Color(0xFF7FA85A);
   static const forge = Color(0xFFE0662B);
   static const market = Color(0xFF5FB0A6);
   static const arena = Color(0xFFC0433A);
+  static const guild = Color(0xFF6F8FE0);
 }
 
 /// Caratteri: Cinzel per titoli e pulsanti (iscrizioni romane), EB Garamond

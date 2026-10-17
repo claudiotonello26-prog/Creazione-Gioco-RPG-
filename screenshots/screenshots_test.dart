@@ -28,6 +28,11 @@ import 'package:iron_oath/ui/screens/quest_screen.dart';
 import 'package:iron_oath/ui/screens/character_creation.dart';
 import 'package:iron_oath/ui/screens/rest_screen.dart';
 import 'package:iron_oath/ui/screens/steps_card.dart';
+import 'package:iron_oath/core/theme.dart';
+import 'package:iron_oath/online/guild_service.dart';
+import 'package:iron_oath/online/nakama_client.dart';
+import 'package:iron_oath/ui/screens/guild_tab.dart';
+import 'package:iron_oath/ui/widgets/oath_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFont(String family, List<String> paths) async {
@@ -119,10 +124,60 @@ void main() {
     st.trainerEnabled = false;
     await t.pumpWidget(IronOathApp(state: st));
     await _shot(t, '10_home');
-    for (final (i, label) in ['Training', 'Raccolta', 'Forgia', 'Mercato', 'Arena'].indexed) {
+    for (final (i, label) in ['Training', 'Raccolta', 'Forgia', 'Mercato', 'Gilda'].indexed) {
       await t.tap(find.widgetWithText(NavigationDestination, label));
       await _shot(t, '1${i + 1}_${label.toLowerCase()}');
     }
+  });
+
+  testWidgets('training con arena e gilda', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    st.useCamera = true;
+    st.serverAddress = '127.0.0.1';
+    await t.pumpWidget(IronOathApp(state: st));
+    await t.tap(find.widgetWithText(NavigationDestination, 'Training'));
+    await t.pumpAndSettle();
+    await t.tap(find.widgetWithText(Tab, 'Arena'));
+    await _shot(t, '16_training_arena');
+    final g = GuildService(
+      client: NakamaClient(ServerConfig.parse('127.0.0.1')!),
+      deviceId: 'x',
+      username: 'Aldric',
+    )
+      ..guild = Guild(
+          id: 'g', name: 'Ordine del Ferro', description: 'Mai saltare il giorno gambe', count: 4)
+      ..myState = 0
+      ..members = [
+        GuildMember(id: '', name: 'Aldric', state: 0, online: true),
+        GuildMember(id: 'b', name: 'Brenna', state: 1, online: true),
+        GuildMember(id: 'c', name: 'Corvo', state: 2, online: false),
+        GuildMember(id: 'd', name: 'Dario', state: 3, online: false),
+      ]
+      ..sessions = [
+        GuildSession(
+          matchId: 'm',
+          friendly: false,
+          exercise: ExerciseId.squat,
+          host: 'b',
+          hostName: 'Brenna',
+          size: 2,
+        ),
+      ]
+      ..challenges = [
+        Challenge(id: 'n', matchId: 'm2', exercise: ExerciseId.pushUp, from: 'Corvo'),
+      ];
+    final nav = Navigator.of(t.element(find.byType(NavigationBar)));
+    nav.push(MaterialPageRoute<void>(
+      builder: (_) => Scaffold(
+        appBar: const OathBar(title: Text('GILDA'), accent: Sections.guild),
+        body: GuildTab(service: g),
+      ),
+    ));
+    await _shot(t, '17_gilda');
+    await t.drag(find.byType(ListView).last, const Offset(0, -700));
+    await _shot(t, '18_gilda_membri');
   });
 
   testWidgets('home con punti da spendere', (t) async {

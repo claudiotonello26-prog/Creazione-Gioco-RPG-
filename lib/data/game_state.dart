@@ -281,15 +281,22 @@ class GameState extends ChangeNotifier {
     String opponent,
     int outcome,
     int? serverPoints,
-    List<RepQuality> reps,
-  ) {
-    if (serverPoints != null) {
-      arenaPoints = serverPoints;
-    } else {
-      arenaPoints = (arenaPoints + rankDelta(outcome)).clamp(0, 99999);
+    List<RepQuality> reps, {
+    LiveMode mode = LiveMode.arena,
+  }) {
+    // Sfide tra amici e allenamenti di gilda non toccano la stagione.
+    if (mode == LiveMode.arena) {
+      if (serverPoints != null) {
+        arenaPoints = serverPoints;
+      } else {
+        arenaPoints = (arenaPoints + rankDelta(outcome)).clamp(0, 99999);
+      }
     }
-    arenaHistory.insert(0, ArenaRecord(id, '$opponent (live)', outcome.sign, today));
-    if (arenaHistory.length > 30) arenaHistory.removeLast();
+    if (mode != LiveMode.group) {
+      final tag = mode == LiveMode.arena ? 'live' : 'amico';
+      arenaHistory.insert(0, ArenaRecord(id, '$opponent ($tag)', outcome.sign, today));
+      if (arenaHistory.length > 30) arenaHistory.removeLast();
+    }
     addTraining(id, reps, countsForQuest: false);
   }
 
@@ -1270,8 +1277,7 @@ class GameState extends ChangeNotifier {
     _changed();
   }
 
-  bool canCraftAmulet(String id) =>
-      amuletRecipes[id] != null && hasMaterials(amuletRecipes[id]!);
+  bool canCraftAmulet(String id) => amuletRecipes[id] != null && hasMaterials(amuletRecipes[id]!);
 
   /// La Fattucchiera incanta gli amuleti d'affinità con il cuore della build.
   bool craftAmulet(String id) {

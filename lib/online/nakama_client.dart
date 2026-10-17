@@ -113,9 +113,41 @@ class NakamaClient {
           body: jsonEncode(jsonEncode(payload)),
         )
         .timeout(const Duration(seconds: 10));
-    if (res.statusCode != 200) throw NakamaException('RPC $id fallita (${res.statusCode})');
+    if (res.statusCode != 200) {
+      var message = 'RPC $id fallita (${res.statusCode})';
+      try {
+        message = (jsonDecode(res.body) as Map<String, dynamic>)['message'] as String? ?? message;
+      } catch (_) {}
+      throw NakamaException(message);
+    }
     final body = jsonDecode(res.body) as Map<String, dynamic>;
     return jsonDecode(body['payload'] as String? ?? '{}') as Map<String, dynamic>;
+  }
+
+  /// Chiamata REST alle API standard di Nakama (gruppi, amici, notifiche).
+  Future<Map<String, dynamic>> api(
+    NakamaSession s,
+    String method,
+    String path, {
+    Map<String, String>? query,
+    Object? body,
+  }) async {
+    final req = http.Request(method, config.http(path, query))
+      ..headers['Authorization'] = 'Bearer ${s.token}'
+      ..headers['Content-Type'] = 'application/json';
+    if (body != null) req.body = jsonEncode(body);
+    final res = await http.Response.fromStream(
+      await _http.send(req).timeout(const Duration(seconds: 10)),
+    );
+    if (res.statusCode != 200) {
+      var message = 'Errore del server (${res.statusCode})';
+      try {
+        message = (jsonDecode(res.body) as Map<String, dynamic>)['message'] as String? ?? message;
+      } catch (_) {}
+      throw NakamaException(message);
+    }
+    if (res.body.isEmpty) return const {};
+    return jsonDecode(res.body) as Map<String, dynamic>;
   }
 
   Future<NakamaSocket> connect(NakamaSession s, {WebSocketChannel Function(Uri)? connector}) async {

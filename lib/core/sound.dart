@@ -67,6 +67,7 @@ enum Music {
   forge('music_forge'),
   market('music_market'),
   arena('music_arena'),
+  guild('music_guild'),
   combat('music_combat'),
   boss('music_boss');
 

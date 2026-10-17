@@ -17,6 +17,20 @@ dell'Arena Pura.
 - **RPC**: `arena_profile` (punti, titolo, posizione) e `arena_top`
   (prime 20 posizioni, di stagione o di un esercizio).
 
+## Gilde
+
+- Le gilde sono i **gruppi** di Nakama: creazione, ricerca, ingresso, inviti
+  (`/v2/group/{id}/add`), membri e uscita passano dalle API REST standard;
+  gli amici da `/v2/friend`.
+- **Sfida tra amici** (`guild_session_create` con `mode: "friendly"` e
+  `opponent`): duello a due senza punti stagione né record; l'avversario
+  riceve una notifica (codice 100) con l'id del duello.
+- **Allenamento di gilda** (`guild_session_create` con `mode: "group"`):
+  fino a quattro membri, parte al via di chi l'ha aperto (op 4), alla fine
+  una classifica senza vincitore.
+- `guild_sessions` elenca allenamenti aperti e sfide in attesa della gilda,
+  solo per chi ne fa parte. Le partite private aspettano fino a 5 minuti.
+
 Le soglie degli angoli e le regole delle sfide specchiano quelle dell'app
 (`lib/pose/rep_counter.dart`, `lib/domain/pvp.dart`): vanno cambiate insieme.
 
@@ -27,6 +41,7 @@ Le soglie degli angoli e le regole delle sfide specchiano quelle dell'app
 | 1 READY | client → server | `{}` |
 | 2 POSE | client → server | `{"k": [[x, y, prob], …13]}` |
 | 3 REP | client → server | `{"q": "perfect" \| "good" \| "poor"}` |
+| 4 START | client → server | allenamento di gilda: il via di chi l'ha aperto |
 | 10 STATE | server → client | fase, conto alla rovescia, tempo, rep per giocatore |
 | 11 RESULT | server → client | vincitore, risultati, punti |
 | 12 POSE | server → client | scheletro dell'avversario `{"u", "k"}` |

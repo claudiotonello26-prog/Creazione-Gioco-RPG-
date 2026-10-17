@@ -130,8 +130,17 @@ class GuideScreen extends StatelessWidget {
     (
       Icons.sports_kabaddi,
       'Arena',
-      'Niente statistiche né build: vince chi si allena meglio, e le rep scorrette non '
-          'contano. Il live contro persone vere richiede la fotocamera.',
+      'Sta nel Training, in alto accanto all\'Allenamento. Niente statistiche né build: vince '
+          'chi si allena meglio, e le rep scorrette non contano. Il live contro persone vere '
+          'richiede la fotocamera.',
+    ),
+    (
+      Icons.shield_outlined,
+      'Gilda',
+      'Fonda una gilda o entra in quella dei tuoi amici. Fondatore e ufficiali invitano per '
+          'nome. Apri un allenamento e fino a quattro membri si uniscono in diretta: chi l\'ha '
+          'aperto dà il via. Puoi sfidare un membro: è un duello vero, ma non tocca i punti '
+          'dell\'Arena. Serve il server online e la fotocamera.',
     ),
   ];
 

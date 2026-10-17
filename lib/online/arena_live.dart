@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import '../domain/combat.dart';
 import '../domain/exercise.dart';
+import '../domain/pvp.dart';
 import '../pose/pose_frame.dart';
 import '../pose/rep_counter.dart';
 import '../pose/rep_input.dart';
@@ -14,13 +15,24 @@ class ArenaOp {
   static const ready = 1;
   static const pose = 2;
   static const rep = 3;
+  static const start = 4;
   static const state = 10;
   static const result = 11;
   static const poseRelay = 12;
   static const repRejected = 13;
 }
 
-enum LivePhase { idle, connecting, searching, joining, waiting, countdown, running, finished, error }
+enum LivePhase {
+  idle,
+  connecting,
+  searching,
+  joining,
+  waiting,
+  countdown,
+  running,
+  finished,
+  error
+}
 
 class LivePlayer {
   LivePlayer({required this.id, required this.name});
@@ -51,6 +63,12 @@ class LiveResult {
 
   /// L'avversario ha abbandonato.
   final bool forfeit;
+
+  /// Allenamento di gilda: posizione nel gruppo (1 il migliore).
+  int? place;
+
+  /// Allenamento di gilda: tutti i risultati, dal primo all'ultimo.
+  List<Map<String, dynamic>> ranking = const [];
 }
 
 /// Duello live dell'Arena Pura: matchmaking, invio dello scheletro e delle
@@ -61,7 +79,14 @@ class ArenaLiveSession extends ChangeNotifier {
     required this.exercise,
     required this.deviceId,
     required this.username,
+    this.matchId,
+    this.mode = LiveMode.arena,
   });
+
+  /// Sfida tra amici o allenamento di gilda: si entra in un duello già
+  /// creato invece di cercare un avversario.
+  final String? matchId;
+  final LiveMode mode;
 
   final NakamaClient client;
   final ExerciseId exercise;
@@ -73,10 +98,20 @@ class ArenaLiveSession extends ChangeNotifier {
   String? myId;
   LivePlayer? me;
   LivePlayer? opponent;
+
+  /// Tutti gli altri: uno nel duello, fino a tre in un allenamento di gilda.
+  final Map<String, LivePlayer> others = {};
+
+  /// Chi ha aperto l'allenamento di gilda (dà il via).
+  String? host;
+  bool get isHost => host != null && host == myId;
   int countdown = 0;
   double elapsed = 0;
   int rejected = 0;
   PoseFrame? opponentPose;
+
+  /// Scheletro di ciascuno degli altri (allenamento di gilda).
+  final Map<String, PoseFrame> poses = {};
   LiveResult? result;
 
   NakamaSession? _session;
@@ -108,14 +143,18 @@ class ArenaLiveSession extends ChangeNotifier {
       _dataSub = _socket!.onMatchData.listen(_onData);
       _socket!.onError.listen((e) => _fail('$e'));
 
-      _set(LivePhase.searching);
-      final matched = _socket!.onMatchmakerMatched.first;
-      _ticket = await _socket!.addMatchmaker(exercise.name);
-      final m = await matched;
-      _ticket = null;
+      var target = matchId;
+      if (target == null) {
+        _set(LivePhase.searching);
+        final matched = _socket!.onMatchmakerMatched.first;
+        _ticket = await _socket!.addMatchmaker(exercise.name);
+        final m = await matched;
+        _ticket = null;
+        target = m['match_id'] as String;
+      }
 
       _set(LivePhase.joining);
-      _matchId = await _socket!.joinMatch(m['match_id'] as String);
+      _matchId = await _socket!.joinMatch(target);
       _socket!.sendMatchData(_matchId!, ArenaOp.ready, const {});
       _set(LivePhase.waiting);
 
@@ -124,6 +163,11 @@ class ArenaLiveSession extends ChangeNotifier {
     } catch (e) {
       _fail('$e');
     }
+  }
+
+  /// Allenamento di gilda: chi l'ha aperto dà il via quando ci sono tutti.
+  void begin() {
+    if (_matchId != null && isHost) _socket?.sendMatchData(_matchId!, ArenaOp.start, const {});
   }
 
   void _fail(String message) {
@@ -153,7 +197,12 @@ class ArenaLiveSession extends ChangeNotifier {
         _applyState(d.data);
       case ArenaOp.poseRelay:
         final k = d.data['k'];
-        if (k is List) opponentPose = PoseFrame.fromWire(k);
+        final u = d.data['u'];
+        if (k is List) {
+          final f = PoseFrame.fromWire(k);
+          if (u is String) poses[u] = f;
+          if (u == null || u == opponent?.id) opponentPose = f;
+        }
       case ArenaOp.repRejected:
         rejected++;
       case ArenaOp.result:
@@ -165,12 +214,14 @@ class ArenaLiveSession extends ChangeNotifier {
   void _applyState(Map<String, dynamic> s) {
     countdown = (s['countdown'] as num?)?.toInt() ?? 0;
     elapsed = (s['elapsed'] as num?)?.toDouble() ?? 0;
+    host = s['host'] as String? ?? host;
     final players = (s['players'] as Map<String, dynamic>?) ?? const {};
     players.forEach((id, raw) {
       final p = raw as Map<String, dynamic>;
       final target = id == myId
           ? (me ??= LivePlayer(id: id, name: p['name'] as String? ?? ''))
-          : (opponent ??= LivePlayer(id: id, name: p['name'] as String? ?? ''));
+          : others.putIfAbsent(id, () => LivePlayer(id: id, name: p['name'] as String? ?? ''));
+      if (id != myId) opponent ??= target;
       target
         ..name = p['name'] as String? ?? target.name
         ..reps = (p['reps'] as num?)?.toInt() ?? 0
@@ -202,13 +253,17 @@ class ArenaLiveSession extends ChangeNotifier {
       theirs: theirs,
       forfeit: theirs?['forfeit'] == true,
     );
+    if (mine['place'] != null) {
+      result!.place = (mine['place'] as num).toInt();
+      result!.ranking = results.values.cast<Map<String, dynamic>>().toList()
+        ..sort((a, b) => ((a['place'] as num?) ?? 9).compareTo((b['place'] as num?) ?? 9));
+    }
     phase = LivePhase.finished;
     _shutdown();
   }
 
   /// Le mie rep valide secondo il server (le rep rifiutate non contano).
-  List<RepQuality> get serverCountedReps =>
-      List.filled(me?.reps ?? 0, RepQuality.good);
+  List<RepQuality> get serverCountedReps => List.filled(me?.reps ?? 0, RepQuality.good);
 
   Future<void> cancel() async {
     try {

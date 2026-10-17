@@ -53,7 +53,11 @@ const Map<String, List<TrainerLine>> trainerHints = {
   ],
   'arena': [
     TrainerLine(TrainerPose.crossed,
-        'L\'Arena Pura: niente armi, niente build. Solo tu e le tue rep contro un altro giurato. Qui non si bara.'),
+        'L\'Arena Pura, qui in alto accanto all\'Allenamento: niente armi, niente build. Solo tu e le tue rep contro un altro giurato. Qui non si bara.'),
+  ],
+  'guild': [
+    TrainerLine(TrainerPose.cheering,
+        'La Gilda! Fondane una o entra in quella dei tuoi amici: vi allenate insieme in diretta e vi sfidate senza toccare i punti dell\'Arena.'),
   ],
   'attributes': [
     TrainerLine(TrainerPose.thinking,

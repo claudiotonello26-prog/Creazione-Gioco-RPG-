@@ -29,10 +29,10 @@ void main() {
     state.trainerEnabled = false;
     await tester.pumpWidget(IronOathApp(state: state));
     await tester.pumpAndSettle();
-    for (final label in ['Home', 'Training', 'Raccolta', 'Forgia', 'Mercato', 'Arena']) {
+    for (final label in ['Home', 'Training', 'Raccolta', 'Forgia', 'Mercato', 'Gilda']) {
       expect(find.text(label), findsWidgets);
     }
-    for (final label in ['Training', 'Raccolta', 'Forgia', 'Mercato', 'Arena', 'Home']) {
+    for (final label in ['Training', 'Raccolta', 'Forgia', 'Mercato', 'Gilda', 'Home']) {
       await tester.tap(find.widgetWithText(NavigationDestination, label));
       await tester.pumpAndSettle();
     }

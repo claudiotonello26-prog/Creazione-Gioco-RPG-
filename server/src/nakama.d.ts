@@ -87,7 +87,49 @@ declare namespace nkruntime {
   type SortOrder = 'ascending' | 'descending';
   type Operator = 'best' | 'set' | 'increment' | 'decrement';
 
+  interface Group {
+    id: string;
+    name: string;
+  }
+
+  interface User {
+    userId: string;
+    username: string;
+  }
+
+  interface UserGroupList {
+    userGroups?: { group: Group; state: number }[];
+  }
+
+  interface GroupUserList {
+    groupUsers?: { user: User; state: number }[];
+  }
+
+  interface Match {
+    matchId: string;
+    label: string;
+    size: number;
+  }
+
   interface Nakama {
+    userGroupsList(userId: string, limit?: number, state?: number | null, cursor?: string): UserGroupList;
+    groupUsersList(groupId: string, limit?: number, state?: number | null, cursor?: string): GroupUserList;
+    notificationSend(
+      userId: string,
+      subject: string,
+      content: { [key: string]: any },
+      code: number,
+      senderId?: string | null,
+      persistent?: boolean,
+    ): void;
+    matchList(
+      limit?: number,
+      authoritative?: boolean | null,
+      label?: string | null,
+      minSize?: number | null,
+      maxSize?: number | null,
+      query?: string | null,
+    ): Match[];
     matchCreate(module: string, params?: { [key: string]: any }): string;
     storageRead(keys: StorageReadRequest[]): StorageObject[];
     storageWrite(objects: StorageWriteRequest[]): any;

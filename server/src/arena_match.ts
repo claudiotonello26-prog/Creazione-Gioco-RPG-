@@ -7,6 +7,8 @@ const ARENA_OP = {
   READY: 1,
   POSE: 2,
   REP: 3,
+  /** Allenamento di gilda: chi l'ha aperto dà il via. */
+  START: 4,
   // Server → client
   STATE: 10,
   RESULT: 11,
@@ -19,6 +21,10 @@ const ARENA_TICK_MS = 1000 / ARENA_TICK_RATE;
 const ARENA_COUNTDOWN_TICKS = 5 * ARENA_TICK_RATE;
 const ARENA_JOIN_TIMEOUT_TICKS = 30 * ARENA_TICK_RATE;
 const ARENA_LINGER_TICKS = 3 * ARENA_TICK_RATE;
+/** Sfide tra amici e allenamenti di gilda: c'è tempo perché l'altro arrivi. */
+const ARENA_PRIVATE_JOIN_TIMEOUT_TICKS = 5 * 60 * ARENA_TICK_RATE;
+/** In un allenamento di gilda si entra in quattro al massimo. */
+const ARENA_GROUP_MAX_PLAYERS = 4;
 /** Il plank finisce dopo 2 secondi fuori posizione. */
 const ARENA_HOLD_BREAK_MS = 2000;
 
@@ -39,7 +45,17 @@ interface ArenaPlayer {
   left: boolean;
 }
 
+/**
+ * arena: duello classificato del matchmaker. friendly: sfida tra amici, senza
+ * punti stagione. group: allenamento di gilda fino a quattro, senza vincitore.
+ */
+type ArenaMode = 'arena' | 'friendly' | 'group';
+
 interface ArenaState extends nkruntime.MatchState {
+  mode: ArenaMode;
+  guild: string;
+  host: string;
+  hostName: string;
   exercise: string;
   challenge: ArenaChallengeDef;
   expected: string[];
@@ -50,6 +66,27 @@ interface ArenaState extends nkruntime.MatchState {
   startWallMs: number;
   createdTick: number;
   result: any;
+  /** L'etichetta dice ancora che si può entrare. */
+  open: boolean;
+  /** In gilda si parte quando chi ha aperto l'allenamento dà il via. */
+  started: boolean;
+}
+
+function arenaMaxPlayers(state: ArenaState): number {
+  return state.mode === 'group' ? ARENA_GROUP_MAX_PLAYERS : 2;
+}
+
+/** Etichetta della partita: la lista degli allenamenti di gilda la legge. */
+function arenaLabel(state: ArenaState): string {
+  return JSON.stringify({
+    mode: state.mode,
+    exercise: state.exercise,
+    guild: state.guild,
+    host: state.host,
+    hostName: state.hostName,
+    to: state.mode === 'friendly' ? state.expected.filter((id) => id !== state.host).join(',') : '',
+    open: state.open ? 1 : 0,
+  });
 }
 
 function arenaNewPlayer(p: nkruntime.Presence): ArenaPlayer {
@@ -132,6 +169,8 @@ function arenaBroadcastState(dispatcher: nkruntime.MatchDispatcher, state: Arena
   dispatcher.broadcastMessage(ARENA_OP.STATE, JSON.stringify({
     phase: state.phase,
     exercise: state.exercise,
+    mode: state.mode,
+    host: state.host,
     countdown: countdown,
     elapsed: Math.round(now) / 1000,
     players: players,
@@ -151,6 +190,10 @@ function arenaHandleMessage(
   if (!p || p.left) return {};
   if (opCode === ARENA_OP.READY && state.phase === 'waiting') {
     p.ready = true;
+    return {};
+  }
+  if (opCode === ARENA_OP.START && state.phase === 'waiting' && userId === state.host) {
+    state.started = true;
     return {};
   }
   if (state.phase !== 'running' || p.done) return {};
@@ -202,7 +245,9 @@ function arenaAdvance(state: ArenaState, tick: number, wallMs?: number): boolean
   if (state.phase === 'waiting') {
     let readyCount = 0;
     for (let i = 0; i < ids.length; i++) if (state.players[ids[i]].ready) readyCount++;
-    if (ids.length === 2 && readyCount === 2) {
+    const min = 2;
+    const go = state.mode !== 'group' || state.started;
+    if (go && ids.length >= min && ids.length <= arenaMaxPlayers(state) && readyCount === ids.length) {
       state.phase = 'countdown';
       state.phaseTick = tick;
     }
@@ -226,13 +271,14 @@ function arenaAdvance(state: ArenaState, tick: number, wallMs?: number): boolean
   let anyLeft = false;
   for (let i = 0; i < ids.length; i++) {
     const p = state.players[ids[i]];
-    if (p.left) anyLeft = true;
+    // In gilda chi se ne va non ferma gli altri.
+    if (p.left && state.mode !== 'group') anyLeft = true;
     if (c.goal === 'longestHold' && !p.done && p.heldMs > 0 &&
         now - p.lastAlignedMs > ARENA_HOLD_BREAK_MS) {
       p.done = true;
       p.doneMs = now;
     }
-    if (!p.done) allDone = false;
+    if (!p.done && !p.left) allDone = false;
   }
   const limit = c.goal === 'mostRepsInTime'
     ? c.seconds
@@ -248,6 +294,7 @@ function arenaComputeResult(state: ArenaState, tick: number): any {
   for (let i = 0; i < ids.length; i++) {
     results[ids[i]] = arenaPlayerResult(state, state.players[ids[i]], now);
   }
+  if (state.mode === 'group') return arenaGroupResult(state, ids, results);
   let cmp = 0;
   if (ids.length === 2) {
     const a = state.players[ids[0]], b = state.players[ids[1]];
@@ -258,14 +305,34 @@ function arenaComputeResult(state: ArenaState, tick: number): any {
   for (let i = 0; i < ids.length; i++) {
     const mine = i === 0 ? cmp : -cmp;
     results[ids[i]].outcome = mine;
-    results[ids[i]].delta = ids.length === 2 ? arenaRankDelta(mine) : 0;
+    results[ids[i]].delta = ids.length === 2 && state.mode === 'arena' ? arenaRankDelta(mine) : 0;
     results[ids[i]].name = state.players[ids[i]].username;
     results[ids[i]].forfeit = state.players[ids[i]].left;
   }
   return { winner: winner, exercise: state.exercise, results: results };
 }
 
+/** Allenamento di gilda: nessun vincitore, solo la classifica del gruppo. */
+function arenaGroupResult(state: ArenaState, ids: string[], results: { [id: string]: any }): any {
+  const order = ids.slice().sort((a, b) => {
+    const pa = state.players[a], pb = state.players[b];
+    if (pa.left !== pb.left) return pa.left ? 1 : -1;
+    return -arenaCompare(state.challenge, results[a], results[b]);
+  });
+  for (let i = 0; i < order.length; i++) {
+    const r = results[order[i]];
+    r.place = i + 1;
+    r.outcome = 0;
+    r.delta = 0;
+    r.name = state.players[order[i]].username;
+    r.forfeit = state.players[order[i]].left;
+  }
+  return { winner: null, mode: state.mode, exercise: state.exercise, results: results };
+}
+
 function arenaSaveResult(nk: nkruntime.Nakama, logger: nkruntime.Logger, state: ArenaState, result: any) {
+  // Solo i duelli del matchmaker contano per la stagione e i record.
+  if (state.mode !== 'arena') return;
   const ids = Object.keys(result.results);
   for (let i = 0; i < ids.length; i++) {
     const id = ids[i];
@@ -297,7 +364,14 @@ function arenaMatchInit(
   params: { [key: string]: string },
 ): { state: nkruntime.MatchState; tickRate: number; label: string } {
   const exercise = ARENA_CHALLENGES[params.exercise] ? params.exercise : 'pushUp';
+  const mode: ArenaMode = params.mode === 'friendly' || params.mode === 'group' ? params.mode : 'arena';
   const state: ArenaState = {
+    mode: mode,
+    guild: params.guild || '',
+    host: params.host || '',
+    hostName: params.hostName || '',
+    open: true,
+    started: false,
     exercise: exercise,
     challenge: ARENA_CHALLENGES[exercise],
     expected: params.players ? params.players.split(',') : [],
@@ -311,7 +385,7 @@ function arenaMatchInit(
   return {
     state: state,
     tickRate: ARENA_TICK_RATE,
-    label: JSON.stringify({ mode: 'arena', exercise: exercise }),
+    label: arenaLabel(state),
   };
 }
 
@@ -325,8 +399,8 @@ function arenaMatchJoinAttempt(
   if (s.expected.length > 0 && s.expected.indexOf(presence.userId) < 0) {
     return { state: s, accept: false, rejectMessage: 'Non sei in questo duello' };
   }
-  if (!s.players[presence.userId] && Object.keys(s.players).length >= 2) {
-    return { state: s, accept: false, rejectMessage: 'Duello pieno' };
+  if (!s.players[presence.userId] && Object.keys(s.players).length >= arenaMaxPlayers(s)) {
+    return { state: s, accept: false, rejectMessage: s.mode === 'group' ? 'Allenamento pieno' : 'Duello pieno' };
   }
   return { state: s, accept: true };
 }
@@ -397,12 +471,18 @@ function arenaMatchLoop(
   if (s.phase === 'finished') {
     return tick - s.phaseTick >= ARENA_LINGER_TICKS ? null : { state: s };
   }
-  if (s.phase === 'waiting' && tick - s.createdTick > ARENA_JOIN_TIMEOUT_TICKS) {
+  const timeout = s.mode === 'arena' ? ARENA_JOIN_TIMEOUT_TICKS : ARENA_PRIVATE_JOIN_TIMEOUT_TICKS;
+  if (s.phase === 'waiting' && tick - s.createdTick > timeout) {
     logger.info('Duello abbandonato prima di iniziare');
     return null;
   }
 
   const ended = arenaAdvance(s, tick, Date.now());
+  const open = s.phase === 'waiting' && Object.keys(s.players).length < arenaMaxPlayers(s);
+  if (open !== s.open) {
+    s.open = open;
+    dispatcher.matchLabelUpdate(arenaLabel(s));
+  }
   if (ended) {
     s.result = arenaComputeResult(s, tick);
     s.phase = 'finished';

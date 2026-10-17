@@ -42,6 +42,7 @@ const Map<String, String> _it = {
   'Forge': 'Forgia',
   'Market': 'Mercato',
   'Arena': 'Arena',
+  'Guild': 'Gilda',
 };
 
 /// Il testo [en] nella lingua corrente.

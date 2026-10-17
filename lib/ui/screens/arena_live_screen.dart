@@ -12,13 +12,23 @@ import '../../online/arena_live.dart';
 import '../../online/nakama_client.dart';
 import '../../pose/pose_frame.dart';
 import '../../pose/rep_input.dart';
+import '../widgets/common.dart';
 import '../widgets/exercise_view.dart';
 
 /// Duello live: l'avversario è un avatar animato dal suo scheletro, nessun
 /// video. Conteggio e vincitore li decide il server.
 class ArenaLiveScreen extends StatefulWidget {
-  const ArenaLiveScreen({super.key, required this.challenge});
+  const ArenaLiveScreen({
+    super.key,
+    required this.challenge,
+    this.matchId,
+    this.mode = LiveMode.arena,
+  });
   final ArenaChallenge challenge;
+
+  /// Sfida tra amici o allenamento di gilda già aperti.
+  final String? matchId;
+  final LiveMode mode;
 
   @override
   State<ArenaLiveScreen> createState() => _ArenaLiveScreenState();
@@ -30,6 +40,8 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
   bool _recorded = false;
 
   ArenaChallenge get c => widget.challenge;
+  LiveMode get mode => widget.mode;
+  bool get _group => mode == LiveMode.group;
 
   @override
   void initState() {
@@ -44,6 +56,8 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
       exercise: c.exercise,
       deviceId: s.deviceId,
       username: s.character.name.replaceAll(RegExp(r'[^A-Za-z0-9_]'), ''),
+      matchId: widget.matchId,
+      mode: mode,
     )..addListener(_onChange);
     _session.start(_input);
   }
@@ -58,6 +72,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
             r.outcome,
             r.points,
             _session.serverCountedReps,
+            mode: mode,
           );
     }
     if (mounted) setState(() {});
@@ -75,12 +90,24 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
   String get _phaseText => switch (_session.phase) {
         LivePhase.idle || LivePhase.connecting => 'Connessione al server…',
         LivePhase.searching => 'Cerco un avversario per ${exercises[c.exercise]!.name}…',
-        LivePhase.joining || LivePhase.waiting => 'Avversario trovato. Mettiti in posizione.',
+        LivePhase.joining || LivePhase.waiting => _waitingText,
         LivePhase.countdown => 'Inizia tra ${_session.countdown}',
         LivePhase.running => '${_session.elapsed.toStringAsFixed(0)} s',
         LivePhase.finished => 'Duello concluso',
         LivePhase.error => _session.error ?? 'Errore',
       };
+
+  String get _waitingText {
+    final s = _session;
+    if (mode == LiveMode.arena) return 'Avversario trovato. Mettiti in posizione.';
+    if (mode == LiveMode.friendly) {
+      return s.opponent == null ? 'In attesa che l\'amico accetti…' : 'Mettiti in posizione.';
+    }
+    final n = s.others.length + 1;
+    return s.isHost
+        ? (n < 2 ? 'In attesa della gilda…' : 'Siete in $n. Dai il via quando ci siete tutti.')
+        : 'Siete in $n. Aspetta il via.';
+  }
 
   String _score(LivePlayer? p) {
     if (p == null) return '—';
@@ -97,7 +124,11 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
         if (!didPop) _confirmLeave();
       },
       child: Scaffold(
-        appBar: OathBar(title: Text('LIVE · ${exercises[c.exercise]!.name.toUpperCase()}')),
+        appBar: OathBar(
+          title: Text(
+            '${_group ? 'GILDA' : 'LIVE'} · ${exercises[c.exercise]!.name.toUpperCase()}',
+          ),
+        ),
         body: Column(
           children: [
             Padding(
@@ -116,7 +147,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
                 children: [
                   Expanded(
                     child: _PlayerPanel(
-                      name: s.opponent?.name ?? 'Avversario',
+                      name: s.opponent?.name ?? (_group ? 'Gilda' : 'Avversario'),
                       score: _score(s.opponent),
                       color: Palette.blood,
                       child: CustomPaint(
@@ -142,12 +173,29 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
                 ],
               ),
             ),
+            if (_group && s.others.length > 1)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  children: [
+                    for (final p in s.others.values.skip(1))
+                      Expanded(
+                        child: OneLine(
+                          '${p.name}  ${_score(p)}',
+                          align: Alignment.center,
+                          style: TextStyle(color: p.left ? Palette.ash : Palette.blood),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             if (s.rejected > 0)
               Text(
                 '${s.rejected} rep non valide per il server (movimento incompleto)',
                 style: const TextStyle(color: Palette.ember, fontSize: 12),
               ),
-            if (s.phase == LivePhase.finished && s.result != null) _ResultCard(result: s.result!),
+            if (s.phase == LivePhase.finished && s.result != null)
+              _ResultCard(result: s.result!, mode: mode),
             if (s.phase != LivePhase.finished)
               Expanded(flex: 3, child: ExerciseView(input: _input)),
             SafeArea(
@@ -157,10 +205,29 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: s.isActive
-                      ? OutlinedButton(onPressed: _confirmLeave, child: const Text('Abbandona'))
+                      ? Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: _confirmLeave,
+                                child: const Text('Abbandona'),
+                              ),
+                            ),
+                            if (_group && s.isHost && s.phase == LivePhase.waiting) ...[
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: FilledButton(
+                                  onPressed: s.others.isEmpty ? null : s.begin,
+                                  child: const OneLine('DAI IL VIA', align: Alignment.center),
+                                ),
+                              ),
+                            ],
+                          ],
+                        )
                       : FilledButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('TORNA ALL\'ARENA'),
+                          child: Text(
+                              mode == LiveMode.arena ? 'TORNA ALL\'ARENA' : 'TORNA ALLA GILDA'),
                         ),
                 ),
               ),
@@ -172,7 +239,8 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
   }
 
   Future<void> _confirmLeave() async {
-    if (_session.phase == LivePhase.searching) {
+    if (_session.phase == LivePhase.searching ||
+        (mode != LiveMode.arena && _session.phase == LivePhase.waiting)) {
       await _session.cancel();
       if (mounted) Navigator.of(context).pop();
       return;
@@ -181,8 +249,10 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Palette.stone,
-        title: const Text('Abbandonare il duello?'),
-        content: const Text('Chi abbandona perde a tavolino.'),
+        title: Text(_group ? 'Lasciare l\'allenamento?' : 'Abbandonare il duello?'),
+        content: Text(
+          _group ? 'Gli altri continuano senza di te.' : 'Chi abbandona perde a tavolino.',
+        ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Resto')),
           FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Abbandono')),
@@ -240,11 +310,13 @@ class _PlayerPanel extends StatelessWidget {
 }
 
 class _ResultCard extends StatelessWidget {
-  const _ResultCard({required this.result});
+  const _ResultCard({required this.result, required this.mode});
   final LiveResult result;
+  final LiveMode mode;
 
   @override
   Widget build(BuildContext context) {
+    if (mode == LiveMode.group) return _groupResult();
     final title = switch (result.outcome) {
       > 0 => result.forfeit ? 'VITTORIA A TAVOLINO' : 'VITTORIA',
       < 0 => 'SCONFITTA',
@@ -265,8 +337,10 @@ class _ResultCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              'Punti stagione ${result.delta >= 0 ? '+' : ''}${result.delta}'
-              '${result.points != null ? ' · totale ${result.points}' : ''}',
+              mode == LiveMode.friendly
+                  ? 'Sfida tra amici: niente punti stagione.'
+                  : 'Punti stagione ${result.delta >= 0 ? '+' : ''}${result.delta}'
+                      '${result.points != null ? ' · totale ${result.points}' : ''}',
             ),
             const SizedBox(height: 4),
             const Text(
@@ -278,6 +352,36 @@ class _ResultCard extends StatelessWidget {
       ),
     );
   }
+
+  Widget _groupResult() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Text(
+                '${result.place ?? '-'}° POSTO',
+                style: TextStyle(
+                  fontSize: 24,
+                  letterSpacing: 4,
+                  color: result.place == 1 ? Palette.goldBright : Palette.holy,
+                ),
+              ),
+              const SizedBox(height: 6),
+              for (final r in result.ranking)
+                OneLine(
+                  '${r['place']}. ${r['name']} · ${r['validReps']} rep'
+                  '${r['forfeit'] == true ? ' (uscito)' : ''}',
+                  align: Alignment.center,
+                ),
+              const SizedBox(height: 4),
+              const Text(
+                'Allenamento di gilda: le rep valgono per il tuo personaggio.',
+                style: TextStyle(color: Palette.ash, fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      );
 }
 
 const _avatarBones = [

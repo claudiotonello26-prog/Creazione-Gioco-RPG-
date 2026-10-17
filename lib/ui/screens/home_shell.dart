@@ -5,6 +5,7 @@ import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import 'arena_tab.dart';
+import 'guild_tab.dart';
 import 'forge_tab.dart';
 import 'home_tab.dart';
 import '../widgets/common.dart';
@@ -45,7 +46,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     if (s == AppLifecycleState.resumed) context.read<GameState>().refreshDay();
   }
 
-  static const _hints = ['home', 'training', 'walk', 'forge', 'market', 'arena'];
+  static const _hints = ['home', 'training', 'walk', 'forge', 'market', 'guild'];
 
   static const _music = [
     Music.home,
@@ -53,7 +54,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     Music.gathering,
     Music.forge,
     Music.market,
-    Music.arena,
+    Music.guild,
   ];
 
   void goTo(int tab) {
@@ -74,7 +75,9 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
         Sound.play(Sfx.levelUp);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(points == 1 ? 'Livello su! +1 punto attributo.' : 'Livello su! +$points punti attributo.'),
+            content: Text(points == 1
+                ? 'Livello su! +1 punto attributo.'
+                : 'Livello su! +$points punti attributo.'),
             backgroundColor: Palette.stoneLight,
             behavior: SnackBarBehavior.floating,
             action: SnackBarAction(label: 'VAI', onPressed: () => goTo(0)),
@@ -108,7 +111,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
       SectionBackdrop(
         art: 'training',
         color: Sections.training,
-        child: framed('Training', Sections.training, TrainTab(onNavigate: goTo)),
+        child: _TrainingSection(onNavigate: goTo),
       ),
       const SectionBackdrop(
         art: 'gathering',
@@ -122,9 +125,9 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
       ),
       const SectionBackdrop(art: 'market', color: Sections.market, child: MarketScreen()),
       SectionBackdrop(
-        art: 'arena',
-        color: Sections.arena,
-        child: framed('Arena', Sections.arena, const ArenaTab()),
+        art: 'guild',
+        color: Sections.guild,
+        child: framed('Guild', Sections.guild, const GuildTab()),
       ),
     ];
     return Scaffold(
@@ -157,26 +160,28 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
             onDestinationSelected: goTo,
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
             destinations: [
-            NavigationDestination(
-              icon: Badge(
-                isLabelVisible: points > 0,
-                label: Text('$points'),
-                child: _navIcon('home', Icons.castle_outlined),
+              NavigationDestination(
+                icon: Badge(
+                  isLabelVisible: points > 0,
+                  label: Text('$points'),
+                  child: _navIcon('home', Icons.castle_outlined),
+                ),
+                label: tr('Home'),
               ),
-              label: tr('Home'),
-            ),
-            NavigationDestination(
-              icon: _navIcon('training', Icons.fitness_center),
-              label: tr('Training'),
-            ),
-            NavigationDestination(
-              icon: _navIcon('gathering', Icons.directions_walk),
-              label: tr('Gathering'),
-            ),
-            NavigationDestination(icon: _navIcon('forge', Icons.hardware), label: tr('Forge')),
-            NavigationDestination(icon: _navIcon('market', Icons.storefront), label: tr('Market')),
-            NavigationDestination(icon: _navIcon('arena', Icons.sports_kabaddi), label: tr('Arena')),
-          ],
+              NavigationDestination(
+                icon: _navIcon('training', Icons.fitness_center),
+                label: tr('Training'),
+              ),
+              NavigationDestination(
+                icon: _navIcon('gathering', Icons.directions_walk),
+                label: tr('Gathering'),
+              ),
+              NavigationDestination(icon: _navIcon('forge', Icons.hardware), label: tr('Forge')),
+              NavigationDestination(
+                  icon: _navIcon('market', Icons.storefront), label: tr('Market')),
+              NavigationDestination(
+                  icon: _navIcon('guild', Icons.shield_outlined), label: tr('Guild')),
+            ],
           ),
         ),
       ),
@@ -188,4 +193,36 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
 Widget _navIcon(String id, IconData fallback) {
   final path = 'assets/art/nav/$id.png';
   return Art.has(path) ? Image.asset(path, width: 28, height: 28) : Icon(fallback);
+}
+
+/// Training: l'allenamento e l'Arena, scelti in alto come Mercante e
+/// Fattucchiera nel Mercato.
+class _TrainingSection extends StatelessWidget {
+  const _TrainingSection({required this.onNavigate});
+  final ValueChanged<int> onNavigate;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: OathBar(
+          title: Text(tr('Training').toUpperCase()),
+          accent: Sections.training,
+          bottom: TabBar(
+            onTap: (i) {
+              Sound.play(Sfx.tab);
+              Sound.music(i == 0 ? Music.training : Music.arena);
+              if (i == 1) maybeShowHint(context, 'arena');
+            },
+            tabs: const [Tab(text: 'Allenamento'), Tab(text: 'Arena')],
+          ),
+        ),
+        body: TabBarView(
+          children: [TrainTab(onNavigate: onNavigate), const ArenaTab()],
+        ),
+      ),
+    );
+  }
 }

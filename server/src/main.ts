@@ -1,4 +1,4 @@
-// Modulo server di Iron Oath per Nakama: Arena Pura live e classifiche.
+// Modulo server di Iron Oath per Nakama: Arena Pura live, classifiche e gilde.
 
 const ARENA_MATCH_MODULE = 'arena_duel';
 const ARENA_SEASON_BOARD = 'arena_season';
@@ -99,5 +99,7 @@ function InitModule(
   initializer.registerMatchmakerMatched(arenaMatchmakerMatched);
   initializer.registerRpc('arena_profile', rpcArenaProfile);
   initializer.registerRpc('arena_top', rpcArenaTop);
+  initializer.registerRpc('guild_session_create', rpcGuildSessionCreate);
+  initializer.registerRpc('guild_sessions', rpcGuildSessions);
   logger.info('Iron Oath: modulo Arena caricato');
 }
