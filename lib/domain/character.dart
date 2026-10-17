@@ -286,21 +286,29 @@ const perkChoices = [
   ]),
 ];
 
-/// Aspetto del personaggio. Gli indici puntano alle tavolozze qui sotto.
+/// Aspetto del personaggio. Gli indici puntano alle tavolozze qui sotto;
+/// per capelli, occhi, maglia e pantaloni -1 vuol dire il colore originale
+/// dell'illustrazione.
 class Appearance {
   Appearance({
     this.female = false,
+    this.style = 3,
     this.face = 0,
     this.skin = 1,
-    this.hair = 0,
-    this.eyes = 0,
+    this.hair = natural,
+    this.eyes = natural,
     this.beard = true,
     this.beardColor = 0,
-    this.shirt = 0,
-    this.pants = 0,
+    this.shirt = natural,
+    this.pants = natural,
   });
 
+  static const int natural = -1;
+
   bool female;
+
+  /// Testa dell'illustrazione: viso, capelli e barba insieme (vedi [styleNames]).
+  int style;
 
   /// 0 ovale, 1 squadrato, 2 tondo, 3 affilato.
   int face;
@@ -332,11 +340,51 @@ class Appearance {
     0xFFB9A98A,
   ];
 
+  /// Le teste disegnate, nello stesso ordine dei file `head_<n>.png`.
+  static const List<String> femaleStyles = [
+    'Rasata',
+    'Rasata, sorriso',
+    'Rasata, fiera',
+    'Corti',
+    'Coda alta',
+    'Cresta intrecciata',
+    'Lunghi mossi',
+    'Treccia',
+    'Caschetto',
+  ];
+  static const List<String> maleStyles = [
+    'Rasato',
+    'Rasato, sorriso',
+    'Corti pettinati',
+    'Spettinati e barba corta',
+    'Chignon e barba',
+    'Cresta e pizzetto',
+    'Mossi con baffi',
+    'Treccine',
+    'Lunghi con baffi',
+  ];
+  List<String> get styleNames => female ? femaleStyles : maleStyles;
+  int get styleIndex => style.clamp(0, styleNames.length - 1);
+
+  /// Colori originali dell'illustrazione, per il disegno a vettori.
+  static const int naturalHair = 0xFF4A3524;
+  static const int naturalEyes = 0xFF7A7F86;
+  static const int naturalShirt = 0xFFD8CCB4;
+  static const int naturalPants = 0xFF4E3B2A;
+
+  static int _pick(List<int> palette, int i, int fallback) =>
+      i < 0 ? fallback : palette[i % palette.length];
+  int get hairColor => _pick(hairColors, hair, naturalHair);
+  int get eyeColor => _pick(eyeColors, eyes, naturalEyes);
+  int get shirtColor => _pick(clothColors, shirt, naturalShirt);
+  int get pantsColor => _pick(clothColors, pants, naturalPants);
+
   /// Barba solo per i personaggi maschili che la vogliono.
   bool get hasBeard => !female && beard;
 
   Map<String, dynamic> toJson() => {
         'f': female,
+        'style': style,
         'face': face,
         'skin': skin,
         'hair': hair,
@@ -349,6 +397,7 @@ class Appearance {
 
   factory Appearance.fromJson(Map<String, dynamic> j) => Appearance(
         female: j['f'] as bool? ?? false,
+        style: j['style'] as int? ?? 3,
         face: j['face'] as int? ?? 0,
         skin: j['skin'] as int? ?? 1,
         hair: j['hair'] as int? ?? 0,

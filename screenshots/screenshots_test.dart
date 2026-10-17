@@ -18,6 +18,7 @@ import 'package:iron_oath/domain/progress.dart';
 import 'package:iron_oath/ui/widgets/exercise_demo.dart';
 import 'package:iron_oath/ui/screens/forge_tab.dart';
 import 'package:iron_oath/domain/items.dart';
+import 'package:iron_oath/domain/character.dart';
 import 'package:iron_oath/ui/screens/gear_screens.dart';
 import 'package:iron_oath/ui/screens/train_tab.dart';
 import 'package:iron_oath/ui/screens/expedition_map.dart';
@@ -29,6 +30,7 @@ import 'package:iron_oath/ui/screens/character_creation.dart';
 import 'package:iron_oath/ui/screens/rest_screen.dart';
 import 'package:iron_oath/ui/screens/steps_card.dart';
 import 'package:iron_oath/core/theme.dart';
+import 'package:iron_oath/core/art.dart';
 import 'package:iron_oath/online/guild_service.dart';
 import 'package:iron_oath/online/nakama_client.dart';
 import 'package:iron_oath/ui/screens/guild_tab.dart';
@@ -314,6 +316,32 @@ void main() {
         find.byType(MaterialApp), matchesGoldenFile('out/36_creazione_countdown.png'));
     await t.tap(find.text('ANNULLA'));
     await t.pumpAndSettle();
+  });
+
+
+  testWidgets('personaggio disegnato', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    st.character.worn.clear();
+    st.character.capeId = null;
+    st.character.offhandId = null;
+    st.character.look
+      ..female = false
+      ..style = 4
+      ..hair = Appearance.natural
+      ..shirt = 2
+      ..pants = Appearance.natural;
+    await t.runAsync(Art.init);
+    await t.pumpWidget(IronOathApp(state: st));
+    await _shot(t, '70_home_personaggio');
+    final nav = Navigator.of(t.element(find.byType(NavigationBar)));
+    nav.push(MaterialPageRoute<void>(builder: (_) => CharacterCreationScreen(onDone: () {})));
+    await _shot(t, '71_creazione_uomo');
+    await t.tap(find.text('DONNA'));
+    await t.pumpAndSettle();
+    await t.tap(find.byType(GestureDetector).at(0));
+    await _shot(t, '72_creazione_donna');
   });
 
   testWidgets('creazione personaggio e pausa tra esercizi', (t) async {

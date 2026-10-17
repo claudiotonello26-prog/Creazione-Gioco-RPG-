@@ -73,6 +73,13 @@ class KnightView extends StatelessWidget {
   Widget build(BuildContext context) {
     final layers = knightLayers(character, pose);
     final weapon = character.weapon;
+    if (!Art.has(layers.first) && HeroView.canShow(character)) {
+      return SizedBox(
+        height: height,
+        width: height * 0.8,
+        child: HeroView(look: character.look, height: height, weapon: weapon),
+      );
+    }
     return SizedBox(
       height: height,
       width: height * 0.8,
@@ -92,6 +99,116 @@ class KnightView extends StatelessWidget {
             ),
     );
   }
+}
+
+
+/// Il personaggio disegnato (Gemini) a livelli: corpo, maglia e pantaloni
+/// colorabili, testa scelta (viso, capelli e barba), capelli e occhi
+/// colorabili. Tutti i PNG di un corpo hanno la stessa tela, già allineati.
+/// Per ora c'è solo senza armatura: con un pezzo addosso torna il disegno a
+/// vettori finché non arrivano gli strati delle armature.
+class HeroView extends StatelessWidget {
+  const HeroView({super.key, required this.look, required this.height, this.weapon});
+  final Appearance look;
+  final double height;
+  final WeaponInstance? weapon;
+
+  /// Proporzioni della tela dei PNG.
+  static const double aspect = 645 / 1896;
+
+  /// Pugno destro (spada, martello) e sinistro (bastone, arco) sulla tela.
+  static const Map<bool, (Offset, Offset)> _fists = {
+    true: (Offset(0.127, 0.530), Offset(0.808, 0.523)),
+    false: (Offset(0.110, 0.523), Offset(0.836, 0.521)),
+  };
+
+  static String dir(bool female) => 'assets/art/hero/${female ? 'f' : 'm'}';
+  static bool get available => Art.has('${dir(false)}/body.png') && Art.has('${dir(true)}/body.png');
+
+  static bool canShow(Character c) =>
+      available &&
+      ArmorSlot.values.every((s) => c.worn[s] == null) &&
+      c.cape == null &&
+      c.offhand == null;
+
+  @override
+  Widget build(BuildContext context) {
+    final d = dir(look.female);
+    final k = look.styleIndex;
+    Widget layer(String name, {int? tint, double opacity = 1}) {
+      Widget img = Image.asset(
+        '$d/$name.png',
+        fit: BoxFit.contain,
+        gaplessPlayback: true,
+        color: tint == null ? null : Color(tint).withValues(alpha: opacity),
+        colorBlendMode: tint == null ? null : BlendMode.modulate,
+      );
+      return img;
+    }
+
+    final w = height * aspect;
+    final layers = Stack(
+      fit: StackFit.expand,
+      children: [
+        layer('body'),
+        if (look.shirt >= 0) layer('shirt', tint: look.shirtColor),
+        if (look.pants >= 0) layer('pants', tint: look.pantsColor),
+        layer('head_$k'),
+        if (look.hair >= 0) layer('hair_$k', tint: look.hairColor),
+        if (look.eyes >= 0) layer('eyes_$k', tint: look.eyeColor, opacity: 0.8),
+      ],
+    );
+    return LayoutBuilder(builder: (context, box) {
+      final bw = box.maxWidth.isFinite ? box.maxWidth : w;
+      final left = (bw - w) / 2;
+      final (right, leftFist) = _fists[look.female]!;
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(left: left, top: 0, width: w, height: height, child: layers),
+          if (weapon != null)
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _HeroWeapon(
+                  weapon!,
+                  Offset(left + right.dx * w, right.dy * height),
+                  Offset(left + leftFist.dx * w, leftFist.dy * height),
+                  height,
+                ),
+              ),
+            ),
+        ],
+      );
+    });
+  }
+}
+
+/// L'arma del disegno a vettori, spostata nel pugno del personaggio disegnato.
+class _HeroWeapon extends KnightPainter {
+  _HeroWeapon(WeaponInstance w, this.rightFist, this.leftFist, this.figure)
+      : super(weapon: w, armorLook: -1);
+  final Offset rightFist;
+  final Offset leftFist;
+  final double figure;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final shape = shapeOf(weapon.def);
+    final side = shape == WeaponShape.bow || shape == WeaponShape.staff;
+    final vh = figure * 0.78;
+    final vw = vh * 0.8;
+    // Punto del disegno a vettori dove la mano stringe l'arma.
+    final grip = side ? Offset(vw * 0.5 + vw * 0.33, vh * 0.5) : Offset(vw * 0.5, vh * 0.54);
+    final fist = side ? leftFist : rightFist;
+    canvas.save();
+    canvas.translate(fist.dx - grip.dx, fist.dy - grip.dy);
+    _weapon(canvas, Size(vw, vh));
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant _HeroWeapon old) =>
+      old.weapon != weapon || old.rightFist != rightFist || old.figure != figure;
 }
 
 /// Strato dell'arma: a +3 e +6 si tinge del colore della sua build, a +10
@@ -174,8 +291,8 @@ class KnightPainter extends CustomPainter {
   final Appearance look;
 
   Color get _skin => Color(Appearance.skinTones[look.skin % Appearance.skinTones.length]);
-  Color get _shirt => Color(Appearance.clothColors[look.shirt % Appearance.clothColors.length]);
-  Color get _pants => Color(Appearance.clothColors[look.pants % Appearance.clothColors.length]);
+  Color get _shirt => Color(look.shirtColor);
+  Color get _pants => Color(look.pantsColor);
 
   static Color _steelOf(int look) => switch (look) {
         2 => const Color(0xFF9DA3AB),
@@ -361,9 +478,9 @@ class KnightPainter extends CustomPainter {
   /// Il viso scelto alla creazione: forma, pelle, occhi, capelli e barba.
   void _head(Canvas canvas, Offset c, double r) {
     final skin = _skin;
-    final hair = Color(Appearance.hairColors[look.hair % Appearance.hairColors.length]);
+    final hair = Color(look.hairColor);
     final beard = Color(Appearance.hairColors[look.beardColor % Appearance.hairColors.length]);
-    final eye = Color(Appearance.eyeColors[look.eyes % Appearance.eyeColors.length]);
+    final eye = Color(look.eyeColor);
     final shadow = Color.lerp(skin, Colors.black, 0.35)!;
     final center = c.translate(0, r * 0.12);
     // Collo.
