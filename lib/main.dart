@@ -26,7 +26,7 @@ class IronOathApp extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: state,
       child: MaterialApp(
-        title: 'Iron Oath',
+        title: 'Gym Oath',
         debugShowCheckedModeBanner: false,
         theme: buildTheme(),
         // Niente sotto la barra di navigazione di Android (Android 15+ disegna

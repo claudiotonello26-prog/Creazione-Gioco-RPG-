@@ -4,7 +4,7 @@
     <!-- Passi da Health Connect (Samsung Health, Google Fit...) per la Camminata. -->
     <uses-permission android:name="android.permission.health.READ_STEPS" />
     <application
-        android:label="Iron Oath"
+        android:label="Gym Oath"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

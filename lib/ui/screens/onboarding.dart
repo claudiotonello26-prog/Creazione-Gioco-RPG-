@@ -40,7 +40,7 @@ class HealthWarningScreen extends StatelessWidget {
                     Image.asset('assets/images/helm.png', height: 120),
                     const SizedBox(height: 18),
                     Text(
-                      'IRON OATH',
+                      'GYM OATH',
                       textAlign: TextAlign.center,
                       style: titleStyle(size: 36, spacing: 8),
                     ),

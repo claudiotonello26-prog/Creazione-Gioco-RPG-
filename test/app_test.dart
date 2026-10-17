@@ -12,7 +12,7 @@ void main() {
     final state = GameState();
     await state.load();
     await tester.pumpWidget(IronOathApp(state: state));
-    expect(find.text('IRON OATH'), findsOneWidget);
+    expect(find.text('GYM OATH'), findsOneWidget);
     await tester.tap(find.text('HO CAPITO, INIZIAMO'));
     await tester.pumpAndSettle();
     expect(find.text('IL TUO GIURAMENTO'), findsOneWidget);

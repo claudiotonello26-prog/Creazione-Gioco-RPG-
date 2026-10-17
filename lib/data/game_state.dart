@@ -784,16 +784,44 @@ class GameState extends ChangeNotifier {
     if (!canCraftArmor(def)) return false;
     def.recipe.forEach(character.spendMaterial);
     character.armors.add(def.id);
-    character.armorId = def.id;
+    for (final slot in ArmorSlot.values) {
+      character.worn[slot] = def.id;
+    }
     _gainSkill(Skill.smithing, craftXp(def.craftLevel) * 3);
     _count('craft:${def.id}');
     _changed();
     return true;
   }
 
-  void wearArmor(String? id) {
-    if (id != null && !character.armors.contains(id)) return;
-    character.armorId = id;
+  /// Indossa un pezzo (null = toglilo).
+  void wearPiece(ArmorSlot slot, String? id) {
+    if (id == null) {
+      character.worn.remove(slot);
+    } else if (character.armors.contains(id)) {
+      character.worn[slot] = id;
+    }
+    _changed();
+  }
+
+  bool canCraftOffhand(OffhandDef def) =>
+      !character.offhands.contains(def.id) &&
+      stationLevel(def.station) >= def.craftLevel &&
+      hasMaterials(def.recipe);
+
+  bool craftOffhand(OffhandDef def) {
+    if (!canCraftOffhand(def)) return false;
+    def.recipe.forEach(character.spendMaterial);
+    character.offhands.add(def.id);
+    character.offhandId = def.id;
+    _gainSkill(Skill.forStation(def.station), craftXp(def.craftLevel) * 3);
+    _count('craft:${def.id}');
+    _changed();
+    return true;
+  }
+
+  void holdOffhand(String? id) {
+    if (id != null && !character.offhands.contains(id)) return;
+    character.offhandId = id;
     _changed();
   }
 

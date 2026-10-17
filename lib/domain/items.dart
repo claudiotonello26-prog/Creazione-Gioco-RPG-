@@ -62,6 +62,9 @@ class WeaponDef {
   /// Archi e bastoni nascono in Carpenteria, il resto all'Incudine.
   Station get station => style == WeaponStyle.melee ? Station.anvil : Station.carpentry;
 
+  /// Le armi a una mano lasciano libera la sinistra per scudo o seconda lama.
+  bool get oneHanded => style == WeaponStyle.melee && !heavy;
+
   /// Elemento dell'aura: segue l'attributo che scala di più.
   Affinity get affinity {
     Attribute? best;
@@ -137,6 +140,18 @@ const List<MaterialRecipe> materialRecipes = [
   MaterialRecipe('star_ingot', Station.furnace, {'star_ore': 2, 'coal': 2}, level: 18),
 ];
 
+/// Pezzi d'armatura: ogni armatura forgiata si indossa pezzo per pezzo, e
+/// ogni pezzo pesa per una quota della sua protezione.
+enum ArmorSlot {
+  helm('Elmo', 0.25),
+  chest('Corazza', 0.45),
+  legs('Gambali', 0.30);
+
+  const ArmorSlot(this.label, this.weight);
+  final String label;
+  final double weight;
+}
+
 /// Armature: riducono il danno dei colpi nemici.
 class ArmorDef {
   const ArmorDef({
@@ -192,6 +207,63 @@ const Map<String, ArmorDef> armorDefs = {
     recipe: {'star_ingot': 6, 'silver_ingot': 2},
     look: 2,
     craftLevel: 20,
+  ),
+};
+
+/// Mano sinistra: scudo o seconda lama, solo con un'arma a una mano.
+class OffhandDef {
+  const OffhandDef({
+    required this.id,
+    required this.name,
+    required this.recipe,
+    required this.station,
+    this.reduction = 0,
+    this.damageBonus = 0,
+    this.craftLevel = 1,
+  });
+  final String id;
+  final String name;
+  final Map<String, int> recipe;
+  final Station station;
+  final int craftLevel;
+
+  /// Scudo: quota di danno in più assorbita.
+  final double reduction;
+
+  /// Seconda lama: danno in più.
+  final double damageBonus;
+
+  bool get isShield => reduction > 0;
+
+  String get effect => isShield
+      ? 'Assorbe un altro ${(reduction * 100).round()}% dei colpi'
+      : '+${(damageBonus * 100).round()}% di danno con due lame';
+}
+
+const Map<String, OffhandDef> offhandDefs = {
+  'wooden_shield': OffhandDef(
+    id: 'wooden_shield',
+    name: 'Scudo di Quercia',
+    recipe: {'oak_plank': 3, 'iron_ingot': 1},
+    station: Station.carpentry,
+    reduction: 0.06,
+    craftLevel: 5,
+  ),
+  'twin_blade': OffhandDef(
+    id: 'twin_blade',
+    name: 'Lama Gemella',
+    recipe: {'steel_ingot': 2, 'reinforced_grip': 1},
+    station: Station.anvil,
+    damageBonus: 0.12,
+    craftLevel: 7,
+  ),
+  'kite_shield': OffhandDef(
+    id: 'kite_shield',
+    name: 'Scudo a Mandorla',
+    recipe: {'steel_ingot': 4, 'oak_plank': 2, 'holy_shard': 1},
+    station: Station.anvil,
+    reduction: 0.12,
+    craftLevel: 11,
   ),
 };
 

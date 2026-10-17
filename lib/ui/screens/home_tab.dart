@@ -30,7 +30,7 @@ class HomeTab extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: Text('IRON OATH', style: titleStyle(size: 16, spacing: 6))),
+            Expanded(child: Text('GYM OATH', style: titleStyle(size: 16, spacing: 6))),
             IconButton(
               tooltip: 'Impostazioni',
               icon: const Icon(Icons.settings_outlined, color: Palette.ash),
@@ -58,7 +58,7 @@ class HomeTab extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(c.name.toUpperCase(), style: titleStyle(size: 22, spacing: 4)),
                 Text('Livello ${c.level} · ${c.weapon.displayName}'
-                    '${c.armor != null ? ' · ${c.armor!.name}' : ''}',
+                    '${c.offhand != null ? ' · ${c.offhand!.name}' : ''}',
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: Palette.ash)),
                 const SizedBox(height: 10),
@@ -69,7 +69,7 @@ class HomeTab extends StatelessWidget {
                     _Stat('Vita', '${c.maxHp}', Icons.favorite, Palette.blood),
                     _Stat('Attacco', '${c.weapon.attackRating(c).round()}', Icons.gavel,
                         Palette.goldBright),
-                    _Stat('Difesa', '${((c.armor?.reduction ?? 0) * 100).round()}%',
+                    _Stat('Difesa', '${(c.damageReduction * 100).round()}%',
                         Icons.shield_outlined, Palette.frost),
                     _Stat('Rune', '${c.runes}', Icons.diamond_outlined, Palette.gold),
                   ],
@@ -235,10 +235,15 @@ class HomeTab extends StatelessWidget {
         ),
         ActionTile(
           icon: Icons.shield_outlined,
-          title: c.armor?.name ?? 'Nessuna armatura',
-          subtitle: c.armor == null
+          title: c.worn.isEmpty
+              ? 'Nessuna armatura'
+              : [
+                  for (final slot in ArmorSlot.values)
+                    if (c.piece(slot) != null) '${slot.label}: ${c.piece(slot)!.name}',
+                ].join(' · '),
+          subtitle: c.worn.isEmpty
               ? 'Forgiala all\'Incudine'
-              : 'Assorbe il ${(c.armor!.reduction * 100).round()}% dei colpi',
+              : 'Assorbe il ${(c.damageReduction * 100).round()}% dei colpi',
           onTap: () => onNavigate(2),
         ),
         for (final id in c.amulets)

@@ -183,9 +183,9 @@ class _ConnectCard extends StatelessWidget {
         ),
       _ => (
           android
-              ? 'Concedi a Iron Oath di leggere i passi. Su Samsung: apri Samsung Health › '
+              ? 'Concedi a Gym Oath di leggere i passi. Su Samsung: apri Samsung Health › '
                   'Impostazioni › Health Connect e attiva la condivisione dei passi.'
-              : 'Concedi a Iron Oath di leggere i passi da Salute.',
+              : 'Concedi a Gym Oath di leggere i passi da Salute.',
           'COLLEGA I PASSI'
         ),
     };

@@ -117,7 +117,9 @@ void main() {
     st.character.addMaterial('coal', 3);
     st.character.weapon.upgrade = 10;
     st.character.armors.add('templar_plate');
-    st.character.armorId = 'templar_plate';
+    for (final slot in ArmorSlot.values) {
+      st.character.worn[slot] = 'templar_plate';
+    }
     await t.pumpWidget(IronOathApp(state: st));
     await _shot(t, '30_trainer');
     await t.tapAt(const Offset(10, 10));

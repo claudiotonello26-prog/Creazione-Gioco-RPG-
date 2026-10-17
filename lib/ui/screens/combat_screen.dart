@@ -4,6 +4,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/combat.dart';
@@ -15,6 +16,7 @@ import '../../pose/rep_counter.dart';
 import '../../pose/rep_input.dart';
 import '../widgets/common.dart';
 import '../widgets/exercise_view.dart';
+import '../widgets/knight_view.dart';
 
 /// Combattimento: ogni rep valida è un attacco, il nemico colpisce a tempo.
 ///
@@ -80,6 +82,14 @@ class _CombatScreenState extends State<CombatScreen> {
       enemy: widget.enemy,
       weaponTier: state.character.weapon.visualTier,
       style: state.character.weapon.def.style,
+      heroLayers: [
+        if (Art.has('assets/art/knight/attack/base.png'))
+          ...knightLayers(state.character, KnightPose.attack),
+      ],
+      weaponTint: state.character.weapon.visualTier == 0
+          ? null
+          : state.character.weapon.def.affinity.color
+              .withValues(alpha: [0.0, 0.35, 0.6, 0.7][state.character.weapon.visualTier]),
     );
     // La fotocamera parte subito: i 5 secondi servono a mettersi in posizione.
     _input = createRepInput(state.useCamera, widget.exercise);

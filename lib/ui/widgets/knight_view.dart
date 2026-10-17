@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 
@@ -30,39 +31,128 @@ Color bladeColor(WeaponInstance w) {
   };
 }
 
-/// Il cavaliere in piedi con l'arma, disegnato a vettori finché non arrivano
-/// le illustrazioni di Antigravity (assets/art/knight/knight_sN_idle.png).
+/// Le due pose del cavaliere: rilassata nella Home, in guardia quando si
+/// combatte e ci si allena.
+enum KnightPose { idle, attack }
+
+/// Strati dell'illustrazione a strati di Antigravity, dal fondo alla cima.
+/// Ogni strato è un PNG trasparente sulla stessa tela, già allineato: basta
+/// sovrapporli. `assets/art/knight/<posa>/base.png` è il corpo senza
+/// equipaggiamento; gli altri si aggiungono solo se esistono.
+List<String> knightLayers(Character c, KnightPose pose) {
+  final dir = 'assets/art/knight/${pose.name}';
+  return [
+    '$dir/base.png',
+    for (final slot in [ArmorSlot.legs, ArmorSlot.chest, ArmorSlot.helm])
+      if (c.worn[slot] != null) '$dir/${slot.name}_${c.worn[slot]}.png',
+    if (c.offhand != null) '$dir/offhand_${c.offhandId}.png',
+    '$dir/weapon_${c.weapon.weaponId}.png',
+  ].where((p) => p.endsWith('base.png') || Art.has(p)).toList();
+}
+
+/// Il cavaliere con l'equipaggiamento che indossa: con le illustrazioni di
+/// Antigravity sovrappone gli strati, altrimenti lo disegna a vettori.
 class KnightView extends StatelessWidget {
-  const KnightView({super.key, required this.character, this.height = 300});
+  const KnightView({
+    super.key,
+    required this.character,
+    this.height = 300,
+    this.pose = KnightPose.idle,
+  });
   final Character character;
   final double height;
+  final KnightPose pose;
 
   @override
   Widget build(BuildContext context) {
-    final stage = (character.level ~/ 10 + 1).clamp(1, 5);
-    final painted = CustomPaint(
-      size: Size(height * 0.8, height),
-      painter: KnightPainter(
-        weapon: character.weapon,
-        armorLook: character.armor?.look ?? -1,
-      ),
-    );
-    final art = 'assets/art/knight/knight_s${stage}_idle.png';
+    final layers = knightLayers(character, pose);
+    final weapon = character.weapon;
     return SizedBox(
       height: height,
       width: height * 0.8,
-      child: Art.has(art) ? Image.asset(art, fit: BoxFit.contain) : painted,
+      child: Art.has(layers.first)
+          ? Stack(
+              fit: StackFit.expand,
+              children: [
+                for (final path in layers)
+                  path.contains('/weapon_')
+                      ? _TintedWeapon(path: path, weapon: weapon)
+                      : Image.asset(path, fit: BoxFit.contain),
+              ],
+            )
+          : CustomPaint(
+              size: Size(height * 0.8, height),
+              painter: KnightPainter.of(character),
+            ),
     );
   }
 }
 
+/// Strato dell'arma: a +3 e +6 si tinge del colore della sua build, a +10
+/// prende anche l'aura.
+class _TintedWeapon extends StatelessWidget {
+  const _TintedWeapon({required this.path, required this.weapon});
+  final String path;
+  final WeaponInstance weapon;
+
+  @override
+  Widget build(BuildContext context) {
+    final tier = weapon.visualTier;
+    final color = weapon.def.affinity.color;
+    Widget img = Image.asset(path, fit: BoxFit.contain);
+    if (tier == 0) return img;
+    img = ColorFiltered(
+      colorFilter: ColorFilter.mode(
+          color.withValues(alpha: [0.0, 0.35, 0.6, 0.7][tier]), BlendMode.srcATop),
+      child: img,
+    );
+    return Stack(fit: StackFit.expand, children: [
+      ImageFiltered(
+        imageFilter: ImageFilter.blur(sigmaX: tier * 5.0, sigmaY: tier * 5.0),
+        child: ColorFiltered(
+          colorFilter: ColorFilter.mode(
+              weapon.def.affinity.glow.withValues(alpha: [0.0, 0.4, 0.7, 1.0][tier]),
+              BlendMode.srcIn),
+          child: Image.asset(path, fit: BoxFit.contain),
+        ),
+      ),
+      img,
+    ]);
+  }
+}
+
 class KnightPainter extends CustomPainter {
-  KnightPainter({required this.weapon, required this.armorLook});
+  KnightPainter({
+    required this.weapon,
+    required this.armorLook,
+    int? helmLook,
+    int? legsLook,
+    this.offhand,
+  })  : helmLook = helmLook ?? armorLook,
+        legsLook = legsLook ?? armorLook;
+
+  factory KnightPainter.of(Character c) => KnightPainter(
+        weapon: c.weapon,
+        armorLook: c.piece(ArmorSlot.chest)?.look ?? -1,
+        helmLook: c.piece(ArmorSlot.helm)?.look ?? -1,
+        legsLook: c.piece(ArmorSlot.legs)?.look ?? -1,
+        offhand: c.offhand,
+      );
 
   final WeaponInstance weapon;
 
-  /// -1 tunica, 0 stoffa imbottita, 1 maglia, 2 piastre.
+  /// Corazza: -1 tunica, 0 stoffa imbottita, 1 maglia, 2 piastre.
   final int armorLook;
+  final int helmLook;
+  final int legsLook;
+  final OffhandDef? offhand;
+
+  static Color _steelOf(int look) => switch (look) {
+        2 => const Color(0xFF9DA3AB),
+        1 => const Color(0xFF7D8288),
+        0 => const Color(0xFF6B5A44),
+        _ => const Color(0xFF4E4236),
+      };
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -88,12 +178,8 @@ class KnightPainter extends CustomPainter {
       );
     }
 
-    final steel = switch (armorLook) {
-      2 => const Color(0xFF9DA3AB),
-      1 => const Color(0xFF7D8288),
-      0 => const Color(0xFF6B5A44),
-      _ => const Color(0xFF4E4236),
-    };
+    final steel = _steelOf(armorLook);
+    final legSteel = _steelOf(legsLook);
     final dark = Color.lerp(steel, Colors.black, 0.55)!;
     final trim = armorLook >= 2 ? Palette.goldBright : Palette.gold.withValues(alpha: 0.7);
     Paint fill(Color c) => Paint()..color = c;
@@ -130,8 +216,8 @@ class KnightPainter extends CustomPainter {
     // Gambe e schinieri.
     for (final side in [-1, 1]) {
       final r = Rect.fromLTWH(cx + side * w * 0.085 - w * 0.065, h * 0.62, w * 0.13, h * 0.3);
-      canvas.drawRRect(RRect.fromRectAndRadius(r, Radius.circular(w * 0.03)), shade(r, steel));
-      canvas.drawCircle(Offset(r.center.dx, h * 0.72), w * 0.04, shade(r, steel));
+      canvas.drawRRect(RRect.fromRectAndRadius(r, Radius.circular(w * 0.03)), shade(r, legSteel));
+      canvas.drawCircle(Offset(r.center.dx, h * 0.72), w * 0.04, shade(r, legSteel));
       canvas.drawCircle(Offset(r.center.dx, h * 0.72), w * 0.04, line);
       canvas.drawRRect(
           RRect.fromRectAndRadius(
@@ -195,8 +281,67 @@ class KnightPainter extends CustomPainter {
       canvas.drawCircle(Offset(cx + side * w * 0.035, h * 0.555), w * 0.04, fill(dark));
     }
 
+    // Mano sinistra: scudo o seconda lama.
+    if (offhand != null) _offhand(canvas, size, steel, trim);
+
     // Elmo (armet con visiera a becco, come l'icona).
-    _helm(canvas, Offset(cx, h * 0.17), w * 0.2, steel, trim);
+    _helm(canvas, Offset(cx, h * 0.17), w * 0.2, _steelOf(helmLook),
+        helmLook >= 2 ? Palette.goldBright : Palette.gold.withValues(alpha: 0.7));
+  }
+
+  void _offhand(Canvas canvas, Size size, Color steel, Color trim) {
+    final w = size.width, h = size.height;
+    final c = Offset(w * 0.2, h * 0.5);
+    if (offhand!.isShield) {
+      final kite = offhand!.reduction >= 0.1;
+      final shield = Path();
+      if (kite) {
+        shield
+          ..moveTo(c.dx - w * 0.12, c.dy - h * 0.13)
+          ..lineTo(c.dx + w * 0.12, c.dy - h * 0.13)
+          ..quadraticBezierTo(c.dx + w * 0.12, c.dy + h * 0.08, c.dx, c.dy + h * 0.2)
+          ..quadraticBezierTo(c.dx - w * 0.12, c.dy + h * 0.08, c.dx - w * 0.12, c.dy - h * 0.13)
+          ..close();
+      } else {
+        shield.addOval(Rect.fromCircle(center: c, radius: w * 0.13));
+      }
+      final r = shield.getBounds();
+      canvas.drawPath(
+          shield,
+          Paint()
+            ..shader = LinearGradient(colors: [
+              Color.lerp(kite ? steel : const Color(0xFF6A4A2C), Colors.black, 0.4)!,
+              kite ? steel : const Color(0xFF7A5634),
+            ]).createShader(r));
+      canvas.drawPath(
+          shield,
+          Paint()
+            ..color = trim
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = w * 0.012);
+      if (kite) {
+        final cross = Paint()..color = const Color(0xFF9E2B25);
+        canvas.drawRect(Rect.fromCenter(center: c, width: w * 0.03, height: h * 0.18), cross);
+        canvas.drawRect(Rect.fromCenter(center: c - Offset(0, h * 0.03), width: w * 0.14, height: h * 0.022), cross);
+      } else {
+        canvas.drawCircle(c, w * 0.035, Paint()..color = Palette.gold);
+      }
+    } else {
+      // Lama gemella, più corta, tenuta bassa a sinistra.
+      final x = w * 0.18;
+      canvas.drawPath(
+          Path()
+            ..moveTo(x - w * 0.02, h * 0.58)
+            ..lineTo(x + w * 0.02, h * 0.58)
+            ..lineTo(x + w * 0.02, h * 0.82)
+            ..lineTo(x, h * 0.87)
+            ..lineTo(x - w * 0.02, h * 0.82)
+            ..close(),
+          Paint()..color = const Color(0xFFB9BEC6));
+      canvas.drawRect(Rect.fromLTWH(x - w * 0.07, h * 0.57, w * 0.14, h * 0.016), Paint()..color = Palette.gold);
+      canvas.drawRect(Rect.fromLTWH(x - w * 0.015, h * 0.51, w * 0.03, h * 0.06),
+          Paint()..color = const Color(0xFF3A2416));
+    }
   }
 
   void _helm(Canvas canvas, Offset c, double r, Color steel, Color trim) {
@@ -374,7 +519,10 @@ class KnightPainter extends CustomPainter {
   bool shouldRepaint(KnightPainter old) =>
       old.weapon.weaponId != weapon.weaponId ||
       old.weapon.upgrade != weapon.upgrade ||
-      old.armorLook != armorLook;
+      old.armorLook != armorLook ||
+      old.helmLook != helmLook ||
+      old.legsLook != legsLook ||
+      old.offhand != offhand;
 }
 
 /// Solo l'arma, grande, per l'Incantamento: mostra come cambierà.
@@ -520,7 +668,13 @@ class TrainerFigure extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final art = 'assets/art/trainer/trainer_${pose.name}.png';
+    // Antigravity fa solo due pose: braccia conserte e buffa. Le altre
+    // ripiegano su quella più vicina.
+    final drawn = switch (pose) {
+      TrainerPose.goofy || TrainerPose.facepalm => 'goofy',
+      _ => 'crossed',
+    };
+    final art = 'assets/art/trainer/trainer_$drawn.png';
     return SizedBox(
       width: height * 0.8,
       height: height,

@@ -27,8 +27,10 @@ class Character {
     Map<String, int>? materials,
     List<WeaponInstance>? weapons,
     Set<String>? perks,
-    this.armorId,
+    Map<ArmorSlot, String>? worn,
     Set<String>? armors,
+    this.offhandId,
+    Set<String>? offhands,
   })  : attributes = attributes ??
             {for (final a in Attribute.values) a: baseAttribute},
         weapon = weapon ?? WeaponInstance(weaponId: 'pilgrim_blade'),
@@ -36,7 +38,9 @@ class Character {
         materials = materials ?? {},
         weapons = weapons ?? [],
         perks = perks ?? {},
-        armors = armors ?? {};
+        worn = worn ?? {},
+        armors = armors ?? {},
+        offhands = offhands ?? {};
 
   static const int baseAttribute = 10;
 
@@ -55,11 +59,28 @@ class Character {
   final Map<String, int> materials;
   final Set<String> perks;
 
-  /// Armatura indossata (null = solo la tunica) e armature possedute.
-  String? armorId;
+  /// Pezzi d'armatura indossati (slot vuoto = solo la tunica) e armature
+  /// possedute.
+  final Map<ArmorSlot, String> worn;
   final Set<String> armors;
 
-  ArmorDef? get armor => armorDefs[armorId];
+  ArmorDef? piece(ArmorSlot slot) => armorDefs[worn[slot]];
+
+  /// Mano sinistra (scudo o seconda lama) e oggetti posseduti.
+  String? offhandId;
+  final Set<String> offhands;
+
+  /// La mano sinistra conta solo con un'arma a una mano.
+  OffhandDef? get offhand => weapon.def.oneHanded ? offhandDefs[offhandId] : null;
+
+  /// Quota di danno assorbita da armatura e scudo.
+  double get damageReduction {
+    var r = 0.0;
+    for (final slot in ArmorSlot.values) {
+      r += (piece(slot)?.reduction ?? 0) * slot.weight;
+    }
+    return r + (offhand?.reduction ?? 0);
+  }
 
   static const int maxAmuletSlots = 3;
 
@@ -134,8 +155,10 @@ class Character {
         'amulets': amulets,
         'materials': materials,
         'perks': perks.toList(),
-        'armor': armorId,
+        'worn': {for (final e in worn.entries) e.key.name: e.value},
         'armors': armors.toList(),
+        'offhand': offhandId,
+        'offhands': offhands.toList(),
       };
 
   factory Character.fromJson(Map<String, dynamic> j) => Character(
@@ -155,9 +178,24 @@ class Character {
         amulets: List<String>.from(j['amulets'] as List),
         materials: Map<String, int>.from(j['materials'] as Map),
         perks: Set<String>.from(j['perks'] as List),
-        armorId: j['armor'] as String?,
+        worn: _readWorn(j),
         armors: Set<String>.from(j['armors'] as List? ?? const []),
+        offhandId: j['offhand'] as String?,
+        offhands: Set<String>.from(j['offhands'] as List? ?? const []),
       );
+}
+
+/// Prima dei pezzi separati c'era un'armatura intera: la si indossa tutta.
+Map<ArmorSlot, String> _readWorn(Map<String, dynamic> j) {
+  final w = j['worn'] as Map?;
+  if (w != null) {
+    return {
+      for (final slot in ArmorSlot.values)
+        if (w[slot.name] is String) slot: w[slot.name] as String,
+    };
+  }
+  final old = j['armor'] as String?;
+  return old == null ? {} : {for (final slot in ArmorSlot.values) slot: old};
 }
 
 class Perk {

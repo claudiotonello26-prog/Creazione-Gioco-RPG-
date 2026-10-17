@@ -61,19 +61,34 @@ class ForgeTab extends StatelessWidget {
             color: identical(w, c.weapon) ? Palette.goldBright : Palette.gold,
             onTap: identical(w, c.weapon) ? null : () => s.equip(w),
           ),
-        const SectionTitle('Armature'),
+        const SectionTitle('Armatura'),
         if (c.armors.isEmpty)
           const Text('Nessuna armatura: la prima si forgia all\'Incudine.',
               style: TextStyle(color: Palette.ash)),
-        for (final id in c.armors)
-          ActionTile(
-            icon: c.armorId == id ? Icons.check_circle : Icons.shield_outlined,
-            title: armorDefs[id]!.name,
-            subtitle: 'Assorbe il ${(armorDefs[id]!.reduction * 100).round()}% dei colpi'
-                '${c.armorId == id ? ' · indossata' : ' · tocca per indossare'}',
-            color: c.armorId == id ? Palette.goldBright : Palette.gold,
-            onTap: () => s.wearArmor(c.armorId == id ? null : id),
-          ),
+        if (c.armors.isNotEmpty)
+          for (final slot in ArmorSlot.values)
+            ActionTile(
+              icon: Icons.shield_outlined,
+              title: '${slot.label}: ${c.piece(slot)?.name ?? 'nessuno'}',
+              subtitle: 'Vale il ${(slot.weight * 100).round()}% della protezione · tocca per cambiare',
+              color: c.piece(slot) != null ? Palette.goldBright : Palette.ash,
+              onTap: () => _pickPiece(context, s, slot),
+            ),
+        if (c.offhands.isNotEmpty) ...[
+          const SectionTitle('Mano sinistra'),
+          if (!c.weapon.def.oneHanded)
+            Text('${c.weapon.def.name} si impugna a due mani: scudo e seconda lama restano sulla schiena.',
+                style: const TextStyle(color: Palette.ash)),
+          for (final id in c.offhands)
+            ActionTile(
+              icon: c.offhandId == id ? Icons.check_circle : Icons.shield_moon_outlined,
+              title: offhandDefs[id]!.name,
+              subtitle: '${offhandDefs[id]!.effect}'
+                  '${c.offhandId == id ? ' · in mano' : ' · tocca per impugnare'}',
+              color: c.offhandId == id ? Palette.goldBright : Palette.gold,
+              onTap: () => s.holdOffhand(c.offhandId == id ? null : id),
+            ),
+        ],
         SectionTitle('Amuleti (${c.amulets.length}/${Character.maxAmuletSlots})'),
         for (final a in amuletDefs.values)
           ActionTile(
@@ -95,6 +110,36 @@ class ForgeTab extends StatelessWidget {
       ],
     );
   }
+}
+
+void _pickPiece(BuildContext context, GameState s, ArmorSlot slot) {
+  final c = s.character;
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Palette.night,
+    builder: (ctx) => SafeArea(
+      child: ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(16),
+        children: [
+          SectionTitle(slot.label),
+          for (final id in [null, ...c.armors])
+            ActionTile(
+              icon: c.worn[slot] == id ? Icons.check_circle : Icons.shield_outlined,
+              title: id == null ? 'Nessuno' : armorDefs[id]!.name,
+              subtitle: id == null
+                  ? 'Solo la tunica'
+                  : 'Assorbe il ${(armorDefs[id]!.reduction * slot.weight * 100).round()}% dei colpi',
+              color: c.worn[slot] == id ? Palette.goldBright : Palette.gold,
+              onTap: () {
+                s.wearPiece(slot, id);
+                Navigator.pop(ctx);
+              },
+            ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _StationButton extends StatelessWidget {
@@ -162,6 +207,7 @@ class StationScreen extends StatelessWidget {
         .toList()
       ..sort((a, b) => a.craftLevel.compareTo(b.craftLevel));
     final armors = station == Station.anvil ? armorDefs.values.toList() : <ArmorDef>[];
+    final offhands = offhandDefs.values.where((o) => o.station == station).toList();
     return [
       Row(
         children: [
@@ -217,6 +263,23 @@ class StationScreen extends StatelessWidget {
           icon: Icons.shield_outlined,
           stationLabel: station.label,
           note: 'Assorbe il ${(a.reduction * 100).round()}% dei colpi',
+        ),
+      if (offhands.isNotEmpty) const SectionTitle('Mano sinistra'),
+      for (final o in offhands)
+        _RecipeTile(
+          title: o.name,
+          inputs: o.recipe,
+          level: o.craftLevel,
+          unlocked: lvl >= o.craftLevel,
+          canMake: s.canCraftOffhand(o),
+          done: s.character.offhands.contains(o.id),
+          onMake: () {
+            s.craftOffhand(o);
+            toast(context, '${o.name} in mano (con un\'arma a una mano).');
+          },
+          icon: o.isShield ? Icons.shield_moon_outlined : Icons.gavel,
+          stationLabel: station.label,
+          note: o.effect,
         ),
     ];
   }
