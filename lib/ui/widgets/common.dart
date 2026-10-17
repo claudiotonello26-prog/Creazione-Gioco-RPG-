@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/art.dart';
 import '../../core/theme.dart';
+import '../../core/sound.dart';
 
 class SectionTitle extends StatelessWidget {
   const SectionTitle(this.text, {super.key, this.trailing});
@@ -31,7 +32,11 @@ class SectionTitle extends StatelessWidget {
             const SizedBox(width: 10),
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: box.maxWidth * 0.8),
-              child: Text(text.toUpperCase(), style: titleStyle(size: 13, spacing: 1.6)),
+              child: OneLine(
+                text.toUpperCase(),
+                align: Alignment.centerLeft,
+                style: titleStyle(size: 13, spacing: 1.6),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -180,7 +185,7 @@ class ActionTile extends StatelessWidget {
       child: Card(
         child: ListTile(
           leading: Icon(icon, color: color),
-          title: Text(title),
+          title: OneLine(title, align: Alignment.centerLeft),
           subtitle: subtitle == null
               ? null
               : Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 13)),
@@ -262,12 +267,14 @@ Future<bool> craftCountdown(
   String? itemId,
   Color color = Palette.gold,
   int seconds = 5,
+  Sfx sound = Sfx.confirm,
 }) async {
   final ok = await showDialog<bool>(
     context: context,
     barrierDismissible: false,
     builder: (_) => _CraftCountdown(title: title, itemId: itemId, color: color, seconds: seconds),
   );
+  Sound.play(ok == true ? sound : Sfx.craftCancel);
   return ok == true;
 }
 
@@ -288,10 +295,19 @@ class _CraftCountdown extends StatefulWidget {
 }
 
 class _CraftCountdownState extends State<_CraftCountdown> with SingleTickerProviderStateMixin {
+  int _lastTick = -1;
+
   late final AnimationController _c = AnimationController(
     vsync: this,
     duration: Duration(seconds: widget.seconds),
   )
+    ..addListener(() {
+      final left = (widget.seconds * (1 - _c.value)).ceil();
+      if (left != _lastTick) {
+        _lastTick = left;
+        if (left > 0 && left < widget.seconds) Sound.play(Sfx.craftTick, volume: 0.6);
+      }
+    })
     ..addStatusListener((st) {
       if (st == AnimationStatus.completed && mounted) Navigator.pop(context, true);
     })
@@ -381,6 +397,146 @@ class SectionBackdrop extends StatelessWidget {
         ),
         child,
       ],
+    );
+  }
+}
+
+/// Testo su una riga sola: se non ci sta si rimpicciolisce, non va mai a capo.
+class OneLine extends StatelessWidget {
+  const OneLine(this.text, {super.key, this.style, this.align = Alignment.centerLeft});
+  final String text;
+  final TextStyle? style;
+  final Alignment align;
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: align,
+      child: Text(text, maxLines: 1, softWrap: false, style: style),
+    );
+  }
+}
+
+/// Selettore a pulsanti fissi: celle tutte uguali su una griglia ordinata
+/// ([columns] per riga), etichette su una riga sola.
+class OathChoice<T> extends StatelessWidget {
+  const OathChoice({
+    super.key,
+    required this.options,
+    required this.selected,
+    required this.onChanged,
+    this.columns,
+    this.color = Palette.gold,
+    this.height = 44,
+  });
+
+  final List<(T, String)> options;
+  final T selected;
+  final ValueChanged<T> onChanged;
+  final int? columns;
+  final Color color;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final cols = columns ?? (options.length <= 4 ? options.length : 3);
+    final rows = <Widget>[];
+    for (var i = 0; i < options.length; i += cols) {
+      rows.add(Row(
+        children: [
+          for (var j = i; j < i + cols; j++)
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(left: j == i ? 0 : 6),
+                child: j < options.length
+                    ? OathToggle(
+                        label: options[j].$2,
+                        selected: options[j].$1 == selected,
+                        onTap: () => onChanged(options[j].$1),
+                        color: color,
+                        height: height,
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ),
+        ],
+      ));
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var r = 0; r < rows.length; r++)
+          Padding(padding: EdgeInsets.only(top: r == 0 ? 0 : 6), child: rows[r]),
+      ],
+    );
+  }
+}
+
+/// Una cella del selettore: si può usare anche da sola come interruttore.
+class OathToggle extends StatelessWidget {
+  const OathToggle({
+    super.key,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.icon,
+    this.color = Palette.gold,
+    this.height = 44,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback? onTap;
+  final IconData? icon;
+  final Color color;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = selected ? Palette.night : Palette.holy;
+    return Material(
+      color: selected ? color : Palette.stoneLight,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(6),
+        side: BorderSide(color: selected ? color : color.withValues(alpha: 0.45)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap == null
+            ? null
+            : () {
+                Sound.play(Sfx.tap, volume: 0.7);
+                onTap!();
+              },
+        child: SizedBox(
+          height: height,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, size: 16, color: selected ? Palette.night : color),
+                  const SizedBox(width: 6),
+                ],
+                Flexible(
+                  child: OneLine(
+                    label.toUpperCase(),
+                    style: TextStyle(
+                      fontFamily: kTitleFont,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      letterSpacing: 1,
+                      color: fg,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

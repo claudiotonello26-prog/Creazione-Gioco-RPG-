@@ -22,6 +22,7 @@ import '../widgets/common.dart';
 import '../widgets/exercise_demo.dart';
 import '../widgets/exercise_view.dart';
 import '../widgets/knight_view.dart';
+import '../../core/sound.dart';
 
 /// Combattimento: ogni rep valida è un attacco, il nemico colpisce a tempo.
 ///
@@ -97,6 +98,7 @@ class _CombatScreenState extends State<CombatScreen> {
   @override
   void initState() {
     super.initState();
+    Sound.pushMusic(widget.enemy.isBoss ? Music.boss : Music.combat);
     final state = context.read<GameState>();
     _engine = _newEngine(state);
     _game = BattleGame(
@@ -149,6 +151,7 @@ class _CombatScreenState extends State<CombatScreen> {
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (!mounted) return;
       setState(() => _countdown--);
+      Sound.play(_countdown <= 0 ? Sfx.countdownGo : Sfx.countdownTick);
       if (_countdown <= 0) {
         t.cancel();
         _beginFight();
@@ -171,6 +174,7 @@ class _CombatScreenState extends State<CombatScreen> {
     _reps.add(e.quality);
     final hit = _engine.registerRep(e.quality);
     _game.heroStrike(damage: hit.damage, critical: hit.critical, bounced: hit.bounced);
+    Sound.play(hit.bounced ? Sfx.heroBounce : hit.critical ? Sfx.heroCrit : Sfx.heroHit);
     setState(() {});
     _checkEnd();
   }
@@ -180,7 +184,10 @@ class _CombatScreenState extends State<CombatScreen> {
     final dt = (now - _last).inMicroseconds / 1e6;
     _last = now;
     final taken = _engine.tick(dt);
-    if (taken > 0) _game.enemyStrike(taken);
+    if (taken > 0) {
+      _game.enemyStrike(taken);
+      Sound.play(Sfx.enemyHit);
+    }
     if (mounted) setState(() {});
     _checkEnd();
   }
@@ -222,6 +229,7 @@ class _CombatScreenState extends State<CombatScreen> {
 
     if (status == CombatStatus.victory) {
       _game.enemyDefeated();
+      Sound.play(Sfx.enemyDie);
       _collect(rewards, victory: true);
       if (widget.looping) {
         // Il prossimo nemico arriva subito: niente pause lunghe.
@@ -244,14 +252,17 @@ class _CombatScreenState extends State<CombatScreen> {
     setState(() => _phase = _Phase.ended);
     if (status == CombatStatus.defeated) {
       _game.heroDied();
+      Sound.play(Sfx.youDied);
       setState(() => _youDied = true);
       await Future<void>.delayed(const Duration(milliseconds: 3800));
       if (!mounted) return;
       setState(() => _youDied = false);
     } else if (status == CombatStatus.fled) {
       _game.heroFled();
+      Sound.play(Sfx.fled);
       await Future<void>.delayed(const Duration(milliseconds: 900));
     } else {
+      Sound.play(Sfx.victory);
       await Future<void>.delayed(const Duration(milliseconds: 1200));
     }
     if (!mounted) return;
@@ -294,6 +305,7 @@ class _CombatScreenState extends State<CombatScreen> {
 
   @override
   void dispose() {
+    Sound.popMusic();
     _loop?.cancel();
     _countdownTimer?.cancel();
     _sub?.cancel();

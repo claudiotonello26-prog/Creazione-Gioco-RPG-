@@ -16,10 +16,6 @@ const Map<BodyRegion, Color> regionColors = {
   BodyRegion.legs: Palette.frost,
 };
 
-final _compact = SegmentedButton.styleFrom(
-  textStyle: const TextStyle(fontFamily: 'EBGaramond', fontSize: 15, fontWeight: FontWeight.w600),
-  visualDensity: VisualDensity.compact,
-);
 
 /// Andamento della forza reale nella Home: indice per Parte alta, Core e
 /// Gambe (100 = test iniziale), con giorno, settimana o mese.
@@ -46,15 +42,11 @@ class _ProgressCardState extends State<ProgressCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SegmentedButton<ProgressSpan>(
-              segments: [
-                for (final sp in ProgressSpan.values)
-                  ButtonSegment(value: sp, label: Text(sp.label)),
-              ],
-              selected: {_span},
-              showSelectedIcon: false,
-              style: _compact,
-              onSelectionChanged: (v) => setState(() => _span = v.first),
+            OathChoice<ProgressSpan>(
+              options: [for (final sp in ProgressSpan.values) (sp, sp.label)],
+              selected: _span,
+              height: 36,
+              onChanged: (v) => setState(() => _span = v),
             ),
             const SizedBox(height: 12),
             SizedBox(height: 160, child: CustomPaint(painter: StrengthChartPainter(points))),
@@ -254,16 +246,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
         children: [
           const ProgressCard(showDetails: false),
           const SectionTitle('Esercizi'),
-          SegmentedButton<ProgressSpan>(
-            segments: const [
-              ButtonSegment(value: ProgressSpan.day, label: Text('Oggi')),
-              ButtonSegment(value: ProgressSpan.week, label: Text('Settimana')),
-              ButtonSegment(value: ProgressSpan.month, label: Text('Mese')),
+          OathChoice<ProgressSpan>(
+            options: const [
+              (ProgressSpan.day, 'Oggi'),
+              (ProgressSpan.week, 'Settimana'),
+              (ProgressSpan.month, 'Mese'),
             ],
-            selected: {_span},
-            showSelectedIcon: false,
-            style: _compact,
-            onSelectionChanged: (v) => setState(() => _span = v.first),
+            selected: _span,
+            height: 36,
+            onChanged: (v) => setState(() => _span = v),
           ),
           const SizedBox(height: 8),
           if (list.isEmpty)

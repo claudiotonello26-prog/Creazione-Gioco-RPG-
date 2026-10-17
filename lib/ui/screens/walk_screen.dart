@@ -16,6 +16,7 @@ import '../../domain/walking.dart';
 import '../../health/step_source.dart';
 import '../widgets/common.dart';
 import '../widgets/trainer.dart';
+import '../../core/sound.dart';
 
 /// La Camminata: i passi di oggi (Samsung Health, Google Fit, smartwatch,
 /// tramite Health Connect o Salute) diventano minerale, legno e pietre.
@@ -117,9 +118,9 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
               ),
             ),
             const SizedBox(height: 12),
-            Text(
+            OneLine(
               'Stai raccogliendo: ${target.name}',
-              textAlign: TextAlign.center,
+              align: Alignment.center,
               style: titleStyle(size: 15),
             ),
             Text(
@@ -358,6 +359,8 @@ class _GatherScreenState extends State<GatherScreen> {
       return;
     }
     final after = s.skillLevel(_r.skill);
+    Sound.play(_r.skill == Skill.mining ? Sfx.gatherOre : Sfx.gatherWood);
+    if (after > before) Sound.play(Sfx.skillUp);
     setState(() => _popup = (_r.id, units, after > before ? after : 0));
     await Future<void>.delayed(const Duration(milliseconds: 2200));
     if (mounted) setState(() => _popup = null);
@@ -383,7 +386,7 @@ class _GatherScreenState extends State<GatherScreen> {
             children: [
               Center(child: ItemIcon(_r.id, size: 120)),
               const SizedBox(height: 8),
-              Text(_r.name, textAlign: TextAlign.center, style: titleStyle(size: 20)),
+              OneLine(_r.name, align: Alignment.center, style: titleStyle(size: 20)),
               Text(
                 '${_r.where} · hai ${s.character.materials[_r.id] ?? 0}',
                 textAlign: TextAlign.center,
@@ -480,9 +483,9 @@ class _GatherPopup extends StatelessWidget {
                 child: ItemIcon(id, size: 110),
               ),
               const SizedBox(height: 8),
-              Text(
+              OneLine(
                 '+$n ${itemName(id)}',
-                textAlign: TextAlign.center,
+                align: Alignment.center,
                 style: titleStyle(size: 22, color: Palette.holy),
               ),
               if (level > 0) ...[
@@ -497,8 +500,9 @@ class _GatherPopup extends StatelessWidget {
                       BoxShadow(color: Palette.goldBright.withValues(alpha: 0.5), blurRadius: 20),
                     ],
                   ),
-                  child: Text(
+                  child: OneLine(
                     '${skill.label.toUpperCase()} · LIVELLO $level',
+                    align: Alignment.center,
                     style: titleStyle(size: 18, color: Palette.goldBright),
                   ),
                 ),

@@ -158,19 +158,13 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
             ),
           ),
           const SectionTitle('Obiettivo'),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final g in _goals)
-                ChoiceChip(
-                  label: Text(g),
-                  selected: _goal == g,
-                  onSelected: (_) => setState(() => _goal = g),
-                ),
-            ],
+          OathChoice<String>(
+            options: [for (final g in _goals) (g, g)],
+            selected: _goal,
+            columns: 2,
+            onChanged: (g) => setState(() => _goal = g),
           ),
-          const SectionTitle('Giorni di allenamento a settimana'),
+          const SectionTitle('Giorni a settimana'),
           Slider(
             value: _days.toDouble(),
             min: 2,
@@ -202,7 +196,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                   _mode == m ? Icons.radio_button_checked : Icons.radio_button_off,
                   color: Palette.gold,
                 ),
-                title: Text(m.label),
+                title: OneLine(m.label),
                 subtitle: Text(
                   m == PlayMode.path
                       ? 'Test iniziale, quest del giorno su misura e progressione.'
@@ -477,7 +471,7 @@ class _Summary extends StatelessWidget {
           for (final q in quest)
             Card(
               child: ListTile(
-                title: Text(q.label),
+                title: OneLine(q.label),
                 subtitle: Text(
                   'Test: ${results[q.exercise]!.reps}${q.info.perLeg ? ' per gamba' : ''}',
                   style: const TextStyle(color: Palette.ash),

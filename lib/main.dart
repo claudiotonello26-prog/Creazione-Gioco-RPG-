@@ -8,11 +8,13 @@ import 'data/game_state.dart';
 import 'ui/screens/home_shell.dart';
 import 'ui/screens/intro_screen.dart';
 import 'ui/screens/onboarding.dart';
+import 'core/sound.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Art.init();
+  await Sound.init();
   final state = GameState();
   await state.load();
   runApp(IronOathApp(state: state, intro: true));

@@ -11,6 +11,7 @@ import '../../domain/skills.dart';
 import '../widgets/common.dart';
 import '../widgets/knight_view.dart';
 import 'gear_screens.dart';
+import '../../core/sound.dart';
 
 IconData stationIcon(Station s) => switch (s) {
   Station.carpentry => Icons.carpenter,
@@ -177,6 +178,7 @@ class StationScreen extends StatelessWidget {
           icon: Icons.hexagon_outlined,
           stationLabel: station.label,
           color: station.accent,
+          sound: stationSound(station),
           itemId: r.output,
         ),
       if (weapons.isNotEmpty) const SectionTitle('Armi'),
@@ -194,6 +196,7 @@ class StationScreen extends StatelessWidget {
           icon: Icons.gavel,
           stationLabel: station.label,
           color: station.accent,
+          sound: stationSound(station),
           itemId: d.id,
           note:
               '${d.style.label} · aura di ${d.affinity.label.toLowerCase()}'
@@ -215,6 +218,7 @@ class StationScreen extends StatelessWidget {
           icon: Icons.shield_outlined,
           stationLabel: station.label,
           color: station.accent,
+          sound: stationSound(station),
           itemId: a.id,
           note:
               'Assorbe il ${(a.reduction * 100).round()}% dei colpi'
@@ -236,6 +240,7 @@ class StationScreen extends StatelessWidget {
           icon: o.isShield ? Icons.shield_moon_outlined : Icons.gavel,
           stationLabel: station.label,
           color: station.accent,
+          sound: stationSound(station),
           itemId: o.id,
           note: o.effect,
         ),
@@ -288,6 +293,7 @@ class StationScreen extends StatelessWidget {
                     title: 'Incanta a +${w.upgrade + 1}',
                     itemId: stone,
                     color: Station.enchant.accent,
+                    sound: Sfx.craftEnchant,
                   );
                   if (!ok || !context.mounted) return;
                   s.upgradeWeapon(w);
@@ -333,6 +339,7 @@ class _RecipeTile extends StatelessWidget {
     required this.icon,
     required this.stationLabel,
     required this.color,
+    this.sound = Sfx.confirm,
     this.itemId,
     this.have,
     this.note,
@@ -340,6 +347,7 @@ class _RecipeTile extends StatelessWidget {
   });
 
   final String title;
+  final Sfx sound;
   final Map<String, int> inputs;
   final int level;
   final bool unlocked;
@@ -378,7 +386,7 @@ class _RecipeTile extends StatelessWidget {
               ),
               onPressed: canMake
                   ? () async {
-                      if (await craftCountdown(context, title: title, itemId: itemId, color: color)) {
+                      if (await craftCountdown(context, title: title, itemId: itemId, color: color, sound: sound)) {
                         onMake();
                       }
                     }
@@ -411,3 +419,11 @@ class _UpgradePreview extends StatelessWidget {
     );
   }
 }
+
+/// Il suono di fine lavorazione di ogni postazione.
+Sfx stationSound(Station s) => switch (s) {
+      Station.carpentry => Sfx.craftCarpentry,
+      Station.furnace => Sfx.craftFurnace,
+      Station.anvil => Sfx.craftAnvil,
+      Station.enchant => Sfx.craftEnchant,
+    };

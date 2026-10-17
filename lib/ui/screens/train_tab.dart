@@ -62,7 +62,7 @@ class TrainTab extends StatelessWidget {
           onTap: () =>
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QuestScreen())),
         ),
-        const SectionTitle('Spedizioni: scegli il gruppo muscolare'),
+        const SectionTitle('Spedizioni'),
         for (final g in worldGroups)
           _GroupCard(
             group: g,
@@ -71,7 +71,7 @@ class TrainTab extends StatelessWidget {
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
           ),
-        const SectionTitle('Caccia: allenamento libero'),
+        const SectionTitle('Caccia libera'),
         for (final a in baseAnimals)
           _FreeFightTile(enemy: a, playerLevel: s.character.level, icon: Icons.pets),
         ActionTile(
@@ -309,7 +309,7 @@ class _FreeFightTile extends StatelessWidget {
                 child: Image.asset(enemyArtPath(enemy), fit: BoxFit.contain),
               )
             : Icon(icon ?? Icons.repeat, color: under ? Palette.blood : Palette.goldBright),
-        title: Text(enemy.name),
+        title: OneLine(enemy.name),
         subtitle: Text(
           '${enemy.moves.map((m) => m.name).join(' o ')} · '
           '${enemy.loot.keys.map((k) => materialNames[k] ?? k).join(', ')}',
@@ -360,7 +360,7 @@ class _ExpeditionCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(child: Text(e.name, style: titleStyle(size: 16))),
+                    Expanded(child: OneLine(e.name, style: titleStyle(size: 16))),
                     if (cleared)
                       const Icon(Icons.check_circle, color: Palette.goldBright, size: 20),
                     const SizedBox(width: 6),
@@ -457,25 +457,18 @@ class _FightSetupState extends State<_FightSetup> {
                 ? '${widget.enemy.name}: scegli l\'esercizio'
                 : '${widget.enemy.name} si batte con',
           ),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final m in widget.enemy.moves)
-                ChoiceChip(
-                  label: Text(m.name),
-                  selected: _move == m,
-                  onSelected: (_) => setState(() => _move = m),
-                ),
-            ],
+          OathChoice<Move>(
+            options: [for (final m in widget.enemy.moves) (m, m.name)],
+            selected: _move,
+            columns: widget.enemy.moves.length.clamp(1, 2),
+            onChanged: (m) => setState(() => _move = m),
           ),
           const SectionTitle('Postura'),
-          SegmentedButton<Stance>(
-            segments: [
-              for (final st in Stance.values) ButtonSegment(value: st, label: Text(st.label)),
-            ],
-            selected: {_stance},
-            onSelectionChanged: (v) => setState(() => _stance = v.first),
+          OathChoice<Stance>(
+            options: [for (final st in Stance.values) (st, st.label)],
+            selected: _stance,
+            color: Sections.training,
+            onChanged: (st) => setState(() => _stance = st),
           ),
           const SizedBox(height: 6),
           Text(

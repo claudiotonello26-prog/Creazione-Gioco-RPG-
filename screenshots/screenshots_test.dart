@@ -272,7 +272,7 @@ void main() {
     final nav = Navigator.of(t.element(find.byType(NavigationBar)));
     nav.push(MaterialPageRoute<void>(builder: (_) => CharacterCreationScreen(onDone: () {})));
     await _shot(t, '03_creazione_personaggio');
-    await t.tap(find.text('Donna'));
+    await t.tap(find.text('DONNA'));
     await t.pumpAndSettle();
     await _shot(t, '03b_creazione_donna');
     nav.pop();

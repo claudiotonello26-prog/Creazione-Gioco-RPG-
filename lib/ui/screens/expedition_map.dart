@@ -18,6 +18,7 @@ import '../widgets/knight_view.dart';
 import 'train_tab.dart';
 import 'rest_screen.dart';
 import 'training_screen.dart';
+import '../../core/sound.dart';
 
 /// Posizione delle tappe sulla mappa, in frazioni dello spazio (dal basso
 /// verso l'alto): le quattro tappe e il boss in cima.
@@ -173,6 +174,7 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
     final s = context.read<GameState>();
     final items = s.openChest(_e, multiplier: _multiplier);
     if (items.isEmpty || !mounted) return;
+    Sound.play(Sfx.chestOpen);
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -316,22 +318,29 @@ class _MapOptions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          spacing: 8,
-          runSpacing: 6,
+        Row(
           children: [
-            FilterChip(
-              label: Text(stretching ? 'Profondo ×2' : 'Zavorrato ×2'),
-              selected: weighted,
-              onSelected: onWeighted,
-            ),
-            if (keys > 0 || useKey)
-              FilterChip(
-                avatar: const Icon(Icons.vpn_key, size: 16, color: Palette.goldBright),
-                label: Text(useKey ? 'Chiave ×2' : 'Chiave ($keys)'),
-                selected: useKey,
-                onSelected: onKey,
+            Expanded(
+              child: OathToggle(
+                label: stretching ? 'Profondo ×2' : 'Zavorrato ×2',
+                icon: Icons.fitness_center,
+                selected: weighted,
+                height: 38,
+                onTap: onWeighted == null ? null : () => onWeighted!(!weighted),
               ),
+            ),
+            if (keys > 0 || useKey) ...[
+              const SizedBox(width: 8),
+              Expanded(
+                child: OathToggle(
+                  label: useKey ? 'Chiave ×2' : 'Chiave ($keys)',
+                  icon: Icons.vpn_key,
+                  selected: useKey,
+                  height: 38,
+                  onTap: onKey == null ? null : () => onKey!(!useKey),
+                ),
+              ),
+            ],
           ],
         ),
         if (underLevel != null)
@@ -668,9 +677,9 @@ class _ChestDialogState extends State<_ChestDialog> with SingleTickerProviderSta
         children: [
           const Icon(Icons.inventory_2, color: Palette.goldBright, size: 44),
           const SizedBox(height: 6),
-          Text(
+          OneLine(
             widget.chest.name.toUpperCase(),
-            textAlign: TextAlign.center,
+            align: Alignment.center,
             style: titleStyle(size: 17),
           ),
         ],

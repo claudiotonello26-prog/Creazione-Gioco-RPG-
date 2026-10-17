@@ -14,6 +14,7 @@ import '../../core/i18n.dart';
 import 'gear_screens.dart';
 import 'walk_screen.dart';
 import 'train_tab.dart';
+import '../../core/sound.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -29,6 +30,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Sound.music(Music.home);
     maybeShowHint(context, 'home');
   }
 
@@ -45,21 +47,34 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
 
   static const _hints = ['home', 'training', 'walk', 'forge', 'market', 'arena'];
 
+  static const _music = [
+    Music.home,
+    Music.training,
+    Music.gathering,
+    Music.forge,
+    Music.market,
+    Music.arena,
+  ];
+
   void goTo(int tab) {
+    if (tab != _tab) Sound.play(Sfx.tab);
+    Sound.music(_music[tab]);
     setState(() => _tab = tab);
     maybeShowHint(context, _hints[tab]);
   }
 
   int _lastPoints = -1;
+  bool? _questDone;
 
   /// Avviso quando arrivano punti nuovi da spendere.
   void _notifyPoints(int points) {
     if (_lastPoints >= 0 && points > _lastPoints) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
+        Sound.play(Sfx.levelUp);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Livello su! Hai $points punti da spendere negli attributi.'),
+            content: Text(points == 1 ? 'Livello su! +1 punto attributo.' : 'Livello su! +$points punti attributo.'),
             backgroundColor: Palette.stoneLight,
             behavior: SnackBarBehavior.floating,
             action: SnackBarAction(label: 'VAI', onPressed: () => goTo(0)),
@@ -74,6 +89,9 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final points = context.watch<GameState>().character.availablePoints;
     _notifyPoints(points);
+    final quest = context.read<GameState>().questComplete;
+    if (_questDone == false && quest) Sound.play(Sfx.questDone);
+    _questDone = quest;
     // Raccolta e Mercato hanno già la loro barra; alle altre la dà la shell.
     Widget framed(String section, Color color, Widget body) => Scaffold(
           backgroundColor: Colors.transparent,

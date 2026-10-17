@@ -211,7 +211,7 @@ class _RuleChapter extends StatelessWidget {
           leading: Icon(icon, color: Palette.goldBright),
           iconColor: Palette.goldBright,
           collapsedIconColor: Palette.gold,
-          title: Text(title.toUpperCase(), style: titleStyle(size: 13.5, spacing: 1.4)),
+          title: OneLine(title.toUpperCase(), style: titleStyle(size: 13.5, spacing: 1.4)),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
           children: [Text(text, style: const TextStyle(color: Palette.holy, fontSize: 14.5))],
         ),
@@ -243,7 +243,7 @@ class _SkillChapter extends StatelessWidget {
           leading: Icon(skillIcon(skill), color: Palette.goldBright),
           iconColor: Palette.goldBright,
           collapsedIconColor: Palette.gold,
-          title: Text(skill.label.toUpperCase(), style: titleStyle(size: 14, spacing: 1.5)),
+          title: OneLine(skill.label.toUpperCase(), style: titleStyle(size: 14, spacing: 1.5)),
           subtitle: Text(
             'Livello $level${next != null ? ' · prossimo sblocco al ${next.$1}' : ''}',
             style: const TextStyle(color: Palette.ash, fontSize: 12.5),

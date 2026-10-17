@@ -15,6 +15,8 @@ import '../../pose/rep_counter.dart';
 import '../../pose/rep_input.dart';
 import '../widgets/exercise_demo.dart';
 import '../widgets/exercise_view.dart';
+import '../../core/sound.dart';
+import '../../core/art.dart';
 
 /// Esito di una serie.
 class SetResult {
@@ -79,6 +81,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
     }
     if (_countdown > 0) {
       setState(() => _countdown--);
+      Sound.play(_countdown == 0 ? Sfx.countdownGo : Sfx.countdownTick);
       if (_countdown == 0) _watch.start();
       return;
     }
@@ -96,6 +99,11 @@ class _TrainingScreenState extends State<TrainingScreen> {
       _reps.add(e.quality);
       if (_perLeg) _legReps[_leg].add(e.quality);
     });
+    Sound.play(switch (e.quality) {
+      RepQuality.perfect => Sfx.repPerfect,
+      RepQuality.good => Sfx.repGood,
+      RepQuality.poor => Sfx.repPoor,
+    });
     final t = widget.target;
     if (_perLeg && t != null && _legReps[_leg].length >= t) {
       _leg == 0 ? _switchLeg() : _finish();
@@ -109,7 +117,11 @@ class _TrainingScreenState extends State<TrainingScreen> {
   void _switchLeg() {
     if (_leg == 1) return;
     HapticFeedback.heavyImpact();
-    SystemSound.play(SystemSoundType.alert);
+    if (Art.has(Sfx.switchLeg.path)) {
+      Sound.play(Sfx.switchLeg);
+    } else {
+      SystemSound.play(SystemSoundType.alert);
+    }
     setState(() {
       _leg = 1;
       _switching = 5;
@@ -122,6 +134,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
   void _finish() {
     if (_finished) return;
     _finished = true;
+    Sound.play(Sfx.setDone);
     _watch.stop();
     // Per gamba vale la gamba più debole: se la seconda resta indietro conta quella.
     final reps = !_perLeg

@@ -42,6 +42,7 @@ dependencies:
   http: ^1.6.0
   web_socket_channel: ^3.0.3
   health: ^13.3.2
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +77,10 @@ flutter:
     - assets/art/items/
     - assets/art/backgrounds/
     - assets/art/nav/
+    # Suoni: elenco e formato in lista-suoni.md. Un file che manca = silenzio.
+    - assets/audio/sfx/
+    - assets/audio/music/
+    - assets/audio/voice/
 
   fonts:
     - family: Cinzel

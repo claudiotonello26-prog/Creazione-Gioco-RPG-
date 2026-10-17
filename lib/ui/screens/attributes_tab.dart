@@ -29,7 +29,7 @@ class AttributesScreen extends StatelessWidget {
             ListTile(
               dense: true,
               leading: Icon(_icon(a), color: Palette.gold),
-              title: Text('${a.label} ${c.attr(a)}'),
+              title: OneLine('${a.label} ${c.attr(a)}'),
               subtitle: Text(_effect(a, c), style: const TextStyle(color: Palette.ash)),
             ),
           if (c.unlockedPerkChoices.isNotEmpty) ...[
@@ -51,7 +51,7 @@ class AttributesScreen extends StatelessWidget {
                           onTap: choice.options.any(c.perks.contains)
                               ? null
                               : () => s.choosePerk(choice, p),
-                          title: Text(p.name),
+                          title: OneLine(p.name),
                           subtitle: Text(p.description, style: const TextStyle(color: Palette.ash)),
                         ),
                     ],
@@ -90,7 +90,7 @@ class AttributesScreen extends StatelessWidget {
           for (final id in [...baseExercises, ExerciseId.plank])
             ListTile(
               dense: true,
-              title: Text(exercises[id]!.name),
+              title: OneLine(exercises[id]!.name),
               subtitle: Text(
                 'Divisione ${s.divisionOf(id).label}',
                 style: const TextStyle(color: Palette.ash),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import 'knight_view.dart';
+import '../../core/sound.dart';
 
 const String trainerName = 'Ser Corvino';
 
@@ -104,12 +105,40 @@ class _TrainerOverlay extends StatefulWidget {
   State<_TrainerOverlay> createState() => _TrainerOverlayState();
 }
 
+/// Il file voce di una battuta: `<sezione>_<n>` per i consigli fissi
+/// (es. home_1), altrimenti un verso secondo la posa (corvino_pointing).
+String voiceIdFor(TrainerLine line) {
+  for (final e in trainerHints.entries) {
+    final i = e.value.indexWhere((l) => l.text == line.text);
+    if (i >= 0) return '${e.key}_${i + 1}';
+  }
+  return 'corvino_${line.pose.name}';
+}
+
 class _TrainerOverlayState extends State<_TrainerOverlay> {
   int _i = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _speak();
+  }
+
+  @override
+  void dispose() {
+    Sound.stopVoice();
+    super.dispose();
+  }
+
+  void _speak() {
+    final line = widget.lines[_i];
+    if (!Sound.voice(voiceIdFor(line))) Sound.voice('corvino_${line.pose.name}');
+  }
 
   void _next() {
     if (_i < widget.lines.length - 1) {
       setState(() => _i++);
+      _speak();
     } else {
       Navigator.of(context).pop();
     }

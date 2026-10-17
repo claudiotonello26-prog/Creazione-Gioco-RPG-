@@ -4,6 +4,7 @@ import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../core/sound.dart';
 import '../../core/theme.dart';
 import '../../core/i18n.dart';
 import '../../data/game_state.dart';
@@ -40,6 +41,7 @@ class SettingsScreen extends StatelessWidget {
               style: TextStyle(color: Palette.ash),
             ),
           ),
+          const _SoundSwitches(),
           ListTile(
             title: const Text('Server dell\'Arena live'),
             subtitle: Text(
@@ -51,22 +53,26 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Lingua / Language'),
-            trailing: SegmentedButton<Lang>(
-              segments: [
-                for (final l in Lang.values) ButtonSegment(value: l, label: Text(l.label)),
-              ],
-              selected: {s.lang},
-              onSelectionChanged: (v) => s.setLang(v.first),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: OathChoice<Lang>(
+                options: [for (final l in Lang.values) (l, l.label)],
+                selected: s.lang,
+                height: 38,
+                onChanged: s.setLang,
+              ),
             ),
           ),
           ListTile(
             title: const Text('Modalità di gioco'),
-            trailing: SegmentedButton<PlayMode>(
-              segments: [
-                for (final m in PlayMode.values) ButtonSegment(value: m, label: Text(m.label)),
-              ],
-              selected: {s.mode},
-              onSelectionChanged: (v) => s.setMode(v.first),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: OathChoice<PlayMode>(
+                options: [for (final m in PlayMode.values) (m, m.label)],
+                selected: s.mode,
+                height: 38,
+                onChanged: s.setMode,
+              ),
             ),
           ),
           ActionTile(
@@ -139,6 +145,35 @@ class SettingsScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Effetti, musica e voce di Ser Corvino: si accendono e spengono a parte.
+class _SoundSwitches extends StatefulWidget {
+  const _SoundSwitches();
+
+  @override
+  State<_SoundSwitches> createState() => _SoundSwitchesState();
+}
+
+class _SoundSwitchesState extends State<_SoundSwitches> {
+  @override
+  Widget build(BuildContext context) {
+    Widget sw(String title, bool value, Future<void> Function(bool) set) => SwitchListTile(
+          value: value,
+          title: Text(title),
+          onChanged: (v) async {
+            await set(v);
+            if (mounted) setState(() {});
+          },
+        );
+    return Column(
+      children: [
+        sw('Effetti sonori', Sound.sfxOn, Sound.setSfx),
+        sw('Musica', Sound.musicOn, Sound.setMusic),
+        sw('Voce di Ser Corvino', Sound.voiceOn, Sound.setVoice),
+      ],
     );
   }
 }

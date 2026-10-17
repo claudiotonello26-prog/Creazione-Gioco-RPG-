@@ -48,28 +48,20 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
               children: [
                 _Row(
                   label: 'Corpo',
-                  child: SegmentedButton<bool>(
-                    segments: const [
-                      ButtonSegment(value: false, label: Text('Uomo')),
-                      ButtonSegment(value: true, label: Text('Donna')),
-                    ],
-                    selected: {_look.female},
-                    onSelectionChanged: (v) => _set(() => _look.female = v.first),
+                  child: OathChoice<bool>(
+                    options: const [(false, 'Uomo'), (true, 'Donna')],
+                    selected: _look.female,
+                    height: 38,
+                    onChanged: (v) => _set(() => _look.female = v),
                   ),
                 ),
                 _Row(
                   label: 'Viso',
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 6,
-                    children: [
-                      for (var i = 0; i < Appearance.faces; i++)
-                        ChoiceChip(
-                          label: Text('${i + 1}'),
-                          selected: _look.face == i,
-                          onSelected: (_) => _set(() => _look.face = i),
-                        ),
-                    ],
+                  child: OathChoice<int>(
+                    options: [for (var i = 0; i < Appearance.faces; i++) (i, '${i + 1}')],
+                    selected: _look.face,
+                    height: 38,
+                    onChanged: (i) => _set(() => _look.face = i),
                   ),
                 ),
                 _Swatches(
@@ -100,7 +92,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                   ),
                   if (_look.beard)
                     _Swatches(
-                      label: 'Colore barba',
+                      label: 'Colore',
                       colors: Appearance.hairColors,
                       selected: _look.beardColor,
                       onPick: (i) => _set(() => _look.beardColor = i),
@@ -150,9 +142,9 @@ class _Row extends StatelessWidget {
           Container(
             width: 92,
             padding: const EdgeInsets.only(top: 8),
-            child: Text(label.toUpperCase(), style: titleStyle(size: 12, spacing: 1.2)),
+            child: OneLine(label.toUpperCase(), style: titleStyle(size: 12, spacing: 1.2)),
           ),
-          Expanded(child: Align(alignment: Alignment.centerLeft, child: child)),
+          Expanded(child: child),
         ],
       ),
     );

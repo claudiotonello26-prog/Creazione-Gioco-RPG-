@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
+import '../../core/sound.dart';
 
 /// L'apertura: un anello d'oro si traccia, il braccio emerge inciso nella
 /// luce, poi GYM OATH sale e l'elmo appare sotto, come una grazia in Elden Ring. Dura 3,5 secondi; un tocco la salta.
@@ -19,11 +20,23 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStateMixin {
   late final AnimationController _c =
       AnimationController(vsync: this, duration: IntroScreen.duration)
+        ..addListener(_cue)
         ..addStatusListener((s) {
           if (s == AnimationStatus.completed) _finish();
         })
         ..forward();
   bool _done = false;
+  var _cues = 0;
+
+  /// Tre suoni sull'animazione: il braccio che emerge, l'anello che si
+  /// chiude, l'elmo che sale.
+  void _cue() {
+    const at = [0.0, 0.36, 0.5];
+    const sounds = [Sfx.splashReveal, Sfx.splashRing, Sfx.splashHelm];
+    while (_cues < at.length && _c.value >= at[_cues]) {
+      Sound.play(sounds[_cues++]);
+    }
+  }
 
   void _finish() {
     if (_done) return;

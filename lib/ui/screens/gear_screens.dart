@@ -12,6 +12,7 @@ import '../../domain/market.dart';
 import '../../domain/skills.dart';
 import '../widgets/common.dart';
 import '../widgets/knight_view.dart';
+import '../../core/sound.dart';
 
 void openEquipment(BuildContext context) =>
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EquipmentScreen()));
@@ -344,8 +345,15 @@ class _Merchant extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _SmallButton('VENDI 1', () => s.sellMaterial(e.key)),
-                if (e.value > 1) _SmallButton('TUTTI', () => s.sellMaterial(e.key, e.value)),
+                _SmallButton('VENDI 1', () {
+                  s.sellMaterial(e.key);
+                  Sound.play(Sfx.sell);
+                }),
+                if (e.value > 1)
+                  _SmallButton('TUTTI', () {
+                    s.sellMaterial(e.key, e.value);
+                    Sound.play(Sfx.sell);
+                  }),
               ],
             ),
           ),
@@ -355,7 +363,10 @@ class _Merchant extends StatelessWidget {
             title: w.displayName,
             subtitle: 'Arma nella rastrelliera',
             trailing: TextButton(
-              onPressed: () => s.sellWeapon(w),
+              onPressed: () {
+                s.sellWeapon(w);
+                Sound.play(Sfx.sell);
+              },
               child: Text('${weaponValue(w)} rune'),
             ),
           ),
@@ -367,7 +378,12 @@ class _Merchant extends StatelessWidget {
             subtitle: 'Hai ${c.materials[id] ?? 0}',
             trailing: TextButton(
               onPressed: () {
-                if (!s.buyMaterial(id)) toast(context, 'Rune insufficienti');
+                if (s.buyMaterial(id)) {
+                  Sound.play(Sfx.buy);
+                } else {
+                  Sound.play(Sfx.locked);
+                  toast(context, 'Rune insufficienti');
+                }
               },
               child: Text('${buyPrice(id)} rune'),
             ),

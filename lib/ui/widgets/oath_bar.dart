@@ -101,12 +101,15 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
                     const SizedBox(width: 10),
                     Flexible(
                       flex: 3,
-                      child: DefaultTextStyle(
-                        style: titleStyle(size: 13, spacing: 2.4, color: accent ?? Palette.holy),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        child: title,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: DefaultTextStyle(
+                          style: titleStyle(size: 13, spacing: 2.4, color: accent ?? Palette.holy),
+                          maxLines: 1,
+                          softWrap: false,
+                          textAlign: TextAlign.center,
+                          child: title,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 10),

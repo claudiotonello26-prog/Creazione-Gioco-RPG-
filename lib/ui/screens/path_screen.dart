@@ -242,13 +242,13 @@ class _PathScreenState extends State<PathScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          SegmentedButton<bool>(
-            segments: [
-              ButtonSegment(value: false, label: Text(_stretch ? 'Base' : 'Corpo libero')),
-              ButtonSegment(value: true, label: Text(_stretch ? 'Profondo' : 'Zavorrato')),
+          OathChoice<bool>(
+            options: [
+              (false, _stretch ? 'Base' : 'Corpo libero'),
+              (true, _stretch ? 'Profondo' : 'Zavorrato'),
             ],
-            selected: {_weighted},
-            onSelectionChanged: (v) => setState(() => _weighted = v.first),
+            selected: _weighted,
+            onChanged: (v) => setState(() => _weighted = v),
           ),
           const SizedBox(height: 6),
           Text(

@@ -7,6 +7,8 @@ import '../../core/theme.dart';
 import '../../domain/exercise.dart';
 import '../widgets/exercise_demo.dart';
 import '../widgets/oath_bar.dart';
+import '../../core/sound.dart';
+import '../../core/art.dart';
 
 /// Esercizi che si fanno a terra con il telefono appoggiato di lato: tra uno
 /// in piedi e uno a terra va spostato il telefono.
@@ -56,17 +58,25 @@ class _RestScreenState extends State<RestScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.movePhone) Sound.play(Sfx.movePhone);
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (_paused) return;
       setState(() => _left--);
       if (_left == 3) HapticFeedback.mediumImpact();
+      if (_left > 0 && _left <= 3) Sound.play(Sfx.restTick);
       if (_left <= 0) _go(true);
     });
   }
 
   void _go(bool next) {
     _timer?.cancel();
-    if (next) SystemSound.play(SystemSoundType.alert);
+    if (next) {
+      if (Art.has(Sfx.restEnd.path)) {
+        Sound.play(Sfx.restEnd);
+      } else {
+        SystemSound.play(SystemSoundType.alert);
+      }
+    }
     if (mounted) Navigator.of(context).pop(next);
   }
 

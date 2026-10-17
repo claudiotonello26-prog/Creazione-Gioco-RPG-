@@ -149,7 +149,7 @@ class _QuestRow extends StatelessWidget {
           complete ? Icons.check_circle : Icons.sports_martial_arts,
           color: complete ? Palette.goldBright : Palette.gold,
         ),
-        title: Text(substitute ?? item.label),
+        title: OneLine(substitute ?? item.label),
         subtitle: Text(
           '${done.clamp(0, item.target)}/${item.target}${item.info.perLeg ? ' per gamba' : ''}'
           '${foe != null && !complete ? ' · contro ${foe.name}' : ''}'
