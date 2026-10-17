@@ -36,7 +36,7 @@ void main() {
       await tester.tap(find.widgetWithText(NavigationDestination, label));
       await tester.pumpAndSettle();
     }
-    expect(find.text('EQUIPAGGIAMENTO'), findsOneWidget);
+    expect(find.text('ARMERIA'), findsOneWidget);
   });
 
   testWidgets('Ser Corvino si presenta alla prima apertura', (tester) async {

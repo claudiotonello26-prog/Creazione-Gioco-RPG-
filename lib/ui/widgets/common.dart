@@ -4,6 +4,8 @@ import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../core/sound.dart';
 
+/// Titolo di sezione al centro, fra due fili d'oro simmetrici; l'eventuale
+/// dettaglio ([trailing]) va sotto, sempre al centro.
 class SectionTitle extends StatelessWidget {
   const SectionTitle(this.text, {super.key, this.trailing});
   final String text;
@@ -11,82 +13,65 @@ class SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget rule(bool left) => Expanded(
+          child: Container(
+            height: 1,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: left ? Alignment.centerLeft : Alignment.centerRight,
+                end: left ? Alignment.centerRight : Alignment.centerLeft,
+                colors: [Palette.gold.withValues(alpha: 0), Palette.gold.withValues(alpha: 0.8)],
+              ),
+            ),
+          ),
+        );
+    Widget diamond() => Transform.rotate(
+          angle: 0.785398,
+          child: Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(
+              border: Border.all(color: Palette.goldBright, width: 1.2),
+              boxShadow: [BoxShadow(color: Palette.gold.withValues(alpha: 0.5), blurRadius: 6)],
+            ),
+          ),
+        );
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 8),
-      child: LayoutBuilder(
-        builder: (context, box) => Row(
-          children: [
-            Transform.rotate(
-              angle: 0.785398,
-              child: Container(
-                width: 9,
-                height: 9,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Palette.goldBright, width: 1.2),
-                  boxShadow: [BoxShadow(color: Palette.gold.withValues(alpha: 0.5), blurRadius: 6)],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          LayoutBuilder(
+            builder: (context, box) => Row(
+              children: [
+                rule(true),
+                const SizedBox(width: 8),
+                diamond(),
+                const SizedBox(width: 10),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: box.maxWidth * 0.7),
+                  child: OneLine(
+                    text.toUpperCase(),
+                    align: Alignment.center,
+                    style: titleStyle(size: 13, spacing: 1.6),
+                  ),
                 ),
-                alignment: Alignment.center,
-                child: Container(width: 3, height: 3, color: Palette.goldBright),
+                const SizedBox(width: 10),
+                diamond(),
+                const SizedBox(width: 8),
+                rule(false),
+              ],
+            ),
+          ),
+          if (trailing != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: DefaultTextStyle.merge(
+                style: const TextStyle(fontSize: 14),
+                child: trailing!,
               ),
             ),
-            const SizedBox(width: 10),
-            ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: box.maxWidth * 0.8),
-              child: OneLine(
-                text.toUpperCase(),
-                align: Alignment.centerLeft,
-                style: titleStyle(size: 13, spacing: 1.6),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 1,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Palette.gold.withValues(alpha: 0.8),
-                                Palette.gold.withValues(alpha: 0.15),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 3,
-                        height: 3,
-                        margin: const EdgeInsets.symmetric(horizontal: 3),
-                        decoration: BoxDecoration(
-                          color: Palette.gold.withValues(alpha: 0.5),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Container(
-                    height: 1,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Palette.gold.withValues(alpha: 0.3),
-                          Palette.gold.withValues(alpha: 0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (trailing != null) ...[const SizedBox(width: 8), trailing!],
-          ],
-        ),
+        ],
       ),
     );
   }

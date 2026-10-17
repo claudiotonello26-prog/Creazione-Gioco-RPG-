@@ -114,21 +114,41 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                       opacity: rise,
                       child: Transform.translate(
                         offset: Offset(0, 12 * (1 - rise)),
-                        child: Text(
-                          'GYM OATH',
-                          style: TextStyle(
-                            fontFamily: 'Cinzel',
-                            fontSize: 30,
-                            letterSpacing: 8 + 3 * rise,
-                            color: Palette.goldBright,
-                            shadows: [
-                              Shadow(
-                                  color: Palette.goldBright.withValues(alpha: 0.9 * glow),
-                                  blurRadius: 18),
-                              Shadow(
-                                  color: const Color(0xFFFFE9A8).withValues(alpha: 0.5 * glow),
-                                  blurRadius: 40),
-                            ],
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 22),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            // Scritta alla Elden Ring: serif sottile, molto
+                            // spaziata, oro che sfuma in luce, alone caldo.
+                            child: ShaderMask(
+                              blendMode: BlendMode.srcIn,
+                              shaderCallback: (r) => const LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [Color(0xFFFFF4CF), Palette.goldBright, Color(0xFFB08A3A)],
+                                stops: [0, 0.5, 1],
+                              ).createShader(r),
+                              child: Text(
+                                'GYM OATH',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Cinzel',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 54,
+                                  letterSpacing: 10 + 6 * rise,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                        color: Palette.goldBright.withValues(alpha: 0.9 * glow),
+                                        blurRadius: 22),
+                                    Shadow(
+                                        color:
+                                            const Color(0xFFFFE9A8).withValues(alpha: 0.55 * glow),
+                                        blurRadius: 60),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),

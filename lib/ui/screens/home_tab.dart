@@ -35,41 +35,29 @@ class HomeTab extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             child: Column(
               children: [
-                Stack(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        gradient: RadialGradient(
-                          center: Alignment(-0.2, -0.1),
-                          radius: 0.8,
-                          colors: [Color(0xFF3A2C16), Color(0x00000000)],
-                        ),
-                      ),
-                      child: Align(
-                        alignment: const Alignment(-0.45, 0),
-                        child: KnightView(character: c, height: 270),
-                      ),
+                // Cavaliere al centro, Equipaggiamento e Inventario ai lati.
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: RadialGradient(
+                      radius: 0.7,
+                      colors: [Color(0xFF3A2C16), Color(0x00000000)],
                     ),
-                    Positioned(
-                      top: 28,
-                      right: -4,
-                      child: Column(
-                        children: [
-                          _GearButton(
-                            icon: Icons.shield,
-                            label: 'EQUIPAGGIAMENTO',
-                            onTap: () => openEquipment(context),
-                          ),
-                          const SizedBox(height: 10),
-                          _GearButton(
-                            icon: Icons.backpack,
-                            label: 'INVENTARIO',
-                            onTap: () => openInventory(context),
-                          ),
-                        ],
+                  ),
+                  child: Row(
+                    children: [
+                      _GearButton(
+                        icon: Icons.shield,
+                        label: 'ARMERIA',
+                        onTap: () => openEquipment(context),
                       ),
-                    ),
-                  ],
+                      Expanded(child: Center(child: KnightView(character: c, height: 270))),
+                      _GearButton(
+                        icon: Icons.backpack,
+                        label: 'INVENTARIO',
+                        onTap: () => openInventory(context),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(c.name.toUpperCase(), style: titleStyle(size: 22, spacing: 4)),
@@ -230,8 +218,8 @@ class _GearButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: SizedBox(
-          width: 80,
-          height: 60,
+          width: 74,
+          height: 70,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -245,8 +233,8 @@ class _GearButton extends StatelessWidget {
                     style: const TextStyle(
                       color: Palette.night,
                       fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                      letterSpacing: 0.4,
+                      fontSize: 11,
+                      letterSpacing: 0.6,
                     ),
                   ),
                 ),

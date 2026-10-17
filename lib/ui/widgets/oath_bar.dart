@@ -22,7 +22,7 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
   /// Colore della sezione per il nome e i fregi.
   final Color? accent;
 
-  static const double _top = 50, _section = 34;
+  static const double _top = 56, _section = 34, _side = 84;
 
   @override
   Size get preferredSize =>
@@ -48,74 +48,112 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               SizedBox(
                 height: _top,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 48,
-                      child: canPop
-                          ? IconButton(
-                              tooltip: 'Indietro',
-                              icon: const Icon(Icons.arrow_back, color: Palette.goldBright),
-                              onPressed: () => Navigator.of(context).maybePop(),
-                            )
-                          : const Icon(Icons.shield_moon_outlined, color: Palette.gold, size: 22),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'GYM OATH',
-                        textAlign: TextAlign.center,
-                        style: titleStyle(size: 17, spacing: 6, color: Palette.goldBright).copyWith(
-                          shadows: [
-                            Shadow(color: Palette.gold.withValues(alpha: 0.6), blurRadius: 12),
-                          ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      // Stessa larghezza a sinistra e a destra: il titolo
+                      // resta sempre al centro dello schermo.
+                      SizedBox(
+                        width: _side,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: canPop
+                              ? BarButton(
+                                  icon: Icons.arrow_back,
+                                  tooltip: 'Indietro',
+                                  onTap: () => Navigator.of(context).maybePop(),
+                                )
+                              : null,
                         ),
                       ),
-                    ),
-                    if (tools) ...[
-                      IconButton(
-                        tooltip: 'Guida',
-                        icon: const Icon(Icons.menu_book_outlined, color: Palette.gold),
-                        onPressed: () =>
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (_) => const GuideScreen())),
+                      const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: _Brand(),
+                        ),
                       ),
-                      IconButton(
-                        tooltip: 'Impostazioni',
-                        icon: const Icon(Icons.settings_outlined, color: Palette.gold),
-                        onPressed: () =>
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
+                      SizedBox(
+                        width: _side,
+                        child: tools
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  BarButton(
+                                    icon: Icons.menu_book_outlined,
+                                    tooltip: 'Guida',
+                                    onTap: () => Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (_) => const GuideScreen()),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  BarButton(
+                                    icon: Icons.settings_outlined,
+                                    tooltip: 'Impostazioni',
+                                    onTap: () => Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : null,
                       ),
-                    ] else
-                      const SizedBox(width: 48),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const _GoldRule(),
               SizedBox(
                 height: _section,
-                child: Row(
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    const SizedBox(width: 12),
-                    Expanded(child: _Flourish(flip: true, color: accent ?? Palette.gold)),
-                    const SizedBox(width: 10),
-                    Flexible(
-                      flex: 3,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: DefaultTextStyle(
-                          style: titleStyle(size: 13, spacing: 2.4, color: accent ?? Palette.holy),
-                          maxLines: 1,
-                          softWrap: false,
-                          textAlign: TextAlign.center,
-                          child: title,
+                    Positioned.fill(
+                      // Il nome non si allarga oltre il 60%: i due fregi
+                      // prendono il resto in parti uguali, così resta al centro.
+                      child: LayoutBuilder(
+                        builder: (context, box) => Row(
+                          children: [
+                            const SizedBox(width: 12),
+                            Expanded(child: _Flourish(flip: true, color: accent ?? Palette.gold)),
+                            const SizedBox(width: 10),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: box.maxWidth * 0.6),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: DefaultTextStyle(
+                                  style: titleStyle(
+                                    size: 13,
+                                    spacing: 2.4,
+                                    color: accent ?? Palette.holy,
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  textAlign: TextAlign.center,
+                                  child: title,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(child: _Flourish(color: accent ?? Palette.gold)),
+                            const SizedBox(width: 12),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(child: _Flourish(color: accent ?? Palette.gold)),
-                    ...?actions,
-                    const SizedBox(width: 12),
+                    if (actions != null)
+                      Positioned(
+                        right: 12,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Palette.stone,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Palette.gold.withValues(alpha: 0.4)),
+                          ),
+                          child: Row(mainAxisSize: MainAxisSize.min, children: actions!),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -185,5 +223,60 @@ class _Flourish extends StatelessWidget {
     );
     final parts = [line, const SizedBox(width: 4), dot, const SizedBox(width: 4), gem];
     return Row(children: flip ? parts : parts.reversed.toList());
+  }
+}
+
+/// Elmo e GYM OATH, al centro.
+class _Brand extends StatelessWidget {
+  const _Brand();
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset('assets/images/logo_helmet.png', height: 28),
+          const SizedBox(width: 8),
+          Text(
+            'GYM OATH',
+            style: titleStyle(size: 17, spacing: 4, color: Palette.goldBright).copyWith(
+              shadows: [Shadow(color: Palette.gold.withValues(alpha: 0.6), blurRadius: 12)],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Tasto tondo grigio della barra: si vede che si può premere.
+class BarButton extends StatelessWidget {
+  const BarButton({super.key, required this.icon, required this.tooltip, required this.onTap});
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: const Color(0xFF3A3632),
+        shape: CircleBorder(side: BorderSide(color: Palette.ash.withValues(alpha: 0.35))),
+        clipBehavior: Clip.antiAlias,
+        elevation: 2,
+        shadowColor: Colors.black,
+        child: InkWell(
+          onTap: onTap,
+          child: SizedBox(
+            width: 38,
+            height: 38,
+            child: Icon(icon, size: 20, color: Palette.holy),
+          ),
+        ),
+      ),
+    );
   }
 }

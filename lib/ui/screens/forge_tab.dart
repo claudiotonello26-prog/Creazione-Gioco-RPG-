@@ -149,14 +149,12 @@ class StationScreen extends StatelessWidget {
     final armors = station == Station.anvil ? armorDefs.values.toList() : <ArmorDef>[];
     final offhands = offhandDefs.values.where((o) => o.station == station).toList();
     return [
-      Row(
-        children: [
-          Icon(stationIcon(station), color: Palette.goldBright, size: 36),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(station.description, style: const TextStyle(color: Palette.ash)),
-          ),
-        ],
+      Icon(stationIcon(station), color: station.accent, size: 40),
+      const SizedBox(height: 6),
+      Text(
+        station.description,
+        textAlign: TextAlign.center,
+        style: const TextStyle(color: Palette.ash),
       ),
       const SizedBox(height: 10),
       StatBar(
