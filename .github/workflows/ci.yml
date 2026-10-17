@@ -96,7 +96,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-front emulated
           script: |
             adb install -r iron-oath.apk
-            adb logcat -c
+            adb logcat -c || true
             adb shell am start -W -n com.ironoath.iron_oath/.MainActivity
             sleep 20
             adb logcat -d > logcat.txt || true
