@@ -78,6 +78,15 @@ Future<void> _shot(WidgetTester t, String name) async {
 void main() {
   setUpAll(_fonts);
 
+  testWidgets('apertura', (t) async {
+    _phone(t);
+    await t.pumpWidget(IronOathApp(state: await _state(), intro: true));
+    await t.pump(const Duration(milliseconds: 2400));
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('out/00_apertura.png'));
+    await t.pump(const Duration(seconds: 2));
+    await t.pumpAndSettle();
+  });
+
   testWidgets('onboarding', (t) async {
     _phone(t);
     await t.pumpWidget(IronOathApp(state: await _state(onboarded: false)));
