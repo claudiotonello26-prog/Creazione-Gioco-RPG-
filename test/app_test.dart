@@ -12,13 +12,34 @@ void main() {
     final state = GameState();
     await state.load();
     await tester.pumpWidget(IronOathApp(state: state));
-    expect(find.text('IRON OATH'), findsOneWidget);
+    expect(find.text('GYM OATH'), findsOneWidget);
     await tester.tap(find.text('HO CAPITO, INIZIAMO'));
     await tester.pumpAndSettle();
     expect(find.text('IL TUO GIURAMENTO'), findsOneWidget);
   });
 
-  testWidgets('dopo il test si vedono le cinque schede', (tester) async {
+  testWidgets('dopo il test si vedono le sei schede', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final state = GameState();
+    await state.load();
+    state.acceptHealth();
+    state.completeTest({
+      for (final id in baseExercises) id: const TestResult(reps: 10, variantLevel: 0),
+    });
+    state.trainerEnabled = false;
+    await tester.pumpWidget(IronOathApp(state: state));
+    await tester.pumpAndSettle();
+    for (final label in ['Home', 'Training', 'Raccolta', 'Forgia', 'Mercato', 'Gilda']) {
+      expect(find.text(label), findsWidgets);
+    }
+    for (final label in ['Training', 'Raccolta', 'Forgia', 'Mercato', 'Gilda', 'Home']) {
+      await tester.tap(find.widgetWithText(NavigationDestination, label));
+      await tester.pumpAndSettle();
+    }
+    expect(find.text('ARMERIA'), findsOneWidget);
+  });
+
+  testWidgets('Ser Corvino si presenta alla prima apertura', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final state = GameState();
     await state.load();
@@ -28,13 +49,12 @@ void main() {
     });
     await tester.pumpWidget(IronOathApp(state: state));
     await tester.pumpAndSettle();
-    for (final label in ['Home', 'Allenati', 'Forgia', 'Arena', 'Profilo']) {
-      expect(find.text(label), findsWidgets);
-    }
-    for (final label in ['Allenati', 'Forgia', 'Arena', 'Profilo']) {
-      await tester.tap(find.widgetWithText(NavigationDestination, label));
+    expect(find.text('SER CORVINO'), findsOneWidget);
+    for (var i = 0; i < 3; i++) {
+      await tester.tap(find.text('SER CORVINO'));
       await tester.pumpAndSettle();
     }
-    expect(find.text('MAPPA DEL CORPO (7 GIORNI)'), findsOneWidget);
+    expect(find.text('SER CORVINO'), findsNothing);
+    expect(state.seenHints, contains('home'));
   });
 }

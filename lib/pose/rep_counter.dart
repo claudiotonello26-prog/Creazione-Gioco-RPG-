@@ -179,6 +179,60 @@ class HoldCounter {
   }
 }
 
+/// Stretching: conta i secondi in cui il corpo è visibile e resta fermo
+/// nella posa. Non giudica la posa: ognuno ha la sua flessibilità.
+class StillHoldCounter extends HoldCounter {
+  StillHoldCounter({this.maxDrift = 0.035});
+
+  /// Spostamento medio massimo tra due frame, in frazione dell'altezza del
+  /// busto, per considerarsi fermi.
+  final double maxDrift;
+  PoseFrame? _prev;
+
+  static const _joints = [
+    Joint.leftShoulder,
+    Joint.rightShoulder,
+    Joint.leftHip,
+    Joint.rightHip,
+    Joint.leftKnee,
+    Joint.rightKnee,
+  ];
+
+  @override
+  void add(PoseFrame frame) {
+    final visible = _joints.where((j) => (frame[j]?.likelihood ?? 0) >= 0.5).toList();
+    final torso = frame.distance(Joint.leftShoulder, Joint.leftHip) ??
+        frame.distance(Joint.rightShoulder, Joint.rightHip);
+    if (visible.length < 4 || torso == null || torso <= 0) {
+      holding = false;
+      hint = FormHint.notVisible;
+      _last = frame.timestamp;
+      _prev = frame;
+      return;
+    }
+    var ok = true;
+    final prev = _prev;
+    if (prev != null) {
+      var drift = 0.0;
+      var n = 0;
+      for (final j in visible) {
+        final a = frame[j]!, b = prev[j];
+        if (b == null) continue;
+        drift += sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+        n++;
+      }
+      // Normalizzato sul tempo: ~30 fps di riferimento.
+      final dt = max(1, (frame.timestamp - prev.timestamp).inMilliseconds) / 33.0;
+      ok = n == 0 || drift / n / torso / dt <= maxDrift;
+    }
+    if (ok && holding && _last != null) held += frame.timestamp - _last!;
+    holding = ok;
+    hint = FormHint.none;
+    _last = frame.timestamp;
+    _prev = frame;
+  }
+}
+
 /// Affondi: due contatori sul ginocchio, uno per gamba. Conta la gamba
 /// davanti, quella che si piega di più.
 class LungeCounter {
@@ -288,20 +342,60 @@ AngleRepCounter counterFor(ExerciseId id, {double smoothing = 0.5}) {
         minRepDuration: const Duration(milliseconds: 250),
         smoothing: smoothing,
       );
+    case ExerciseId.highKnees:
+      // Angolo spalla-anca-ginocchio della gamba più alta: ~180 in piedi,
+      // sotto i 110 con la coscia parallela al suolo. Ogni ginocchio conta.
+      return AngleRepCounter(
+        measure: (f) {
+          final l = f.angle(Joint.leftShoulder, Joint.leftHip, Joint.leftKnee);
+          final r = f.angle(Joint.rightShoulder, Joint.rightHip, Joint.rightKnee);
+          if (l == null) return r;
+          if (r == null) return l;
+          return min(l, r);
+        },
+        requiredJoints: const [Joint.leftShoulder, Joint.leftHip, Joint.leftKnee],
+        downThreshold: 125,
+        perfectDown: 105,
+        upThreshold: 160,
+        looseUp: 145,
+        minRepDuration: const Duration(milliseconds: 200),
+        smoothing: smoothing,
+      );
     case ExerciseId.lunge:
+      // Il ginocchio più piegato: con il telefono davanti le due gambe si
+      // piegano quasi uguali, quindi si guarda il minimo e si conta ogni
+      // discesa. Quale gamba lavora lo decide il cambio gamba a schermo.
+      return AngleRepCounter(
+        measure: (f) {
+          final l = f.angle(Joint.leftHip, Joint.leftKnee, Joint.leftAnkle);
+          final r = f.angle(Joint.rightHip, Joint.rightKnee, Joint.rightAnkle);
+          if (l == null) return r;
+          if (r == null) return l;
+          return min(l, r);
+        },
+        requiredJoints: const [Joint.leftHip, Joint.leftKnee, Joint.leftAnkle],
+        downThreshold: 105,
+        perfectDown: 95,
+        upThreshold: 160,
+        looseUp: 145,
+        smoothing: smoothing,
+      );
     case ExerciseId.plank:
-      throw ArgumentError('Usa LungeCounter / HoldCounter per $id');
+    case ExerciseId.stretch:
+      throw ArgumentError('Usa HoldCounter per $id');
   }
 }
 
 /// Facciata unica usata dalle schermate.
 class ExerciseTracker {
   ExerciseTracker(this.exercise)
-      : _angle = (exercise == ExerciseId.lunge || exercise == ExerciseId.plank)
-            ? null
-            : counterFor(exercise),
-        _lunge = exercise == ExerciseId.lunge ? LungeCounter() : null,
-        _hold = exercise == ExerciseId.plank ? HoldCounter() : null;
+      : _angle = exercise.isHold ? null : counterFor(exercise),
+        _lunge = null,
+        _hold = switch (exercise) {
+          ExerciseId.plank => HoldCounter(),
+          ExerciseId.stretch => StillHoldCounter(),
+          _ => null,
+        };
 
   final ExerciseId exercise;
   final AngleRepCounter? _angle;
@@ -315,7 +409,7 @@ class ExerciseTracker {
   FormHint get hint =>
       _angle?.hint ?? _hold?.hint ?? (_lunge != null ? _lunge.left.hint : FormHint.none);
 
-  /// Rep complete (per gli affondi: coppie gamba sinistra + destra).
+  /// Rep complete (per gli affondi ogni discesa, di qualunque gamba).
   int get count => _angle?.count ?? _lunge?.count ?? 0;
 
   RepEvent? add(PoseFrame frame) {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -6,6 +9,7 @@ import '../../data/game_state.dart';
 import '../../domain/exercise.dart';
 import '../../domain/routine.dart';
 import '../widgets/common.dart';
+import 'character_creation.dart';
 import 'training_screen.dart';
 
 /// Avviso di salute → questionario → test con la fotocamera.
@@ -27,53 +31,64 @@ class HealthWarningScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Spacer(),
-              const Icon(Icons.shield_moon_outlined, size: 64, color: Palette.gold),
-              const SizedBox(height: 16),
-              const Text(
-                'IRON OATH',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 34, letterSpacing: 8, color: Palette.goldBright),
-              ),
-              const Text(
-                'Il regno è caduto. Il tuo corpo è l\'ultima arma.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Palette.ash),
-              ),
-              const SizedBox(height: 32),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('Prima di iniziare',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      SizedBox(height: 8),
-                      Text(
-                        'Questo è un gioco, non un consiglio medico. Se hai problemi '
-                        'di salute, dolori o sei in gravidanza, senti un medico prima '
-                        'di allenarti. Fermati se senti dolore, vertigini o fiato '
-                        'corto.\n\nLa fotocamera serve solo a contare le rep: le '
-                        'immagini restano sul telefono.',
-                        style: TextStyle(color: Palette.ash, height: 1.4),
+        child: LayoutBuilder(
+          builder: (context, box) => SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: box.maxHeight - 48),
+              child: IntrinsicHeight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Spacer(),
+                    Image.asset('assets/images/helm.png', height: 120),
+                    const SizedBox(height: 18),
+                    Text(
+                      'GYM OATH',
+                      textAlign: TextAlign.center,
+                      style: titleStyle(size: 36, spacing: 8),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Il regno è caduto. Il tuo corpo è l\'ultima arma.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Palette.ash,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 17,
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 28),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(18),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('PRIMA DI INIZIARE', style: titleStyle(size: 14)),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Questo è un gioco, non un consiglio medico. Se hai problemi '
+                              'di salute, dolori o sei in gravidanza, senti un medico prima '
+                              'di allenarti. Fermati se senti dolore, vertigini o fiato '
+                              'corto.\n\nLa fotocamera serve solo a contare le rep: le '
+                              'immagini restano sul telefono.',
+                              style: TextStyle(color: Palette.ash, height: 1.35),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    const SizedBox(height: 20),
+                    FilledButton(
+                      onPressed: () => context.read<GameState>().acceptHealth(),
+                      child: const Text('HO CAPITO, INIZIAMO'),
+                    ),
+                  ],
                 ),
               ),
-              const Spacer(),
-              FilledButton(
-                onPressed: () => context.read<GameState>().acceptHealth(),
-                child: const Text('HO CAPITO, INIZIAMO'),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -118,13 +133,20 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       limitations: _limits.text,
       mode: _mode,
     );
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FitnessTestScreen()));
+    // Prima il cavaliere (senza armatura), poi il test.
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (ctx) => CharacterCreationScreen(
+        onDone: () => Navigator.of(ctx).pushReplacement(
+          MaterialPageRoute(builder: (_) => const FitnessTestScreen()),
+        ),
+      ),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('IL TUO GIURAMENTO')),
+      appBar: OathBar(title: const Text('IL TUO GIURAMENTO')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -136,19 +158,13 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
             ),
           ),
           const SectionTitle('Obiettivo'),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final g in _goals)
-                ChoiceChip(
-                  label: Text(g),
-                  selected: _goal == g,
-                  onSelected: (_) => setState(() => _goal = g),
-                ),
-            ],
+          OathChoice<String>(
+            options: [for (final g in _goals) (g, g)],
+            selected: _goal,
+            columns: 2,
+            onChanged: (g) => setState(() => _goal = g),
           ),
-          const SectionTitle('Giorni di allenamento a settimana'),
+          const SectionTitle('Giorni a settimana'),
           Slider(
             value: _days.toDouble(),
             min: 2,
@@ -180,7 +196,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                   _mode == m ? Icons.radio_button_checked : Icons.radio_button_off,
                   color: Palette.gold,
                 ),
-                title: Text(m.label),
+                title: OneLine(m.label),
                 subtitle: Text(
                   m == PlayMode.path
                       ? 'Test iniziale, quest del giorno su misura e progressione.'
@@ -212,22 +228,53 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
   int _variant = 0;
   final Map<ExerciseId, TestResult> _results = {};
 
-  ExerciseId get _current => baseExercises[_index];
-  bool get _done => _index >= baseExercises.length;
+  /// Prima le gambe, che continuano a scaldare il corpo, poi la parte alta,
+  /// il core e per ultimo il cardio.
+  static const List<ExerciseId> order = [
+    ExerciseId.squat,
+    ExerciseId.lunge,
+    ExerciseId.pushUp,
+    ExerciseId.crunch,
+    ExerciseId.legRaise,
+    ExerciseId.jumpingJack,
+  ];
+
+  /// 40 secondi di jumping jack prima del test: non contano.
+  bool _warmedUp = false;
+
+  ExerciseId get _current => order[_index];
+  bool get _done => _index >= order.length;
+
+  Future<void> _warmUp() async {
+    await Navigator.of(context).push<SetResult>(
+      MaterialPageRoute(
+        builder: (_) => const TrainingScreen(
+          exercise: ExerciseId.jumpingJack,
+          title: 'Riscaldamento',
+          subtitle: 'Jumping jack a ritmo tranquillo: non conta per il test',
+          timeLimit: Duration(seconds: 40),
+        ),
+      ),
+    );
+    if (mounted) setState(() => _warmedUp = true);
+  }
 
   Future<void> _runCurrent() async {
     final ex = exercises[_current]!;
     final timed = ex.testMode == TestMode.repsIn60s;
-    final result = await Navigator.of(context).push<SetResult>(MaterialPageRoute(
-      builder: (_) => TrainingScreen(
-        exercise: _current,
-        title: ex.variant(_variant).name,
-        subtitle: timed
-            ? 'Più rep corrette possibili in 60 secondi'
-            : 'Massimo di rep corrette${ex.perLeg ? ' per gamba' : ''}. Fermati quando la forma cede.',
-        timeLimit: timed ? const Duration(seconds: 60) : null,
+    final result = await Navigator.of(context).push<SetResult>(
+      MaterialPageRoute(
+        builder: (_) => TrainingScreen(
+          exercise: _current,
+          title: ex.variant(_variant).name,
+          subtitle: timed
+              ? 'Più rep corrette possibili in 60 secondi'
+              : 'Massimo di rep${ex.perLeg ? ' per gamba: prima la destra, poi cambia' : ''}. '
+                  'Fermati quando la forma cede.',
+          timeLimit: timed ? const Duration(seconds: 60) : null,
+        ),
       ),
-    ));
+    );
     if (!mounted || result == null) return;
     final reps = result.reps.length;
     if (reps == 0 && _variant < ex.easiestLevel) {
@@ -251,6 +298,34 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
     );
   }
 
+  Widget _warmUpPage() => Scaffold(
+        appBar: OathBar(title: Text(widget.isRetest ? 'TORNEO DELLA PROVA' : 'TEST DELLA PROVA')),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            const SizedBox(height: 12),
+            Text('Riscaldamento', style: titleStyle(size: 26)),
+            const SizedBox(height: 8),
+            const Text(
+              'Il test cerca il tuo massimo: in ogni prova fai più ripetizioni che puoi. '
+              'Prima scaldati con 40 secondi di jumping jack, poi si parte dalle gambe.',
+              style: TextStyle(color: Palette.ash, fontSize: 16),
+            ),
+            const SizedBox(height: 24),
+            FilledButton(onPressed: _warmUp, child: const Text('INIZIA IL RISCALDAMENTO')),
+            TextButton(
+              onPressed: () => setState(() => _warmedUp = true),
+              child: const Text('Sono già caldo'),
+            ),
+            if (!widget.isRetest)
+              TextButton(
+                onPressed: _skipWithDefaults,
+                child: const Text('Salta il test (valori da principiante)'),
+              ),
+          ],
+        ),
+      );
+
   void _skipWithDefaults() {
     // Valori da principiante per chi vuole giocare in modalità Libera subito.
     const defaults = {
@@ -272,30 +347,32 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
   @override
   Widget build(BuildContext context) {
     if (_done) return _Summary(results: _results, onConfirm: () => _complete(_results));
+    if (!_warmedUp) return _warmUpPage();
     final ex = exercises[_current]!;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.isRetest ? 'TORNEO DELLA PROVA' : 'TEST DELLA PROVA')),
+      appBar: OathBar(title: Text(widget.isRetest ? 'TORNEO DELLA PROVA' : 'TEST DELLA PROVA')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           StatBar(
-            value: _index / baseExercises.length,
+            value: _index / order.length,
             color: Palette.gold,
-            label: 'Prova ${_index + 1} di ${baseExercises.length}',
+            label: 'Prova ${_index + 1} di ${order.length}',
           ),
           const SizedBox(height: 20),
-          Text(ex.variant(_variant).name,
-              style: const TextStyle(fontSize: 28, color: Palette.goldBright)),
+          Text(
+            ex.variant(_variant).name,
+            style: const TextStyle(fontSize: 28, color: Palette.goldBright),
+          ),
           const SizedBox(height: 8),
           Text(
-            switch (ex.testMode) {
-              TestMode.maxReps =>
-                'Fai il massimo di rep corrette${ex.perLeg ? ' per gamba' : ''}.',
-              TestMode.repsIn60s => 'Fai più rep corrette possibili in 60 secondi.',
-              TestMode.hold => 'Tieni la posizione il più a lungo possibile.',
-            },
-            style: const TextStyle(color: Palette.ash, fontSize: 16),
-          ),
+              switch (ex.testMode) {
+                TestMode.maxReps =>
+                  'Più ripetizioni che puoi${ex.perLeg ? ', prima con la destra e poi con la sinistra' : ''}.',
+                TestMode.repsIn60s => 'Fai più rep corrette possibili in 60 secondi.',
+                TestMode.hold => 'Tieni la posizione il più a lungo possibile.',
+              },
+              style: const TextStyle(color: Palette.ash, fontSize: 16)),
           const SizedBox(height: 16),
           const Card(
             child: Padding(
@@ -360,9 +437,11 @@ class _RestDialogState extends State<_RestDialog> {
     return AlertDialog(
       backgroundColor: Palette.stone,
       title: const Text('Riposo'),
-      content: Text('$_left s',
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 40, color: Palette.goldBright)),
+      content: Text(
+        '$_left s',
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 40, color: Palette.goldBright),
+      ),
       actions: [
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Salta')),
       ],
@@ -379,7 +458,7 @@ class _Summary extends StatelessWidget {
   Widget build(BuildContext context) {
     final quest = RoutineRules.dailyQuest(results);
     return Scaffold(
-      appBar: AppBar(title: const Text('IL TUO PUNTO DI PARTENZA')),
+      appBar: OathBar(title: const Text('IL TUO PUNTO DI PARTENZA')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -392,13 +471,15 @@ class _Summary extends StatelessWidget {
           for (final q in quest)
             Card(
               child: ListTile(
-                title: Text(q.label),
+                title: OneLine(q.label),
                 subtitle: Text(
                   'Test: ${results[q.exercise]!.reps}${q.info.perLeg ? ' per gamba' : ''}',
                   style: const TextStyle(color: Palette.ash),
                 ),
-                trailing: Text('${q.target}',
-                    style: const TextStyle(fontSize: 22, color: Palette.goldBright)),
+                trailing: Text(
+                  '${q.target}',
+                  style: const TextStyle(fontSize: 22, color: Palette.goldBright),
+                ),
               ),
             ),
           const SizedBox(height: 20),

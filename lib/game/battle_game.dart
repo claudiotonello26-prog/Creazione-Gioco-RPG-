@@ -6,6 +6,7 @@ import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/painting.dart' show TextStyle, FontWeight;
 
+import '../core/art.dart';
 import '../core/theme.dart';
 import '../domain/enemies.dart';
 import '../domain/items.dart';
@@ -14,9 +15,21 @@ import '../domain/items.dart';
 /// vettoriali provvisorie, da sostituire con le illustrazioni 2D e le
 /// animazioni Spine dell'art bible.
 class BattleGame extends FlameGame {
-  BattleGame({required this.enemy, required this.weaponTier, required this.style});
+  BattleGame({
+    required this.enemy,
+    required this.weaponTier,
+    required this.style,
+    this.heroLayers = const [],
+    this.weaponTint,
+  });
 
   final EnemyDef enemy;
+
+  /// Strati del cavaliere in guardia (vuoto = figura vettoriale).
+  final List<String> heroLayers;
+
+  /// Colore della build che tinge l'arma dal +3 in su.
+  final Color? weaponTint;
 
   /// 0..3: aspetto dell'arma (+3, +6, +10).
   final int weaponTier;
@@ -30,15 +43,29 @@ class BattleGame extends FlameGame {
 
   @override
   Future<void> onLoad() async {
+    images.prefix = '';
     add(_Backdrop()..size = size);
-    _hero = _Hero(weaponTier: weaponTier)
+    final heroSprites = [
+      for (final p in heroLayers) await Sprite.load(p, images: images),
+    ];
+    final enemyArt = enemyArtPath(enemy);
+    final enemySprite =
+        Art.has(enemyArt) ? await Sprite.load(enemyArt, images: images) : null;
+    _hero = _Hero(
+      weaponTier: weaponTier,
+      layers: heroSprites,
+      weaponLayer: heroLayers.indexWhere((p) => p.contains('/weapon_')),
+      weaponTint: weaponTint,
+    )
       ..anchor = Anchor.bottomCenter
-      ..size = Vector2(90, 150)
+      ..size = heroSprites.isEmpty ? Vector2(90, 150) : Vector2(176, 220)
       ..position = Vector2(size.x * 0.25, size.y * 0.86);
     final scale = enemy.isBoss ? 1.7 : (1.0 + enemy.tier * 0.1);
-    _enemy = _Enemy(enemy)
+    _enemy = _Enemy(enemy, sprite: enemySprite)
       ..anchor = Anchor.bottomCenter
-      ..size = Vector2(110 * scale, 150 * scale)
+      ..size = enemySprite == null
+          ? Vector2(110 * scale, 150 * scale)
+          : Vector2(170 * scale, 170 * scale)
       ..position = Vector2(size.x * 0.72, size.y * 0.86);
     addAll([_hero, _enemy]);
   }
@@ -91,6 +118,23 @@ class BattleGame extends FlameGame {
     _floating('NEMICO ABBATTUTO', Vector2(size.x / 2, size.y * 0.3), Palette.goldBright, 26);
   }
 
+  /// Caccia infinita: un nuovo nemico emerge dalle rovine.
+  void respawnEnemy(int wave) {
+    if (!isLoaded) return;
+    _enemy
+      ..opacity = 0
+      ..position = Vector2(size.x * 1.1, size.y * 0.86);
+    _enemy.add(OpacityEffect.to(1, EffectController(duration: 0.6)));
+    _enemy.add(MoveToEffect(Vector2(size.x * 0.72, size.y * 0.86), EffectController(duration: 0.6)));
+    _floating('ONDATA ${wave + 1}', Vector2(size.x / 2, size.y * 0.3), Palette.ember, 26);
+  }
+
+  void heroDied() {
+    if (!isLoaded) return;
+    _hero.add(RotateEffect.to(-pi / 2, EffectController(duration: 0.7)));
+    _hero.add(OpacityEffect.to(0.35, EffectController(duration: 1.2)));
+  }
+
   void heroFled() {
     if (!isLoaded) return;
     _hero.add(MoveByEffect(Vector2(-200, 0), EffectController(duration: 0.8)));
@@ -106,7 +150,7 @@ class BattleGame extends FlameGame {
           color: color,
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
-          fontFamily: 'serif',
+          fontFamily: 'Cinzel',
         ),
       ),
     );
@@ -161,9 +205,23 @@ class _Backdrop extends PositionComponent {
   }
 }
 
-mixin _Flash on PositionComponent {
+/// Lampo quando si viene colpiti e trasparenza per comparire e svanire
+/// (le figure usano Paint propri, quindi la trasparenza va su un layer).
+mixin _Flash on PositionComponent implements OpacityProvider {
   Color? _flashColor;
   double _flashTime = 0;
+
+  @override
+  double opacity = 1;
+
+  @override
+  void renderTree(Canvas canvas) {
+    if (opacity >= 1) return super.renderTree(canvas);
+    if (opacity <= 0) return;
+    canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, opacity));
+    super.renderTree(canvas);
+    canvas.restore();
+  }
 
   void flash(Color c) {
     _flashColor = c;
@@ -178,14 +236,46 @@ mixin _Flash on PositionComponent {
 
   Color flashTint(Color base) =>
       _flashTime > 0 && _flashColor != null ? _flashColor! : base;
+
+  /// Disegna le illustrazioni: durante il lampo diventano del colore del
+  /// colpo, come le figure vettoriali.
+  void renderSprites(Canvas canvas, List<Sprite> sprites, {int tinted = -1, Color? tint}) {
+    final flashing = _flashTime > 0 && _flashColor != null;
+    for (var i = 0; i < sprites.length; i++) {
+      final sp = sprites[i];
+      // Adatta mantenendo le proporzioni, appoggiato in basso.
+      final k = min(size.x / sp.srcSize.x, size.y / sp.srcSize.y);
+      final d = sp.srcSize * k;
+      final at = Vector2((size.x - d.x) / 2, size.y - d.y);
+      final color = flashing ? _flashColor! : (i == tinted ? tint : null);
+      sp.render(
+        canvas,
+        position: at,
+        size: d,
+        overridePaint: color == null
+            ? null
+            : (Paint()..colorFilter = ColorFilter.mode(color, BlendMode.srcATop)),
+      );
+    }
+  }
 }
 
+/// Dove sta l'illustrazione di un nemico.
+String enemyArtPath(EnemyDef e) =>
+    'assets/art/${e.isAnimal ? 'animals' : e.isBoss ? 'bosses' : 'enemies'}/${e.id}_idle.png';
+
 class _Hero extends PositionComponent with _Flash {
-  _Hero({required this.weaponTier});
+  _Hero({required this.weaponTier, this.layers = const [], this.weaponLayer = -1, this.weaponTint});
   final int weaponTier;
+  final List<Sprite> layers;
+  final int weaponLayer;
+  final Color? weaponTint;
 
   @override
   void render(Canvas canvas) {
+    if (layers.isNotEmpty) {
+      return renderSprites(canvas, layers, tinted: weaponLayer, tint: weaponTint);
+    }
     final w = size.x, h = size.y;
     final body = Paint()..color = flashTint(const Color(0xFF4A423A));
     final dark = Paint()..color = flashTint(const Color(0xFF2B2520));
@@ -242,11 +332,14 @@ class _Hero extends PositionComponent with _Flash {
 }
 
 class _Enemy extends PositionComponent with _Flash {
-  _Enemy(this.def);
+  _Enemy(this.def, {this.sprite});
   final EnemyDef def;
+  final Sprite? sprite;
 
   @override
   void render(Canvas canvas) {
+    // Le illustrazioni dei nemici guardano già a sinistra, verso l'eroe.
+    if (sprite != null) return renderSprites(canvas, [sprite!]);
     final w = size.x, h = size.y;
     final base = def.isBoss
         ? const Color(0xFF3B2A22)

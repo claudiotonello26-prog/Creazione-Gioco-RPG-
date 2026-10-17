@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -12,6 +15,7 @@ import '../../pose/rep_counter.dart';
 import '../../pose/rep_input.dart';
 import '../widgets/common.dart';
 import '../widgets/exercise_view.dart';
+import 'arena_live_screen.dart';
 
 class ArenaTab extends StatelessWidget {
   const ArenaTab({super.key});
@@ -29,51 +33,47 @@ class ArenaTab extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                const Text('ARENA PURA',
-                    style: TextStyle(letterSpacing: 4, color: Palette.goldBright, fontSize: 20)),
-                const SizedBox(height: 4),
                 const Text(
-                  'Niente statistiche né build: vince chi si allena meglio. '
-                  'Le rep scorrette non contano.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Palette.ash),
+                  'ARENA PURA',
+                  style: TextStyle(letterSpacing: 4, color: Palette.goldBright, fontSize: 20),
                 ),
                 const SizedBox(height: 12),
                 Text('${s.seasonTitle} · ${s.arenaPoints} punti stagione'),
-                Text('Vittorie $wins · Sconfitte $losses',
-                    style: const TextStyle(color: Palette.ash)),
+                Text(
+                  'Vittorie $wins · Sconfitte $losses',
+                  style: const TextStyle(color: Palette.ash),
+                ),
               ],
             ),
           ),
         ),
-        const SectionTitle('Duello rapido 1v1'),
+        const SectionTitle('Duello live online'),
+        if (s.serverAddress.isEmpty || !s.useCamera)
+          Text(
+            s.serverAddress.isEmpty
+                ? 'Imposta il server dell\'Arena nel Profilo per sfidare persone vere.'
+                : 'Il live richiede la fotocamera: le rep devono essere verificate.',
+            style: const TextStyle(color: Palette.ash),
+          )
+        else
+          for (final c in arenaChallenges.values)
+            ActionTile(
+              icon: Icons.public,
+              title: '${exercises[c.exercise]!.name} · live',
+              subtitle: 'Contro una persona vera',
+              color: Palette.goldBright,
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => ArenaLiveScreen(challenge: c))),
+            ),
+        const SectionTitle('Duello contro ombre'),
         for (final c in arenaChallenges.values)
           ActionTile(
             icon: Icons.sports_kabaddi,
             title: exercises[c.exercise]!.name,
-            subtitle: '${c.description}\nDivisione: ${s.divisionOf(c.exercise).label}',
-            onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => ArenaDuelScreen(challenge: c))),
+            subtitle: 'Divisione: ${s.divisionOf(c.exercise).label}',
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => ArenaDuelScreen(challenge: c))),
           ),
-        const SectionTitle('In arrivo'),
-        const ActionTile(
-          icon: Icons.groups_outlined,
-          title: 'Allenamento di gruppo (2–6)',
-          subtitle: 'Sala live con avatar animati dallo scheletro e chat vocale opzionale',
-          enabled: false,
-        ),
-        const ActionTile(
-          icon: Icons.mark_email_unread_outlined,
-          title: 'Sfide tra amici',
-          subtitle: '"Batti i miei 20 push-up entro stasera"',
-          enabled: false,
-        ),
-        const ActionTile(
-          icon: Icons.emoji_events_outlined,
-          title: 'Arena classificata e gilde',
-          subtitle: 'Leghe, titoli e boss di gilda settimanale',
-          enabled: false,
-        ),
         if (s.arenaHistory.isNotEmpty) ...[
           const SectionTitle('Ultimi duelli'),
           for (final r in s.arenaHistory.take(10))
@@ -83,7 +83,7 @@ class ArenaTab extends StatelessWidget {
                 r.won > 0 ? Icons.emoji_events : (r.won < 0 ? Icons.close : Icons.drag_handle),
                 color: r.won > 0 ? Palette.goldBright : Palette.ash,
               ),
-              title: Text('${exercises[r.exercise]!.name} contro ${r.opponent}'),
+              title: OneLine('${exercises[r.exercise]!.name} contro ${r.opponent}'),
               trailing: Text(r.day, style: const TextStyle(color: Palette.ash)),
             ),
         ],
@@ -150,7 +150,8 @@ class _ArenaDuelScreenState extends State<ArenaDuelScreen> {
       case ChallengeGoal.mostRepsInTime:
         if (t.inSeconds >= c.seconds) _end();
       case ChallengeGoal.longestHold:
-        _notHolding = _input.holdingNow ? Duration.zero : _notHolding + const Duration(milliseconds: 100);
+        _notHolding =
+            _input.holdingNow ? Duration.zero : _notHolding + const Duration(milliseconds: 100);
         if (_input.held > Duration.zero && _notHolding > const Duration(seconds: 2)) _end();
       case ChallengeGoal.fastestReps:
         break;
@@ -179,10 +180,11 @@ class _ArenaDuelScreenState extends State<ArenaDuelScreen> {
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: Palette.stone,
-        title: Text(cmp > 0 ? 'VITTORIA' : (cmp < 0 ? 'SCONFITTA' : 'PAREGGIO'),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: cmp > 0 ? Palette.goldBright : Palette.ash, letterSpacing: 4)),
+        title: Text(
+          cmp > 0 ? 'VITTORIA' : (cmp < 0 ? 'SCONFITTA' : 'PAREGGIO'),
+          textAlign: TextAlign.center,
+          style: TextStyle(color: cmp > 0 ? Palette.goldBright : Palette.ash, letterSpacing: 4),
+        ),
         content: Text(
           'Tu: ${_describe(mine)}\n${_opponent.name}: ${_describe(theirs)}\n\n'
           'Punti stagione ${rankDelta(cmp) >= 0 ? '+' : ''}${rankDelta(cmp)}',
@@ -237,7 +239,7 @@ class _ArenaDuelScreenState extends State<ArenaDuelScreen> {
     return PopScope(
       canPop: _countdown > 0 || _over,
       child: Scaffold(
-        appBar: AppBar(title: Text(exercises[c.exercise]!.name.toUpperCase())),
+        appBar: OathBar(title: Text(exercises[c.exercise]!.name.toUpperCase())),
         body: Column(
           children: [
             Padding(
@@ -264,9 +266,7 @@ class _ArenaDuelScreenState extends State<ArenaDuelScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    _countdown > 0
-                        ? 'Inizia tra $_countdown'
-                        : '${_watch.elapsed.inSeconds}s',
+                    _countdown > 0 ? 'Inizia tra $_countdown' : '${_watch.elapsed.inSeconds}s',
                     style: const TextStyle(fontSize: 22, color: Palette.goldBright),
                   ),
                 ],

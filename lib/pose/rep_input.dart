@@ -26,7 +26,7 @@ abstract class RepInput extends ChangeNotifier {
   FormHint get hint;
   int get count;
   Duration get held;
-  bool get isHold => exercise == ExerciseId.plank;
+  bool get isHold => exercise.isHold;
   String? get error;
 
   Future<void> start();
@@ -109,7 +109,8 @@ class CameraRepInput extends RepInput {
       if (poses.isEmpty) {
         _pose = null;
       } else {
-        _pose = _toFrame(poses.first, _clock.elapsed);
+        _pose = _toFrame(poses.first, _clock.elapsed,
+            image.width > image.height ? image.width.toDouble() : image.height.toDouble());
         final event = _tracker.add(_pose!);
         if (event != null) emit(event);
       }
@@ -158,7 +159,7 @@ class CameraRepInput extends RepInput {
     Joint.rightAnkle: PoseLandmarkType.rightAnkle,
   };
 
-  static PoseFrame _toFrame(Pose pose, Duration t) => PoseFrame({
+  static PoseFrame _toFrame(Pose pose, Duration t, double scale) => PoseFrame({
         for (final e in _map.entries)
           if (pose.landmarks[e.value] != null)
             e.key: JointPoint(
@@ -166,7 +167,7 @@ class CameraRepInput extends RepInput {
               pose.landmarks[e.value]!.y,
               pose.landmarks[e.value]!.likelihood,
             ),
-      }, timestamp: t);
+      }, timestamp: t, scale: scale);
 
   @override
   void dispose() {

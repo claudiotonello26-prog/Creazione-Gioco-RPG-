@@ -1,6 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../widgets/oath_bar.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
@@ -9,7 +13,10 @@ import '../../domain/combat.dart';
 import '../../domain/exercise.dart';
 import '../../pose/rep_counter.dart';
 import '../../pose/rep_input.dart';
+import '../widgets/exercise_demo.dart';
 import '../widgets/exercise_view.dart';
+import '../../core/sound.dart';
+import '../../core/art.dart';
 
 /// Esito di una serie.
 class SetResult {
@@ -50,6 +57,14 @@ class _TrainingScreenState extends State<TrainingScreen> {
   bool _finished = false;
   int _countdown = 3;
 
+  /// Esercizi per gamba: prima tutta la destra, poi CAMBIA GAMBA e la sinistra.
+  bool get _perLeg => exercises[widget.exercise]!.perLeg;
+  int _leg = 0;
+  final List<List<RepQuality>> _legReps = [[], []];
+
+  /// Secondi di pausa del cambio gamba (0 = non in pausa).
+  int _switching = 0;
+
   @override
   void initState() {
     super.initState();
@@ -60,8 +75,13 @@ class _TrainingScreenState extends State<TrainingScreen> {
   }
 
   void _tick() {
+    if (_switching > 0) {
+      setState(() => _switching--);
+      return;
+    }
     if (_countdown > 0) {
       setState(() => _countdown--);
+      Sound.play(_countdown == 0 ? Sfx.countdownGo : Sfx.countdownTick);
       if (_countdown == 0) _watch.start();
       return;
     }
@@ -74,24 +94,56 @@ class _TrainingScreenState extends State<TrainingScreen> {
   }
 
   void _onRep(RepEvent e) {
-    if (_countdown > 0 || _finished) return;
-    setState(() => _reps.add(e.quality));
+    if (_countdown > 0 || _finished || _switching > 0) return;
+    setState(() {
+      _reps.add(e.quality);
+      if (_perLeg) _legReps[_leg].add(e.quality);
+    });
+    Sound.play(switch (e.quality) {
+      RepQuality.perfect => Sfx.repPerfect,
+      RepQuality.good => Sfx.repGood,
+      RepQuality.poor => Sfx.repPoor,
+    });
     final t = widget.target;
-    if (t != null && _countReps >= t) _finish();
+    if (_perLeg && t != null && _legReps[_leg].length >= t) {
+      _leg == 0 ? _switchLeg() : _finish();
+    } else if (!_perLeg && t != null && _countReps >= t) {
+      _finish();
+    }
   }
 
-  /// Per gli affondi il target è per gamba: contano le coppie.
-  int get _countReps =>
-      exercises[widget.exercise]!.perLeg ? _reps.length ~/ 2 : _reps.length;
+  /// Fine della prima gamba: avviso grande, suono e vibrazione, 5 secondi
+  /// per cambiare, poi si riparte da zero sull'altra.
+  void _switchLeg() {
+    if (_leg == 1) return;
+    HapticFeedback.heavyImpact();
+    if (Art.has(Sfx.switchLeg.path)) {
+      Sound.play(Sfx.switchLeg);
+    } else {
+      SystemSound.play(SystemSoundType.alert);
+    }
+    setState(() {
+      _leg = 1;
+      _switching = 5;
+    });
+  }
+
+  /// Rep della gamba in corso (o di tutta la serie se non è per gamba).
+  int get _countReps => _perLeg ? _legReps[_leg].length : _reps.length;
 
   void _finish() {
     if (_finished) return;
     _finished = true;
+    Sound.play(Sfx.setDone);
     _watch.stop();
-    final perLeg = exercises[widget.exercise]!.perLeg;
-    final reps = perLeg
-        ? [for (var i = 0; i + 1 < _reps.length; i += 2) _reps[i]]
-        : List.of(_reps);
+    // Per gamba vale la gamba più debole: se la seconda resta indietro conta quella.
+    final reps = !_perLeg
+        ? List.of(_reps)
+        : _legReps[1].isEmpty
+            ? List.of(_legReps[0])
+            : _legReps[1].length < _legReps[0].length
+                ? List.of(_legReps[1])
+                : _legReps[0].sublist(0, _legReps[1].length);
     Navigator.of(context).pop(SetResult(reps, _input.held, _watch.elapsed));
   }
 
@@ -105,45 +157,60 @@ class _TrainingScreenState extends State<TrainingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final perLeg = exercises[widget.exercise]!.perLeg;
+    final perLeg = _perLeg;
     final limit = widget.timeLimit;
-    final remaining =
-        limit == null ? null : (limit - _watch.elapsed).inSeconds.clamp(0, 9999);
+    final remaining = limit == null ? null : (limit - _watch.elapsed).inSeconds.clamp(0, 9999);
     final counterText = _input.isHold
         ? '${_input.held.inSeconds}s'
         : (widget.target != null ? '$_countReps/${widget.target}' : '$_countReps');
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: OathBar(title: Text(widget.title)),
       body: Column(
         children: [
           if (widget.subtitle != null)
             Padding(
               padding: const EdgeInsets.all(8),
-              child: Text(widget.subtitle!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Palette.ash)),
+              child: Text(
+                widget.subtitle!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Palette.ash),
+              ),
             ),
           Expanded(
             child: ExerciseView(
               input: _input,
-              overlay: Positioned(
-                top: 12,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: _countdown > 0
-                      ? RepCounterBadge(text: '$_countdown', caption: 'Preparati')
-                      : ListenableBuilder(
-                          listenable: _input,
-                          builder: (_, _) => RepCounterBadge(
-                            text: _input.isHold ? '${_input.held.inSeconds}s' : counterText,
-                            caption: [
-                              if (perLeg) 'per gamba',
-                              if (remaining != null) '$remaining s',
-                            ].join(' · '),
-                          ),
-                        ),
+              overlay: Positioned.fill(
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 12,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: _countdown > 0
+                            ? RepCounterBadge(text: '$_countdown', caption: 'Preparati')
+                            : ListenableBuilder(
+                                listenable: _input,
+                                builder: (_, _) => RepCounterBadge(
+                                  text: _input.isHold ? '${_input.held.inSeconds}s' : counterText,
+                                  caption: [
+                                    if (perLeg) _leg == 0 ? 'gamba destra' : 'gamba sinistra',
+                                    if (remaining != null) '$remaining s',
+                                  ].join(' · '),
+                                ),
+                              ),
+                      ),
+                    ),
+                    if (_switching > 0)
+                      Positioned.fill(child: _SwitchLegOverlay(seconds: _switching)),
+                    // Come si fa l'esercizio: due pose in loop.
+                    Positioned(
+                      left: 12,
+                      bottom: 12,
+                      child: ExerciseDemo(move: demoFor(widget.title, widget.exercise)),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -164,14 +231,37 @@ class _TrainingScreenState extends State<TrainingScreen> {
               padding: const EdgeInsets.all(12),
               child: SizedBox(
                 width: double.infinity,
-                child: FilledButton(
-                  onPressed: _finish,
-                  child: const Text('TERMINA SERIE'),
-                ),
+                child: perLeg && _leg == 0
+                    ? FilledButton(onPressed: _switchLeg, child: const Text('CAMBIA GAMBA'))
+                    : FilledButton(onPressed: _finish, child: const Text('TERMINA SERIE')),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// CAMBIA GAMBA a tutto schermo, leggibile da lontano.
+class _SwitchLegOverlay extends StatelessWidget {
+  const _SwitchLegOverlay({required this.seconds});
+  final int seconds;
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: Colors.black.withValues(alpha: 0.82),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.swap_horiz, color: Palette.goldBright, size: 90),
+            Text('CAMBIA GAMBA', style: titleStyle(size: 34, spacing: 3)),
+            const SizedBox(height: 8),
+            Text('Ora la sinistra · $seconds', style: titleStyle(size: 20, color: Palette.holy)),
+          ],
+        ),
       ),
     );
   }

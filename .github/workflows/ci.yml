@@ -25,6 +25,20 @@ jobs:
       - run: flutter analyze
       - run: flutter test
 
+  server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      - run: npm run build
+      - run: node --test test/arena.test.js
+
   android:
     needs: test
     runs-on: ubuntu-latest
@@ -43,10 +57,85 @@ jobs:
       # Numero di build crescente: ogni APK si installa sopra il precedente.
       - run: flutter build apk --release --build-number=${{ github.run_number }}
       - run: mv build/app/outputs/flutter-apk/app-release.apk iron-oath.apk
+      # Versione solo per telefoni a 64 bit (quasi tutti dal 2019): circa la
+      # metà del peso. Stesso numero di build, quindi si aggiorna sopra.
+      - run: flutter build apk --release --target-platform android-arm64 --build-number=${{ github.run_number }}
+      - run: mv build/app/outputs/flutter-apk/app-release.apk iron-oath-arm64.apk
+      - run: ls -lh *.apk
       - uses: actions/upload-artifact@v4
         with:
           name: iron-oath-android
-          path: iron-oath.apk
+          path: |
+            iron-oath.apk
+            iron-oath-arm64.apk
+
+  # Avvia l'APK vero su emulatori Android (vecchio e recente) e fallisce se
+  # l'app si chiude all'avvio. Il logcat resta come artefatto.
+  android-smoke:
+    needs: android
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [26, 29, 34]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: iron-oath-android
+      - name: Abilita KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          target: ${{ matrix.api-level == 34 && 'google_apis' || 'default' }}
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-front emulated
+          script: |
+            adb install -r iron-oath.apk
+            adb logcat -c || true
+            adb shell am start -W -n com.ironoath.iron_oath/.MainActivity
+            sleep 20
+            adb logcat -d > logcat.txt || true
+            adb shell screencap -p /sdcard/s.png && adb pull /sdcard/s.png screen.png || true
+            grep -E "FATAL EXCEPTION|AndroidRuntime|E/flutter|libc  |DEBUG   " logcat.txt | head -80 || true
+            adb shell pidof com.ironoath.iron_oath
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-api-${{ matrix.api-level }}
+          path: |
+            logcat.txt
+            screen.png
+          if-no-files-found: ignore
+
+  # APK scaricabile direttamente dal telefono, senza zip: release di prova
+  # "apk-latest" ricreata a ogni build che supera la prova sugli emulatori.
+  publish-apk:
+    needs: android-smoke
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: iron-oath-android
+      - name: Pubblica l'APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          gh release delete apk-latest --yes --cleanup-tag || true
+          gh release create apk-latest iron-oath-arm64.apk iron-oath.apk \
+            --prerelease --target "$SHA" \
+            --title "Iron Oath – APK di prova (build ${{ github.run_number }})" \
+            --notes "Build ${{ github.run_number }} dal ramo $BRANCH. Scarica iron-oath-arm64.apk dal telefono e installalo sopra la versione precedente; iron-oath.apk funziona su tutti i telefoni ma pesa di più."
 
   # IPA non firmata: si installa su iPhone da Windows con Sideloadly e un
   # Apple ID gratuito. Gira su macOS (minuti costosi), quindi solo su main o

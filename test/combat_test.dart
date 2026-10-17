@@ -14,15 +14,15 @@ void main() {
         },
       );
 
-  test('rep richieste dal documento: 12 / 15 / 20 con test di 20', () {
+  test('rep richieste per gradino: 12 / 14 / 18 con test di 20', () {
     int reps(String id) => CombatEngine(
           enemy: enemyDefs[id]!,
           character: Character(),
           testReps: 20,
         ).expectedReps;
     expect(reps('hollow_goblin'), 12);
-    expect(reps('fallen_knight'), 15);
-    expect(reps('ash_wyrm'), 20);
+    expect(reps('carrion_hound'), 14);
+    expect(reps('forge_servant'), 18);
   });
 
   test('con rep perfette e build sufficiente il nemico cade al numero previsto', () {
@@ -77,7 +77,7 @@ void main() {
 
   test('build troppo debole: i colpi rimbalzano', () {
     final e = CombatEngine(
-      enemy: enemyDefs['ash_wyrm']!,
+      enemy: enemyDefs['forge_servant']!,
       character: Character(),
       testReps: 20,
     );
@@ -86,9 +86,9 @@ void main() {
     expect(e.penetration, lessThan(1.0));
   });
 
-  test('il nemico attacca a tempo e a vita zero si fugge', () {
+  test('il nemico attacca a tempo e a vita zero si muore', () {
     final e = CombatEngine(
-      enemy: enemyDefs['ash_wyrm']!,
+      enemy: enemyDefs['forge_servant']!,
       character: Character(),
       testReps: 20,
     );
@@ -97,13 +97,13 @@ void main() {
       e.tick(0.5);
       t += 0.5;
     }
-    expect(e.status, CombatStatus.fled);
+    expect(e.status, CombatStatus.defeated);
     expect(e.rewards().runes, 0);
   });
 
   test('il Rampage sale con rep senza pause e dà fino a +20%', () {
     final e = CombatEngine(
-      enemy: enemyDefs['ash_wyrm']!,
+      enemy: enemyDefs['forge_servant']!,
       character: strongHero(),
       testReps: 100,
     );
@@ -124,5 +124,51 @@ void main() {
       attributes: {for (final a in Attribute.values) a: 10}..[Attribute.strength] = 30,
     );
     expect(strong.weapon.attackRating(strong), greaterThan(weak.weapon.attackRating(weak)));
+  });
+
+  test('ritmo giusto: l\'eroe base vince con poco margine, a metà ritmo muore', () {
+    CombatStatus fight(double secondsPerRep) {
+      final e = CombatEngine(
+        enemy: enemyDefs['hollow_goblin']!,
+        character: Character(weapon: WeaponInstance(weaponId: 'pilgrim_blade', upgrade: 3)),
+        testReps: 20,
+      );
+      var t = 0.0;
+      var next = secondsPerRep;
+      while (e.status == CombatStatus.fighting && t < 600) {
+        e.tick(0.1);
+        t += 0.1;
+        if (t >= next && e.status == CombatStatus.fighting) {
+          e.registerRep(RepQuality.good);
+          next += secondsPerRep;
+        }
+      }
+      return e.status;
+    }
+
+    expect(fight(2.0), CombatStatus.victory);
+    expect(fight(4.5), CombatStatus.defeated);
+  });
+
+  test('se ti fermi il nemico recupera vita', () {
+    final e = CombatEngine(
+      enemy: enemyDefs['hollow_goblin']!,
+      character: strongHero(),
+      testReps: 20,
+    );
+    e.registerRep(RepQuality.perfect);
+    final hp = e.enemyHp;
+    for (var i = 0; i < 50; i++) {
+      e.tick(0.1);
+    }
+    expect(e.enemyHp, greaterThan(hp));
+  });
+
+  test('caccia infinita: ogni ondata è più forte', () {
+    final a = CombatEngine(enemy: enemyDefs['hollow_goblin']!, character: Character(), testReps: 20);
+    final b = CombatEngine(
+        enemy: enemyDefs['hollow_goblin']!, character: Character(), testReps: 20, wave: 3);
+    expect(b.enemyMaxHp, greaterThan(a.enemyMaxHp));
+    expect(b.hitDamage, greaterThan(a.hitDamage));
   });
 }

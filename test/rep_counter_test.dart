@@ -91,4 +91,35 @@ void main() {
     expect(c.add(const PoseFrame({})), isNull);
     expect(c.hint, FormHint.notVisible);
   });
+
+  test('high knees: ogni ginocchio sopra l\'anca è una rep, alternando le gambe', () {
+    // In piedi di fronte: spalla sopra l'anca, il ginocchio sale davanti.
+    PoseFrame frame(double leftHip, double rightHip, int ms) {
+      JointPoint knee(double deg, double x) {
+        final r = deg * pi / 180;
+        return JointPoint(x + sin(r) * 0.5, 1 - cos(r) * 0.5);
+      }
+
+      return PoseFrame({
+        Joint.leftShoulder: const JointPoint(-0.2, 0),
+        Joint.rightShoulder: const JointPoint(0.2, 0),
+        Joint.leftHip: const JointPoint(-0.2, 1),
+        Joint.rightHip: const JointPoint(0.2, 1),
+        Joint.leftKnee: knee(leftHip, -0.2),
+        Joint.rightKnee: knee(rightHip, 0.2),
+      }, timestamp: Duration(milliseconds: ms));
+    }
+
+    final t = ExerciseTracker(ExerciseId.highKnees);
+    var ms = 0;
+    var events = 0;
+    for (var i = 0; i < 6; i++) {
+      final left = i.isEven;
+      for (final a in <double>[175, 150, 120, 95, 90, 95, 120, 150, 175, 178, 178, 178, 178, 178, 178, 178]) {
+        if (t.add(frame(left ? a : 178, left ? 178 : a, ms)) != null) events++;
+        ms += 60;
+      }
+    }
+    expect(events, 6);
+  });
 }

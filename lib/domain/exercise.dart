@@ -6,7 +6,7 @@ library;
 
 enum MuscleGroup {
   push('Spinta'),
-  back('Dorso e postura'),
+  stretching('Stretching'),
   core('Core e addome'),
   legs('Gambe'),
   cardio('Cardio'),
@@ -14,6 +14,10 @@ enum MuscleGroup {
 
   const MuscleGroup(this.label);
   final String label;
+
+  /// Dai salvataggi: 'back' (Dorso e postura) è diventato Stretching.
+  static MuscleGroup parse(String name) =>
+      name == 'back' ? stretching : MuscleGroup.values.byName(name);
 }
 
 /// Come si misura un esercizio nel test.
@@ -36,7 +40,34 @@ enum ExerciseId {
   squat,
   lunge,
   jumpingJack,
+
+  /// Ginocchia alte: ogni ginocchio sopra l'anca è una rep.
+  highKnees,
   plank,
+
+  /// Posa di stretching da tenere ferma.
+  stretch,
+}
+
+extension ExerciseKind on ExerciseId {
+  /// Si misura in secondi tenuti, non in rep.
+  bool get isHold => this == ExerciseId.plank || this == ExerciseId.stretch;
+}
+
+/// Un esercizio come lo vede il giocatore (Push-up diamante, Cobra...) e il
+/// modello di movimento che lo conta ([trackAs]). [ratio] è la quota delle
+/// rep del test di [trackAs] che vale una serie normale: 0.5 = come la
+/// versione base, più basso = più duro.
+class Move {
+  const Move(this.name, this.trackAs, {this.ratio = 0.5});
+  final String name;
+  final ExerciseId trackAs;
+  final double ratio;
+
+  bool get hold => trackAs.isHold;
+
+  /// Quanto pesa rispetto alla versione base (1 = uguale).
+  double get difficulty => 0.5 / ratio;
 }
 
 class ExerciseVariant {
@@ -113,7 +144,7 @@ const Map<ExerciseId, Exercise> exercises = {
     id: ExerciseId.squat,
     name: 'Squat',
     group: MuscleGroup.legs,
-    testMode: TestMode.repsIn60s,
+    testMode: TestMode.maxReps,
     variants: [
       ExerciseVariant('Squat', level: 0),
       ExerciseVariant('Squat sulla sedia', level: 1),
@@ -140,12 +171,29 @@ const Map<ExerciseId, Exercise> exercises = {
       ExerciseVariant('Step jack', level: 1),
     ],
   ),
+  ExerciseId.highKnees: Exercise(
+    id: ExerciseId.highKnees,
+    name: 'High knees',
+    group: MuscleGroup.cardio,
+    testMode: TestMode.repsIn60s,
+    variants: [
+      ExerciseVariant('High knees', level: 0),
+      ExerciseVariant('Marcia a ginocchia alte', level: 1),
+    ],
+  ),
   ExerciseId.plank: Exercise(
     id: ExerciseId.plank,
     name: 'Plank',
     group: MuscleGroup.core,
     testMode: TestMode.hold,
     variants: [ExerciseVariant('Plank', level: 0)],
+  ),
+  ExerciseId.stretch: Exercise(
+    id: ExerciseId.stretch,
+    name: 'Stretching',
+    group: MuscleGroup.stretching,
+    testMode: TestMode.hold,
+    variants: [ExerciseVariant('Posa di stretching', level: 0)],
   ),
 };
 

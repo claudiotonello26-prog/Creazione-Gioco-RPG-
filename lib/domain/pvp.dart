@@ -47,18 +47,17 @@ class ArenaChallenge {
 }
 
 const Map<ExerciseId, ArenaChallenge> arenaChallenges = {
-  ExerciseId.pushUp: ArenaChallenge(
-      exercise: ExerciseId.pushUp, goal: ChallengeGoal.fastestReps, targetReps: 20),
-  ExerciseId.squat: ArenaChallenge(
-      exercise: ExerciseId.squat, goal: ChallengeGoal.fastestReps, targetReps: 30),
-  ExerciseId.lunge: ArenaChallenge(
-      exercise: ExerciseId.lunge, goal: ChallengeGoal.fastestReps, targetReps: 20),
-  ExerciseId.crunch: ArenaChallenge(
-      exercise: ExerciseId.crunch, goal: ChallengeGoal.fastestReps, targetReps: 30),
+  ExerciseId.pushUp:
+      ArenaChallenge(exercise: ExerciseId.pushUp, goal: ChallengeGoal.fastestReps, targetReps: 20),
+  ExerciseId.squat:
+      ArenaChallenge(exercise: ExerciseId.squat, goal: ChallengeGoal.fastestReps, targetReps: 30),
+  ExerciseId.lunge:
+      ArenaChallenge(exercise: ExerciseId.lunge, goal: ChallengeGoal.fastestReps, targetReps: 20),
+  ExerciseId.crunch:
+      ArenaChallenge(exercise: ExerciseId.crunch, goal: ChallengeGoal.fastestReps, targetReps: 30),
   ExerciseId.jumpingJack: ArenaChallenge(
       exercise: ExerciseId.jumpingJack, goal: ChallengeGoal.mostRepsInTime, seconds: 60),
-  ExerciseId.plank: ArenaChallenge(
-      exercise: ExerciseId.plank, goal: ChallengeGoal.longestHold),
+  ExerciseId.plank: ArenaChallenge(exercise: ExerciseId.plank, goal: ChallengeGoal.longestHold),
 };
 
 /// Soglie del record personale (rep, o secondi per il plank) per ogni
@@ -97,9 +96,8 @@ class ArenaResult {
   final double formScore;
   final bool completed;
 
-  static double formScoreOf(List<RepQuality> reps) => reps.isEmpty
-      ? 0
-      : reps.map((q) => q.multiplier).reduce((a, b) => a + b) / reps.length;
+  static double formScoreOf(List<RepQuality> reps) =>
+      reps.isEmpty ? 0 : reps.map((q) => q.multiplier).reduce((a, b) => a + b) / reps.length;
 }
 
 /// Ritorna >0 se vince [a], <0 se vince [b], 0 in caso di pareggio perfetto.
@@ -141,8 +139,15 @@ class ArenaOpponent {
   final double holdSeconds;
 
   static const _names = [
-    'Ser Varek', 'Ildra la Grigia', 'Fratello Osmund', 'Kael di Cenere',
-    'Maelis', 'Il Penitente', 'Thorne', 'Sorella Vesna', 'Brann Mezzaluna',
+    'Ser Varek',
+    'Ildra la Grigia',
+    'Fratello Osmund',
+    'Kael di Cenere',
+    'Maelis',
+    'Il Penitente',
+    'Thorne',
+    'Sorella Vesna',
+    'Brann Mezzaluna',
   ];
 
   factory ArenaOpponent.generate(Division division, {Random? random}) {
@@ -170,10 +175,14 @@ class ArenaOpponent {
             validReps: repsAt(c.seconds.toDouble()),
             elapsedSeconds: c.seconds.toDouble(),
             formScore: formScore),
-        ChallengeGoal.longestHold => ArenaResult(
-            validReps: 0, elapsedSeconds: holdSeconds, formScore: formScore),
+        ChallengeGoal.longestHold =>
+          ArenaResult(validReps: 0, elapsedSeconds: holdSeconds, formScore: formScore),
       };
 }
 
 /// Punti classifica della stagione: +25 vittoria, −15 sconfitta.
 int rankDelta(int comparison) => comparison > 0 ? 25 : (comparison < 0 ? -15 : 5);
+
+/// arena: duello classificato; friendly: sfida tra amici senza punti;
+/// group: allenamento di gilda fino a quattro.
+enum LiveMode { arena, friendly, group }
