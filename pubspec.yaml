@@ -41,6 +41,7 @@ dependencies:
   provider: ^6.1.5+1
   http: ^1.6.0
   web_socket_channel: ^3.0.3
+  health: ^13.3.2
 
 dev_dependencies:
   flutter_test:

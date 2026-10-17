@@ -47,7 +47,9 @@ class EnemyDef {
   /// Secondi tra un attacco e l'altro.
   double get attackInterval => isBoss ? 3.5 : 4.0;
 
-  int get runeReward => 20 * tier * (isBoss ? 4 : 1);
+  /// Rune per uccisione: crescono più delle rep richieste, così per ogni rep
+  /// un nemico più duro paga di più.
+  int get runeReward => const [20, 40, 65, 95, 130][tier - 1] * (isBoss ? 3 : 1);
 }
 
 const String regionCathedral = 'Cattedrali in Rovina';

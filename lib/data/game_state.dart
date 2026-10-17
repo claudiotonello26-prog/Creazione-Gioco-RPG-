@@ -10,6 +10,7 @@ import '../domain/exercise.dart';
 import '../domain/items.dart';
 import '../domain/pvp.dart';
 import '../domain/routine.dart';
+import '../domain/walking.dart';
 
 enum PlayMode {
   /// Come GymScape: combattimenti liberi, nessuna routine imposta.
@@ -38,6 +39,12 @@ class DailyState {
   int xpEarned = 0;
   bool goodForm = true;
 
+  /// Passi di oggi già trasformati in materiali.
+  int claimedSteps = 0;
+
+  /// Rep fatte oggi in combattimento per gruppo muscolare (fatica).
+  final Map<MuscleGroup, int> combatReps = {};
+
   Map<String, dynamic> toJson() => {
         'day': day,
         'quest': {for (final e in questDone.entries) e.key.name: e.value},
@@ -47,6 +54,8 @@ class DailyState {
         'exp': expeditionDone,
         'xp': xpEarned,
         'good': goodForm,
+        'steps': claimedSteps,
+        'combat': {for (final e in combatReps.entries) e.key.name: e.value},
       };
 
   factory DailyState.fromJson(Map<String, dynamic> j) {
@@ -55,11 +64,14 @@ class DailyState {
       ..questRewarded = j['rewarded'] as bool
       ..expeditionDone = j['exp'] as bool
       ..xpEarned = j['xp'] as int
-      ..goodForm = j['good'] as bool? ?? true;
+      ..goodForm = j['good'] as bool? ?? true
+      ..claimedSteps = j['steps'] as int? ?? 0;
     (j['quest'] as Map).forEach(
         (k, v) => d.questDone[ExerciseId.values.byName(k as String)] = v as int);
     (j['variety'] as Map).forEach(
         (k, v) => d.varietyUsed[MuscleGroup.values.byName(k as String)] = v as int);
+    ((j['combat'] as Map?) ?? const {}).forEach(
+        (k, v) => d.combatReps[MuscleGroup.values.byName(k as String)] = v as int);
     return d;
   }
 }
@@ -478,22 +490,65 @@ class GameState extends ChangeNotifier {
 
   // ------------------------------------------------------------- combattimento
 
-  /// Ritorna gli XP totali guadagnati (rep con Bonus Varietà + bonus vittoria).
-  int applyCombatRewards(CombatRewards r, ExerciseId exercise, List<RepQuality> reps,
-      {required bool victory}) {
+  /// Fatica: le prime [freshReps] rep di un gruppo al giorno pagano pieno,
+  /// poi il bottino cala. Ripetere sempre lo stesso esercizio facile rende
+  /// meno che cambiare gruppo; gli XP invece contano sempre (sono salute).
+  static const int freshReps = 60;
+  static const int tiredReps = 120;
+
+  static double fatigueAt(int repsBefore) =>
+      repsBefore < freshReps ? 1.0 : (repsBefore < tiredReps ? 0.6 : 0.3);
+
+  /// Moltiplicatore medio per [count] rep fatte dopo [before] rep del giorno.
+  static double fatigueFor(int before, int count) {
+    if (count <= 0) return fatigueAt(before);
+    var sum = 0.0;
+    for (var i = 0; i < count; i++) {
+      sum += fatigueAt(before + i);
+    }
+    return sum / count;
+  }
+
+  double fatigueOf(MuscleGroup g) => fatigueAt(daily.combatReps[g] ?? 0);
+
+  /// Ritorna gli XP guadagnati (rep con Bonus Varietà + bonus vittoria) e le
+  /// ricompense effettivamente date dopo la fatica.
+  (int, CombatRewards, double) applyCombatRewards(
+      CombatRewards r, ExerciseId exercise, List<RepQuality> reps,
+      {required bool victory, Random? random}) {
+    _rollDay();
+    final group = exercises[exercise]!.group;
+    final before = daily.combatReps[group] ?? 0;
+    final fatigue = fatigueFor(before, reps.length);
+    daily.combatReps[group] = before + reps.length;
+    final granted = r.scaled(fatigue, random ?? Random());
+
     var xp = addTraining(exercise, reps, countsForQuest: false, inCombat: true);
     if (victory) {
       final bonus = (r.xp * 0.25).round();
       _gainXp(bonus);
       xp += bonus;
     }
-    character.runes += r.runes;
-    r.materials.forEach(character.addMaterial);
-    if (r.rareWeapon != null) {
-      character.weapons.add(WeaponInstance(weaponId: r.rareWeapon!));
+    character.runes += granted.runes;
+    granted.materials.forEach(character.addMaterial);
+    if (granted.rareWeapon != null) {
+      character.weapons.add(WeaponInstance(weaponId: granted.rareWeapon!));
     }
     _changed();
-    return xp;
+    return (xp, granted, fatigue);
+  }
+
+  // --------------------------------------------------------------- camminata
+
+  /// Trasforma i passi di oggi in materiali. Ritorna solo quelli nuovi.
+  Map<String, int> claimSteps(int stepsToday) {
+    _rollDay();
+    if (stepsToday <= daily.claimedSteps) return const {};
+    final loot = stepLootDelta(daily.claimedSteps, stepsToday);
+    daily.claimedSteps = stepsToday;
+    loot.forEach(character.addMaterial);
+    _changed();
+    return loot;
   }
 
   void recordHuntWave(int wave) {

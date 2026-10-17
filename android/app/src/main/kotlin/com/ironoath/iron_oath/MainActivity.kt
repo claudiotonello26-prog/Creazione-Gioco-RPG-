@@ -1,5 +1,6 @@
 package com.ironoath.iron_oath
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+// FragmentActivity: serve a Health Connect per chiedere il permesso dei passi.
+class MainActivity : FlutterFragmentActivity()

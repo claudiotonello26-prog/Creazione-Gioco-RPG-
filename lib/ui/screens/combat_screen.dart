@@ -68,6 +68,9 @@ class _CombatScreenState extends State<CombatScreen> {
   final Map<String, int> _totalMaterials = {};
   final List<String> _rareWeapons = [];
 
+  /// Fatica più bassa toccata (1 = bottino pieno).
+  double _minFatigue = 1;
+
   @override
   void initState() {
     super.initState();
@@ -138,14 +141,15 @@ class _CombatScreenState extends State<CombatScreen> {
 
   /// Applica le ricompense di questo nemico e le somma al totale della caccia.
   int _collect(CombatRewards rewards, {required bool victory}) {
-    final xp = context
+    final (xp, granted, fatigue) = context
         .read<GameState>()
         .applyCombatRewards(rewards, widget.exercise, List.of(_reps), victory: victory);
+    if (victory && fatigue < 1) _minFatigue = fatigue < _minFatigue ? fatigue : _minFatigue;
     _totalReps += _reps.length;
     _totalXp += xp;
-    _totalRunes += rewards.runes;
-    rewards.materials.forEach((k, v) => _totalMaterials[k] = (_totalMaterials[k] ?? 0) + v);
-    if (rewards.rareWeapon != null) _rareWeapons.add(rewards.rareWeapon!);
+    _totalRunes += granted.runes;
+    granted.materials.forEach((k, v) => _totalMaterials[k] = (_totalMaterials[k] ?? 0) + v);
+    if (granted.rareWeapon != null) _rareWeapons.add(granted.rareWeapon!);
     _reps.clear();
     return xp;
   }
@@ -201,6 +205,7 @@ class _CombatScreenState extends State<CombatScreen> {
         runes: _totalRunes,
         materials: _totalMaterials,
         rareWeapons: _rareWeapons,
+        fatigue: _minFatigue,
       ),
     );
     if (mounted) Navigator.of(context).pop(status == CombatStatus.victory);
@@ -454,8 +459,10 @@ class _ResultDialog extends StatelessWidget {
     required this.runes,
     required this.materials,
     required this.rareWeapons,
+    this.fatigue = 1,
   });
 
+  final double fatigue;
   final CombatStatus status;
   final bool endless;
   final int wavesCleared;
@@ -494,6 +501,14 @@ class _ResultDialog extends StatelessWidget {
           for (final w in rareWeapons)
             Text('ARMA RARA: ${weaponDefs[w]!.name}',
                 style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold)),
+          if (fatigue < 1)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                  'Gruppo muscolare affaticato: bottino al ${(fatigue * 100).round()}%. '
+                  'Cambia gruppo per tornare al pieno, gli XP restano interi.',
+                  style: const TextStyle(color: Palette.ember)),
+            ),
           if (status == CombatStatus.defeated)
             const Padding(
               padding: EdgeInsets.only(top: 8),

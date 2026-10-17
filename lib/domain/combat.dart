@@ -118,6 +118,7 @@ class CombatEngine {
 
   int reps = 0;
   int perfectReps = 0;
+  double _qualitySum = 0;
   CombatStatus status = CombatStatus.fighting;
 
   double get attackTimerProgress => 1 - _attackTimer / enemy.attackInterval;
@@ -159,15 +160,17 @@ class CombatEngine {
   /// Quota di danno che passa la difesa (0.25..1).
   double get penetration => (attackPower / enemy.defense).clamp(0.25, 1.0);
 
-  /// Bottino extra dal potere oltre la difesa del nemico (0..50%).
+  /// Bottino extra dal potere oltre la difesa del nemico (0..25%): poco,
+  /// perché farmare nemici deboli con un'arma enorme non deve convenire.
   double get lootBonus =>
-      ((attackPower / enemy.defense - 1) * 0.5).clamp(0.0, 0.5);
+      ((attackPower / enemy.defense - 1) * 0.25).clamp(0.0, 0.25);
 
   RepHit registerRep(RepQuality quality) {
     if (status != CombatStatus.fighting) {
       throw StateError('Il combattimento è finito');
     }
     reps++;
+    _qualitySum += quality.multiplier;
     _sinceLastRep = 0;
     rampage = min(1.0, rampage + rampagePerRep);
 
@@ -232,6 +235,19 @@ class CombatEngine {
     return taken;
   }
 
+  /// Sforzo richiesto rispetto a chi fa 20 rep al test: chi ha nemici da
+  /// poche rep prende meno a uccisione, chi ne ha di lunghi di più. Così il
+  /// bottino segue le rep fatte davvero, non il numero di nemici.
+  double get effortFactor => (enemyMaxHp / (20 * enemy.repFactor)).clamp(0.5, 5.0);
+
+  /// Qualità media delle rep (1 = tutte perfette, 0.6 = tutte scarse).
+  double get averageQuality => reps == 0 ? 1.0 : _qualitySum / reps;
+
+  /// Premio di rischio della caccia infinita, oltre alla vita in più che
+  /// è già pagata da [effortFactor].
+  double get waveBonus => 1 + waveRewardStep * wave;
+  static const double waveRewardStep = 0.1;
+
   /// Ricompense a fine combattimento. Se fuggi o muori tieni gli XP delle rep
   /// fatte.
   CombatRewards rewards() {
@@ -239,20 +255,19 @@ class CombatEngine {
     if (status != CombatStatus.victory) {
       return CombatRewards(xp: xp, runes: 0, materials: const {});
     }
-    final bonus = 1 + lootBonus;
+    final pay = (1 + lootBonus) * effortFactor * averageQuality * waveBonus;
     final materials = <String, int>{
-      for (final e in enemy.loot.entries) e.key: max(1, (e.value * bonus).round()),
+      for (final e in enemy.loot.entries) e.key: max(1, (e.value * pay).round()),
     };
     String? rare;
     var rareChance = enemy.rareDropChance;
     if (enemy.isBeast) rareChance += _amulets.rareLoot;
-    if (enemy.rareDrop != null && _random.nextDouble() < rareChance * bonus) {
+    if (enemy.rareDrop != null && _random.nextDouble() < rareChance * (1 + lootBonus) * waveBonus) {
       rare = enemy.rareDrop;
     }
-    final waveBonus = 1 + 0.25 * wave;
     return CombatRewards(
       xp: xp,
-      runes: (enemy.runeReward * bonus * waveBonus).round(),
+      runes: (enemy.runeReward * pay).round(),
       materials: materials,
       rareWeapon: rare,
     );
@@ -266,6 +281,27 @@ class CombatRewards {
     required this.materials,
     this.rareWeapon,
   });
+
+  /// Stesse ricompense ridotte dalla fatica (rune e materiali, non XP né
+  /// armi rare). L'arrotondamento è casuale così anche 0,3 di essenza
+  /// vale qualcosa in media.
+  CombatRewards scaled(double factor, Random random) {
+    if (factor >= 1) return this;
+    int r(num v) {
+      final x = v * factor;
+      return x.floor() + (random.nextDouble() < x - x.floor() ? 1 : 0);
+    }
+
+    return CombatRewards(
+      xp: xp,
+      runes: r(runes),
+      materials: {
+        for (final e in materials.entries)
+          if (r(e.value) > 0) e.key: r(e.value),
+      },
+      rareWeapon: rareWeapon,
+    );
+  }
 
   final int xp;
   final int runes;
