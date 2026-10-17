@@ -106,6 +106,15 @@ class TrainTab extends StatelessWidget {
             onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => ChallengeScreen(group: g))),
           ),
+        const SectionTitle('Caccia infinita'),
+        ActionTile(
+          icon: Icons.all_inclusive,
+          title: 'Caccia nelle Cattedrali',
+          subtitle: 'Ogni nemico abbattuto ne arriva uno più forte, finché resisti'
+              '${s.bestHuntWave > 0 ? ' · record ${s.bestHuntWave}' : ''}',
+          color: Palette.ember,
+          onTap: () => _freeFight(context, enemyDefs['hollow_goblin']!, endless: true),
+        ),
         const SectionTitle('Combattimenti liberi'),
         for (final e in enemyDefs.values.where((e) => e.region == regionCathedral))
           ActionTile(
@@ -119,7 +128,7 @@ class TrainTab extends StatelessWidget {
     );
   }
 
-  Future<void> _freeFight(BuildContext context, EnemyDef enemy) async {
+  Future<void> _freeFight(BuildContext context, EnemyDef enemy, {bool endless = false}) async {
     final choice = await showModalBottomSheet<(ExerciseId, Stance)>(
       context: context,
       backgroundColor: Palette.stone,
@@ -127,7 +136,8 @@ class TrainTab extends StatelessWidget {
     );
     if (choice == null || !context.mounted) return;
     await Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => CombatScreen(enemy: enemy, exercise: choice.$1, stance: choice.$2),
+      builder: (_) => CombatScreen(
+          enemy: enemy, exercise: choice.$1, stance: choice.$2, endless: endless),
     ));
   }
 

@@ -91,6 +91,23 @@ class BattleGame extends FlameGame {
     _floating('NEMICO ABBATTUTO', Vector2(size.x / 2, size.y * 0.3), Palette.goldBright, 26);
   }
 
+  /// Caccia infinita: un nuovo nemico emerge dalle rovine.
+  void respawnEnemy(int wave) {
+    if (!isLoaded) return;
+    _enemy
+      ..opacity = 0
+      ..position = Vector2(size.x * 1.1, size.y * 0.86);
+    _enemy.add(OpacityEffect.to(1, EffectController(duration: 0.6)));
+    _enemy.add(MoveToEffect(Vector2(size.x * 0.72, size.y * 0.86), EffectController(duration: 0.6)));
+    _floating('ONDATA ${wave + 1}', Vector2(size.x / 2, size.y * 0.3), Palette.ember, 26);
+  }
+
+  void heroDied() {
+    if (!isLoaded) return;
+    _hero.add(RotateEffect.to(-pi / 2, EffectController(duration: 0.7)));
+    _hero.add(OpacityEffect.to(0.35, EffectController(duration: 1.2)));
+  }
+
   void heroFled() {
     if (!isLoaded) return;
     _hero.add(MoveByEffect(Vector2(-200, 0), EffectController(duration: 0.8)));
@@ -161,9 +178,23 @@ class _Backdrop extends PositionComponent {
   }
 }
 
-mixin _Flash on PositionComponent {
+/// Lampo quando si viene colpiti e trasparenza per comparire e svanire
+/// (le figure usano Paint propri, quindi la trasparenza va su un layer).
+mixin _Flash on PositionComponent implements OpacityProvider {
   Color? _flashColor;
   double _flashTime = 0;
+
+  @override
+  double opacity = 1;
+
+  @override
+  void renderTree(Canvas canvas) {
+    if (opacity >= 1) return super.renderTree(canvas);
+    if (opacity <= 0) return;
+    canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, opacity));
+    super.renderTree(canvas);
+    canvas.restore();
+  }
 
   void flash(Color c) {
     _flashColor = c;

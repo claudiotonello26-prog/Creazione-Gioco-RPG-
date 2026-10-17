@@ -27,7 +27,12 @@ class IronOathApp extends StatelessWidget {
         title: 'Iron Oath',
         debugShowCheckedModeBanner: false,
         theme: buildTheme(),
-        builder: (context, child) => SoulsBackground(child: child!),
+        // Niente sotto la barra di navigazione di Android (Android 15+ disegna
+        // l'app a tutto schermo): tutte le pagine, i fogli e i dialoghi
+        // stanno sopra.
+        builder: (context, child) => SoulsBackground(
+          child: SafeArea(top: false, child: child!),
+        ),
         home: Consumer<GameState>(
           builder: (_, s, _) =>
               s.onboarded ? const HomeShell() : const OnboardingFlow(),

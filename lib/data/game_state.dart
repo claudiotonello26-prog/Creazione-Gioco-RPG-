@@ -132,6 +132,9 @@ class GameState extends ChangeNotifier {
   int arenaPoints = 1000;
   List<ArenaRecord> arenaHistory = [];
 
+  /// Record di nemici abbattuti di fila nella Caccia infinita.
+  int bestHuntWave = 0;
+
   late DailyState daily;
 
   // ---------------------------------------------------------------- persistenza
@@ -213,6 +216,7 @@ class GameState extends ChangeNotifier {
         'arena': arenaPoints,
         'arenaHistory': [for (final r in arenaHistory) r.toJson()],
         'daily': daily.toJson(),
+        'bestHunt': bestHuntWave,
       };
 
   void _fromJson(Map<String, dynamic> j) {
@@ -257,6 +261,7 @@ class GameState extends ChangeNotifier {
         ArenaRecord.fromJson(r as Map<String, dynamic>),
     ];
     daily = DailyState.fromJson(j['daily'] as Map<String, dynamic>);
+    bestHuntWave = j['bestHunt'] as int? ?? 0;
   }
 
   Future<void> resetAll() async {
@@ -276,6 +281,7 @@ class GameState extends ChangeNotifier {
     trainedGroups = {};
     arenaPoints = 1000;
     arenaHistory = [];
+    bestHuntWave = 0;
     daily = DailyState(_dayKey(_clock()));
     notifyListeners();
   }
@@ -488,6 +494,12 @@ class GameState extends ChangeNotifier {
     }
     _changed();
     return xp;
+  }
+
+  void recordHuntWave(int wave) {
+    if (wave <= bestHuntWave) return;
+    bestHuntWave = wave;
+    _changed();
   }
 
   bool useExpeditionKey() {

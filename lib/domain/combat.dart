@@ -27,7 +27,8 @@ enum Stance {
   final double damageTakenMult;
 }
 
-enum CombatStatus { fighting, victory, fled }
+/// fled = fuga volontaria; defeated = vita a zero (YOU DIED).
+enum CombatStatus { fighting, victory, defeated, fled }
 
 class RepHit {
   const RepHit({
@@ -60,15 +61,33 @@ class CombatEngine {
     required this.character,
     required int testReps,
     this.stance = Stance.balanced,
+    this.wave = 0,
     Random? random,
   })  : _random = random ?? Random(),
         expectedReps = max(3, (testReps * enemy.repFactor).round()) {
-    enemyMaxHp = expectedReps.toDouble();
+    enemyMaxHp = expectedReps * (1 + waveHpStep * wave);
     enemyHp = enemyMaxHp;
     heroMaxHp = character.maxHp.toDouble();
     heroHp = heroMaxHp;
     _attackTimer = enemy.attackInterval;
+    // Il nemico è tarato sull'eroe base (vita 140): chi tiene il ritmo di una
+    // rep ogni ~2 secondi vince con poco margine; chi rallenta, sbaglia la
+    // forma o ha una build debole muore. Il Vigore dà tempo in più.
+    final secondsToKill = expectedReps * secondsPerRep * enemy.pressure;
+    hitDamage = baseHeroHp * enemy.attackInterval / secondsToKill * (1 + waveDamageStep * wave);
   }
+
+  /// Ritmo di riferimento della taratura.
+  static const double secondsPerRep = 2.2;
+  static const double baseHeroHp = 140;
+
+  /// Caccia infinita: ogni nemico abbattuto ne arriva uno più forte.
+  static const double waveHpStep = 0.2;
+  static const double waveDamageStep = 0.1;
+
+  /// Dopo questa pausa senza rep il nemico si rimette in forze.
+  static const double regenDelay = 3.0;
+  static const double regenPerSecond = 0.03;
 
   static const double rampageMaxBonus = 0.20;
   static const double rampagePerRep = 0.1;
@@ -77,7 +96,11 @@ class CombatEngine {
   final EnemyDef enemy;
   final Character character;
   final Stance stance;
+  final int wave;
   final Random _random;
+
+  /// Danno di ogni colpo del nemico, prima di postura e perk.
+  late final double hitDamage;
 
   /// Rep previste con forma perfetta.
   final int expectedReps;
@@ -194,19 +217,23 @@ class CombatEngine {
     if (_sinceLastRep > character.rampageGrace) {
       rampage = max(0, rampage - rampageDecayPerSecond * dt);
     }
+    if (_sinceLastRep > regenDelay) {
+      enemyHp = min(enemyMaxHp, enemyHp + enemyMaxHp * regenPerSecond * dt);
+    }
 
     _attackTimer -= dt;
     if (_attackTimer > 0) return 0;
     _attackTimer += enemy.attackInterval;
 
-    var taken = enemy.attackDamage * stance.damageTakenMult;
+    var taken = hitDamage * stance.damageTakenMult;
     if (character.perks.contains('iron_skin')) taken *= 0.9;
     heroHp = max(0, heroHp - taken);
-    if (heroHp <= 0) status = CombatStatus.fled;
+    if (heroHp <= 0) status = CombatStatus.defeated;
     return taken;
   }
 
-  /// Ricompense a fine combattimento. Se fuggi tieni gli XP delle rep fatte.
+  /// Ricompense a fine combattimento. Se fuggi o muori tieni gli XP delle rep
+  /// fatte.
   CombatRewards rewards() {
     final xp = reps * 10 + perfectReps * 5;
     if (status != CombatStatus.victory) {
@@ -222,9 +249,10 @@ class CombatEngine {
     if (enemy.rareDrop != null && _random.nextDouble() < rareChance * bonus) {
       rare = enemy.rareDrop;
     }
+    final waveBonus = 1 + 0.25 * wave;
     return CombatRewards(
       xp: xp,
-      runes: (enemy.runeReward * bonus).round(),
+      runes: (enemy.runeReward * bonus * waveBonus).round(),
       materials: materials,
       rareWeapon: rare,
     );

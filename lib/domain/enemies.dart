@@ -39,11 +39,13 @@ class EnemyDef {
   double get defense => const [15.0, 24.0, 34.0, 46.0, 60.0][tier - 1] *
       (isBoss ? 1.15 : 1.0);
 
-  /// Danno di ogni attacco a tempo.
-  int get attackDamage => const [8, 12, 17, 23, 30][tier - 1] + (isBoss ? 6 : 0);
+  /// Margine di tempo che il nemico concede: con 1.9 l'eroe base muore dopo
+  /// 1,9 volte il tempo che serve ad abbatterlo al ritmo giusto. Più basso =
+  /// più difficile.
+  double get pressure => const [1.9, 1.75, 1.6, 1.45, 1.35][tier - 1] * (isBoss ? 0.9 : 1.0);
 
   /// Secondi tra un attacco e l'altro.
-  double get attackInterval => isBoss ? 5.0 : 6.0;
+  double get attackInterval => isBoss ? 3.5 : 4.0;
 
   int get runeReward => 20 * tier * (isBoss ? 4 : 1);
 }
