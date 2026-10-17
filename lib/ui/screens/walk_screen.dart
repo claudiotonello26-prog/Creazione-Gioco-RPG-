@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
-import '../../domain/items.dart';
+import '../../domain/skills.dart';
 import '../../domain/walking.dart';
 import '../../health/step_source.dart';
 import '../widgets/common.dart';
@@ -71,37 +71,25 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
   void _claim(GameState s) {
     final steps = _steps;
     if (steps == null) return;
-    final loot = s.claimSteps(steps);
-    if (loot.isEmpty) {
-      toast(context, 'Niente di nuovo: cammina ancora e torna qui.');
+    final r = resourceById(s.gatherTarget);
+    final (units, levels) = s.claimSteps(steps);
+    if (units == 0) {
+      toast(context, 'Ancora qualche passo: servono ${r.stepsPerUnit} passi per ${r.name}.');
       return;
     }
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Palette.stone,
-        title: Text('BOTTINO DEL CAMMINO', textAlign: TextAlign.center, style: titleStyle(size: 18)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (final e in loot.entries) Text('+${e.value} ${materialNames[e.key] ?? e.key}'),
-          ],
-        ),
-        actions: [
-          FilledButton(onPressed: () => Navigator.pop(ctx), child: const Text('CONTINUA')),
-        ],
-      ),
-    );
+    toast(
+        context,
+        '+$units ${r.name}'
+        '${levels > 0 ? ' · ${r.skill.label} sale al livello ${s.skillLevel(r.skill)}!' : ''}');
   }
 
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     final steps = _steps ?? 0;
-    final claimed = s.daily.claimedSteps;
-    final pending = stepLootDelta(claimed, steps);
-    final next = nextMilestone(steps);
+    final target = resourceById(s.gatherTarget);
+    final fresh = (min(steps, dailyStepCap) - s.daily.claimedSteps).clamp(0, dailyStepCap);
+    final ready = (fresh + s.stepBank) ~/ target.stepsPerUnit;
     return Scaffold(
       appBar: AppBar(title: const Text('CAMMINATA')),
       body: RefreshIndicator(
@@ -112,61 +100,65 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
             Center(
               child: _StepRing(
                 steps: steps,
-                goal: next?.steps ?? dailyStepCap,
+                goal: target.stepsPerUnit,
+                progress: ((fresh + s.stepBank) % target.stepsPerUnit) / target.stepsPerUnit,
                 known: _steps != null,
               ),
             ),
+            const SizedBox(height: 12),
+            Text('Stai raccogliendo: ${target.name}',
+                textAlign: TextAlign.center, style: titleStyle(size: 15)),
+            Text('${target.where} · ${target.stepsPerUnit} passi per unità',
+                textAlign: TextAlign.center, style: const TextStyle(color: Palette.ash)),
             const SizedBox(height: 12),
             if (_access == null)
               const Center(child: CircularProgressIndicator())
             else if (_access != StepAccess.ready)
               _ConnectCard(access: _access!, busy: _busy, onConnect: _connect)
-            else ...[
-              Text(
-                next == null
-                    ? 'Tutti i traguardi di oggi raggiunti.'
-                    : 'Prossimo traguardo: ${next.title} a ${next.steps} passi',
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Palette.ash),
-              ),
-              const SizedBox(height: 12),
+            else
               FilledButton.icon(
-                onPressed: pending.isEmpty ? null : () => _claim(s),
+                onPressed: fresh + s.stepBank > 0 ? () => _claim(s) : null,
                 icon: const Icon(Icons.inventory_2_outlined),
-                label: Text(pending.isEmpty
-                    ? 'NIENTE DA RISCUOTERE'
-                    : 'RISCUOTI ${pending.values.fold(0, (a, b) => a + b)} MATERIALI'),
+                label: Text(ready > 0 ? 'RACCOGLI $ready × ${target.name.toUpperCase()}' : 'CAMMINA ANCORA'),
               ),
+            for (final skill in [Skill.woodcutting, Skill.mining]) ...[
+              SectionTitle(skill.label,
+                  trailing: Text('Livello ${s.skillLevel(skill)}',
+                      style: const TextStyle(color: Palette.goldBright))),
+              Builder(builder: (_) {
+                final (_, xpIn, xpNeed) = skillProgress(s.skillXp[skill] ?? 0);
+                return StatBar(value: xpIn / xpNeed, color: Palette.gold, label: '$xpIn / $xpNeed XP');
+              }),
+              const SizedBox(height: 6),
+              for (final r in resources.where((r) => r.skill == skill))
+                _resourceTile(s, r),
             ],
-            const SectionTitle('Cosa danno i passi'),
-            const ActionTile(
-              icon: Icons.landscape_outlined,
-              title: 'Ogni 1000 passi',
-              subtitle: '1 Minerale di ferro: con l\'essenza dei mostri fa Pietre di forgia',
-            ),
-            const ActionTile(
-              icon: Icons.forest_outlined,
-              title: 'Ogni 2500 passi',
-              subtitle: '1 Legno di frassino cenere: archi e aste',
-            ),
-            for (final m in stepMilestones)
-              ActionTile(
-                icon: steps >= m.steps ? Icons.check_circle : Icons.flag_outlined,
-                color: steps >= m.steps ? Palette.goldBright : Palette.ash,
-                title: '${m.title} · ${m.steps} passi',
-                subtitle: m.loot.entries
-                    .map((e) => '${e.value}× ${materialNames[e.key]}')
-                    .join(' + '),
-              ),
             const SizedBox(height: 8),
             Text(
-              'Si conta da mezzanotte, fino a $dailyStepCap passi al giorno. '
-              'Già riscossi oggi: $claimed passi.',
+              'Scegli cosa raccogliere: i materiali migliori si sbloccano salendo di '
+              'livello nel mestiere. Si conta da mezzanotte, fino a $dailyStepCap passi al giorno.',
               style: const TextStyle(color: Palette.ash, fontSize: 12),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _resourceTile(GameState s, Resource r) {
+    final unlocked = s.skillLevel(r.skill) >= r.level;
+    final selected = s.gatherTarget == r.id;
+    return ActionTile(
+      icon: unlocked
+          ? (selected ? Icons.radio_button_checked : Icons.radio_button_off)
+          : Icons.lock_outline,
+      color: selected ? Palette.goldBright : (unlocked ? Palette.gold : Palette.iron),
+      title: r.name,
+      subtitle: unlocked
+          ? '${r.where} · ${r.stepsPerUnit} passi · hai ${s.character.materials[r.id] ?? 0}'
+          : 'Si sblocca a ${r.skill.label} livello ${r.level}',
+      enabled: unlocked,
+      onTap: unlocked ? () => s.setGatherTarget(r.id) : null,
     );
   }
 }
@@ -214,9 +206,11 @@ class _ConnectCard extends StatelessWidget {
 }
 
 class _StepRing extends StatelessWidget {
-  const _StepRing({required this.steps, required this.goal, required this.known});
+  const _StepRing(
+      {required this.steps, required this.goal, required this.progress, required this.known});
   final int steps;
   final int goal;
+  final double progress;
   final bool known;
 
   @override
@@ -225,7 +219,7 @@ class _StepRing extends StatelessWidget {
       width: 200,
       height: 200,
       child: CustomPaint(
-        painter: _RingPainter(min(1.0, steps / goal)),
+        painter: _RingPainter(progress.clamp(0.0, 1.0)),
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,

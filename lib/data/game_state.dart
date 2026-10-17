@@ -10,6 +10,8 @@ import '../domain/exercise.dart';
 import '../domain/items.dart';
 import '../domain/pvp.dart';
 import '../domain/routine.dart';
+import '../domain/novice.dart';
+import '../domain/skills.dart';
 import '../domain/walking.dart';
 
 enum PlayMode {
@@ -45,6 +47,9 @@ class DailyState {
   /// Rep fatte oggi in combattimento per gruppo muscolare (fatica).
   final Map<MuscleGroup, int> combatReps = {};
 
+  /// Tappe del sentiero completate oggi per gruppo (4 esercizi + boss).
+  final Map<MuscleGroup, int> pathDone = {};
+
   Map<String, dynamic> toJson() => {
         'day': day,
         'quest': {for (final e in questDone.entries) e.key.name: e.value},
@@ -56,6 +61,7 @@ class DailyState {
         'good': goodForm,
         'steps': claimedSteps,
         'combat': {for (final e in combatReps.entries) e.key.name: e.value},
+        'path': {for (final e in pathDone.entries) e.key.name: e.value},
       };
 
   factory DailyState.fromJson(Map<String, dynamic> j) {
@@ -72,6 +78,8 @@ class DailyState {
         (k, v) => d.varietyUsed[MuscleGroup.values.byName(k as String)] = v as int);
     ((j['combat'] as Map?) ?? const {}).forEach(
         (k, v) => d.combatReps[MuscleGroup.values.byName(k as String)] = v as int);
+    ((j['path'] as Map?) ?? const {}).forEach(
+        (k, v) => d.pathDone[MuscleGroup.values.byName(k as String)] = v as int);
     return d;
   }
 }
@@ -147,6 +155,26 @@ class GameState extends ChangeNotifier {
   /// Record di nemici abbattuti di fila nella Caccia infinita.
   int bestHuntWave = 0;
 
+  /// Giorni (yyyy-mm-dd) in cui hai aperto l'app e in cui hai chiuso la quest.
+  Set<String> activeDays = {};
+  Set<String> questDays = {};
+
+  /// XP dei mestieri (Taglialegna, Minatore, Carpenteria, Fornace, Incudine).
+  Map<Skill, int> skillXp = {};
+
+  /// Materia prima che i passi stanno raccogliendo e passi avanzati.
+  String gatherTarget = 'ash_wood';
+  int stepBank = 0;
+
+  /// Contatori per il Cammino del Novizio (vittorie, oggetti creati...).
+  Map<String, int> stats = {};
+
+  /// Missione del Novizio in corso (== noviceQuests.length: finito).
+  int noviceStep = 0;
+
+  /// Consigli del trainer già visti.
+  Set<String> seenHints = {};
+
   late DailyState daily;
 
   // ---------------------------------------------------------------- persistenza
@@ -166,6 +194,7 @@ class GameState extends ChangeNotifier {
       await _save();
     }
     _rollDay();
+    if (onboarded && activeDays.add(today)) await _save();
     notifyListeners();
   }
 
@@ -229,7 +258,18 @@ class GameState extends ChangeNotifier {
         'arenaHistory': [for (final r in arenaHistory) r.toJson()],
         'daily': daily.toJson(),
         'bestHunt': bestHuntWave,
+        'activeDays': _recent(activeDays),
+        'questDays': _recent(questDays),
+        'skills': {for (final e in skillXp.entries) e.key.name: e.value},
+        'gather': gatherTarget,
+        'bank': stepBank,
+        'stats': stats,
+        'novice': noviceStep,
+        'hints': seenHints.toList(),
       };
+
+  /// Bastano gli ultimi 120 giorni per il calendario.
+  List<String> _recent(Set<String> days) => (days.toList()..sort()).reversed.take(120).toList();
 
   void _fromJson(Map<String, dynamic> j) {
     healthAccepted = j['health'] as bool;
@@ -274,6 +314,17 @@ class GameState extends ChangeNotifier {
     ];
     daily = DailyState.fromJson(j['daily'] as Map<String, dynamic>);
     bestHuntWave = j['bestHunt'] as int? ?? 0;
+    activeDays = Set<String>.from(j['activeDays'] as List? ?? const []);
+    questDays = Set<String>.from(j['questDays'] as List? ?? const []);
+    skillXp = {
+      for (final e in ((j['skills'] as Map?) ?? const {}).entries)
+        Skill.values.byName(e.key as String): e.value as int,
+    };
+    gatherTarget = j['gather'] as String? ?? 'ash_wood';
+    stepBank = j['bank'] as int? ?? 0;
+    stats = Map<String, int>.from(j['stats'] as Map? ?? const {});
+    noviceStep = j['novice'] as int? ?? 0;
+    seenHints = Set<String>.from(j['hints'] as List? ?? const []);
   }
 
   Future<void> resetAll() async {
@@ -294,6 +345,14 @@ class GameState extends ChangeNotifier {
     arenaPoints = 1000;
     arenaHistory = [];
     bestHuntWave = 0;
+    activeDays = {};
+    questDays = {};
+    skillXp = {};
+    gatherTarget = 'ash_wood';
+    stepBank = 0;
+    stats = {};
+    noviceStep = 0;
+    seenHints = {};
     daily = DailyState(_dayKey(_clock()));
     notifyListeners();
   }
@@ -318,10 +377,12 @@ class GameState extends ChangeNotifier {
   void refreshDay() {
     final before = daily.day;
     _rollDay();
-    if (before != daily.day) _changed();
+    final opened = onboarded && activeDays.add(today);
+    if (before != daily.day || opened) _changed();
   }
 
   void _markActive() {
+    activeDays.add(today);
     if (lastActiveDay == today) return;
     final yesterday = _dayKey(_clock().subtract(const Duration(days: 1)));
     streak = lastActiveDay == yesterday ? streak + 1 : 1;
@@ -454,6 +515,8 @@ class GameState extends ChangeNotifier {
   void _checkQuestReward() {
     if (daily.questRewarded || !questComplete) return;
     daily.questRewarded = true;
+    questDays.add(today);
+    _count('quests');
     expeditionKeys += 1;
     character.runes += 100;
     _gainXp(150);
@@ -529,6 +592,7 @@ class GameState extends ChangeNotifier {
       _gainXp(bonus);
       xp += bonus;
     }
+    if (victory) _count('wins');
     character.runes += granted.runes;
     granted.materials.forEach(character.addMaterial);
     if (granted.rareWeapon != null) {
@@ -538,17 +602,102 @@ class GameState extends ChangeNotifier {
     return (xp, granted, fatigue);
   }
 
-  // --------------------------------------------------------------- camminata
+  // ----------------------------------------------------------------- sentieri
 
-  /// Trasforma i passi di oggi in materiali. Ritorna solo quelli nuovi.
-  Map<String, int> claimSteps(int stepsToday) {
+  int pathProgress(MuscleGroup g) {
     _rollDay();
-    if (stepsToday <= daily.claimedSteps) return const {};
-    final loot = stepLootDelta(daily.claimedSteps, stepsToday);
-    daily.claimedSteps = stepsToday;
+    return daily.pathDone[g] ?? 0;
+  }
+
+  /// Una tappa del sentiero superata: si sblocca la successiva.
+  void completePathStep(MuscleGroup g, int step) {
+    _rollDay();
+    if (step != (daily.pathDone[g] ?? 0)) return;
+    daily.pathDone[g] = step + 1;
+    _count('path_steps');
+    _changed();
+  }
+
+  /// Bottino del boss a circuito: fisso, perché 30 secondi a sfinimento
+  /// valgono per tutti allo stesso modo. Lo Zavorrato dà di più.
+  Map<String, int> bossLoot(MuscleGroup g, {required bool weighted, Random? random}) {
+    final r = random ?? Random();
+    final m = weighted ? 2 : 1;
+    final loot = <String, int>{
+      'beast_essence': 3 * m,
+      'iron_ore': 3 * m,
+      'coal': 2 * m,
+      'forge_stone_1': 1 * m,
+    };
+    if (r.nextDouble() < (weighted ? 0.5 : 0.3)) loot['holy_shard'] = 1;
+    if (r.nextDouble() < (weighted ? 0.12 : 0.06)) loot['ancient_stone'] = 1;
+    if (r.nextDouble() < (weighted ? 0.06 : 0.03)) loot['somber_stone'] = 1;
     loot.forEach(character.addMaterial);
+    daily.pathDone[g] = (daily.pathDone[g] ?? 0) + 1;
+    _count('boss_wins');
+    _gainXp(150 * m);
+    _markActive();
     _changed();
     return loot;
+  }
+
+  // -------------------------------------------------------- Cammino del Novizio
+
+  NoviceQuest? get noviceQuest =>
+      noviceStep < noviceQuests.length ? noviceQuests[noviceStep] : null;
+
+  bool get noviceReady {
+    final q = noviceQuest;
+    return q != null && stat(q.stat) >= q.target;
+  }
+
+  /// Riscuote la missione completata e passa alla prossima.
+  NoviceQuest? claimNovice() {
+    final q = noviceQuest;
+    if (q == null || !noviceReady) return null;
+    character.runes += q.runes;
+    q.loot.forEach(character.addMaterial);
+    noviceStep++;
+    _changed();
+    return q;
+  }
+
+  /// Segna un consiglio del trainer come visto. Ritorna true la prima volta.
+  bool markHint(String id) {
+    if (!seenHints.add(id)) return false;
+    _changed();
+    return true;
+  }
+
+  // --------------------------------------------------------------- camminata
+
+  void setGatherTarget(String id) {
+    final r = resourceById(id);
+    if (skillLevel(r.skill) < r.level) return;
+    gatherTarget = id;
+    _changed();
+  }
+
+  /// I passi nuovi di oggi vanno nella raccolta scelta: ogni [Resource.stepsPerUnit]
+  /// passi un'unità, il resto aspetta il prossimo giro. Ritorna (unità, livelli
+  /// di mestiere guadagnati).
+  (int, int) claimSteps(int stepsToday) {
+    _rollDay();
+    final capped = min(stepsToday, dailyStepCap);
+    if (capped <= daily.claimedSteps) return (0, 0);
+    stepBank += capped - daily.claimedSteps;
+    daily.claimedSteps = capped;
+    final r = resourceById(gatherTarget);
+    final units = stepBank ~/ r.stepsPerUnit;
+    stepBank %= r.stepsPerUnit;
+    var levels = 0;
+    if (units > 0) {
+      character.addMaterial(r.id, units);
+      _count('gather:${r.id}', units);
+      levels = _gainSkill(r.skill, units * r.xp);
+    }
+    _changed();
+    return (units, levels);
   }
 
   void recordHuntWave(int wave) {
@@ -568,26 +717,75 @@ class GameState extends ChangeNotifier {
 
   // ------------------------------------------------------------------ forgia
 
-  bool craftForgeStone() {
-    for (final e in forgeStone1Recipe.entries) {
-      if ((character.materials[e.key] ?? 0) < e.value) return false;
-    }
-    forgeStone1Recipe.forEach(character.spendMaterial);
-    character.addMaterial('forge_stone_1', 1);
+  bool hasMaterials(Map<String, int> needed) =>
+      needed.entries.every((e) => (character.materials[e.key] ?? 0) >= e.value);
+
+  // ----------------------------------------------------------------- mestieri
+
+  int skillLevel(Skill k) => skillProgress(skillXp[k] ?? 0).$1;
+
+  int stationLevel(Station s) => skillLevel(Skill.forStation(s));
+
+  /// Ritorna i livelli guadagnati (0 se nessuno).
+  int _gainSkill(Skill k, int xp) {
+    final before = skillLevel(k);
+    skillXp[k] = (skillXp[k] ?? 0) + xp;
+    return skillLevel(k) - before;
+  }
+
+  void _count(String key, [int n = 1]) => stats[key] = (stats[key] ?? 0) + n;
+
+  int stat(String key) => stats[key] ?? 0;
+
+  /// Fornace e Carpenteria: trasforma materiali in altri materiali.
+  bool craftMaterial(MaterialRecipe r) {
+    if (stationLevel(r.station) < r.level || !hasMaterials(r.inputs)) return false;
+    r.inputs.forEach(character.spendMaterial);
+    character.addMaterial(r.output, r.qty);
+    _gainSkill(Skill.forStation(r.station), craftXp(r.level));
+    _count('craft:${r.output}', r.qty);
     _changed();
     return true;
   }
 
+  bool craftForgeStone() =>
+      craftMaterial(materialRecipes.firstWhere((r) => r.output == 'forge_stone_1'));
+
   bool canCraft(WeaponDef def) =>
       def.recipe.isNotEmpty &&
-      def.recipe.entries.every((e) => (character.materials[e.key] ?? 0) >= e.value);
+      stationLevel(def.station) >= def.craftLevel &&
+      hasMaterials(def.recipe);
 
   bool craftWeapon(WeaponDef def) {
     if (!canCraft(def)) return false;
     def.recipe.forEach(character.spendMaterial);
     character.weapons.add(WeaponInstance(weaponId: def.id));
+    _gainSkill(Skill.forStation(def.station), craftXp(def.craftLevel) * 3);
+    _count('craft:${def.id}');
     _changed();
     return true;
+  }
+
+  bool canCraftArmor(ArmorDef def) =>
+      !character.armors.contains(def.id) &&
+      stationLevel(Station.anvil) >= def.craftLevel &&
+      hasMaterials(def.recipe);
+
+  bool craftArmor(ArmorDef def) {
+    if (!canCraftArmor(def)) return false;
+    def.recipe.forEach(character.spendMaterial);
+    character.armors.add(def.id);
+    character.armorId = def.id;
+    _gainSkill(Skill.smithing, craftXp(def.craftLevel) * 3);
+    _count('craft:${def.id}');
+    _changed();
+    return true;
+  }
+
+  void wearArmor(String? id) {
+    if (id != null && !character.armors.contains(id)) return;
+    character.armorId = id;
+    _changed();
   }
 
   bool upgradeWeapon(WeaponInstance w) {
@@ -595,6 +793,7 @@ class GameState extends ChangeNotifier {
     if (stone == null) return false;
     if (!character.spendMaterial(stone, w.nextStoneCost)) return false;
     w.upgrade++;
+    _count('upgrades');
     _changed();
     return true;
   }
@@ -632,7 +831,10 @@ class GameState extends ChangeNotifier {
 
   bool raiseAttribute(Attribute a) {
     final ok = character.raise(a);
-    if (ok) _changed();
+    if (ok) {
+      _count('attr');
+      _changed();
+    }
     return ok;
   }
 

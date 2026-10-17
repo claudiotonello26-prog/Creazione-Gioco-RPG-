@@ -230,6 +230,7 @@ class CombatEngine {
 
     var taken = hitDamage * stance.damageTakenMult;
     if (character.perks.contains('iron_skin')) taken *= 0.9;
+    taken *= 1 - (character.armor?.reduction ?? 0);
     heroHp = max(0, heroHp - taken);
     if (heroHp <= 0) status = CombatStatus.defeated;
     return taken;

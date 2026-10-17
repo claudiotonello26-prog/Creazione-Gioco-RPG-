@@ -27,13 +27,16 @@ class Character {
     Map<String, int>? materials,
     List<WeaponInstance>? weapons,
     Set<String>? perks,
+    this.armorId,
+    Set<String>? armors,
   })  : attributes = attributes ??
             {for (final a in Attribute.values) a: baseAttribute},
         weapon = weapon ?? WeaponInstance(weaponId: 'pilgrim_blade'),
         amulets = amulets ?? [],
         materials = materials ?? {},
         weapons = weapons ?? [],
-        perks = perks ?? {};
+        perks = perks ?? {},
+        armors = armors ?? {};
 
   static const int baseAttribute = 10;
 
@@ -51,6 +54,12 @@ class Character {
   final List<String> amulets;
   final Map<String, int> materials;
   final Set<String> perks;
+
+  /// Armatura indossata (null = solo la tunica) e armature possedute.
+  String? armorId;
+  final Set<String> armors;
+
+  ArmorDef? get armor => armorDefs[armorId];
 
   static const int maxAmuletSlots = 3;
 
@@ -125,6 +134,8 @@ class Character {
         'amulets': amulets,
         'materials': materials,
         'perks': perks.toList(),
+        'armor': armorId,
+        'armors': armors.toList(),
       };
 
   factory Character.fromJson(Map<String, dynamic> j) => Character(
@@ -144,6 +155,8 @@ class Character {
         amulets: List<String>.from(j['amulets'] as List),
         materials: Map<String, int>.from(j['materials'] as Map),
         perks: Set<String>.from(j['perks'] as List),
+        armorId: j['armor'] as String?,
+        armors: Set<String>.from(j['armors'] as List? ?? const []),
       );
 }
 
