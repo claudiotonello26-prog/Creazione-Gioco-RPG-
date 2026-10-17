@@ -213,10 +213,8 @@ const List<MaterialRecipe> materialRecipes = [
       level: 10),
   MaterialRecipe('somber_stone_3', Station.furnace, {'somber_stone_2': 2, 'beast_essence': 3},
       level: 14),
-  MaterialRecipe('somber_stone_4', Station.furnace, {'somber_stone_3': 2, 'gem_cut': 1},
-      level: 18),
-  MaterialRecipe('epic_stone', Station.furnace, {'somber_stone_4': 2, 'gem_perfect': 1},
-      level: 22),
+  MaterialRecipe('somber_stone_4', Station.furnace, {'somber_stone_3': 2, 'gem_cut': 1}, level: 18),
+  MaterialRecipe('epic_stone', Station.furnace, {'somber_stone_4': 2, 'gem_perfect': 1}, level: 22),
 ];
 
 /// Requisito per usare ciò che si forgia a un certo livello di postazione:
@@ -231,10 +229,14 @@ int wieldLevelFor(int craftLevel) => craftLevel < 5
 
 /// Pezzi d'armatura: ogni armatura forgiata si indossa pezzo per pezzo, e
 /// ogni pezzo pesa per una quota della sua protezione.
+/// Pezzi dell'armatura, nell'ordine dell'Armeria. Il peso è la quota della
+/// protezione del pezzo: in tutto fanno 1.
 enum ArmorSlot {
-  helm('Elmo', 0.25),
-  chest('Corazza', 0.45),
-  legs('Gambali', 0.30);
+  helm('Elmo', 0.20),
+  chest('Corazza', 0.40),
+  gloves('Bracciali', 0.10),
+  legs('Gambali', 0.20),
+  boots('Stivali', 0.10);
 
   const ArmorSlot(this.label, this.weight);
   final String label;
@@ -392,6 +394,53 @@ const Map<String, ArmorDef> armorDefs = {
     recipe: {'star_ingot': 6, 'silver_ingot': 2},
     look: 2,
     craftLevel: 20,
+  ),
+};
+
+/// Mantelli: si comprano dal Mercante, proteggono un poco e colorano il
+/// cavaliere.
+class CapeDef {
+  const CapeDef({
+    required this.id,
+    required this.name,
+    required this.color,
+    this.reduction = 0,
+    this.price = 0,
+  });
+  final String id;
+  final String name;
+  final int color;
+
+  /// Quota di danno in più assorbita.
+  final double reduction;
+  final int price;
+
+  String get effect =>
+      reduction > 0 ? 'Assorbe un altro ${(reduction * 100).round()}% dei colpi' : 'Solo stile';
+}
+
+const Map<String, CapeDef> capeDefs = {
+  'pilgrim_cape': CapeDef(id: 'pilgrim_cape', name: 'Mantello del Pellegrino', color: 0xFF4A1612),
+  'scarlet_cape': CapeDef(
+    id: 'scarlet_cape',
+    name: 'Mantello Scarlatto',
+    color: 0xFF8E1F1A,
+    reduction: 0.02,
+    price: 400,
+  ),
+  'wolf_cape': CapeDef(
+    id: 'wolf_cape',
+    name: 'Mantello del Lupo Grigio',
+    color: 0xFF5A5F66,
+    reduction: 0.03,
+    price: 900,
+  ),
+  'oath_cape': CapeDef(
+    id: 'oath_cape',
+    name: 'Mantello del Giuramento',
+    color: 0xFF1F2E5A,
+    reduction: 0.05,
+    price: 2000,
   ),
 };
 
@@ -765,7 +814,11 @@ class WeaponInstance {
 String? stoneFor(WeaponDef def, int level) {
   if (level > def.maxUpgrade || level < 1) return null;
   if (def.rare) {
-    return level == 5 ? 'epic_stone' : level == 1 ? 'somber_stone' : 'somber_stone_$level';
+    return level == 5
+        ? 'epic_stone'
+        : level == 1
+            ? 'somber_stone'
+            : 'somber_stone_$level';
   }
   if (level <= 3) return 'forge_stone_1';
   if (level <= 6) return 'forge_stone_2';
@@ -775,8 +828,7 @@ String? stoneFor(WeaponDef def, int level) {
 
 /// Quante pietre: 1, 2, 3 dentro ogni gradino; una sola per Astrale,
 /// Tenebre ed Epica.
-int stoneCostFor(WeaponDef def, int level) =>
-    def.rare || level == 10 ? 1 : ((level - 1) % 3) + 1;
+int stoneCostFor(WeaponDef def, int level) => def.rare || level == 10 ? 1 : ((level - 1) % 3) + 1;
 
 class Amulet {
   const Amulet(this.id, this.name, this.description, this.apply);

@@ -1210,6 +1210,36 @@ class GameState extends ChangeNotifier {
     return true;
   }
 
+  void wearCape(String? id) {
+    if (id != null && !character.capes.contains(id)) return;
+    character.capeId = id;
+    _changed();
+  }
+
+  bool buyCape(String id) {
+    final cape = capeDefs[id];
+    if (cape == null || character.capes.contains(id) || character.runes < cape.price) return false;
+    character.runes -= cape.price;
+    character.capes.add(id);
+    character.capeId = id;
+    _changed();
+    return true;
+  }
+
+  /// Amuleto al collo: solo passivi; quello di prima torna nella borsa.
+  bool wearNeck(String? id) {
+    final old = character.neck;
+    if (id != null) {
+      final a = amuletDefs[id];
+      if (a == null || a.isAffinity || amuletCount(id) <= 0) return false;
+      character.spendMaterial('amulet_$id', 1);
+    }
+    if (old != null) character.addMaterial('amulet_$old', 1);
+    character.neck = id;
+    _changed();
+    return true;
+  }
+
   void holdOffhand(String? id) {
     if (id != null && !character.offhands.contains(id)) return;
     character.offhandId = id;

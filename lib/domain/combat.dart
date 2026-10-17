@@ -148,7 +148,7 @@ class CombatEngine {
   AmuletEffect get _amulets {
     var holy = 0.0, heavy = 0.0, rare = 0.0, lowHp = 0.0, damage = 0.0, loot = 0.0;
     var boss = 0.0, crit = 0.0;
-    for (final amulet in character.weapon.amulets) {
+    for (final amulet in character.wornAmulets) {
       final a = amulet.apply;
       boss += a.bossDamage;
       crit += a.critDamage;

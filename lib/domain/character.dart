@@ -34,10 +34,13 @@ class Character {
     Set<String>? armors,
     this.offhandId,
     Set<String>? offhands,
+    this.capeId = 'pilgrim_cape',
+    Set<String>? capes,
+    this.neck,
     Appearance? look,
   })  : look = look ?? Appearance(),
-        attributes = attributes ??
-            {for (final a in Attribute.values) a: baseAttribute},
+        capes = capes ?? {'pilgrim_cape'},
+        attributes = attributes ?? {for (final a in Attribute.values) a: baseAttribute},
         weapon = weapon ?? WeaponInstance(weaponId: 'pilgrim_blade'),
         amulets = amulets ?? [],
         materials = materials ?? {},
@@ -79,6 +82,20 @@ class Character {
   String? offhandId;
   final Set<String> offhands;
 
+  /// Mantello addosso (null: nessuno) e mantelli posseduti.
+  String? capeId;
+  final Set<String> capes;
+  CapeDef? get cape => capeDefs[capeId];
+
+  /// Amuleto al collo: un passivo in più oltre ai due dell'arma.
+  String? neck;
+
+  /// Tutti gli amuleti che contano: quelli dell'arma e quello al collo.
+  Iterable<Amulet> get wornAmulets => [
+        ...weapon.amulets,
+        if (amuletDefs[neck] != null) amuletDefs[neck]!,
+      ];
+
   /// La mano sinistra conta solo con un'arma a una mano.
   OffhandDef? get offhand => weapon.def.oneHanded ? offhandDefs[offhandId] : null;
 
@@ -88,7 +105,7 @@ class Character {
     for (final slot in ArmorSlot.values) {
       r += (piece(slot)?.reduction ?? 0) * slot.weight;
     }
-    return r + (offhand?.reduction ?? 0);
+    return r + (offhand?.reduction ?? 0) + (cape?.reduction ?? 0);
   }
 
   /// Danno in più dai pezzi d'armatura dei materiali di build: +5% ogni 10
@@ -128,8 +145,7 @@ class Character {
     return (remaining, xpForLevel(lvl));
   }
 
-  int get spentPoints => attributes.values
-      .fold(0, (sum, v) => sum + (v - baseAttribute));
+  int get spentPoints => attributes.values.fold(0, (sum, v) => sum + (v - baseAttribute));
 
   /// Un punto per livello sopra il primo, più i Punti Disciplina.
   int get availablePoints => (level - 1) + disciplinePoints - spentPoints;
@@ -148,8 +164,7 @@ class Character {
   /// Secondi di pausa prima che il Rampage inizi a calare.
   double get rampageGrace => 2.0 + attr(Attribute.endurance) * 0.08;
 
-  void addMaterial(String id, int qty) =>
-      materials[id] = (materials[id] ?? 0) + qty;
+  void addMaterial(String id, int qty) => materials[id] = (materials[id] ?? 0) + qty;
 
   bool spendMaterial(String id, int qty) {
     final have = materials[id] ?? 0;
@@ -179,6 +194,9 @@ class Character {
         'armors': armors.toList(),
         'offhand': offhandId,
         'offhands': offhands.toList(),
+        'cape': capeId,
+        'capes': capes.toList(),
+        'neck': neck,
         'look': look.toJson(),
       };
 
@@ -193,8 +211,7 @@ class Character {
         runes: j['runes'] as int,
         weapon: WeaponInstance.fromJson(j['weapon'] as Map<String, dynamic>),
         weapons: [
-          for (final w in j['weapons'] as List)
-            WeaponInstance.fromJson(w as Map<String, dynamic>),
+          for (final w in j['weapons'] as List) WeaponInstance.fromJson(w as Map<String, dynamic>),
         ],
         amulets: List<String>.from(j['amulets'] as List),
         materials: Map<String, int>.from(j['materials'] as Map),
@@ -203,6 +220,9 @@ class Character {
         armors: Set<String>.from(j['armors'] as List? ?? const []),
         offhandId: j['offhand'] as String?,
         offhands: Set<String>.from(j['offhands'] as List? ?? const []),
+        capeId: j.containsKey('capes') ? j['cape'] as String? : 'pilgrim_cape',
+        capes: j['capes'] == null ? null : Set<String>.from(j['capes'] as List),
+        neck: j['neck'] as String?,
         look: j['look'] == null ? null : Appearance.fromJson(j['look'] as Map<String, dynamic>),
       );
 }
@@ -211,10 +231,19 @@ class Character {
 Map<ArmorSlot, String> _readWorn(Map<String, dynamic> j) {
   final w = j['worn'] as Map?;
   if (w != null) {
-    return {
+    final worn = {
       for (final slot in ArmorSlot.values)
         if (w[slot.name] is String) slot: w[slot.name] as String,
     };
+    // Bracciali e stivali sono arrivati dopo: si prendono dalla stessa
+    // armatura di corazza e gambali, così la protezione non cala.
+    if (!w.containsKey(ArmorSlot.gloves.name) && worn[ArmorSlot.chest] != null) {
+      worn[ArmorSlot.gloves] = worn[ArmorSlot.chest]!;
+    }
+    if (!w.containsKey(ArmorSlot.boots.name) && worn[ArmorSlot.legs] != null) {
+      worn[ArmorSlot.boots] = worn[ArmorSlot.legs]!;
+    }
+    return worn;
   }
   final old = j['armor'] as String?;
   return old == null ? {} : {for (final slot in ArmorSlot.values) slot: old};
@@ -233,25 +262,27 @@ class PerkChoice {
   final Map<Attribute, int> requirements;
   final List<Perk> options;
 
-  bool isUnlocked(Character c) =>
-      requirements.entries.every((e) => c.attr(e.key) >= e.value);
+  bool isUnlocked(Character c) => requirements.entries.every((e) => c.attr(e.key) >= e.value);
 }
 
 const perkChoices = [
-  PerkChoice({Attribute.strength: 20}, [
-    Perk('colossus_blow', 'Colpo del Colosso',
-        'Ogni 5ª rep perfetta di fila è un colpo caricato'),
+  PerkChoice({
+    Attribute.strength: 20
+  }, [
+    Perk('colossus_blow', 'Colpo del Colosso', 'Ogni 5ª rep perfetta di fila è un colpo caricato'),
     Perk('iron_skin', 'Pelle di Ferro', '−10% danno fisico subito'),
   ]),
-  PerkChoice({Attribute.faith: 20}, [
-    Perk('blessing', 'Benedizione',
-        'Ogni rep perfetta cura il 2% dei punti vita'),
-    Perk('judgement', 'Giudizio',
-        '+15% danno sacro contro nemici sotto metà vita'),
+  PerkChoice({
+    Attribute.faith: 20
+  }, [
+    Perk('blessing', 'Benedizione', 'Ogni rep perfetta cura il 2% dei punti vita'),
+    Perk('judgement', 'Giudizio', '+15% danno sacro contro nemici sotto metà vita'),
   ]),
-  PerkChoice({Attribute.strength: 30, Attribute.faith: 30}, [
-    Perk('crusader', 'Crociato',
-        'Gli attacchi pesanti aggiungono un\'esplosione di luce sacra'),
+  PerkChoice({
+    Attribute.strength: 30,
+    Attribute.faith: 30
+  }, [
+    Perk('crusader', 'Crociato', 'Gli attacchi pesanti aggiungono un\'esplosione di luce sacra'),
   ]),
 ];
 
@@ -284,11 +315,21 @@ class Appearance {
   static const int faces = 4;
   static const List<int> skinTones = [0xFFF1D3B5, 0xFFD9AE8A, 0xFFB07D57, 0xFF7A4E31];
   static const List<int> hairColors = [
-    0xFF2B1D14, 0xFF5A3A22, 0xFF9A6A3A, 0xFFD6B26A, 0xFF8E2E1E, 0xFFB9B4AC,
+    0xFF2B1D14,
+    0xFF5A3A22,
+    0xFF9A6A3A,
+    0xFFD6B26A,
+    0xFF8E2E1E,
+    0xFFB9B4AC,
   ];
   static const List<int> eyeColors = [0xFF4A2E1A, 0xFF3F6E9E, 0xFF4E7A45, 0xFF7A7F86];
   static const List<int> clothColors = [
-    0xFF6B5A44, 0xFF4A1612, 0xFF2F3E4E, 0xFF3D4A2C, 0xFF5B4A6E, 0xFFB9A98A,
+    0xFF6B5A44,
+    0xFF4A1612,
+    0xFF2F3E4E,
+    0xFF3D4A2C,
+    0xFF5B4A6E,
+    0xFFB9A98A,
   ];
 
   /// Barba solo per i personaggi maschili che la vogliono.

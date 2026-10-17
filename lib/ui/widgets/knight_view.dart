@@ -43,7 +43,13 @@ List<String> knightLayers(Character c, KnightPose pose) {
   final dir = 'assets/art/knight/${pose.name}';
   return [
     '$dir/base.png',
-    for (final slot in [ArmorSlot.legs, ArmorSlot.chest, ArmorSlot.helm])
+    for (final slot in [
+      ArmorSlot.boots,
+      ArmorSlot.legs,
+      ArmorSlot.chest,
+      ArmorSlot.gloves,
+      ArmorSlot.helm,
+    ])
       if (c.worn[slot] != null) '$dir/${slot.name}_${c.worn[slot]}.png',
     if (c.offhand != null) '$dir/offhand_${c.offhandId}.png',
     '$dir/weapon_${c.weapon.weaponId}.png',
@@ -127,17 +133,26 @@ class KnightPainter extends CustomPainter {
     required this.armorLook,
     int? helmLook,
     int? legsLook,
+    int? glovesLook,
+    int? bootsLook,
+    int? capeColor,
     this.offhand,
     Appearance? look,
   })  : look = look ?? Appearance(),
         helmLook = helmLook ?? armorLook,
-        legsLook = legsLook ?? armorLook;
+        legsLook = legsLook ?? armorLook,
+        glovesLook = glovesLook ?? armorLook,
+        bootsLook = bootsLook ?? legsLook ?? armorLook,
+        capeColor = capeColor ?? (armorLook >= 0 ? 0xFF4A1612 : null);
 
   factory KnightPainter.of(Character c) => KnightPainter(
         weapon: c.weapon,
         armorLook: c.piece(ArmorSlot.chest)?.look ?? -1,
         helmLook: c.piece(ArmorSlot.helm)?.look ?? -1,
         legsLook: c.piece(ArmorSlot.legs)?.look ?? -1,
+        glovesLook: c.piece(ArmorSlot.gloves)?.look ?? -1,
+        bootsLook: c.piece(ArmorSlot.boots)?.look ?? -1,
+        capeColor: c.cape?.color ?? 0,
         offhand: c.offhand,
         look: c.look,
       );
@@ -148,6 +163,11 @@ class KnightPainter extends CustomPainter {
   final int armorLook;
   final int helmLook;
   final int legsLook;
+  final int glovesLook;
+  final int bootsLook;
+
+  /// Colore del mantello: 0 o null, nessun mantello.
+  final int? capeColor;
   final OffhandDef? offhand;
 
   /// Aspetto del personaggio: viso, capelli e vestiti sotto l'armatura.
@@ -190,7 +210,6 @@ class KnightPainter extends CustomPainter {
 
     final steel = armorLook < 0 ? _shirt : _steelOf(armorLook);
     final legSteel = legsLook < 0 ? _pants : _steelOf(legsLook);
-    final dark = Color.lerp(steel, Colors.black, 0.55)!;
     final trim = armorLook >= 2 ? Palette.goldBright : Palette.gold.withValues(alpha: 0.7);
     Paint fill(Color c) => Paint()..color = c;
     Paint shade(Rect r, Color c) => Paint()
@@ -210,23 +229,23 @@ class KnightPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = w * 0.008;
 
-    // Mantello: solo con l'armatura addosso.
-    if (armorLook >= 0) {
-    final cape = Path()
-      ..moveTo(cx - w * 0.2, h * 0.27)
-      ..quadraticBezierTo(cx - w * 0.36, h * 0.65, cx - w * 0.3, h * 0.93)
-      ..lineTo(cx + w * 0.3, h * 0.93)
-      ..quadraticBezierTo(cx + w * 0.36, h * 0.65, cx + w * 0.2, h * 0.27)
-      ..close();
-    canvas.drawPath(cape, fill(const Color(0xFF4A1612)));
-    canvas.drawPath(
-        cape,
-        Paint()
-          ..shader = const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0x00000000), Color(0x99000000)],
-          ).createShader(Rect.fromLTWH(0, h * 0.27, w, h * 0.66)));
+    // Mantello.
+    if (capeColor != null && capeColor != 0) {
+      final cape = Path()
+        ..moveTo(cx - w * 0.2, h * 0.27)
+        ..quadraticBezierTo(cx - w * 0.36, h * 0.65, cx - w * 0.3, h * 0.93)
+        ..lineTo(cx + w * 0.3, h * 0.93)
+        ..quadraticBezierTo(cx + w * 0.36, h * 0.65, cx + w * 0.2, h * 0.27)
+        ..close();
+      canvas.drawPath(cape, fill(Color(capeColor!)));
+      canvas.drawPath(
+          cape,
+          Paint()
+            ..shader = const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0x00000000), Color(0x99000000)],
+            ).createShader(Rect.fromLTWH(0, h * 0.27, w, h * 0.66)));
     }
 
     // Gambe e schinieri.
@@ -237,11 +256,19 @@ class KnightPainter extends CustomPainter {
         canvas.drawCircle(Offset(r.center.dx, h * 0.72), w * 0.04, shade(r, legSteel));
         canvas.drawCircle(Offset(r.center.dx, h * 0.72), w * 0.04, line);
       }
+      // Stivali: cuoio senza armatura, gambiera e scarpa di metallo con.
+      final boot = Rect.fromLTWH(r.left - w * 0.005, h * 0.84, r.width + w * 0.01, h * 0.065);
+      if (bootsLook >= 0) {
+        canvas.drawRRect(RRect.fromRectAndRadius(boot, Radius.circular(w * 0.02)),
+            shade(boot, _steelOf(bootsLook)));
+      }
       canvas.drawRRect(
           RRect.fromRectAndRadius(
               Rect.fromLTWH(r.left - w * 0.01, h * 0.9, r.width + w * 0.03, h * 0.04),
               Radius.circular(w * 0.02)),
-          fill(legsLook < 0 ? const Color(0xFF3A2A1A) : dark));
+          fill(bootsLook < 0
+              ? const Color(0xFF3A2A1A)
+              : Color.lerp(_steelOf(bootsLook), Colors.black, 0.45)!));
     }
 
     // Busto.
@@ -300,14 +327,23 @@ class KnightPainter extends CustomPainter {
       canvas.drawOval(pauldron, shade(pauldron, steel));
       canvas.drawArc(pauldron, pi, pi, false, line);
     }
+    // Bracciali sugli avambracci.
+    if (glovesLook >= 0) {
+      for (final side in [-1, 1]) {
+        final bracer = Rect.fromLTWH(cx + side * w * 0.235 - w * 0.06, h * 0.45, w * 0.12, h * 0.1);
+        canvas.drawRRect(RRect.fromRectAndRadius(bracer, Radius.circular(w * 0.03)),
+            shade(bracer, _steelOf(glovesLook)));
+        canvas.drawRRect(RRect.fromRectAndRadius(bracer, Radius.circular(w * 0.03)), line);
+      }
+    }
 
     // Arma: spade e martello piantati davanti, arco e bastone di lato.
     _weapon(canvas, size);
 
     // Mani sul pomolo.
     for (final side in [-1, 1]) {
-      canvas.drawCircle(
-          Offset(cx + side * w * 0.035, h * 0.555), w * 0.04, fill(armorLook < 0 ? _skin : dark));
+      canvas.drawCircle(Offset(cx + side * w * 0.035, h * 0.555), w * 0.04,
+          fill(glovesLook < 0 ? _skin : Color.lerp(_steelOf(glovesLook), Colors.black, 0.4)!));
     }
 
     // Mano sinistra: scudo o seconda lama.
@@ -359,8 +395,10 @@ class KnightPainter extends CustomPainter {
       default:
         face
           ..moveTo(center.dx - r * 0.66, center.dy - r * 0.35)
-          ..quadraticBezierTo(center.dx - r * 0.66, center.dy - r * 0.82, center.dx, center.dy - r * 0.82)
-          ..quadraticBezierTo(center.dx + r * 0.66, center.dy - r * 0.82, center.dx + r * 0.66, center.dy - r * 0.35)
+          ..quadraticBezierTo(
+              center.dx - r * 0.66, center.dy - r * 0.82, center.dx, center.dy - r * 0.82)
+          ..quadraticBezierTo(center.dx + r * 0.66, center.dy - r * 0.82, center.dx + r * 0.66,
+              center.dy - r * 0.35)
           ..lineTo(center.dx + r * 0.5, center.dy + r * 0.45)
           ..lineTo(center.dx, center.dy + r * 0.85)
           ..lineTo(center.dx - r * 0.5, center.dy + r * 0.45)
@@ -370,8 +408,9 @@ class KnightPainter extends CustomPainter {
     canvas.drawPath(
         face,
         Paint()
-          ..shader = LinearGradient(colors: [shadow, skin, skin, shadow], stops: const [0, 0.3, 0.7, 1])
-              .createShader(bounds));
+          ..shader =
+              LinearGradient(colors: [shadow, skin, skin, shadow], stops: const [0, 0.3, 0.7, 1])
+                  .createShader(bounds));
     // Barba sulla mascella, con la bocca libera.
     if (look.hasBeard) {
       canvas.save();
@@ -411,10 +450,14 @@ class KnightPainter extends CustomPainter {
     // Capelli sopra: calotta corta, più piena per i capelli lunghi.
     final top = Path()
       ..moveTo(bounds.left - r * 0.06, center.dy - r * 0.18)
-      ..quadraticBezierTo(bounds.left - r * 0.04, bounds.top - r * 0.22, center.dx, bounds.top - r * 0.2)
-      ..quadraticBezierTo(bounds.right + r * 0.04, bounds.top - r * 0.22, bounds.right + r * 0.06, center.dy - r * 0.18)
-      ..quadraticBezierTo(center.dx + r * 0.3, bounds.top + r * 0.18, center.dx, bounds.top + r * 0.16)
-      ..quadraticBezierTo(center.dx - r * 0.3, bounds.top + r * 0.18, bounds.left - r * 0.06, center.dy - r * 0.18)
+      ..quadraticBezierTo(
+          bounds.left - r * 0.04, bounds.top - r * 0.22, center.dx, bounds.top - r * 0.2)
+      ..quadraticBezierTo(bounds.right + r * 0.04, bounds.top - r * 0.22, bounds.right + r * 0.06,
+          center.dy - r * 0.18)
+      ..quadraticBezierTo(
+          center.dx + r * 0.3, bounds.top + r * 0.18, center.dx, bounds.top + r * 0.16)
+      ..quadraticBezierTo(
+          center.dx - r * 0.3, bounds.top + r * 0.18, bounds.left - r * 0.06, center.dy - r * 0.18)
       ..close();
     canvas.drawPath(top, Paint()..color = hair);
   }
@@ -694,6 +737,9 @@ class KnightPainter extends CustomPainter {
       old.armorLook != armorLook ||
       old.helmLook != helmLook ||
       old.legsLook != legsLook ||
+      old.glovesLook != glovesLook ||
+      old.bootsLook != bootsLook ||
+      old.capeColor != capeColor ||
       old.offhand != offhand ||
       old.lookKey != lookKey;
 

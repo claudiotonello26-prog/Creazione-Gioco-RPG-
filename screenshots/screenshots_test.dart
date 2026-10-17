@@ -378,8 +378,17 @@ void main() {
     st.character.addMaterial('iron_ore', 7);
     st.character.addMaterial('forge_stone_1', 2);
     st.character.addMaterial('holy_shard', 1);
-    st.character.armors.add('gambeson');
-    st.character.worn[ArmorSlot.chest] = 'gambeson';
+    st.character.armors.addAll(['gambeson', 'chainmail']);
+    for (final slot in ArmorSlot.values) {
+      st.character.worn[slot] = slot == ArmorSlot.boots ? 'gambeson' : 'chainmail';
+    }
+    st.character.offhands.add('wooden_shield');
+    st.character.offhandId = 'wooden_shield';
+    st.character.capes.add('scarlet_cape');
+    st.character.capeId = 'scarlet_cape';
+    st.character.addMaterial('amulet_fang_charm', 1);
+    st.wearNeck('fang_charm');
+    st.character.weapon.upgrade = 6;
     st.character.addMaterial('amulet_ember_amulet', 1);
     st.character.addMaterial('amulet_regicide_seal', 1);
     st.character.addMaterial('beast_essence', 4);
@@ -390,10 +399,16 @@ void main() {
     final nav = Navigator.of(t.element(find.byType(NavigationBar)));
     nav.push(MaterialPageRoute<void>(builder: (_) => const EquipmentScreen()));
     await _shot(t, '50_equipaggiamento');
+    await t.tap(find.text('CORAZZA'));
+    await t.pumpAndSettle();
+    await t.drag(find.byType(ListView).first, const Offset(0, -900));
+    await _shot(t, '50b_armeria_corazza');
     nav.pop();
     await t.pumpAndSettle();
     nav.push(MaterialPageRoute<void>(builder: (_) => const InventoryScreen()));
     await _shot(t, '51_inventario');
+    await t.tap(find.widgetWithText(Tab, 'Armi'));
+    await _shot(t, '51b_inventario_armi');
     nav.pop();
     await t.pumpAndSettle();
     nav.push(MaterialPageRoute<void>(builder: (_) => const MarketScreen()));
