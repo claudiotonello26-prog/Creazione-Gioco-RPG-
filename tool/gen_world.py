@@ -13,13 +13,15 @@ for m in re.finditer(r"  '(\w+)': EnemyDef\((.*?)\n  \),", old, re.S):
     if 'isBeast: true' in body: beast.add(m.group(1))
 blurbs = {m.group(1): m.group(2) for m in re.finditer(r"id: '(\w+)',\n    name: .*?\n    group: .*?\n    level: \d+,\n    blurb: '((?:[^'\\]|\\.)*)'", old)}
 GROUP = {'push': 'push', 'legs': 'legs', 'core': 'core', 'cardio': 'cardio', 'stretching': 'stretching'}
-TR = {'pushUp','squat','lunge','crunch','legRaise','plank','jumpingJack','stretch'}
+TR = {'pushUp','squat','lunge','crunch','legRaise','plank','jumpingJack','highKnees','stretch'}
 FIX = {'Push-up sulle ginocchia': 1.3}  # le ginocchia aiutano: più rep del push-up.
 moves = {}
 for g in d['groups']:
     for e in g['expeditions']:
         for s in e['steps']:
             x = s['exercise']; moves[x['name']] = (x['track'], FIX.get(x['name'], x['ratio']), x['demo'])
+# Le high knees hanno il loro contatore (ogni ginocchio una rep).
+if 'High knees' in moves: moves['High knees'] = ('highKnees', 1.2, moves['High knees'][2])
 moves.setdefault('Push-up', ('pushUp', 1.0, 'push_up'))
 for n, t in [('Squat', 'squat'), ('Crunch', 'crunch'), ('Jumping jack', 'jumpingJack')]:
     moves.setdefault(n, (t, 1.0, n.lower()))

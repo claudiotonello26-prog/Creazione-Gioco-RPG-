@@ -26,7 +26,7 @@ enum BodyRegion {
       ExerciseId.pushUp => upper,
       ExerciseId.crunch || ExerciseId.legRaise || ExerciseId.plank => core,
       ExerciseId.squat || ExerciseId.lunge => legs,
-      ExerciseId.jumpingJack || ExerciseId.stretch => null,
+      ExerciseId.jumpingJack || ExerciseId.highKnees || ExerciseId.stretch => null,
     };
   }
 }

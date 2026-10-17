@@ -34,7 +34,9 @@ class Character {
     Set<String>? armors,
     this.offhandId,
     Set<String>? offhands,
-  })  : attributes = attributes ??
+    Appearance? look,
+  })  : look = look ?? Appearance(),
+        attributes = attributes ??
             {for (final a in Attribute.values) a: baseAttribute},
         weapon = weapon ?? WeaponInstance(weaponId: 'pilgrim_blade'),
         amulets = amulets ?? [],
@@ -49,6 +51,10 @@ class Character {
 
   String name;
   int xp;
+
+  /// Aspetto scelto alla creazione: si vede quando non c'è l'elmo o
+  /// l'armatura.
+  Appearance look;
 
   /// Punti guadagnati solo con stretching e sfide di mobilità.
   int disciplinePoints;
@@ -173,6 +179,7 @@ class Character {
         'armors': armors.toList(),
         'offhand': offhandId,
         'offhands': offhands.toList(),
+        'look': look.toJson(),
       };
 
   factory Character.fromJson(Map<String, dynamic> j) => Character(
@@ -196,6 +203,7 @@ class Character {
         armors: Set<String>.from(j['armors'] as List? ?? const []),
         offhandId: j['offhand'] as String?,
         offhands: Set<String>.from(j['offhands'] as List? ?? const []),
+        look: j['look'] == null ? null : Appearance.fromJson(j['look'] as Map<String, dynamic>),
       );
 }
 
@@ -246,3 +254,67 @@ const perkChoices = [
         'Gli attacchi pesanti aggiungono un\'esplosione di luce sacra'),
   ]),
 ];
+
+/// Aspetto del personaggio. Gli indici puntano alle tavolozze qui sotto.
+class Appearance {
+  Appearance({
+    this.female = false,
+    this.face = 0,
+    this.skin = 1,
+    this.hair = 0,
+    this.eyes = 0,
+    this.beard = true,
+    this.beardColor = 0,
+    this.shirt = 0,
+    this.pants = 0,
+  });
+
+  bool female;
+
+  /// 0 ovale, 1 squadrato, 2 tondo, 3 affilato.
+  int face;
+  int skin;
+  int hair;
+  int eyes;
+  bool beard;
+  int beardColor;
+  int shirt;
+  int pants;
+
+  static const int faces = 4;
+  static const List<int> skinTones = [0xFFF1D3B5, 0xFFD9AE8A, 0xFFB07D57, 0xFF7A4E31];
+  static const List<int> hairColors = [
+    0xFF2B1D14, 0xFF5A3A22, 0xFF9A6A3A, 0xFFD6B26A, 0xFF8E2E1E, 0xFFB9B4AC,
+  ];
+  static const List<int> eyeColors = [0xFF4A2E1A, 0xFF3F6E9E, 0xFF4E7A45, 0xFF7A7F86];
+  static const List<int> clothColors = [
+    0xFF6B5A44, 0xFF4A1612, 0xFF2F3E4E, 0xFF3D4A2C, 0xFF5B4A6E, 0xFFB9A98A,
+  ];
+
+  /// Barba solo per i personaggi maschili che la vogliono.
+  bool get hasBeard => !female && beard;
+
+  Map<String, dynamic> toJson() => {
+        'f': female,
+        'face': face,
+        'skin': skin,
+        'hair': hair,
+        'eyes': eyes,
+        'beard': beard,
+        'bc': beardColor,
+        'shirt': shirt,
+        'pants': pants,
+      };
+
+  factory Appearance.fromJson(Map<String, dynamic> j) => Appearance(
+        female: j['f'] as bool? ?? false,
+        face: j['face'] as int? ?? 0,
+        skin: j['skin'] as int? ?? 1,
+        hair: j['hair'] as int? ?? 0,
+        eyes: j['eyes'] as int? ?? 0,
+        beard: j['beard'] as bool? ?? true,
+        beardColor: j['bc'] as int? ?? 0,
+        shirt: j['shirt'] as int? ?? 0,
+        pants: j['pants'] as int? ?? 0,
+      );
+}

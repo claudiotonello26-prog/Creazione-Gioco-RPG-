@@ -205,6 +205,11 @@ class GameState extends ChangeNotifier {
     return best;
   }
 
+  void setLook(Appearance look) {
+    character.look = look;
+    _changed();
+  }
+
   void setOath(Attribute? a) {
     oath = a;
     _changed();
@@ -718,7 +723,9 @@ class GameState extends ChangeNotifier {
     _changed();
   }
 
-  int testRepsFor(ExerciseId id) => test[id]?.reps ?? 10;
+  /// Le high knees non hanno un test: valgono come i jumping jack.
+  int testRepsFor(ExerciseId id) =>
+      test[id == ExerciseId.highKnees ? ExerciseId.jumpingJack : id]?.reps ?? 10;
 
   // ------------------------------------------------------------- combattimento
 

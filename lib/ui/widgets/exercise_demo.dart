@@ -97,6 +97,7 @@ DemoMove demoFor(String name, ExerciseId trackAs) {
     ExerciseId.squat => DemoMove.squat,
     ExerciseId.lunge => DemoMove.lunge,
     ExerciseId.jumpingJack => DemoMove.jumpingJack,
+    ExerciseId.highKnees => DemoMove.highKnees,
     ExerciseId.plank => DemoMove.plank,
     ExerciseId.stretch => DemoMove.forwardFold,
   };

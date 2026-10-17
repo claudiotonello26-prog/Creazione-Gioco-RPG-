@@ -9,6 +9,7 @@ import '../../data/game_state.dart';
 import '../../domain/exercise.dart';
 import '../../domain/routine.dart';
 import '../widgets/common.dart';
+import 'character_creation.dart';
 import 'training_screen.dart';
 
 /// Avviso di salute → questionario → test con la fotocamera.
@@ -132,7 +133,14 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       limitations: _limits.text,
       mode: _mode,
     );
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FitnessTestScreen()));
+    // Prima il cavaliere (senza armatura), poi il test.
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (ctx) => CharacterCreationScreen(
+        onDone: () => Navigator.of(ctx).pushReplacement(
+          MaterialPageRoute(builder: (_) => const FitnessTestScreen()),
+        ),
+      ),
+    ));
   }
 
   @override
@@ -226,8 +234,36 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
   int _variant = 0;
   final Map<ExerciseId, TestResult> _results = {};
 
-  ExerciseId get _current => baseExercises[_index];
-  bool get _done => _index >= baseExercises.length;
+  /// Prima le gambe, che continuano a scaldare il corpo, poi la parte alta,
+  /// il core e per ultimo il cardio.
+  static const List<ExerciseId> order = [
+    ExerciseId.squat,
+    ExerciseId.lunge,
+    ExerciseId.pushUp,
+    ExerciseId.crunch,
+    ExerciseId.legRaise,
+    ExerciseId.jumpingJack,
+  ];
+
+  /// 40 secondi di jumping jack prima del test: non contano.
+  bool _warmedUp = false;
+
+  ExerciseId get _current => order[_index];
+  bool get _done => _index >= order.length;
+
+  Future<void> _warmUp() async {
+    await Navigator.of(context).push<SetResult>(
+      MaterialPageRoute(
+        builder: (_) => const TrainingScreen(
+          exercise: ExerciseId.jumpingJack,
+          title: 'Riscaldamento',
+          subtitle: 'Jumping jack a ritmo tranquillo: non conta per il test',
+          timeLimit: Duration(seconds: 40),
+        ),
+      ),
+    );
+    if (mounted) setState(() => _warmedUp = true);
+  }
 
   Future<void> _runCurrent() async {
     final ex = exercises[_current]!;
@@ -239,7 +275,8 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
           title: ex.variant(_variant).name,
           subtitle: timed
               ? 'Più rep corrette possibili in 60 secondi'
-              : 'Massimo di rep corrette${ex.perLeg ? ' per gamba' : ''}. Fermati quando la forma cede.',
+              : 'Massimo di rep${ex.perLeg ? ' per gamba: prima la destra, poi cambia' : ''}. '
+                  'Fermati quando la forma cede.',
           timeLimit: timed ? const Duration(seconds: 60) : null,
         ),
       ),
@@ -267,6 +304,34 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
     );
   }
 
+  Widget _warmUpPage() => Scaffold(
+        appBar: OathBar(title: Text(widget.isRetest ? 'TORNEO DELLA PROVA' : 'TEST DELLA PROVA')),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            const SizedBox(height: 12),
+            Text('Riscaldamento', style: titleStyle(size: 26)),
+            const SizedBox(height: 8),
+            const Text(
+              'Il test cerca il tuo massimo: in ogni prova fai più ripetizioni che puoi. '
+              'Prima scaldati con 40 secondi di jumping jack, poi si parte dalle gambe.',
+              style: TextStyle(color: Palette.ash, fontSize: 16),
+            ),
+            const SizedBox(height: 24),
+            FilledButton(onPressed: _warmUp, child: const Text('INIZIA IL RISCALDAMENTO')),
+            TextButton(
+              onPressed: () => setState(() => _warmedUp = true),
+              child: const Text('Sono già caldo'),
+            ),
+            if (!widget.isRetest)
+              TextButton(
+                onPressed: _skipWithDefaults,
+                child: const Text('Salta il test (valori da principiante)'),
+              ),
+          ],
+        ),
+      );
+
   void _skipWithDefaults() {
     // Valori da principiante per chi vuole giocare in modalità Libera subito.
     const defaults = {
@@ -288,6 +353,7 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
   @override
   Widget build(BuildContext context) {
     if (_done) return _Summary(results: _results, onConfirm: () => _complete(_results));
+    if (!_warmedUp) return _warmUpPage();
     final ex = exercises[_current]!;
     return Scaffold(
       appBar: OathBar(title: Text(widget.isRetest ? 'TORNEO DELLA PROVA' : 'TEST DELLA PROVA')),
@@ -295,9 +361,9 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           StatBar(
-            value: _index / baseExercises.length,
+            value: _index / order.length,
             color: Palette.gold,
-            label: 'Prova ${_index + 1} di ${baseExercises.length}',
+            label: 'Prova ${_index + 1} di ${order.length}',
           ),
           const SizedBox(height: 20),
           Text(
@@ -308,7 +374,7 @@ class _FitnessTestScreenState extends State<FitnessTestScreen> {
           Text(
               switch (ex.testMode) {
                 TestMode.maxReps =>
-                  'Fai il massimo di rep corrette${ex.perLeg ? ' per gamba' : ''}.',
+                  'Più ripetizioni che puoi${ex.perLeg ? ', prima con la destra e poi con la sinistra' : ''}.',
                 TestMode.repsIn60s => 'Fai più rep corrette possibili in 60 secondi.',
                 TestMode.hold => 'Tieni la posizione il più a lungo possibile.',
               },

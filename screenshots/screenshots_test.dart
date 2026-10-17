@@ -25,6 +25,8 @@ import 'package:iron_oath/domain/enemies.dart';
 import 'package:iron_oath/domain/skills.dart';
 import 'package:iron_oath/ui/screens/guide_screen.dart';
 import 'package:iron_oath/ui/screens/quest_screen.dart';
+import 'package:iron_oath/ui/screens/character_creation.dart';
+import 'package:iron_oath/ui/screens/rest_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFont(String family, List<String> paths) async {
@@ -253,6 +255,42 @@ void main() {
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('out/36_creazione_countdown.png'));
     await t.tap(find.text('ANNULLA'));
     await t.pumpAndSettle();
+  });
+
+  testWidgets('creazione personaggio e pausa tra esercizi', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    st.character.look
+      ..hair = 2
+      ..beard = true
+      ..beardColor = 2
+      ..face = 1
+      ..shirt = 3;
+    await t.pumpWidget(IronOathApp(state: st));
+    await t.pumpAndSettle();
+    final nav = Navigator.of(t.element(find.byType(NavigationBar)));
+    nav.push(MaterialPageRoute<void>(builder: (_) => CharacterCreationScreen(onDone: () {})));
+    await _shot(t, '03_creazione_personaggio');
+    await t.tap(find.text('Donna'));
+    await t.pumpAndSettle();
+    await _shot(t, '03b_creazione_donna');
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(MaterialPageRoute<void>(
+      builder: (_) => const RestScreen(
+        name: 'Crunch',
+        exercise: ExerciseId.crunch,
+        index: 2,
+        total: 4,
+        movePhone: true,
+      ),
+    ));
+    await t.pump();
+    await t.pump(const Duration(milliseconds: 600));
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('out/37_pausa_sposta_telefono.png'));
+    nav.pop();
+    await t.pump(const Duration(seconds: 1));
   });
 
   testWidgets('equipaggiamento, inventario, mercato', (t) async {

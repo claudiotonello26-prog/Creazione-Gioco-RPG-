@@ -128,7 +128,9 @@ class KnightPainter extends CustomPainter {
     int? helmLook,
     int? legsLook,
     this.offhand,
-  })  : helmLook = helmLook ?? armorLook,
+    Appearance? look,
+  })  : look = look ?? Appearance(),
+        helmLook = helmLook ?? armorLook,
         legsLook = legsLook ?? armorLook;
 
   factory KnightPainter.of(Character c) => KnightPainter(
@@ -137,6 +139,7 @@ class KnightPainter extends CustomPainter {
         helmLook: c.piece(ArmorSlot.helm)?.look ?? -1,
         legsLook: c.piece(ArmorSlot.legs)?.look ?? -1,
         offhand: c.offhand,
+        look: c.look,
       );
 
   final WeaponInstance weapon;
@@ -146,6 +149,13 @@ class KnightPainter extends CustomPainter {
   final int helmLook;
   final int legsLook;
   final OffhandDef? offhand;
+
+  /// Aspetto del personaggio: viso, capelli e vestiti sotto l'armatura.
+  final Appearance look;
+
+  Color get _skin => Color(Appearance.skinTones[look.skin % Appearance.skinTones.length]);
+  Color get _shirt => Color(Appearance.clothColors[look.shirt % Appearance.clothColors.length]);
+  Color get _pants => Color(Appearance.clothColors[look.pants % Appearance.clothColors.length]);
 
   static Color _steelOf(int look) => switch (look) {
         2 => const Color(0xFF9DA3AB),
@@ -178,8 +188,8 @@ class KnightPainter extends CustomPainter {
       );
     }
 
-    final steel = _steelOf(armorLook);
-    final legSteel = _steelOf(legsLook);
+    final steel = armorLook < 0 ? _shirt : _steelOf(armorLook);
+    final legSteel = legsLook < 0 ? _pants : _steelOf(legsLook);
     final dark = Color.lerp(steel, Colors.black, 0.55)!;
     final trim = armorLook >= 2 ? Palette.goldBright : Palette.gold.withValues(alpha: 0.7);
     Paint fill(Color c) => Paint()..color = c;
@@ -196,11 +206,12 @@ class KnightPainter extends CustomPainter {
         stops: const [0, 0.35, 0.6, 1],
       ).createShader(r);
     final line = Paint()
-      ..color = trim
+      ..color = armorLook < 0 ? Color.lerp(_shirt, Colors.black, 0.5)! : trim
       ..style = PaintingStyle.stroke
       ..strokeWidth = w * 0.008;
 
-    // Mantello.
+    // Mantello: solo con l'armatura addosso.
+    if (armorLook >= 0) {
     final cape = Path()
       ..moveTo(cx - w * 0.2, h * 0.27)
       ..quadraticBezierTo(cx - w * 0.36, h * 0.65, cx - w * 0.3, h * 0.93)
@@ -216,18 +227,21 @@ class KnightPainter extends CustomPainter {
             end: Alignment.bottomCenter,
             colors: [Color(0x00000000), Color(0x99000000)],
           ).createShader(Rect.fromLTWH(0, h * 0.27, w, h * 0.66)));
+    }
 
     // Gambe e schinieri.
     for (final side in [-1, 1]) {
       final r = Rect.fromLTWH(cx + side * w * 0.085 - w * 0.065, h * 0.62, w * 0.13, h * 0.3);
       canvas.drawRRect(RRect.fromRectAndRadius(r, Radius.circular(w * 0.03)), shade(r, legSteel));
-      canvas.drawCircle(Offset(r.center.dx, h * 0.72), w * 0.04, shade(r, legSteel));
-      canvas.drawCircle(Offset(r.center.dx, h * 0.72), w * 0.04, line);
+      if (legsLook >= 0) {
+        canvas.drawCircle(Offset(r.center.dx, h * 0.72), w * 0.04, shade(r, legSteel));
+        canvas.drawCircle(Offset(r.center.dx, h * 0.72), w * 0.04, line);
+      }
       canvas.drawRRect(
           RRect.fromRectAndRadius(
               Rect.fromLTWH(r.left - w * 0.01, h * 0.9, r.width + w * 0.03, h * 0.04),
               Radius.circular(w * 0.02)),
-          fill(dark));
+          fill(legsLook < 0 ? const Color(0xFF3A2A1A) : dark));
     }
 
     // Busto.
@@ -269,9 +283,17 @@ class KnightPainter extends CustomPainter {
         Rect.fromLTWH(cx - w * 0.17, h * 0.555, w * 0.34, h * 0.03), fill(const Color(0xFF3A2A1A)));
     canvas.drawRect(Rect.fromLTWH(cx - w * 0.025, h * 0.552, w * 0.05, h * 0.036), fill(trim));
 
-    // Braccia e spallacci.
+    // Braccia e spallacci (senza armatura: maniche e avambracci nudi).
     for (final side in [-1, 1]) {
       final arm = Rect.fromLTWH(cx + side * w * 0.235 - w * 0.055, h * 0.3, w * 0.11, h * 0.26);
+      if (armorLook < 0) {
+        canvas.drawRRect(
+            RRect.fromRectAndRadius(arm, Radius.circular(w * 0.04)), shade(arm, _skin));
+        final sleeve = Rect.fromLTWH(arm.left, arm.top, arm.width, arm.height * 0.45);
+        canvas.drawRRect(
+            RRect.fromRectAndRadius(sleeve, Radius.circular(w * 0.04)), shade(sleeve, _shirt));
+        continue;
+      }
       canvas.drawRRect(RRect.fromRectAndRadius(arm, Radius.circular(w * 0.04)), shade(arm, steel));
       final pauldron = Rect.fromCenter(
           center: Offset(cx + side * w * 0.215, h * 0.3), width: w * 0.2, height: h * 0.1);
@@ -284,15 +306,117 @@ class KnightPainter extends CustomPainter {
 
     // Mani sul pomolo.
     for (final side in [-1, 1]) {
-      canvas.drawCircle(Offset(cx + side * w * 0.035, h * 0.555), w * 0.04, fill(dark));
+      canvas.drawCircle(
+          Offset(cx + side * w * 0.035, h * 0.555), w * 0.04, fill(armorLook < 0 ? _skin : dark));
     }
 
     // Mano sinistra: scudo o seconda lama.
     if (offhand != null) _offhand(canvas, size, steel, trim);
 
-    // Elmo (armet con visiera a becco, come l'icona).
-    _helm(canvas, Offset(cx, h * 0.17), w * 0.2, _steelOf(helmLook),
-        helmLook >= 2 ? Palette.goldBright : Palette.gold.withValues(alpha: 0.7));
+    // Elmo (armet con visiera a becco, come l'icona) o, senza, il viso.
+    if (helmLook < 0) {
+      _head(canvas, Offset(cx, h * 0.17), w * 0.2);
+    } else {
+      _helm(canvas, Offset(cx, h * 0.17), w * 0.2, _steelOf(helmLook),
+          helmLook >= 2 ? Palette.goldBright : Palette.gold.withValues(alpha: 0.7));
+    }
+  }
+
+  /// Il viso scelto alla creazione: forma, pelle, occhi, capelli e barba.
+  void _head(Canvas canvas, Offset c, double r) {
+    final skin = _skin;
+    final hair = Color(Appearance.hairColors[look.hair % Appearance.hairColors.length]);
+    final beard = Color(Appearance.hairColors[look.beardColor % Appearance.hairColors.length]);
+    final eye = Color(Appearance.eyeColors[look.eyes % Appearance.eyeColors.length]);
+    final shadow = Color.lerp(skin, Colors.black, 0.35)!;
+    final center = c.translate(0, r * 0.12);
+    // Collo.
+    canvas.drawRect(
+        Rect.fromCenter(center: center.translate(0, r * 0.95), width: r * 0.5, height: r * 0.6),
+        Paint()..color = shadow);
+    // Capelli lunghi dietro la testa.
+    if (look.female) {
+      canvas.drawRRect(
+          RRect.fromRectAndCorners(
+            Rect.fromCenter(center: center.translate(0, r * 0.45), width: r * 1.7, height: r * 2.1),
+            topLeft: Radius.circular(r * 0.85),
+            topRight: Radius.circular(r * 0.85),
+            bottomLeft: Radius.circular(r * 0.3),
+            bottomRight: Radius.circular(r * 0.3),
+          ),
+          Paint()..color = Color.lerp(hair, Colors.black, 0.2)!);
+    }
+    final face = Path();
+    switch (look.face % Appearance.faces) {
+      case 0:
+        face.addOval(Rect.fromCenter(center: center, width: r * 1.3, height: r * 1.65));
+      case 1:
+        face.addRRect(RRect.fromRectAndRadius(
+            Rect.fromCenter(center: center, width: r * 1.38, height: r * 1.6),
+            Radius.circular(r * 0.35)));
+      case 2:
+        face.addOval(Rect.fromCenter(center: center, width: r * 1.5, height: r * 1.55));
+      default:
+        face
+          ..moveTo(center.dx - r * 0.66, center.dy - r * 0.35)
+          ..quadraticBezierTo(center.dx - r * 0.66, center.dy - r * 0.82, center.dx, center.dy - r * 0.82)
+          ..quadraticBezierTo(center.dx + r * 0.66, center.dy - r * 0.82, center.dx + r * 0.66, center.dy - r * 0.35)
+          ..lineTo(center.dx + r * 0.5, center.dy + r * 0.45)
+          ..lineTo(center.dx, center.dy + r * 0.85)
+          ..lineTo(center.dx - r * 0.5, center.dy + r * 0.45)
+          ..close();
+    }
+    final bounds = face.getBounds();
+    canvas.drawPath(
+        face,
+        Paint()
+          ..shader = LinearGradient(colors: [shadow, skin, skin, shadow], stops: const [0, 0.3, 0.7, 1])
+              .createShader(bounds));
+    // Barba sulla mascella, con la bocca libera.
+    if (look.hasBeard) {
+      canvas.save();
+      canvas.clipPath(face);
+      canvas.drawPath(
+          Path()
+            ..moveTo(bounds.left, center.dy + r * 0.05)
+            ..quadraticBezierTo(center.dx, center.dy + r * 0.3, bounds.right, center.dy + r * 0.05)
+            ..lineTo(bounds.right, bounds.bottom)
+            ..lineTo(bounds.left, bounds.bottom)
+            ..close(),
+          Paint()..color = beard);
+      canvas.restore();
+    }
+    // Occhi, sopracciglia e bocca.
+    for (final side in [-1, 1]) {
+      final e = center.translate(side * r * 0.28, -r * 0.08);
+      canvas.drawOval(Rect.fromCenter(center: e, width: r * 0.28, height: r * 0.15),
+          Paint()..color = const Color(0xFFF4EEE4));
+      canvas.drawCircle(e, r * 0.065, Paint()..color = eye);
+      canvas.drawCircle(e, r * 0.03, Paint()..color = Colors.black);
+      canvas.drawLine(
+          e.translate(-r * 0.15, -r * 0.16 - (look.female ? r * 0.02 : 0)),
+          e.translate(r * 0.15, -r * 0.13),
+          Paint()
+            ..color = hair
+            ..strokeWidth = r * (look.female ? 0.04 : 0.07)
+            ..strokeCap = StrokeCap.round);
+    }
+    canvas.drawLine(
+        center.translate(-r * 0.15, r * 0.4),
+        center.translate(r * 0.15, r * 0.4),
+        Paint()
+          ..color = Color.lerp(skin, const Color(0xFF7A2A20), 0.6)!
+          ..strokeWidth = r * 0.05
+          ..strokeCap = StrokeCap.round);
+    // Capelli sopra: calotta corta, più piena per i capelli lunghi.
+    final top = Path()
+      ..moveTo(bounds.left - r * 0.06, center.dy - r * 0.18)
+      ..quadraticBezierTo(bounds.left - r * 0.04, bounds.top - r * 0.22, center.dx, bounds.top - r * 0.2)
+      ..quadraticBezierTo(bounds.right + r * 0.04, bounds.top - r * 0.22, bounds.right + r * 0.06, center.dy - r * 0.18)
+      ..quadraticBezierTo(center.dx + r * 0.3, bounds.top + r * 0.18, center.dx, bounds.top + r * 0.16)
+      ..quadraticBezierTo(center.dx - r * 0.3, bounds.top + r * 0.18, bounds.left - r * 0.06, center.dy - r * 0.18)
+      ..close();
+    canvas.drawPath(top, Paint()..color = hair);
   }
 
   void _offhand(Canvas canvas, Size size, Color steel, Color trim) {
@@ -570,7 +694,10 @@ class KnightPainter extends CustomPainter {
       old.armorLook != armorLook ||
       old.helmLook != helmLook ||
       old.legsLook != legsLook ||
-      old.offhand != offhand;
+      old.offhand != offhand ||
+      old.lookKey != lookKey;
+
+  String get lookKey => look.toJson().toString();
 }
 
 /// Solo l'arma, grande, per l'Incantamento: mostra come cambierà.

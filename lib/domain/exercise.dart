@@ -40,6 +40,9 @@ enum ExerciseId {
   squat,
   lunge,
   jumpingJack,
+
+  /// Ginocchia alte: ogni ginocchio sopra l'anca è una rep.
+  highKnees,
   plank,
 
   /// Posa di stretching da tenere ferma.
@@ -141,7 +144,7 @@ const Map<ExerciseId, Exercise> exercises = {
     id: ExerciseId.squat,
     name: 'Squat',
     group: MuscleGroup.legs,
-    testMode: TestMode.repsIn60s,
+    testMode: TestMode.maxReps,
     variants: [
       ExerciseVariant('Squat', level: 0),
       ExerciseVariant('Squat sulla sedia', level: 1),
@@ -166,6 +169,16 @@ const Map<ExerciseId, Exercise> exercises = {
     variants: [
       ExerciseVariant('Jumping jack', level: 0),
       ExerciseVariant('Step jack', level: 1),
+    ],
+  ),
+  ExerciseId.highKnees: Exercise(
+    id: ExerciseId.highKnees,
+    name: 'High knees',
+    group: MuscleGroup.cardio,
+    testMode: TestMode.repsIn60s,
+    variants: [
+      ExerciseVariant('High knees', level: 0),
+      ExerciseVariant('Marcia a ginocchia alte', level: 1),
     ],
   ),
   ExerciseId.plank: Exercise(

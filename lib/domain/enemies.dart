@@ -745,7 +745,7 @@ const Map<String, EnemyDef> enemyDefs = {
     group: MuscleGroup.cardio,
     region: 'Le Rovine Lunari',
     moves: [
-      Move('High knees', ExerciseId.jumpingJack, ratio: 0.3),
+      Move('High knees', ExerciseId.highKnees, ratio: 0.6),
       Move('Squat veloci', ExerciseId.squat),
     ],
     loot: {'moon_silver': 4, 'beast_essence': 1},
@@ -763,7 +763,7 @@ const Map<String, EnemyDef> enemyDefs = {
     isBeast: true,
     moves: [
       Move('Jumping jack', ExerciseId.jumpingJack),
-      Move('High knees', ExerciseId.jumpingJack, ratio: 0.3),
+      Move('High knees', ExerciseId.highKnees, ratio: 0.6),
       Move('Mountain climber', ExerciseId.jumpingJack, ratio: 0.25),
       Move('Squat veloci', ExerciseId.squat),
     ],
@@ -795,7 +795,7 @@ const Map<String, EnemyDef> enemyDefs = {
     group: MuscleGroup.cardio,
     region: 'La Biblioteca Allagata',
     moves: [
-      Move('High knees', ExerciseId.jumpingJack, ratio: 0.3),
+      Move('High knees', ExerciseId.highKnees, ratio: 0.6),
       Move('Burpee', ExerciseId.squat, ratio: 0.125),
     ],
     loot: {'abyss_ink': 2},
@@ -812,7 +812,7 @@ const Map<String, EnemyDef> enemyDefs = {
     isBoss: true,
     moves: [
       Move('Jumping jack', ExerciseId.jumpingJack),
-      Move('High knees', ExerciseId.jumpingJack, ratio: 0.3),
+      Move('High knees', ExerciseId.highKnees, ratio: 0.6),
       Move('Mountain climber', ExerciseId.jumpingJack, ratio: 0.25),
       Move('Burpee', ExerciseId.squat, ratio: 0.125),
     ],
@@ -845,7 +845,7 @@ const Map<String, EnemyDef> enemyDefs = {
     region: 'L\'Osservatorio Crollato',
     moves: [
       Move('Mountain climber', ExerciseId.jumpingJack, ratio: 0.25),
-      Move('High knees', ExerciseId.jumpingJack, ratio: 0.3),
+      Move('High knees', ExerciseId.highKnees, ratio: 0.6),
     ],
     loot: {'abyss_crystal': 1, 'bronze_ingot': 2, 'silver_ingot': 1},
     rareDrop: 'forge_stone_2',
@@ -863,7 +863,7 @@ const Map<String, EnemyDef> enemyDefs = {
       Move('Burpee', ExerciseId.squat, ratio: 0.125),
       Move('Mountain climber', ExerciseId.jumpingJack, ratio: 0.25),
       Move('Skater jump', ExerciseId.jumpingJack, ratio: 0.25),
-      Move('High knees', ExerciseId.jumpingJack, ratio: 0.3),
+      Move('High knees', ExerciseId.highKnees, ratio: 0.6),
     ],
     loot: {'abyss_crystal': 4, 'forge_stone_2': 1},
     rareDrop: 'star_core',
@@ -1479,7 +1479,7 @@ const List<Expedition> expeditions = [
     blurb: 'Di notte la luna si posa sulle pietre e le lascia d\'argento.',
     steps: [
       ExpeditionStep('spectral_archer', Move('Jumping jack', ExerciseId.jumpingJack), level: 1, tier: 1),
-      ExpeditionStep('lunar_wisp', Move('High knees', ExerciseId.jumpingJack, ratio: 0.3), level: 3, tier: 1),
+      ExpeditionStep('lunar_wisp', Move('High knees', ExerciseId.highKnees, ratio: 0.6), level: 3, tier: 1),
       ExpeditionStep('spectral_archer', Move('Mountain climber', ExerciseId.jumpingJack, ratio: 0.25), level: 5, tier: 2, veteran: true),
       ExpeditionStep('lunar_wisp', Move('Squat veloci', ExerciseId.squat), level: 7, tier: 2, veteran: true),
     ],
@@ -1501,7 +1501,7 @@ const List<Expedition> expeditions = [
     blurb: 'I libri galleggiano. L\'inchiostro, nell\'acqua nera, è ancora vivo.',
     steps: [
       ExpeditionStep('drowned_scribe', Move('Jumping jack', ExerciseId.jumpingJack), level: 10, tier: 2),
-      ExpeditionStep('living_tome', Move('High knees', ExerciseId.jumpingJack, ratio: 0.3), level: 13, tier: 2),
+      ExpeditionStep('living_tome', Move('High knees', ExerciseId.highKnees, ratio: 0.6), level: 13, tier: 2),
       ExpeditionStep('drowned_scribe', Move('Mountain climber', ExerciseId.jumpingJack, ratio: 0.25), level: 16, tier: 3, veteran: true),
       ExpeditionStep('living_tome', Move('Burpee', ExerciseId.squat, ratio: 0.125), level: 19, tier: 3, veteran: true),
     ],
@@ -1525,7 +1525,7 @@ const List<Expedition> expeditions = [
       ExpeditionStep('mad_astrologer', Move('Burpee', ExerciseId.squat, ratio: 0.125), level: 25, tier: 3),
       ExpeditionStep('brass_automaton', Move('Mountain climber', ExerciseId.jumpingJack, ratio: 0.25), level: 29, tier: 3),
       ExpeditionStep('mad_astrologer', Move('Skater jump', ExerciseId.jumpingJack, ratio: 0.25), level: 33, tier: 4, veteran: true),
-      ExpeditionStep('brass_automaton', Move('High knees', ExerciseId.jumpingJack, ratio: 0.3), level: 37, tier: 4, veteran: true),
+      ExpeditionStep('brass_automaton', Move('High knees', ExerciseId.highKnees, ratio: 0.6), level: 37, tier: 4, veteran: true),
     ],
     bossId: 'star_eye',
     chest: Chest(

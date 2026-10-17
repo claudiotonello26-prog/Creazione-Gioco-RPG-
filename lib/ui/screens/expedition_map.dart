@@ -16,6 +16,7 @@ import '../../game/battle_game.dart';
 import '../widgets/common.dart';
 import '../widgets/knight_view.dart';
 import 'train_tab.dart';
+import 'rest_screen.dart';
 import 'training_screen.dart';
 
 /// Posizione delle tappe sulla mappa, in frazioni dello spazio (dal basso
@@ -111,9 +112,28 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
   Future<void> _boss() async {
     final s = context.read<GameState>();
     _spendKey(s);
-    final moves = [for (final st in _e.steps) st.move];
+    // Prima gli esercizi in piedi, poi quelli a terra: il telefono si sposta una volta.
+    final moves = byPhonePosition([for (final st in _e.steps) st.move], (m) => m.trackAs);
     for (var i = 0; i < moves.length; i++) {
       final m = moves[i];
+      if (i > 0) {
+        final go = await Navigator.of(context).push<bool>(
+          MaterialPageRoute(
+            builder: (_) => RestScreen(
+              name: m.name,
+              exercise: m.trackAs,
+              index: i + 1,
+              total: moves.length,
+              movePhone: onFloor(m.trackAs) != onFloor(moves[i - 1].trackAs),
+            ),
+          ),
+        );
+        if (!mounted) return;
+        if (go != true) {
+          toast(context, '${_e.boss.name} resta in piedi. Riprova quando vuoi.');
+          return;
+        }
+      }
       final r = await Navigator.of(context).push<SetResult>(
         MaterialPageRoute(
           builder: (_) => TrainingScreen(

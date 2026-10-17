@@ -64,7 +64,7 @@ const List<EnemyDef> baseAnimals = [
     region: 'Bosco di frassino',
     isBeast: true,
     isAnimal: true,
-    moves: [Move('High knees', ExerciseId.jumpingJack, ratio: 0.3)],
+    moves: [Move('High knees', ExerciseId.highKnees, ratio: 0.6)],
     loot: {'raw_hide': 1, 'bone': 1},
   ),
 ];

@@ -45,7 +45,7 @@ const Map<MuscleGroup, List<PathExercise>> bodyweightPaths = {
   ],
   MuscleGroup.cardio: [
     PathExercise('Jumping jack', ExerciseId.jumpingJack),
-    PathExercise('High knees', ExerciseId.jumpingJack, ratio: 0.6),
+    PathExercise('High knees', ExerciseId.highKnees, ratio: 0.6),
     PathExercise('Mountain climber', ExerciseId.jumpingJack, ratio: 0.5),
     PathExercise('Burpee', ExerciseId.squat, ratio: 0.25),
   ],
