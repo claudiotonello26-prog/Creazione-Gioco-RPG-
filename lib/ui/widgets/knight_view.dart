@@ -463,7 +463,7 @@ class KnightPainter extends CustomPainter {
   }
 
   /// Aura dell'arma: bagliore che cresce con il livello, e a +10 i segni
-  /// dell'elemento (fiamme, vento, neon, raggi).
+  /// dell'elemento (fiamme, vento, neon, fulmini).
   void _aura(Canvas canvas, Path shape, Affinity aff, int tier, double w, {bool stroke = false}) {
     if (tier == 0) return;
     final glow = Paint()

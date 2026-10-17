@@ -342,8 +342,8 @@ class StationScreen extends StatelessWidget {
           subtitle: switch (a) {
             Affinity.fire => 'Lama rossa, a +10 avvolta dal fuoco',
             Affinity.wind => 'Lama verde, a +10 vortici di vento',
-            Affinity.arcane => 'Lama blu, a +10 neon azzurro',
-            Affinity.holy => 'Riflessi dorati, a +10 aura divina',
+            Affinity.arcane => 'Lama blu, a +10 neon azzurro e puntini di luce',
+            Affinity.holy => 'Lama d\'oro, a +10 aura luminosa e fulmini oro-azzurri',
           },
         ),
     ];
