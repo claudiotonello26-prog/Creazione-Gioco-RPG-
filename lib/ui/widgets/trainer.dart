@@ -20,8 +20,7 @@ const Map<String, List<TrainerLine>> trainerHints = {
         'Dunque sei tu il nuovo giurato. Sono Ser Corvino, maestro d\'armi. Ti seguirò ovunque, che ti piaccia o no.'),
     TrainerLine(TrainerPose.pointing,
         'Questa è la tua casa: il tuo cavaliere, la quest del giorno e il Cammino del Novizio. Segui le mie missioni e diventerai qualcuno.'),
-    TrainerLine(TrainerPose.goofy,
-        'E non guardarmi così. L\'elmo è storto per scelta stilistica.'),
+    TrainerLine(TrainerPose.goofy, 'E non guardarmi così. L\'elmo è storto per scelta stilistica.'),
   ],
   'training': [
     TrainerLine(TrainerPose.pointing,
@@ -58,8 +57,8 @@ const Map<String, List<TrainerLine>> trainerHints = {
   'attributes': [
     TrainerLine(TrainerPose.thinking,
         'Ogni livello ti dà un punto. Vigore per la vita, Forza e Destrezza per le armi, Fede e Intelligenza per la magia.'),
-    TrainerLine(TrainerPose.goofy,
-        'Io li ho messi tutti in Carisma. Ah, non c\'è Carisma? Peccato.'),
+    TrainerLine(
+        TrainerPose.goofy, 'Io li ho messi tutti in Carisma. Ah, non c\'è Carisma? Peccato.'),
   ],
   'hunt': [
     TrainerLine(TrainerPose.cheering,
@@ -146,17 +145,23 @@ class _TrainerOverlayState extends State<_TrainerOverlay> {
                       ),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: const Color(0xFF6B5320), width: 1.5),
-                      boxShadow: [BoxShadow(color: Palette.gold.withValues(alpha: 0.35), blurRadius: 18)],
+                      boxShadow: [
+                        BoxShadow(color: Palette.gold.withValues(alpha: 0.35), blurRadius: 18)
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(trainerName.toUpperCase(),
-                            style: titleStyle(size: 13, spacing: 3, color: const Color(0xFF3A2A10))),
+                            style:
+                                titleStyle(size: 13, spacing: 3, color: const Color(0xFF3A2A10))),
                         const SizedBox(height: 6),
                         Text(line.text,
                             style: const TextStyle(
-                                fontSize: 17, color: Color(0xFF14100A), height: 1.3, fontWeight: FontWeight.w600)),
+                                fontSize: 17,
+                                color: Color(0xFF14100A),
+                                height: 1.3,
+                                fontWeight: FontWeight.w600)),
                         const SizedBox(height: 8),
                         Align(
                           alignment: Alignment.centerRight,

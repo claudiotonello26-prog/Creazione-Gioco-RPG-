@@ -102,8 +102,8 @@ class _TintedWeapon extends StatelessWidget {
     Widget img = Image.asset(path, fit: BoxFit.contain);
     if (tier == 0) return img;
     img = ColorFiltered(
-      colorFilter: ColorFilter.mode(
-          color.withValues(alpha: [0.0, 0.35, 0.6, 0.7][tier]), BlendMode.srcATop),
+      colorFilter:
+          ColorFilter.mode(color.withValues(alpha: [0.0, 0.35, 0.6, 0.7][tier]), BlendMode.srcATop),
       child: img,
     );
     return Stack(fit: StackFit.expand, children: [
@@ -187,8 +187,12 @@ class KnightPainter extends CustomPainter {
       ..shader = LinearGradient(
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
-        colors: [Color.lerp(c, Colors.black, 0.45)!, Color.lerp(c, Colors.white, 0.25)!, c,
-          Color.lerp(c, Colors.black, 0.55)!],
+        colors: [
+          Color.lerp(c, Colors.black, 0.45)!,
+          Color.lerp(c, Colors.white, 0.25)!,
+          c,
+          Color.lerp(c, Colors.black, 0.55)!
+        ],
         stops: const [0, 0.35, 0.6, 1],
       ).createShader(r);
     final line = Paint()
@@ -247,7 +251,8 @@ class KnightPainter extends CustomPainter {
       canvas.clipPath(torso);
       for (var y = h * 0.29; y < h * 0.66; y += w * 0.025) {
         for (var x = cx - w * 0.2; x < cx + w * 0.2; x += w * 0.03) {
-          canvas.drawArc(Rect.fromCircle(center: Offset(x, y), radius: w * 0.014), 0, pi, false, ring);
+          canvas.drawArc(
+              Rect.fromCircle(center: Offset(x, y), radius: w * 0.014), 0, pi, false, ring);
         }
       }
       canvas.restore();
@@ -260,7 +265,8 @@ class KnightPainter extends CustomPainter {
     }
     canvas.drawPath(torso, line);
     // Cintura.
-    canvas.drawRect(Rect.fromLTWH(cx - w * 0.17, h * 0.555, w * 0.34, h * 0.03), fill(const Color(0xFF3A2A1A)));
+    canvas.drawRect(
+        Rect.fromLTWH(cx - w * 0.17, h * 0.555, w * 0.34, h * 0.03), fill(const Color(0xFF3A2A1A)));
     canvas.drawRect(Rect.fromLTWH(cx - w * 0.025, h * 0.552, w * 0.05, h * 0.036), fill(trim));
 
     // Braccia e spallacci.
@@ -322,7 +328,9 @@ class KnightPainter extends CustomPainter {
       if (kite) {
         final cross = Paint()..color = const Color(0xFF9E2B25);
         canvas.drawRect(Rect.fromCenter(center: c, width: w * 0.03, height: h * 0.18), cross);
-        canvas.drawRect(Rect.fromCenter(center: c - Offset(0, h * 0.03), width: w * 0.14, height: h * 0.022), cross);
+        canvas.drawRect(
+            Rect.fromCenter(center: c - Offset(0, h * 0.03), width: w * 0.14, height: h * 0.022),
+            cross);
       } else {
         canvas.drawCircle(c, w * 0.035, Paint()..color = Palette.gold);
       }
@@ -338,7 +346,8 @@ class KnightPainter extends CustomPainter {
             ..lineTo(x - w * 0.02, h * 0.82)
             ..close(),
           Paint()..color = const Color(0xFFB9BEC6));
-      canvas.drawRect(Rect.fromLTWH(x - w * 0.07, h * 0.57, w * 0.14, h * 0.016), Paint()..color = Palette.gold);
+      canvas.drawRect(Rect.fromLTWH(x - w * 0.07, h * 0.57, w * 0.14, h * 0.016),
+          Paint()..color = Palette.gold);
       canvas.drawRect(Rect.fromLTWH(x - w * 0.015, h * 0.51, w * 0.03, h * 0.06),
           Paint()..color = const Color(0xFF3A2416));
     }
@@ -348,12 +357,14 @@ class KnightPainter extends CustomPainter {
     final rect = Rect.fromCircle(center: c, radius: r);
     final dome = Path()
       ..moveTo(c.dx, c.dy - r * 1.25)
-      ..cubicTo(c.dx + r * 0.25, c.dy - r * 0.9, c.dx + r * 0.95, c.dy - r * 0.75, c.dx + r * 0.95, c.dy)
+      ..cubicTo(
+          c.dx + r * 0.25, c.dy - r * 0.9, c.dx + r * 0.95, c.dy - r * 0.75, c.dx + r * 0.95, c.dy)
       ..lineTo(c.dx + r * 0.85, c.dy + r * 0.7)
       ..lineTo(c.dx, c.dy + r * 1.1)
       ..lineTo(c.dx - r * 0.85, c.dy + r * 0.7)
       ..lineTo(c.dx - r * 0.95, c.dy)
-      ..cubicTo(c.dx - r * 0.95, c.dy - r * 0.75, c.dx - r * 0.25, c.dy - r * 0.9, c.dx, c.dy - r * 1.25)
+      ..cubicTo(
+          c.dx - r * 0.95, c.dy - r * 0.75, c.dx - r * 0.25, c.dy - r * 0.9, c.dx, c.dy - r * 1.25)
       ..close();
     canvas.drawPath(
         dome,
@@ -387,8 +398,10 @@ class KnightPainter extends CustomPainter {
       // Fori di respirazione.
       for (var i = 0; i < 3; i++) {
         for (var j = 0; j < 2; j++) {
-          canvas.drawCircle(Offset(c.dx + side * r * (0.22 + j * 0.18), c.dy + r * (0.42 + i * 0.16)),
-              r * 0.035, Paint()..color = Colors.black.withValues(alpha: 0.7));
+          canvas.drawCircle(
+              Offset(c.dx + side * r * (0.22 + j * 0.18), c.dy + r * (0.42 + i * 0.16)),
+              r * 0.035,
+              Paint()..color = Colors.black.withValues(alpha: 0.7));
         }
       }
     }
@@ -418,7 +431,9 @@ class KnightPainter extends CustomPainter {
           ..close();
         _aura(canvas, blade, aff, tier, w);
         canvas.drawPath(blade, metal);
-        canvas.drawLine(Offset(cx, h * 0.6), Offset(cx, h * 0.93),
+        canvas.drawLine(
+            Offset(cx, h * 0.6),
+            Offset(cx, h * 0.93),
             Paint()
               ..color = Colors.white.withValues(alpha: 0.35)
               ..strokeWidth = 1.2);
@@ -426,8 +441,10 @@ class KnightPainter extends CustomPainter {
         canvas.drawRect(Rect.fromLTWH(cx - w * 0.02, h * 0.5, w * 0.04, h * 0.085), grip);
         canvas.drawCircle(Offset(cx, h * 0.495), w * 0.028, hilt);
       case WeaponShape.hammer:
-        blade = Path()..addRRect(RRect.fromRectAndRadius(
-            Rect.fromLTWH(cx - w * 0.12, h * 0.84, w * 0.24, h * 0.1), Radius.circular(w * 0.02)));
+        blade = Path()
+          ..addRRect(RRect.fromRectAndRadius(
+              Rect.fromLTWH(cx - w * 0.12, h * 0.84, w * 0.24, h * 0.1),
+              Radius.circular(w * 0.02)));
         _aura(canvas, blade, aff, tier, w);
         canvas.drawRect(Rect.fromLTWH(cx - w * 0.02, h * 0.5, w * 0.04, h * 0.36), grip);
         canvas.drawPath(blade, metal);
@@ -438,7 +455,9 @@ class KnightPainter extends CustomPainter {
         blade = Path()..addOval(Rect.fromCircle(center: Offset(x, h * 0.18), radius: w * 0.05));
         _aura(canvas, blade, aff, tier, w);
         canvas.drawPath(blade, metal);
-        canvas.drawCircle(Offset(x, h * 0.18), w * 0.06,
+        canvas.drawCircle(
+            Offset(x, h * 0.18),
+            w * 0.06,
             Paint()
               ..color = Palette.gold
               ..style = PaintingStyle.stroke
@@ -455,7 +474,9 @@ class KnightPainter extends CustomPainter {
           ..strokeCap = StrokeCap.round;
         _aura(canvas, blade, aff, tier, w, stroke: true);
         canvas.drawPath(blade, limb);
-        canvas.drawLine(Offset(x, h * 0.25), Offset(x, h * 0.78),
+        canvas.drawLine(
+            Offset(x, h * 0.25),
+            Offset(x, h * 0.78),
             Paint()
               ..color = Palette.holy.withValues(alpha: 0.7)
               ..strokeWidth = 1);
@@ -495,8 +516,12 @@ class KnightPainter extends CustomPainter {
       case Affinity.wind:
         for (var i = 0; i < 4; i++) {
           final y = b.top + b.height * (0.15 + i * 0.22);
-          canvas.drawArc(Rect.fromCenter(center: Offset(b.center.dx, y), width: b.width + 30, height: 12),
-              pi * 0.1, pi * 1.3, false, accent);
+          canvas.drawArc(
+              Rect.fromCenter(center: Offset(b.center.dx, y), width: b.width + 30, height: 12),
+              pi * 0.1,
+              pi * 1.3,
+              false,
+              accent);
         }
       case Affinity.arcane:
         // Neon azzurro e puntini di luce, niente di più.
@@ -507,15 +532,16 @@ class KnightPainter extends CustomPainter {
               ..style = PaintingStyle.stroke
               ..strokeWidth = 2);
         for (var i = 0; i < 14; i++) {
-          final p = Offset(b.left - 10 + rnd.nextDouble() * (b.width + 20),
-              b.top + rnd.nextDouble() * b.height);
+          final p = Offset(
+              b.left - 10 + rnd.nextDouble() * (b.width + 20), b.top + rnd.nextDouble() * b.height);
           canvas.drawCircle(p, 1.2 + rnd.nextDouble() * 1.6,
               Paint()..color = const Color(0xFF7FF4FF).withValues(alpha: 0.85));
         }
       case Affinity.holy:
         // Aura d'oro e qualche fulmine oro-azzurro, da divinità greca.
         for (var i = 0; i < 3; i++) {
-          var p = Offset(b.left + rnd.nextDouble() * b.width, b.top + rnd.nextDouble() * b.height * 0.3);
+          var p = Offset(
+              b.left + rnd.nextDouble() * b.width, b.top + rnd.nextDouble() * b.height * 0.3);
           final bolt = Path()..moveTo(p.dx, p.dy);
           for (var k = 0; k < 5; k++) {
             p += Offset(rnd.nextDouble() * 16 - 8, b.height * 0.12);
@@ -528,7 +554,11 @@ class KnightPainter extends CustomPainter {
                 ..style = PaintingStyle.stroke
                 ..strokeWidth = 4
                 ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
-          canvas.drawPath(bolt, accent..color = const Color(0xFFFFF4C2)..strokeWidth = 1.4);
+          canvas.drawPath(
+              bolt,
+              accent
+                ..color = const Color(0xFFFFF4C2)
+                ..strokeWidth = 1.4);
         }
     }
   }
@@ -609,17 +639,22 @@ class TrainerPainter extends KnightPainter {
     canvas.drawPath(cape, Paint()..color = const Color(0xFF2A1210));
     // Busto.
     final torso = Rect.fromLTWH(cx - w * 0.27, h * 0.33, w * 0.54, h * 0.67);
-    canvas.drawRRect(RRect.fromRectAndCorners(torso, topLeft: Radius.circular(w * 0.1),
-        topRight: Radius.circular(w * 0.1)), metal(torso));
-    canvas.drawRRect(RRect.fromRectAndCorners(torso, topLeft: Radius.circular(w * 0.1),
-        topRight: Radius.circular(w * 0.1)), line);
+    canvas.drawRRect(
+        RRect.fromRectAndCorners(torso,
+            topLeft: Radius.circular(w * 0.1), topRight: Radius.circular(w * 0.1)),
+        metal(torso));
+    canvas.drawRRect(
+        RRect.fromRectAndCorners(torso,
+            topLeft: Radius.circular(w * 0.1), topRight: Radius.circular(w * 0.1)),
+        line);
     // Croce sul petto.
     final cross = Paint()..color = const Color(0xFF7E1F1A);
     canvas.drawRect(Rect.fromLTWH(cx - w * 0.03, h * 0.42, w * 0.06, h * 0.3), cross);
     canvas.drawRect(Rect.fromLTWH(cx - w * 0.12, h * 0.5, w * 0.24, h * 0.055), cross);
     // Spallacci.
     for (final side in [-1, 1]) {
-      final p = Rect.fromCenter(center: Offset(cx + side * w * 0.3, h * 0.38), width: w * 0.3, height: h * 0.16);
+      final p = Rect.fromCenter(
+          center: Offset(cx + side * w * 0.3, h * 0.38), width: w * 0.3, height: h * 0.16);
       canvas.drawOval(p, metal(p));
       canvas.drawArc(p, pi, pi, false, line);
     }

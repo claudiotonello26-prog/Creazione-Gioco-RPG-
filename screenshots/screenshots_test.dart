@@ -24,6 +24,7 @@ import 'package:iron_oath/ui/screens/expedition_map.dart';
 import 'package:iron_oath/domain/enemies.dart';
 import 'package:iron_oath/domain/skills.dart';
 import 'package:iron_oath/ui/screens/guide_screen.dart';
+import 'package:iron_oath/ui/screens/quest_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFont(String family, List<String> paths) async {
@@ -93,7 +94,9 @@ void main() {
         await precacheImage((e.widget as Image).image, e);
       }
     });
-    await t.pump(const Duration(milliseconds: 3000));
+    await t.pump(const Duration(milliseconds: 900));
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('out/00a_apertura_anello.png'));
+    await t.pump(const Duration(milliseconds: 2100));
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('out/00_apertura.png'));
     await t.pump(const Duration(seconds: 2));
     await t.pumpAndSettle();
@@ -214,12 +217,42 @@ void main() {
     await t.pumpAndSettle();
     nav.push(MaterialPageRoute<void>(builder: (_) => const GuideScreen()));
     await t.pumpAndSettle();
-    await t.tap(find.text('ATTACCO'));
+    await t.tap(find.text('GIURAMENTO E BUILD'));
     await _shot(t, '24_guida');
+    await t.scrollUntilVisible(find.text('ATTACCO'), 300);
+    await t.tap(find.text('ATTACCO'));
+    await t.pumpAndSettle();
+    await t.drag(find.byType(ListView).last, const Offset(0, -500));
+    await _shot(t, '24b_guida_attacco');
     nav.pop();
     await t.pumpAndSettle();
     nav.push(MaterialPageRoute<void>(builder: (_) => const BestiaryScreen()));
     await _shot(t, '25_bestiario');
+  });
+
+  testWidgets('quest e postazione', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    st.character.addMaterial('ash_wood', 45);
+    await t.pumpWidget(IronOathApp(state: st));
+    await t.pumpAndSettle();
+    final nav = Navigator.of(t.element(find.byType(NavigationBar)));
+    nav.push(MaterialPageRoute<void>(builder: (_) => const QuestScreen()));
+    await _shot(t, '26_quest');
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(
+        MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.carpentry)));
+    await _shot(t, '35_carpenteria');
+    await t.tap(find.text('CREA').first);
+    await t.pump();
+    await t.pump(const Duration(milliseconds: 400));
+    await t.pump(const Duration(milliseconds: 1200));
+    expect(find.text('ANNULLA'), findsOneWidget);
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('out/36_creazione_countdown.png'));
+    await t.tap(find.text('ANNULLA'));
+    await t.pumpAndSettle();
   });
 
   testWidgets('equipaggiamento, inventario, mercato', (t) async {

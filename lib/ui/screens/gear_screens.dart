@@ -301,6 +301,7 @@ class MarketScreen extends StatelessWidget {
       initialIndex: initialTab,
       child: Scaffold(
         appBar: OathBar(
+          accent: Sections.market,
           title: const Text('MERCATO'),
           actions: [
             Center(
@@ -331,10 +332,6 @@ class _Merchant extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const Text(
-          '"Compro tutto, a metà prezzo. Vendo poco, al doppio. È il mercato, cavaliere."',
-          style: TextStyle(color: Palette.ash, fontStyle: FontStyle.italic),
-        ),
         const SectionTitle('Vendi'),
         if (toSell.isEmpty && c.weapons.isEmpty)
           const Text('Niente da vendere.', style: TextStyle(color: Palette.ash)),
@@ -406,11 +403,6 @@ class _Witch extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const Text(
-          '"Un amuleto non ti rende forte. Ti rende... diverso." Ne puoi portare tre.',
-          style: TextStyle(color: Palette.ash, fontStyle: FontStyle.italic),
-        ),
-        const SizedBox(height: 8),
         for (final a in amuletDefs.values)
           ActionTile(
             icon: Icons.brightness_7_outlined,

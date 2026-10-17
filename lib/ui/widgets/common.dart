@@ -254,3 +254,133 @@ class ItemIcon extends StatelessWidget {
     );
   }
 }
+
+/// Cinque secondi prima di creare qualcosa, con ANNULLA: true se si va avanti.
+Future<bool> craftCountdown(
+  BuildContext context, {
+  required String title,
+  String? itemId,
+  Color color = Palette.gold,
+  int seconds = 5,
+}) async {
+  final ok = await showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => _CraftCountdown(title: title, itemId: itemId, color: color, seconds: seconds),
+  );
+  return ok == true;
+}
+
+class _CraftCountdown extends StatefulWidget {
+  const _CraftCountdown({
+    required this.title,
+    required this.itemId,
+    required this.color,
+    required this.seconds,
+  });
+  final String title;
+  final String? itemId;
+  final Color color;
+  final int seconds;
+
+  @override
+  State<_CraftCountdown> createState() => _CraftCountdownState();
+}
+
+class _CraftCountdownState extends State<_CraftCountdown> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: Duration(seconds: widget.seconds),
+  )
+    ..addStatusListener((st) {
+      if (st == AnimationStatus.completed && mounted) Navigator.pop(context, true);
+    })
+    ..forward();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: AnimatedBuilder(
+        animation: _c,
+        builder: (context, _) {
+          final left = (widget.seconds * (1 - _c.value)).ceil();
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(widget.title.toUpperCase(),
+                  textAlign: TextAlign.center, style: titleStyle(size: 15, color: widget.color)),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: 120,
+                height: 120,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox.expand(
+                      child: CircularProgressIndicator(
+                        value: 1 - _c.value,
+                        strokeWidth: 5,
+                        color: widget.color,
+                        backgroundColor: Palette.iron,
+                      ),
+                    ),
+                    if (widget.itemId != null && Art.has('assets/art/items/${widget.itemId}.png'))
+                      Opacity(opacity: 0.35, child: ItemIcon(widget.itemId!, size: 70)),
+                    Text('$left', style: titleStyle(size: 40, color: Palette.holy)),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+      actionsAlignment: MainAxisAlignment.center,
+      actions: [
+        FilledButton(
+          style:
+              FilledButton.styleFrom(backgroundColor: Palette.blood, foregroundColor: Palette.holy),
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('ANNULLA'),
+        ),
+      ],
+    );
+  }
+}
+
+/// Sfondo di una sezione: l'illustrazione (assets/art/backgrounds, quando
+/// c'è) appena visibile e un alone del colore della sezione in alto.
+class SectionBackdrop extends StatelessWidget {
+  const SectionBackdrop({super.key, required this.art, required this.color, required this.child});
+  final String art;
+  final Color color;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final path = 'assets/art/backgrounds/$art.png';
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        if (Art.has(path)) Opacity(opacity: 0.3, child: Image.asset(path, fit: BoxFit.cover)),
+        IgnorePointer(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: const Alignment(0, -1.1),
+                radius: 1.1,
+                colors: [color.withValues(alpha: 0.22), color.withValues(alpha: 0)],
+              ),
+            ),
+          ),
+        ),
+        child,
+      ],
+    );
+  }
+}

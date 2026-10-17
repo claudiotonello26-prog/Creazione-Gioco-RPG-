@@ -143,3 +143,24 @@ List<EnemyDef> get bestiary => [
             ? a.level.compareTo(b.level)
             : (a.isBoss ? 1 : 0) - (b.isBoss ? 1 : 0),
       );
+
+/// Il nemico della quest giornaliera per un esercizio: il più forte che il
+/// giocatore può reggere al suo livello, fra quelli che si battono con quel
+/// movimento (niente boss).
+(EnemyDef, Move)? questFoe(ExerciseId id, int level) {
+  (EnemyDef, Move)? best;
+  for (final e in bestiary) {
+    if (e.isBoss) continue;
+    final m = e.moves.where((m) => m.trackAs == id).firstOrNull;
+    if (m == null) continue;
+    final b = best;
+    final fits = e.level <= level;
+    final bestFits = b != null && b.$1.level <= level;
+    if (b == null ||
+        (fits && (!bestFits || e.level > b.$1.level)) ||
+        (!fits && !bestFits && e.level < b.$1.level)) {
+      best = (e, m);
+    }
+  }
+  return best;
+}

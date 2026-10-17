@@ -58,7 +58,11 @@ class DailyState {
   /// aprire, 6 finita.
   final Map<String, int> expeditionStep = {};
 
+  /// Bottino della quest giornaliera, per mostrarlo dopo.
+  final Map<String, int> questLoot = {};
+
   Map<String, dynamic> toJson() => {
+        'qloot': questLoot,
         'day': day,
         'quest': {for (final e in questDone.entries) e.key.name: e.value},
         'variety': {for (final e in varietyUsed.entries) e.key.name: e.value},
@@ -94,6 +98,7 @@ class DailyState {
       (k, v) => d.pathDone[MuscleGroup.parse(k as String)] = v as int,
     );
     ((j['map'] as Map?) ?? const {}).forEach((k, v) => d.expeditionStep[k as String] = v as int);
+    ((j['qloot'] as Map?) ?? const {}).forEach((k, v) => d.questLoot[k as String] = v as int);
     return d;
   }
 }
@@ -186,6 +191,26 @@ class GameState extends ChangeNotifier {
 
   /// XP dei mestieri (Taglialegna, Minatore, Carpenteria, Fornace, Incudine).
   Map<Skill, int> skillXp = {};
+
+  /// Giuramento: la build per cui arrivano i componenti speciali. null = la
+  /// più alta fra Forza, Destrezza, Fede e Intelligenza.
+  Attribute? oath;
+
+  Attribute get build {
+    if (oath != null) return oath!;
+    var best = oathAttributes.first;
+    for (final a in oathAttributes) {
+      if (character.attr(a) > character.attr(best)) best = a;
+    }
+    return best;
+  }
+
+  void setOath(Attribute? a) {
+    oath = a;
+    _changed();
+  }
+
+  Map<String, int> _forBuild(Map<String, int> loot) => lootForBuild(loot, build);
 
   /// Materia prima che i passi stanno raccogliendo e passi avanzati.
   String gatherTarget = 'ash_wood';
@@ -304,6 +329,7 @@ class GameState extends ChangeNotifier {
         'activeDays': _recent(activeDays),
         'questDays': _recent(questDays),
         'skills': {for (final e in skillXp.entries) e.key.name: e.value},
+        if (oath != null) 'oath': oath!.name,
         'gather': gatherTarget,
         'bank': stepBank,
         'stats': stats,
@@ -377,6 +403,7 @@ class GameState extends ChangeNotifier {
         Skill.values.byName(e.key as String): e.value as int,
     };
     gatherTarget = j['gather'] as String? ?? 'ash_wood';
+    oath = j['oath'] == null ? null : Attribute.values.byName(j['oath'] as String);
     // Prima degli attrezzi si poteva minare a mani nude: chi l'ha già fatto
     // tiene il piccone.
     if ((skillXp[Skill.mining] ?? 0) > 0 && (character.materials['ash_pickaxe'] ?? 0) == 0) {
@@ -648,6 +675,11 @@ class GameState extends ChangeNotifier {
     expeditionKeys += 1;
     character.runes += 100;
     _gainXp(150);
+    final loot = questLootFor(character.level, build, Random());
+    loot.forEach(character.addMaterial);
+    daily.questLoot
+      ..clear()
+      ..addAll(loot);
     if (daily.goodForm) {
       goodDays += 1;
       progression = RoutineRules.nextProgression(progression, goodDays);
@@ -739,9 +771,11 @@ class GameState extends ChangeNotifier {
     final before = daily.combatReps[group] ?? 0;
     final fatigue = fatigueFor(before, reps.length);
     daily.combatReps[group] = before + reps.length;
-    final granted = r.scaled(fatigue, random ?? Random());
+    final scaled = r.scaled(fatigue, random ?? Random());
+    final granted = scaled.withMaterials(_forBuild(scaled.materials));
 
-    var xp = addTraining(exercise, reps, countsForQuest: false, inCombat: true);
+    // Le rep in combattimento contano anche per la quest giornaliera.
+    var xp = addTraining(exercise, reps, inCombat: true);
     if (victory) {
       final bonus = (r.xp * 0.25).round();
       _gainXp(bonus);
@@ -793,7 +827,7 @@ class GameState extends ChangeNotifier {
     if (r.nextDouble() < (weighted ? 0.5 : 0.3)) loot['holy_shard'] = 1;
     if (r.nextDouble() < (weighted ? 0.12 : 0.06)) loot['ancient_stone'] = 1;
     if (r.nextDouble() < (weighted ? 0.06 : 0.03)) loot['somber_stone'] = 1;
-    loot.forEach(character.addMaterial);
+    _forBuild(loot).forEach(character.addMaterial);
     daily.pathDone[g] = (daily.pathDone[g] ?? 0) + 1;
     _count('boss_wins');
     _gainXp(150 * m);
@@ -918,7 +952,7 @@ class GameState extends ChangeNotifier {
   Map<String, int> expeditionBossDown(Expedition e, {bool weighted = false}) {
     _rollDay();
     final m = weighted ? 2 : 1;
-    final loot = {for (final l in e.boss.loot.entries) l.key: l.value * m};
+    final loot = _forBuild({for (final l in e.boss.loot.entries) l.key: l.value * m});
     loot.forEach(character.addMaterial);
     _gainXp(150 * m);
     _gainSkill(Skill.expeditions, 60);
@@ -942,7 +976,7 @@ class GameState extends ChangeNotifier {
     final runes = e.chest.runes * multiplier;
     character.runes += runes;
     out.add(('runes', runes, false));
-    for (final g in e.chest.guaranteed.entries) {
+    for (final g in _forBuild(e.chest.guaranteed).entries) {
       character.addMaterial(g.key, g.value * multiplier);
       out.add((g.key, g.value * multiplier, false));
     }
@@ -963,7 +997,7 @@ class GameState extends ChangeNotifier {
       character.weapons.add(WeaponInstance(weaponId: id));
       return id;
     }
-    final key = amuletDefs.containsKey(id) ? 'amulet_$id' : id;
+    final key = amuletDefs.containsKey(id) ? 'amulet_$id' : forBuild(id, build);
     character.addMaterial(key, 1);
     return key;
   }
@@ -976,9 +1010,9 @@ class GameState extends ChangeNotifier {
 
   CombatRewards holdVictory(EnemyDef e, {required int seconds, double lootMultiplier = 1}) {
     _rollDay();
-    final materials = {
+    final materials = _forBuild({
       for (final l in e.loot.entries) l.key: max(1, (l.value * lootMultiplier).round()),
-    };
+    });
     materials.forEach(character.addMaterial);
     final runes = (e.runeReward * lootMultiplier).round();
     character.runes += runes;

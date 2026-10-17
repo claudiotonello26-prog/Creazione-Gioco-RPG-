@@ -37,13 +37,6 @@ class ArenaTab extends StatelessWidget {
                   'ARENA PURA',
                   style: TextStyle(letterSpacing: 4, color: Palette.goldBright, fontSize: 20),
                 ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Niente statistiche né build: vince chi si allena meglio. '
-                  'Le rep scorrette non contano.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Palette.ash),
-                ),
                 const SizedBox(height: 12),
                 Text('${s.seasonTitle} · ${s.arenaPoints} punti stagione'),
                 Text(
@@ -67,7 +60,7 @@ class ArenaTab extends StatelessWidget {
             ActionTile(
               icon: Icons.public,
               title: '${exercises[c.exercise]!.name} · live',
-              subtitle: 'Contro una persona vera · ${c.description}',
+              subtitle: 'Contro una persona vera',
               color: Palette.goldBright,
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => ArenaLiveScreen(challenge: c))),
@@ -77,29 +70,10 @@ class ArenaTab extends StatelessWidget {
           ActionTile(
             icon: Icons.sports_kabaddi,
             title: exercises[c.exercise]!.name,
-            subtitle: '${c.description}\nDivisione: ${s.divisionOf(c.exercise).label}',
+            subtitle: 'Divisione: ${s.divisionOf(c.exercise).label}',
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => ArenaDuelScreen(challenge: c))),
           ),
-        const SectionTitle('In arrivo'),
-        const ActionTile(
-          icon: Icons.groups_outlined,
-          title: 'Allenamento di gruppo (2–6)',
-          subtitle: 'Sala live con avatar animati dallo scheletro e chat vocale opzionale',
-          enabled: false,
-        ),
-        const ActionTile(
-          icon: Icons.mark_email_unread_outlined,
-          title: 'Sfide tra amici',
-          subtitle: '"Batti i miei 20 push-up entro stasera"',
-          enabled: false,
-        ),
-        const ActionTile(
-          icon: Icons.emoji_events_outlined,
-          title: 'Arena classificata e gilde',
-          subtitle: 'Leghe, titoli e boss di gilda settimanale',
-          enabled: false,
-        ),
         if (s.arenaHistory.isNotEmpty) ...[
           const SectionTitle('Ultimi duelli'),
           for (final r in s.arenaHistory.take(10))

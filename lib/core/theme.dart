@@ -19,6 +19,17 @@ class Palette {
   static const frost = Color(0xFF7FA7C9);
 }
 
+/// Ogni sezione ha il suo colore, così si capisce subito dove si è: lo usano
+/// la barra in alto, l'alone dello sfondo e i pulsanti principali.
+class Sections {
+  static const home = Palette.gold;
+  static const training = Color(0xFFD0603A);
+  static const gathering = Color(0xFF7FA85A);
+  static const forge = Color(0xFFE0662B);
+  static const market = Color(0xFF5FB0A6);
+  static const arena = Color(0xFFC0433A);
+}
+
 /// Caratteri: Cinzel per titoli e pulsanti (iscrizioni romane), EB Garamond
 /// per il testo (libro antico, ma leggibile).
 const kTitleFont = 'Cinzel';
@@ -396,7 +407,12 @@ ThemeData buildTheme() {
     ),
     dialogTheme: const DialogThemeData(backgroundColor: Palette.stone, shape: GildedBorder()),
     snackBarTheme: const SnackBarThemeData(
+      backgroundColor: Palette.stoneLight,
       contentTextStyle: TextStyle(fontFamily: kBodyFont, fontSize: 16, color: Palette.holy),
+      // L'azione è un pulsante oro con la scritta nera: si vede sempre.
+      actionTextColor: Palette.night,
+      actionBackgroundColor: Palette.goldBright,
+      disabledActionTextColor: Palette.ash,
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: Palette.gold,

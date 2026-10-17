@@ -5,7 +5,10 @@ import '../widgets/oath_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
+import '../../game/battle_game.dart' show enemyArtPath;
+import '../../core/art.dart';
 import '../../data/game_state.dart';
+import '../../domain/character.dart';
 import '../../domain/combat.dart';
 import '../../domain/enemies.dart';
 import '../../domain/exercise.dart';
@@ -60,12 +63,6 @@ class TrainTab extends StatelessWidget {
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QuestScreen())),
         ),
         const SectionTitle('Spedizioni: scegli il gruppo muscolare'),
-        const Text(
-          'Le spedizioni fanno salire di livello. Scegli il gruppo da allenare: ognuno ha quattro '
-          'spedizioni a mappa con boss e forziere, e materiali che si trovano solo lì.',
-          style: TextStyle(color: Palette.ash, fontSize: 13),
-        ),
-        const SizedBox(height: 8),
         for (final g in worldGroups)
           _GroupCard(
             group: g,
@@ -75,19 +72,12 @@ class TrainTab extends StatelessWidget {
                 .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
           ),
         const SectionTitle('Caccia: allenamento libero'),
-        const Text(
-          'Scegli un nemico e allenati quanto vuoi: rinasce dopo ogni uccisione e il bottino lo '
-          'ritiri alla fine. Questi cinque sono sempre alla tua portata.',
-          style: TextStyle(color: Palette.ash, fontSize: 13),
-        ),
-        const SizedBox(height: 6),
         for (final a in baseAnimals)
           _FreeFightTile(enemy: a, playerLevel: s.character.level, icon: Icons.pets),
         ActionTile(
           icon: Icons.menu_book,
           title: 'Tutti i nemici (${bestiary.length})',
-          subtitle: 'Animali, mostri e boss per livello. Nessuno è bloccato: sopra il tuo livello '
-              'si muore, ma puoi provarci.',
+          subtitle: 'Animali, mostri e boss, dal livello 1 in su',
           color: Palette.goldBright,
           onTap: () =>
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BestiaryScreen())),
@@ -203,32 +193,18 @@ class GroupScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(
-            group == MuscleGroup.stretching
-                ? 'Qui non si combatte: gli spiriti si calmano se tieni la posa. Non c\'è giusto o '
-                    'sbagliato, conta restare fermi. ${groupMaterials[group]}. Ogni mappa finisce con un forziere.'
-                : '${groupMaterials[group]}. Ogni spedizione è una mappa: quattro tappe, il boss in cima '
-                    'e un forziere. Sotto il livello consigliato, senza l\'equipaggiamento giusto, si muore.',
-            style: const TextStyle(color: Palette.ash),
-          ),
-          const SizedBox(height: 8),
           const SectionTitle('Spedizioni'),
           for (final e in list)
             _ExpeditionCard(
               expedition: e,
               cleared: s.clearedExpeditions.contains(e.id),
               underLevel: s.character.level < e.level,
+              oath: s.build,
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => ExpeditionMapScreen(expedition: e))),
             ),
           if (group != MuscleGroup.stretching) ...[
             const SectionTitle('Combattimenti liberi'),
-            const Text(
-              'Il mostro rinasce dopo ogni uccisione: continua finché vuoi, il bottino lo '
-              'ritiri alla fine.',
-              style: TextStyle(color: Palette.ash, fontSize: 13),
-            ),
-            const SizedBox(height: 6),
             for (final m in {for (final e in list) ...e.monsters})
               _FreeFightTile(enemy: m, playerLevel: s.character.level),
             for (final e in list)
@@ -237,8 +213,7 @@ class GroupScreen extends StatelessWidget {
             ActionTile(
               icon: Icons.all_inclusive,
               title: 'Caccia: ${list.first.monster.name}',
-              subtitle: 'Ogni nemico abbattuto ne chiama uno più forte. Più resisti, più è '
-                  'probabile un drop raro${s.bestHuntWave > 0 ? ' · record ${s.bestHuntWave}' : ''}',
+              subtitle: 'Nemici sempre più forti${s.bestHuntWave > 0 ? ' · record ${s.bestHuntWave}' : ''}',
               color: Palette.ember,
               onTap: () => startFreeFight(context, list.first.monster, endless: true),
             ),
@@ -327,11 +302,19 @@ class _FreeFightTile extends StatelessWidget {
     final under = playerLevel < enemy.level;
     return Card(
       child: ListTile(
-        leading: Icon(icon ?? Icons.repeat, color: under ? Palette.blood : Palette.goldBright),
+        leading: Art.has(enemyArtPath(enemy))
+            ? SizedBox(
+                width: 44,
+                height: 44,
+                child: Image.asset(enemyArtPath(enemy), fit: BoxFit.contain),
+              )
+            : Icon(icon ?? Icons.repeat, color: under ? Palette.blood : Palette.goldBright),
         title: Text(enemy.name),
         subtitle: Text(
           '${enemy.moves.map((m) => m.name).join(' o ')} · '
           '${enemy.loot.keys.map((k) => materialNames[k] ?? k).join(', ')}',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(color: Palette.ash, fontSize: 13),
         ),
         trailing: Text(
@@ -353,10 +336,12 @@ class _ExpeditionCard extends StatelessWidget {
     required this.cleared,
     required this.underLevel,
     required this.onTap,
+    required this.oath,
   });
   final Expedition expedition;
   final bool cleared;
   final bool underLevel;
+  final Attribute oath;
   final VoidCallback onTap;
 
   @override
@@ -388,28 +373,16 @@ class _ExpeditionCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text(e.blurb, style: const TextStyle(color: Palette.ash, fontSize: 13)),
-                const SizedBox(height: 6),
-                Text(
-                  e.monsters.map((m) => m.name).join(' · '),
-                  style: const TextStyle(fontSize: 14),
-                ),
-                Text(
-                  'Boss: ${e.boss.name}',
-                  style: const TextStyle(color: Palette.ember, fontSize: 14),
-                ),
-                Text(e.chest.name, style: const TextStyle(color: Palette.goldBright, fontSize: 13)),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
+                Text('Boss: ${e.boss.name}',
+                    style: const TextStyle(color: Palette.ember, fontSize: 14)),
+                const SizedBox(height: 8),
                 Wrap(
-                  spacing: 6,
+                  spacing: 8,
                   runSpacing: 6,
                   children: [
-                    for (final d in e.drops)
-                      InfoChip(
-                        Icons.hexagon_outlined,
-                        materialNames[d] ?? d,
-                        color: Palette.goldBright,
-                      ),
+                    for (final d in {for (final d in e.drops) forBuild(d, oath)})
+                      Tooltip(message: itemName(d), child: ItemIcon(d, size: 30)),
                   ],
                 ),
               ],
@@ -429,6 +402,7 @@ Future<bool> startFreeFight(
   bool endless = false,
   bool respawn = false,
   double lootMultiplier = 1,
+  Move? move,
 }) async {
   final st = context.read<GameState>();
   if (endless && st.trainerEnabled && st.markHint('hunt')) {
@@ -438,7 +412,7 @@ Future<bool> startFreeFight(
   final choice = await showModalBottomSheet<(Move, Stance)>(
     context: context,
     backgroundColor: Palette.stone,
-    builder: (_) => _FightSetup(enemy: enemy),
+    builder: (_) => _FightSetup(enemy: enemy, move: move),
   );
   if (choice == null || !context.mounted) return false;
   final won = await Navigator.of(context).push<bool>(
@@ -458,15 +432,16 @@ Future<bool> startFreeFight(
 }
 
 class _FightSetup extends StatefulWidget {
-  const _FightSetup({required this.enemy});
+  const _FightSetup({required this.enemy, this.move});
   final EnemyDef enemy;
+  final Move? move;
 
   @override
   State<_FightSetup> createState() => _FightSetupState();
 }
 
 class _FightSetupState extends State<_FightSetup> {
-  late Move _move = widget.enemy.moves.first;
+  late Move _move = widget.move ?? widget.enemy.moves.first;
   Stance _stance = Stance.balanced;
 
   @override
@@ -506,11 +481,11 @@ class _FightSetupState extends State<_FightSetup> {
           Text(
               switch (_stance) {
                 Stance.aggressive =>
-                  'Colpi più penetranti, ma subisci più danni. Ogni rep fa salire Attacco.',
+                  'Più danni dati e subiti · sale l\'Attacco',
                 Stance.balanced =>
-                  'Nessun vantaggio né svantaggio. Le rep vanno metà ad Attacco, metà a Difesa.',
+                  'Metà Attacco, metà Difesa',
                 Stance.defensive =>
-                  'Subisci un quarto di danni in meno, colpi meno penetranti. Ogni rep fa salire Difesa.',
+                  '-25% danni subiti · sale la Difesa',
               },
               style: const TextStyle(color: Palette.ash)),
           const SizedBox(height: 16),

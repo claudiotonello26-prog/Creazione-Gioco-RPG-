@@ -88,13 +88,23 @@ class _StationButton extends StatelessWidget {
                 height: 64,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Palette.gold, width: 1.5),
-                  gradient: const RadialGradient(colors: [Color(0xFF3A2C16), Palette.night]),
+                  border: Border.all(color: station.accent, width: 1.5),
+                  gradient: RadialGradient(
+                    colors: [station.accent.withValues(alpha: 0.35), Palette.night],
+                  ),
+                  boxShadow: [
+                    BoxShadow(color: station.accent.withValues(alpha: 0.35), blurRadius: 14),
+                  ],
                 ),
-                child: Icon(stationIcon(station), color: Palette.goldBright, size: 32),
+                child: Icon(stationIcon(station), color: station.accent, size: 32),
               ),
               const SizedBox(height: 10),
-              FittedBox(child: Text(station.label.toUpperCase(), style: titleStyle(size: 14))),
+              FittedBox(
+                child: Text(
+                  station.label.toUpperCase(),
+                  style: titleStyle(size: 14, color: station.accent),
+                ),
+              ),
               Text(
                 level == null ? 'Potenzia l\'arma' : 'Livello $level',
                 style: const TextStyle(color: Palette.ash, fontSize: 13),
@@ -116,10 +126,14 @@ class StationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     return Scaffold(
-      appBar: OathBar(title: Text(station.label.toUpperCase())),
-      body: ListView(
+      appBar: OathBar(title: Text(station.label.toUpperCase()), accent: station.accent),
+      body: SectionBackdrop(
+        art: 'station_${station.name}',
+        color: station.accent,
+        child: ListView(
         padding: const EdgeInsets.all(16),
         children: station == Station.enchant ? _enchant(context, s) : _crafting(context, s),
+      ),
       ),
     );
   }
@@ -162,6 +176,8 @@ class StationScreen extends StatelessWidget {
           onMake: () => s.craftMaterial(r),
           icon: Icons.hexagon_outlined,
           stationLabel: station.label,
+          color: station.accent,
+          itemId: r.output,
         ),
       if (weapons.isNotEmpty) const SectionTitle('Armi'),
       for (final d in weapons)
@@ -177,6 +193,8 @@ class StationScreen extends StatelessWidget {
           },
           icon: Icons.gavel,
           stationLabel: station.label,
+          color: station.accent,
+          itemId: d.id,
           note:
               '${d.style.label} · aura di ${d.affinity.label.toLowerCase()}'
               '${d.wieldLevel > 1 ? ' · si impugna con ${d.usesMagic ? 'Magia' : 'Attacco'} ${d.wieldLevel}' : ''}',
@@ -196,6 +214,8 @@ class StationScreen extends StatelessWidget {
           },
           icon: Icons.shield_outlined,
           stationLabel: station.label,
+          color: station.accent,
+          itemId: a.id,
           note:
               'Assorbe il ${(a.reduction * 100).round()}% dei colpi'
               '${a.wearLevel > 1 ? ' · si indossa con Difesa ${a.wearLevel}' : ''}',
@@ -215,6 +235,8 @@ class StationScreen extends StatelessWidget {
           },
           icon: o.isShield ? Icons.shield_moon_outlined : Icons.gavel,
           stationLabel: station.label,
+          color: station.accent,
+          itemId: o.id,
           note: o.effect,
         ),
     ];
@@ -227,15 +249,8 @@ class StationScreen extends StatelessWidget {
       weaponId: w.weaponId,
       upgrade: (w.upgrade + 1).clamp(0, w.def.maxUpgrade),
     );
-    final aff = w.def.affinity;
     final stone = w.nextStone;
     return [
-      Text(
-        'L\'aura di quest\'arma è ${aff.label.toLowerCase()} (${aff.attributeLabel}). '
-        'A +3 la lama si tinge, a +6 si accende, a +10 ha l\'aura completa.',
-        style: const TextStyle(color: Palette.ash),
-      ),
-      const SizedBox(height: 12),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -267,7 +282,14 @@ class StationScreen extends StatelessWidget {
       if (stone != null)
         FilledButton(
           onPressed: (c.materials[stone] ?? 0) >= w.nextStoneCost
-              ? () {
+              ? () async {
+                  final ok = await craftCountdown(
+                    context,
+                    title: 'Incanta a +${w.upgrade + 1}',
+                    itemId: stone,
+                    color: Station.enchant.accent,
+                  );
+                  if (!ok || !context.mounted) return;
                   s.upgradeWeapon(w);
                   toast(context, '${w.displayName}: l\'acciaio canta.');
                 }
@@ -310,6 +332,8 @@ class _RecipeTile extends StatelessWidget {
     required this.onMake,
     required this.icon,
     required this.stationLabel,
+    required this.color,
+    this.itemId,
     this.have,
     this.note,
     this.done = false,
@@ -323,6 +347,8 @@ class _RecipeTile extends StatelessWidget {
   final VoidCallback onMake;
   final IconData icon;
   final String stationLabel;
+  final Color color;
+  final String? itemId;
   final int? have;
   final String? note;
   final bool done;
@@ -335,13 +361,30 @@ class _RecipeTile extends StatelessWidget {
         .join(' · ');
     return ActionTile(
       icon: unlocked ? icon : Icons.lock_outline,
-      color: unlocked ? Palette.gold : Palette.iron,
+      color: unlocked ? color : Palette.iron,
       title: '$title${have != null && have! > 0 ? '  ·  hai $have' : ''}',
       subtitle: unlocked ? [?note, needs].join('\n') : 'Si sblocca a $stationLabel livello $level',
       enabled: unlocked,
       trailing: done
           ? const Icon(Icons.check, color: Palette.goldBright)
-          : TextButton(onPressed: canMake ? onMake : null, child: const Text('Crea')),
+          : !unlocked
+          ? null
+          : FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: color,
+                foregroundColor: Palette.night,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                minimumSize: const Size(0, 36),
+              ),
+              onPressed: canMake
+                  ? () async {
+                      if (await craftCountdown(context, title: title, itemId: itemId, color: color)) {
+                        onMake();
+                      }
+                    }
+                  : null,
+              child: const Text('CREA'),
+            ),
     );
   }
 }

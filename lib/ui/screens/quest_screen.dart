@@ -11,6 +11,9 @@ import '../../data/game_state.dart';
 import '../../domain/exercise.dart';
 import '../../domain/routine.dart';
 import '../widgets/common.dart';
+import '../../domain/hunting.dart';
+import '../../domain/items.dart';
+import 'train_tab.dart' show startFreeFight;
 import 'training_screen.dart';
 
 /// Alternative a basso impatto, solo se il giocatore dichiara dolore.
@@ -23,8 +26,16 @@ const Map<ExerciseId, String> lowImpactAlternatives = {
   ExerciseId.jumpingJack: 'Marcia sul posto',
 };
 
+/// Ogni voce della quest si fa combattendo: un nemico che si batte con
+/// quell'esercizio, che rinasce finché vuoi. Le rep contano per la quest e
+/// ogni uccisione lascia il suo bottino.
 Future<void> runQuestItem(BuildContext context, QuestItem q) async {
   final s = context.read<GameState>();
+  final foe = questFoe(q.exercise, s.character.level);
+  if (foe != null) {
+    await startFreeFight(context, foe.$1, respawn: true, move: foe.$2);
+    return;
+  }
   final remaining = (q.target - s.questDoneFor(q.exercise)).clamp(1, 9999);
   final result = await Navigator.of(context).push<SetResult>(
     MaterialPageRoute(
@@ -53,12 +64,6 @@ class QuestScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           StatBar(value: s.questProgress, color: Palette.gold, height: 12),
-          const SizedBox(height: 6),
-          const Text(
-            'Il 60% del tuo test, uguale per struttura per tutti. Le prime rep di ogni '
-            'gruppo muscolare valgono doppio (Bonus Varietà).',
-            style: TextStyle(color: Palette.ash, fontSize: 13),
-          ),
           const SectionTitle('Esercizi'),
           for (final q in s.quest) _QuestRow(item: q),
           const SectionTitle('Chiusura obbligatoria'),
@@ -76,18 +81,52 @@ class QuestScreen extends StatelessWidget {
                 : () => Navigator.of(context)
                     .push(MaterialPageRoute(builder: (_) => const StretchingScreen())),
           ),
-          if (s.questComplete)
-            const Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'Quest completata: +150 XP, +100 rune e una Chiave della Spedizione.',
-                  style: TextStyle(color: Palette.goldBright),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
+          SectionTitle(s.questComplete ? 'Bottino ottenuto' : 'Bottino'),
+          _QuestLoot(loot: s.questComplete ? s.daily.questLoot : null),
         ],
+      ),
+    );
+  }
+}
+
+/// Ricompensa della quest: rune, XP, chiave e il forziere di materiali.
+class _QuestLoot extends StatelessWidget {
+  const _QuestLoot({this.loot});
+  final Map<String, int>? loot;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget cell(Widget icon, String text) => SizedBox(
+          width: 76,
+          child: Column(
+            children: [
+              SizedBox(height: 40, child: Center(child: icon)),
+              const SizedBox(height: 4),
+              Text(text,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  style: const TextStyle(fontSize: 12, color: Palette.ash)),
+            ],
+          ),
+        );
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 6,
+          runSpacing: 10,
+          children: [
+            cell(const Icon(Icons.diamond_outlined, color: Palette.goldBright), '100 rune'),
+            cell(const Icon(Icons.auto_awesome, color: Palette.goldBright), '150 XP'),
+            cell(const Icon(Icons.vpn_key_outlined, color: Palette.goldBright), 'Chiave'),
+            if (loot != null)
+              for (final e in loot!.entries)
+                cell(ItemIcon(e.key, size: 36), '${e.value}× ${itemName(e.key)}')
+            else
+              cell(const Icon(Icons.inventory_2_outlined, color: Palette.gold), 'Forziere di materiali'),
+          ],
+        ),
       ),
     );
   }
@@ -103,15 +142,17 @@ class _QuestRow extends StatelessWidget {
     final done = s.questDoneFor(item.exercise);
     final complete = done >= item.target;
     final substitute = s.substitutions[item.exercise];
+    final foe = questFoe(item.exercise, s.character.level)?.$1;
     return Card(
       child: ListTile(
         leading: Icon(
-          complete ? Icons.check_circle : Icons.fitness_center,
+          complete ? Icons.check_circle : Icons.sports_martial_arts,
           color: complete ? Palette.goldBright : Palette.gold,
         ),
         title: Text(substitute ?? item.label),
         subtitle: Text(
           '${done.clamp(0, item.target)}/${item.target}${item.info.perLeg ? ' per gamba' : ''}'
+          '${foe != null && !complete ? ' · contro ${foe.name}' : ''}'
           '${RoutineRules.shouldSuggestHarderVariant(item) ? ' · pronto per la versione successiva!' : ''}',
           style: const TextStyle(color: Palette.ash),
         ),

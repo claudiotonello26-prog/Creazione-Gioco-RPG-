@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
+import '../../domain/items.dart';
 import '../../domain/character.dart';
 import '../../domain/skills.dart';
 import '../widgets/common.dart';
@@ -361,6 +362,8 @@ class _AttributePanelState extends State<_AttributePanel> {
               ),
           ],
         ),
+        const SizedBox(height: 8),
+        _OathTile(state: s),
         if (allocating) ...[
           const SizedBox(height: 8),
           Row(
@@ -600,6 +603,60 @@ class _QuestCalendar extends StatelessWidget {
             fontSize: 12,
             color: quest ? Palette.night : (future ? Palette.iron : Palette.ash),
             fontWeight: quest ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Il Giuramento: per quale build arrivano i componenti speciali, da
+/// qualunque gruppo muscolare.
+class _OathTile extends StatelessWidget {
+  const _OathTile({required this.state});
+  final GameState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final b = state.build;
+    final parts = buildMaterials[b]!;
+    return ActionTile(
+      icon: Icons.local_fire_department_outlined,
+      title: 'Giuramento: ${b.label}${state.oath == null ? ' (auto)' : ''}',
+      subtitle: 'Ogni spedizione ti dà ${itemName(parts[0])} e ${itemName(parts[1])}',
+      trailing: ItemIcon(parts[0], size: 30),
+      onTap: () => showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: Palette.night,
+        builder: (ctx) => SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(16),
+            children: [
+              const SectionTitle('Giuramento'),
+              ActionTile(
+                icon: Icons.auto_awesome,
+                title: 'Automatico',
+                subtitle: 'Segue il tuo attributo di build più alto',
+                color: state.oath == null ? Palette.goldBright : Palette.gold,
+                onTap: () {
+                  state.setOath(null);
+                  Navigator.pop(ctx);
+                },
+              ),
+              for (final a in oathAttributes)
+                ActionTile(
+                  icon: state.oath == a ? Icons.check_circle : Icons.circle_outlined,
+                  title: a.label,
+                  subtitle: buildMaterials[a]!.map(itemName).join(' · '),
+                  color: state.oath == a ? Palette.goldBright : Palette.gold,
+                  trailing: ItemIcon(buildMaterials[a]![0], size: 28),
+                  onTap: () {
+                    state.setOath(a);
+                    Navigator.pop(ctx);
+                  },
+                ),
+            ],
           ),
         ),
       ),

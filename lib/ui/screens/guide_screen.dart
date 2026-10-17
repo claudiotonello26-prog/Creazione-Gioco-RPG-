@@ -34,6 +34,9 @@ class GuideScreen extends StatelessWidget {
               style: TextStyle(color: Palette.ash, fontStyle: FontStyle.italic),
             ),
           ),
+          const SectionTitle('Come funziona'),
+          for (final (icon, title, text) in _rules) _RuleChapter(icon: icon, title: title, text: text),
+          const SectionTitle('Abilità'),
           for (final k in Skill.values)
             _SkillChapter(
               skill: k,
@@ -45,6 +48,70 @@ class GuideScreen extends StatelessWidget {
       ),
     );
   }
+
+  static const List<(IconData, String, String)> _rules = [
+    (
+      Icons.assignment_turned_in_outlined,
+      'Quest giornaliera',
+      'Ogni esercizio della quest si fa combattendo un nemico del tuo livello: le rep contano '
+          'per la quest e ogni uccisione lascia bottino. Chiusa la quest ricevi rune, XP, una '
+          'Chiave della Spedizione e un forziere di materiali della tua fascia. Lo stretching '
+          'finale dà un Punto Disciplina.',
+    ),
+    (
+      Icons.map_outlined,
+      'Spedizioni',
+      'Ogni gruppo muscolare ha quattro spedizioni a mappa: quattro tappe, il boss in cima e un '
+          'forziere. Sotto il livello consigliato si muore facilmente. "Zavorrato" raddoppia le '
+          'rep e il bottino; una Chiave raddoppia il forziere.',
+    ),
+    (
+      Icons.local_fire_department_outlined,
+      'Giuramento e build',
+      'Ogni gruppo lascia i suoi materiali base (ferro, bronzo, argento, pelle, gemme), utili a '
+          'tutti. I componenti di build (Ferro di Brace, Argento di Bufera, Oro Consacrato, '
+          'Cristallo d\'Abisso e i loro cuori rari) arrivano invece sempre per la build del tuo '
+          'Giuramento, da qualunque gruppo. Così chi gioca Forza non deve fare solo Spinta, e '
+          'chi fa cardio non raccoglie roba inutile. Il Giuramento si cambia dalla Home.',
+    ),
+    (
+      Icons.pets,
+      'Caccia e combattimenti liberi',
+      'Qualunque nemico, anche sopra il tuo livello. Rinasce dopo ogni uccisione e il bottino '
+          'si ritira alla fine. La fatica riduce il bottino se insisti troppo sullo stesso '
+          'gruppo nello stesso giorno. La caccia infinita chiama nemici sempre più forti.',
+    ),
+    (
+      Icons.shield_outlined,
+      'Postura',
+      'Aggressiva: più danni dati e subiti, sale l\'Attacco. Equilibrata: metà e metà. '
+          'Difensiva: un quarto di danni in meno, sale la Difesa.',
+    ),
+    (
+      Icons.directions_walk,
+      'Raccolta',
+      'I passi del giorno (da mezzanotte, fino a un massimo giornaliero) si spendono su una '
+          'risorsa: ogni tot passi un\'unità. Le risorse migliori chiedono livello e attrezzo.',
+    ),
+    (
+      Icons.blur_on,
+      'Aure delle armi',
+      'Ogni arma ha un\'aura. A +3 la lama si tinge, a +6 si accende, a +10 ha l\'aura '
+          'completa. Un amuleto d\'affinità cambia l\'aura dell\'arma.',
+    ),
+    (
+      Icons.storefront,
+      'Mercato',
+      'Il mercante compra a metà prezzo e vende al doppio. La fattucchiera vende amuleti: '
+          'se ne portano tre.',
+    ),
+    (
+      Icons.sports_kabaddi,
+      'Arena',
+      'Niente statistiche né build: vince chi si allena meglio, e le rep scorrette non '
+          'contano. Il live contro persone vere richiede la fotocamera.',
+    ),
+  ];
 
   static const Map<Skill, String> _intro = {
     Skill.woodcutting: 'Spendi i passi nei boschi della Raccolta. Ogni albero nuovo chiede '
@@ -126,6 +193,31 @@ List<Unlock> guideFor(Skill k) {
   }
   out.sort((a, b) => a.$1.compareTo(b.$1));
   return out;
+}
+
+class _RuleChapter extends StatelessWidget {
+  const _RuleChapter({required this.icon, required this.title, required this.text});
+  final IconData icon;
+  final String title;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          leading: Icon(icon, color: Palette.goldBright),
+          iconColor: Palette.goldBright,
+          collapsedIconColor: Palette.gold,
+          title: Text(title.toUpperCase(), style: titleStyle(size: 13.5, spacing: 1.4)),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+          children: [Text(text, style: const TextStyle(color: Palette.holy, fontSize: 14.5))],
+        ),
+      ),
+    );
+  }
 }
 
 class _SkillChapter extends StatelessWidget {

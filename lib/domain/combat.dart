@@ -352,6 +352,9 @@ class CombatRewards {
     );
   }
 
+  CombatRewards withMaterials(Map<String, int> m) =>
+      CombatRewards(xp: xp, runes: runes, materials: m, rareWeapon: rareWeapon);
+
   final int xp;
   final int runes;
   final Map<String, int> materials;

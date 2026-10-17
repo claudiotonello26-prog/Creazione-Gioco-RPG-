@@ -7,7 +7,7 @@ import '../screens/settings_screen.dart';
 /// La barra di ogni schermata: GYM OATH con guida e impostazioni sempre a
 /// portata, e sotto il nome della sezione fra due fregi.
 class OathBar extends StatelessWidget implements PreferredSizeWidget {
-  const OathBar({super.key, required this.title, this.actions, this.bottom, this.tools = true});
+  const OathBar({super.key, required this.title, this.actions, this.bottom, this.tools = true, this.accent});
 
   /// Nome della sezione (Raccolta, Mercato...).
   final Widget title;
@@ -18,6 +18,9 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Guida e impostazioni; spenti nelle loro stesse schermate.
   final bool tools;
+
+  /// Colore della sezione per il nome e i fregi.
+  final Color? accent;
 
   static const double _top = 50, _section = 34;
 
@@ -94,12 +97,12 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Row(
                   children: [
                     const SizedBox(width: 12),
-                    const Expanded(child: _Flourish(flip: true)),
+                    Expanded(child: _Flourish(flip: true, color: accent ?? Palette.gold)),
                     const SizedBox(width: 10),
                     Flexible(
                       flex: 3,
                       child: DefaultTextStyle(
-                        style: titleStyle(size: 13, spacing: 2.4, color: Palette.holy),
+                        style: titleStyle(size: 13, spacing: 2.4, color: accent ?? Palette.holy),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -107,7 +110,7 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    const Expanded(child: _Flourish()),
+                    Expanded(child: _Flourish(color: accent ?? Palette.gold)),
                     ...?actions,
                     const SizedBox(width: 12),
                   ],
@@ -145,8 +148,9 @@ class _GoldRule extends StatelessWidget {
 
 /// Fregio: un filo che sfuma verso l'esterno con un rombo accanto al titolo.
 class _Flourish extends StatelessWidget {
-  const _Flourish({this.flip = false});
+  const _Flourish({this.flip = false, this.color = Palette.gold});
   final bool flip;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +159,7 @@ class _Flourish extends StatelessWidget {
         height: 1,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: flip ? [Colors.transparent, Palette.gold] : [Palette.gold, Colors.transparent],
+            colors: flip ? [Colors.transparent, color] : [color, Colors.transparent],
           ),
         ),
       ),
@@ -166,15 +170,15 @@ class _Flourish extends StatelessWidget {
         width: 6,
         height: 6,
         decoration: BoxDecoration(
-          color: Palette.goldBright,
-          boxShadow: [BoxShadow(color: Palette.gold.withValues(alpha: 0.7), blurRadius: 6)],
+          color: color,
+          boxShadow: [BoxShadow(color: color.withValues(alpha: 0.7), blurRadius: 6)],
         ),
       ),
     );
     final dot = Container(
       width: 3,
       height: 3,
-      decoration: const BoxDecoration(color: Palette.gold, shape: BoxShape.circle),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
     final parts = [line, const SizedBox(width: 4), dot, const SizedBox(width: 4), gem];
     return Row(children: flip ? parts : parts.reversed.toList());

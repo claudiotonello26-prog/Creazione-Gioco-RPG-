@@ -102,7 +102,7 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
     final fresh = (min(steps, dailyStepCap) - s.daily.claimedSteps).clamp(0, dailyStepCap);
     final ready = (fresh + s.stepBank) ~/ target.stepsPerUnit;
     return Scaffold(
-      appBar: OathBar(title: Text(tr('Gathering').toUpperCase())),
+      appBar: OathBar(title: Text(tr('Gathering').toUpperCase()), accent: Sections.gathering),
       body: RefreshIndicator(
         onRefresh: _refresh,
         child: ListView(
@@ -161,12 +161,6 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
               const SizedBox(height: 6),
               for (final r in resources.where((r) => r.skill == skill)) _resourceTile(s, r),
             ],
-            const SizedBox(height: 8),
-            Text(
-              'Scegli cosa raccogliere: i materiali migliori si sbloccano salendo di '
-              'livello nel mestiere. Si conta da mezzanotte, fino a $dailyStepCap passi al giorno.',
-              style: const TextStyle(color: Palette.ash, fontSize: 12),
-            ),
           ],
         ),
       ),
@@ -381,7 +375,7 @@ class _GatherScreenState extends State<GatherScreen> {
     final ready = available ~/ per;
     final (lvl, xpIn, xpNeed) = s.skillProgressOf(_r.skill);
     return Scaffold(
-      appBar: OathBar(title: Text(tr('Gathering').toUpperCase())),
+      appBar: OathBar(title: Text(tr('Gathering').toUpperCase()), accent: Sections.gathering),
       body: Stack(
         children: [
           ListView(

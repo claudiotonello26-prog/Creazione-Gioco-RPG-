@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' show Color;
 
 import 'character.dart';
@@ -96,6 +97,15 @@ enum Station {
   const Station(this.label, this.description);
   final String label;
   final String description;
+
+  /// Colore della postazione: legno arancio, fuoco rosso, acciaio blu,
+  /// incanto viola.
+  Color get accent => switch (this) {
+        carpentry => const Color(0xFFD9893A),
+        furnace => const Color(0xFFD2452F),
+        anvil => const Color(0xFF6E9BC9),
+        enchant => const Color(0xFFA77BE0),
+      };
 }
 
 /// Colore dell'arma potenziata: a +3 si tinge, a +6 si accende, a +10
@@ -886,4 +896,58 @@ const Map<String, String> materialNames = {
 };
 
 /// Alla fornace: minerale dai passi + essenza dai mostri = Pietra di forgia I.
+/// Componenti di build per attributo: [I, II, cuore raro]. Ogni gruppo
+/// muscolare li lascia cadere, ma arrivano sempre quelli del Giuramento del
+/// giocatore, così nessuna build è costretta a un solo gruppo.
+const Map<Attribute, List<String>> buildMaterials = {
+  Attribute.strength: ['ember_iron', 'godforge_steel', 'ember_heart'],
+  Attribute.dexterity: ['gale_silver', 'steel_feather', 'storm_eye'],
+  Attribute.faith: ['hallowed_gold', 'martyr_obsidian', 'martyr_tear'],
+  Attribute.intelligence: ['abyss_crystal', 'star_iron', 'star_core'],
+};
+
+/// Le build che si possono giurare.
+const List<Attribute> oathAttributes = [
+  Attribute.strength,
+  Attribute.dexterity,
+  Attribute.faith,
+  Attribute.intelligence,
+];
+
+/// Il componente equivalente per la build [build] (gli altri restano uguali).
+String forBuild(String id, Attribute build) {
+  for (final list in buildMaterials.values) {
+    final i = list.indexOf(id);
+    if (i >= 0) return buildMaterials[build]![i];
+  }
+  return id;
+}
+
+Map<String, int> lootForBuild(Map<String, int> loot, Attribute build) {
+  final out = <String, int>{};
+  loot.forEach((k, v) => out.update(forBuild(k, build), (o) => o + v, ifAbsent: () => v));
+  return out;
+}
+
+/// Il forziere della quest giornaliera: materiali della fascia del
+/// giocatore, una pietra di forgia e, dalla fascia III, i componenti della
+/// sua build (con una piccola probabilità del cuore raro).
+Map<String, int> questLootFor(int level, Attribute build, Random r) {
+  final tier = (level ~/ 10).clamp(0, 3);
+  final loot = <String, int>{
+    ...switch (tier) {
+      0 => {'iron_ingot': 2, 'ash_plank': 1, 'beast_essence': 2, 'forge_stone_1': 1},
+      1 => {'steel_ingot': 2, 'oak_plank': 1, 'holy_shard': 1, 'forge_stone_1': 2},
+      2 => {'silver_ingot': 2, 'yew_plank': 1, 'forge_stone_2': 1},
+      _ => {'star_ingot': 2, 'ebony_plank': 1, 'forge_stone_3': 1},
+    },
+  };
+  final parts = buildMaterials[build]!;
+  if (tier >= 1) loot[parts[0]] = tier == 1 ? 1 : 2;
+  if (tier >= 3) loot[parts[1]] = 1;
+  if (tier >= 2 && r.nextDouble() < 0.1) loot[parts[2]] = 1;
+  if (r.nextDouble() < 0.25) loot['gem_rough'] = 1;
+  return loot;
+}
+
 const Map<String, int> forgeStone1Recipe = {'iron_ore': 30, 'beast_essence': 1};

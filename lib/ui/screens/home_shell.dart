@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import 'arena_tab.dart';
 import 'forge_tab.dart';
 import 'home_tab.dart';
+import '../widgets/common.dart';
 import '../widgets/oath_bar.dart';
 import '../widgets/trainer.dart';
 import '../../core/i18n.dart';
@@ -73,18 +75,39 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     final points = context.watch<GameState>().character.availablePoints;
     _notifyPoints(points);
     // Raccolta e Mercato hanno già la loro barra; alle altre la dà la shell.
-    Widget framed(String section, Widget body) => Scaffold(
+    Widget framed(String section, Color color, Widget body) => Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: OathBar(title: Text(tr(section).toUpperCase())),
+          appBar: OathBar(title: Text(tr(section).toUpperCase()), accent: color),
           body: body,
         );
+    // Ogni scheda ha il suo colore e il suo sfondo.
     final tabs = [
-      framed('Home', HomeTab(onNavigate: goTo)),
-      framed('Training', TrainTab(onNavigate: goTo)),
-      const WalkScreen(asTab: true),
-      framed('Forge', const ForgeTab()),
-      const MarketScreen(),
-      framed('Arena', const ArenaTab()),
+      SectionBackdrop(
+        art: 'home',
+        color: Sections.home,
+        child: framed('Home', Sections.home, HomeTab(onNavigate: goTo)),
+      ),
+      SectionBackdrop(
+        art: 'training',
+        color: Sections.training,
+        child: framed('Training', Sections.training, TrainTab(onNavigate: goTo)),
+      ),
+      const SectionBackdrop(
+        art: 'gathering',
+        color: Sections.gathering,
+        child: WalkScreen(asTab: true),
+      ),
+      SectionBackdrop(
+        art: 'forge',
+        color: Sections.forge,
+        child: framed('Forge', Sections.forge, const ForgeTab()),
+      ),
+      const SectionBackdrop(art: 'market', color: Sections.market, child: MarketScreen()),
+      SectionBackdrop(
+        art: 'arena',
+        color: Sections.arena,
+        child: framed('Arena', Sections.arena, const ArenaTab()),
+      ),
     ];
     return Scaffold(
       body: IndexedStack(index: _tab, children: tabs),
@@ -116,26 +139,35 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
             onDestinationSelected: goTo,
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
             destinations: [
-              NavigationDestination(
-                icon: Badge(
-                  isLabelVisible: points > 0,
-                  label: Text('$points'),
-                  child: const Icon(Icons.castle_outlined),
-                ),
-                label: tr('Home'),
+            NavigationDestination(
+              icon: Badge(
+                isLabelVisible: points > 0,
+                label: Text('$points'),
+                child: _navIcon('home', Icons.castle_outlined),
               ),
-              NavigationDestination(icon: const Icon(Icons.fitness_center), label: tr('Training')),
-              NavigationDestination(
-                icon: const Icon(Icons.directions_walk),
-                label: tr('Gathering'),
-              ),
-              NavigationDestination(icon: const Icon(Icons.hardware), label: tr('Forge')),
-              NavigationDestination(icon: const Icon(Icons.storefront), label: tr('Market')),
-              NavigationDestination(icon: const Icon(Icons.sports_kabaddi), label: tr('Arena')),
-            ],
+              label: tr('Home'),
+            ),
+            NavigationDestination(
+              icon: _navIcon('training', Icons.fitness_center),
+              label: tr('Training'),
+            ),
+            NavigationDestination(
+              icon: _navIcon('gathering', Icons.directions_walk),
+              label: tr('Gathering'),
+            ),
+            NavigationDestination(icon: _navIcon('forge', Icons.hardware), label: tr('Forge')),
+            NavigationDestination(icon: _navIcon('market', Icons.storefront), label: tr('Market')),
+            NavigationDestination(icon: _navIcon('arena', Icons.sports_kabaddi), label: tr('Arena')),
+          ],
           ),
         ),
       ),
     );
   }
+}
+
+/// Icona della barra in basso: l'illustrazione di Antigravity se c'è.
+Widget _navIcon(String id, IconData fallback) {
+  final path = 'assets/art/nav/$id.png';
+  return Art.has(path) ? Image.asset(path, width: 28, height: 28) : Icon(fallback);
 }

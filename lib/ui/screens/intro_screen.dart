@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
 
-/// L'apertura: buio, poi GYM OATH sale lentamente in oro, come una grazia
-/// in Elden Ring. Dura 3,5 secondi; un tocco la salta.
+/// L'apertura: un anello d'oro si traccia, il braccio emerge inciso nella
+/// luce, poi GYM OATH sale e l'elmo appare sotto, come una grazia in Elden Ring. Dura 3,5 secondi; un tocco la salta.
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key, required this.onDone});
   final VoidCallback onDone;
@@ -52,9 +52,14 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
           animation: _c,
           builder: (context, _) {
             final t = _c.value;
-            // 0–0,15 buio · fino a 0,6 sale la scritta · poi brilla · da 0,85 sfuma.
-            final rise = _span(t, 0.12, 0.6);
-            final out = 1 - _span(t, 0.85, 1.0);
+            // 0,02–0,4 l'anello si disegna e il braccio emerge dal buio come
+            // inciso nell'oro · 0,35–0,6 sale la scritta · 0,5–0,8 l'elmo
+            // sale da sotto · da 0,88 tutto sfuma.
+            final ring = _span(t, 0.02, 0.38);
+            final reveal = _span(t, 0.08, 0.42);
+            final rise = _span(t, 0.35, 0.62);
+            final helm = _span(t, 0.5, 0.8);
+            final out = 1 - _span(t, 0.88, 1.0);
             final glow = rise * (0.6 + 0.4 * sin(t * pi * 2.2).abs());
             return Opacity(
               opacity: out,
@@ -62,15 +67,40 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CustomPaint(
-                      size: const Size(190, 130),
-                      painter: _ArmPainter(progress: _span(t, 0.03, 0.55), glow: glow),
+                    SizedBox(
+                      width: 220,
+                      height: 220,
+                      child: CustomPaint(
+                        painter: _RingPainter(progress: ring, glow: glow),
+                        child: Padding(
+                          padding: const EdgeInsets.all(34),
+                          child: ShaderMask(
+                            // Una lama di luce attraversa il braccio dal basso a
+                            // sinistra verso il pugno e lo lascia acceso.
+                            blendMode: BlendMode.dstIn,
+                            shaderCallback: (r) => LinearGradient(
+                              begin: Alignment.bottomLeft,
+                              end: Alignment.topRight,
+                              colors: const [Colors.white, Colors.white, Colors.transparent],
+                              stops: [
+                                0,
+                                (reveal * 1.2 - 0.1).clamp(0.0, 1.0),
+                                (reveal * 1.2 + 0.05).clamp(0.0, 1.0)
+                              ],
+                            ).createShader(r),
+                            child: Image.asset(
+                              'assets/images/arm_gold.png',
+                              filterQuality: FilterQuality.medium,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 22),
                     Opacity(
                       opacity: rise,
-                      child: Transform.scale(
-                        scale: 0.96 + 0.04 * rise,
+                      child: Transform.translate(
+                        offset: Offset(0, 12 * (1 - rise)),
                         child: Text(
                           'GYM OATH',
                           style: TextStyle(
@@ -79,8 +109,12 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                             letterSpacing: 8 + 3 * rise,
                             color: Palette.goldBright,
                             shadows: [
-                              Shadow(color: Palette.goldBright.withValues(alpha: 0.9 * glow), blurRadius: 18),
-                              Shadow(color: const Color(0xFFFFE9A8).withValues(alpha: 0.5 * glow), blurRadius: 40),
+                              Shadow(
+                                  color: Palette.goldBright.withValues(alpha: 0.9 * glow),
+                                  blurRadius: 18),
+                              Shadow(
+                                  color: const Color(0xFFFFE9A8).withValues(alpha: 0.5 * glow),
+                                  blurRadius: 40),
                             ],
                           ),
                         ),
@@ -97,8 +131,14 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                     ),
                     const SizedBox(height: 22),
                     Opacity(
-                      opacity: _span(t, 0.5, 0.8),
-                      child: Image.asset('assets/images/logo_helmet.png', height: 96),
+                      opacity: helm,
+                      child: Transform.translate(
+                        offset: Offset(0, 30 * (1 - helm)),
+                        child: Transform.scale(
+                          scale: 0.9 + 0.1 * helm,
+                          child: Image.asset('assets/images/logo_helmet.png', height: 96),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -111,73 +151,79 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
   }
 }
 
-/// Un braccio piegato visto di lato, il bicipite in tensione: si disegna
-/// come un tratto d'oro.
-class _ArmPainter extends CustomPainter {
-  _ArmPainter({required this.progress, required this.glow});
+/// Anello d'oro che si traccia attorno al braccio, con una scintilla in testa
+/// e una seconda linea sottile che lo segue.
+class _RingPainter extends CustomPainter {
+  _RingPainter({required this.progress, required this.glow});
   final double progress;
   final double glow;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Offset p(double x, double y) => Offset(x * size.width, y * size.height);
-    void cubic(Path path, double x1, double y1, double x2, double y2, double x3, double y3) =>
-        path.cubicTo(p(x1, y1).dx, p(x1, y1).dy, p(x2, y2).dx, p(x2, y2).dy, p(x3, y3).dx,
-            p(x3, y3).dy);
-    final start = p(0.04, 0.56);
-    final outline = Path()..moveTo(start.dx, start.dy);
-    // Spalla e deltoide.
-    cubic(outline, 0.06, 0.42, 0.15, 0.38, 0.23, 0.43);
-    // Il bicipite, gonfio.
-    cubic(outline, 0.3, 0.16, 0.54, 0.18, 0.61, 0.5);
-    // Interno dell'avambraccio fino al polso.
-    cubic(outline, 0.66, 0.42, 0.66, 0.3, 0.69, 0.21);
-    // Il pugno chiuso.
-    cubic(outline, 0.62, 0.13, 0.67, 0.0, 0.78, 0.0);
-    cubic(outline, 0.9, 0.0, 0.95, 0.13, 0.88, 0.22);
-    // Esterno dell'avambraccio, più largo verso il gomito.
-    cubic(outline, 0.9, 0.36, 0.98, 0.55, 0.93, 0.7);
-    // Gomito.
-    cubic(outline, 0.9, 0.82, 0.82, 0.87, 0.7, 0.87);
-    // Sotto: il tricipite fino all'ascella.
-    cubic(outline, 0.5, 0.91, 0.28, 0.93, 0.04, 0.84);
-    final details = Path();
-    void stroke(double x0, double y0, double x1, double y1, double x2, double y2) {
-      details
-        ..moveTo(p(x0, y0).dx, p(x0, y0).dy)
-        ..quadraticBezierTo(p(x1, y1).dx, p(x1, y1).dy, p(x2, y2).dx, p(x2, y2).dy);
-    }
-
-    // Il pollice che chiude il pugno.
-    stroke(0.68, 0.11, 0.74, 0.17, 0.82, 0.16);
-    // La piega del gomito e il tricipite.
-    stroke(0.38, 0.63, 0.49, 0.68, 0.6, 0.6);
-    stroke(0.22, 0.76, 0.38, 0.74, 0.52, 0.8);
+    if (progress <= 0) return;
+    final c = size.center(Offset.zero);
+    final r = size.shortestSide / 2 - 6;
+    const start = pi / 2;
+    final sweep = 2 * pi * progress;
+    canvas.drawCircle(
+      c,
+      r + 10,
+      Paint()
+        ..shader = RadialGradient(colors: [
+          const Color(0xFFFFE9A8).withValues(alpha: 0.18 * progress + 0.12 * glow),
+          const Color(0x00000000),
+        ]).createShader(Rect.fromCircle(center: c, radius: r + 10)),
+    );
     final line = Paint()
-      ..color = Palette.goldBright.withValues(alpha: 0.95)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.2
+      ..strokeWidth = 2.4
       ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..maskFilter = MaskFilter.blur(BlurStyle.solid, 2 + 3 * glow);
-    final halo = Paint()
-      ..shader = RadialGradient(colors: [
-        const Color(0xFFFFE9A8).withValues(alpha: 0.3 * glow),
-        const Color(0x00000000),
-      ]).createShader(Rect.fromCircle(center: p(0.5, 0.5), radius: size.width * 0.6));
-    canvas.drawCircle(p(0.5, 0.5), size.width * 0.6, halo);
-    void drawPart(Path path, double from, double to) {
-      final k = ((progress - from) / (to - from)).clamp(0.0, 1.0);
-      if (k <= 0) return;
-      for (final m in path.computeMetrics()) {
-        canvas.drawPath(m.extractPath(0, m.length * k), line);
-      }
+      ..color = Palette.goldBright
+      ..maskFilter = MaskFilter.blur(BlurStyle.solid, 2 + 2 * glow);
+    canvas.drawArc(Rect.fromCircle(center: c, radius: r), start, sweep, false, line);
+    canvas.drawArc(
+      Rect.fromCircle(center: c, radius: r - 7),
+      start,
+      -sweep * 0.98,
+      false,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.8
+        ..color = Palette.gold.withValues(alpha: 0.55),
+    );
+    // Quattro rombi cardinali che si accendono quando l'anello li raggiunge.
+    for (var k = 0; k < 4; k++) {
+      final a = start + k * pi / 2;
+      if (sweep < k * pi / 2) continue;
+      final o = c + Offset(cos(a), sin(a)) * r;
+      canvas.save();
+      canvas.translate(o.dx, o.dy);
+      canvas.rotate(a);
+      canvas.drawPath(
+        Path()
+          ..moveTo(-6, 0)
+          ..lineTo(0, -3.5)
+          ..lineTo(6, 0)
+          ..lineTo(0, 3.5)
+          ..close(),
+        Paint()..color = Palette.goldBright,
+      );
+      canvas.restore();
     }
-
-    drawPart(outline, 0, 0.85);
-    drawPart(details, 0.7, 1);
+    if (progress < 1) {
+      final a = start + sweep;
+      final tip = c + Offset(cos(a), sin(a)) * r;
+      canvas.drawCircle(
+        tip,
+        7,
+        Paint()
+          ..color = const Color(0xFFFFF3C4)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+      );
+      canvas.drawCircle(tip, 2.2, Paint()..color = Colors.white);
+    }
   }
 
   @override
-  bool shouldRepaint(_ArmPainter old) => old.progress != progress || old.glow != glow;
+  bool shouldRepaint(_RingPainter old) => old.progress != progress || old.glow != glow;
 }
