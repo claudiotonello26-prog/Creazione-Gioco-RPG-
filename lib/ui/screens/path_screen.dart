@@ -141,8 +141,14 @@ class _PathScreenState extends State<PathScreen> {
     final ok = e.hold
         ? result.held.inSeconds >= 20
         : result.reps.length >= (_target(s, e) * 0.8).floor();
-    if (result.reps.isNotEmpty) s.addTraining(e.trackAs, result.reps, countsForQuest: false);
-    if (e.hold) s.recordBest(ExerciseId.plank, result.held.inSeconds);
+    if (result.reps.isNotEmpty) {
+      s.addTraining(e.trackAs, result.reps,
+          countsForQuest: false, name: e.name, difficulty: s.usualDifficulty(e.trackAs) / e.ratio, pathGroup: widget.group);
+    }
+    if (e.hold) {
+      s.recordBest(ExerciseId.plank, result.held.inSeconds,
+          name: e.name, difficulty: _weighted ? 1.5 : 1, group: widget.group);
+    }
     if (ok) {
       s.completePathStep(widget.group, index);
       toast(context, index == 3 ? 'Il guardiano ti aspetta in cima.' : 'Tappa superata.');
@@ -172,7 +178,10 @@ class _PathScreenState extends State<PathScreen> {
         toast(context, 'Il guardiano resta in piedi. Riprova quando vuoi.');
         return;
       }
-      if (r.reps.isNotEmpty) s.addTraining(e.trackAs, r.reps, countsForQuest: false);
+      if (r.reps.isNotEmpty) {
+        s.addTraining(e.trackAs, r.reps,
+            countsForQuest: false, name: e.name, difficulty: s.usualDifficulty(e.trackAs) / e.ratio, pathGroup: widget.group);
+      }
     }
     final loot = s.bossLoot(widget.group, weighted: _weighted);
     if (!mounted) return;

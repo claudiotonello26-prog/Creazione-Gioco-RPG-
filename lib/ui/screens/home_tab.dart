@@ -9,6 +9,7 @@ import '../../domain/items.dart';
 import '../../domain/novice.dart';
 import '../widgets/knight_view.dart';
 import '../widgets/trainer.dart';
+import 'progress_screen.dart';
 import 'quest_screen.dart';
 import 'settings_screen.dart';
 import 'walk_screen.dart';
@@ -197,6 +198,8 @@ class HomeTab extends StatelessWidget {
             ),
           ),
         ],
+        const SectionTitle('Il tuo andamento'),
+        const ProgressCard(),
         const SectionTitle('Oggi'),
         ActionTile(
           icon: Icons.directions_walk,

@@ -96,6 +96,20 @@ Come su Gymscape, i passi si accumulano in una riserva e si convertono nel mater
 - Boss: circuito dei 4 esercizi, 30 secondi ciascuno fino allo sfinimento. Il premio arriva sempre, indipendentemente dalle rep.
 - Premio boss (doppio nello Zavorrato): 3 Essenze di bestia, 3 Minerali di ferro, 2 Carboni, 1 Pietra di forgia I e 150 XP. Rari: Scheggia sacra 30% (50%), Pietra antica 6% (12%), Pietra cupa 3% (6%).
 
+## 7. Andamento della forza
+
+Ogni serie (quest, combattimenti, sentieri, boss e test) finisce nello storico, giorno per giorno ed esercizio per esercizio.
+
+- **Rep equivalenti** = rep × difficoltà, rispetto alla versione base dell'esercizio.
+  - Le versioni facilitate valgono 0,6 per ogni gradino in giù: push-up sulle ginocchia 0,6, inclinati 0,36, al muro 0,22.
+  - Negli esercizi dei sentieri la difficoltà è quella della tua versione divisa per il loro rapporto: il pike push-up (0,4) vale 2,5 push-up.
+  - Il plank conta 1 rep ogni 2 secondi.
+- **Indice di forza** di una zona (Parte alta, Core, Gambe) = la serie migliore del periodo in rep equivalenti, divisa per quella del primo test, × 100. La zona fa la media dei suoi esercizi.
+  - 100 vuol dire forte come al primo giorno, 130 vuol dire il 30% in più.
+  - Se fai meno rep ma di una versione più dura, l'indice sale lo stesso: 14 push-up pieni battono 20 sulle ginocchia (14 contro 12).
+- Il grafico mostra gli ultimi 14 giorni, 12 settimane o 12 mesi. Il cardio conta nelle rep totali ma non nell'indice di forza.
+- Nel dettaglio di ogni esercizio: rep nel periodo, record in una serie, ultima serie migliore e confronto con la media delle volte precedenti.
+
 ## Dove sta nel codice
 
 - `lib/domain/combat.dart`:
@@ -105,5 +119,6 @@ Come su Gymscape, i passi si accumulano in una riserva e si convertono nel mater
 - `lib/data/game_state.dart`: `fatigueAt` e `applyCombatRewards`.
 - `lib/domain/skills.dart`: materiali raccoglibili e curva dei mestieri.
 - `lib/domain/items.dart`: ricette, stazioni e armature.
-- `lib/data/game_state.dart`: `claimSteps`, `craftMaterial` e `bossLoot`.
+- `lib/data/game_state.dart`: `claimSteps`, `craftMaterial`, `bossLoot` e `logSet`.
+- `lib/domain/progress.dart`: storico, rep equivalenti e indice di forza.
 - Test: `test/combat_test.dart`, `test/economy_test.dart` e `test/walking_test.dart`. La tabella qui sopra la stampa il test "tabella di bilanciamento".

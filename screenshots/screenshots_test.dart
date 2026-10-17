@@ -13,6 +13,8 @@ import 'package:iron_oath/main.dart';
 import 'package:iron_oath/ui/screens/combat_screen.dart';
 import 'package:iron_oath/ui/screens/walk_screen.dart';
 import 'package:iron_oath/ui/screens/path_screen.dart';
+import 'package:iron_oath/ui/screens/progress_screen.dart';
+import 'package:iron_oath/domain/progress.dart';
 import 'package:iron_oath/ui/screens/forge_tab.dart';
 import 'package:iron_oath/domain/items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -137,5 +139,29 @@ void main() {
     await t.pumpAndSettle();
     nav.push(MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.enchant)));
     await _shot(t, '34_incantamento');
+  });
+
+  testWidgets('andamento della forza', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    final now = DateTime.now();
+    for (var d = 40; d >= 0; d -= 2) {
+      final day = dayKeyOf(now.subtract(Duration(days: d)));
+      final g = (40 - d) / 40;
+      st.history[day] = {
+        'Push-up': ExerciseDay(trackAs: ExerciseId.pushUp, region: BodyRegion.upper)
+          ..add((st.testRepsFor(ExerciseId.pushUp) * (0.9 + 0.35 * g)).round(), 1),
+        'Crunch': ExerciseDay(trackAs: ExerciseId.crunch, region: BodyRegion.core)
+          ..add((st.testRepsFor(ExerciseId.crunch) * (1 + 0.15 * g)).round(), 1),
+        'Squat': ExerciseDay(trackAs: ExerciseId.squat, region: BodyRegion.legs)
+          ..add((st.testRepsFor(ExerciseId.squat) * (1.05 + 0.5 * g)).round(), 1),
+      };
+    }
+    await t.pumpWidget(IronOathApp(state: st));
+    await t.pumpAndSettle();
+    Navigator.of(t.element(find.byType(NavigationBar)))
+        .push(MaterialPageRoute<void>(builder: (_) => const ProgressScreen()));
+    await _shot(t, '40_andamento');
   });
 }

@@ -11,6 +11,7 @@ import '../domain/items.dart';
 import '../domain/pvp.dart';
 import '../domain/routine.dart';
 import '../domain/novice.dart';
+import '../domain/progress.dart';
 import '../domain/skills.dart';
 import '../domain/walking.dart';
 
@@ -134,6 +135,11 @@ class GameState extends ChangeNotifier {
   DateTime? testDate;
   Map<ExerciseId, int> records = {};
 
+  /// Storico di tutte le serie, giorno per giorno, e livello del primo test
+  /// in rep equivalenti: è lo 0% dell'andamento della forza.
+  TrainingHistory history = {};
+  Map<ExerciseId, double> baselineEq = {};
+
   /// Moltiplicatore della quest (+5% ogni 7 giorni buoni).
   double progression = 1.0;
   int goodDays = 0;
@@ -250,6 +256,11 @@ class GameState extends ChangeNotifier {
         'test': {for (final e in test.entries) e.key.name: e.value.toJson()},
         'testDate': testDate?.toIso8601String(),
         'records': {for (final e in records.entries) e.key.name: e.value},
+        'history': {
+          for (final d in history.entries)
+            d.key: {for (final e in d.value.entries) e.key: e.value.toJson()},
+        },
+        'baseline': {for (final e in baselineEq.entries) e.key.name: e.value},
         'progression': progression,
         'goodDays': goodDays,
         'subs': {for (final e in substitutions.entries) e.key.name: e.value},
@@ -295,6 +306,18 @@ class GameState extends ChangeNotifier {
             TestResult.fromJson(e.value as Map<String, dynamic>),
     };
     testDate = j['testDate'] == null ? null : DateTime.parse(j['testDate'] as String);
+    history = {
+      for (final d in (j['history'] as Map? ?? const {}).entries)
+        d.key as String: {
+          for (final e in (d.value as Map).entries)
+            e.key as String: ExerciseDay.fromJson(e.value as Map<String, dynamic>),
+        },
+    };
+    baselineEq = {
+      for (final e in (j['baseline'] as Map? ?? const {}).entries)
+        ExerciseId.values.byName(e.key as String): (e.value as num).toDouble(),
+    };
+    if (baselineEq.isEmpty) _setBaseline();
     records = {
       for (final e in (j['records'] as Map).entries)
         ExerciseId.values.byName(e.key as String): e.value as int,
@@ -343,6 +366,8 @@ class GameState extends ChangeNotifier {
     test = {};
     testDate = null;
     records = {};
+    history = {};
+    baselineEq = {};
     progression = 1.0;
     goodDays = 0;
     substitutions = {};
@@ -439,8 +464,51 @@ class GameState extends ChangeNotifier {
     progression = 1.0;
     goodDays = 0;
     results.forEach((id, r) => _updateRecord(id, r.reps));
+    if (baselineEq.isEmpty) _setBaseline();
+    // Il test è una serie al massimo: entra nello storico come le altre.
+    results.forEach((id, r) {
+      final (name, diff) = _usualVariant(id);
+      logSet(name, id, r.reps, difficulty: diff);
+    });
     onboarded = true;
     _changed();
+  }
+
+  /// Il primo test fissa il livello di partenza della forza.
+  void _setBaseline() {
+    baselineEq = {
+      for (final e in test.entries)
+        e.key: e.value.reps *
+            variantDifficulty(e.value.variantLevel) /
+            (e.key == ExerciseId.plank ? plankSecondsPerRep : 1),
+    };
+  }
+
+  /// Difficoltà della versione che il giocatore fa di solito.
+  double usualDifficulty(ExerciseId id) => _usualVariant(id).$2;
+
+  /// Nome e difficoltà della versione che il giocatore fa di solito.
+  (String, double) _usualVariant(ExerciseId id) {
+    final lvl = test[id]?.variantLevel ?? 0;
+    return (exercises[id]!.variant(lvl).name, variantDifficulty(lvl));
+  }
+
+  /// Registra una serie nello storico. [difficulty] rispetto alla versione
+  /// base: 2.5 = vale due rep e mezzo di quella base.
+  void logSet(String name, ExerciseId trackAs, int reps,
+      {required double difficulty, MuscleGroup? group}) {
+    if (reps <= 0) return;
+    final day = history.putIfAbsent(today, () => {});
+    day
+        .putIfAbsent(
+            name,
+            () => ExerciseDay(
+                trackAs: trackAs, region: BodyRegion.of(trackAs, group: group)))
+        .add(reps, difficulty);
+    if (history.length > 400) {
+      final keys = history.keys.toList()..sort();
+      history.remove(keys.first);
+    }
   }
 
   bool get retestDue =>
@@ -485,9 +553,16 @@ class GameState extends ChangeNotifier {
 
   /// Registra rep fatte (quest, sfida o allenamento libero).
   int addTraining(ExerciseId id, List<RepQuality> reps,
-      {bool countsForQuest = true, bool inCombat = false}) {
+      {bool countsForQuest = true,
+      bool inCombat = false,
+      String? name,
+      double? difficulty,
+      MuscleGroup? pathGroup}) {
     if (reps.isEmpty) return 0;
     _rollDay();
+    final usual = _usualVariant(id);
+    logSet(name ?? usual.$1, id, reps.length,
+        difficulty: difficulty ?? usual.$2, group: pathGroup);
     final group = exercises[id]!.group;
     final xp = xpFor(id, reps, inCombat: inCombat);
     daily.varietyUsed[group] = (daily.varietyUsed[group] ?? 0) + reps.length;
@@ -553,8 +628,11 @@ class GameState extends ChangeNotifier {
     if (value > (records[id] ?? 0)) records[id] = value;
   }
 
-  void recordBest(ExerciseId id, int value) {
+  void recordBest(ExerciseId id, int value, {String? name, double difficulty = 1, MuscleGroup? group}) {
     _updateRecord(id, value);
+    if (id == ExerciseId.plank) {
+      logSet(name ?? 'Plank', id, value, difficulty: difficulty, group: group);
+    }
     _changed();
   }
 
