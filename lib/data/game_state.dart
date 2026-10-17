@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/i18n.dart';
 import '../domain/character.dart';
 import '../domain/combat.dart';
 import '../domain/enemies.dart';
@@ -126,6 +127,9 @@ class GameState extends ChangeNotifier {
 
   /// false = inserimento manuale delle rep (emulatori, accessibilità).
   bool useCamera = true;
+
+  /// Lingua dei nomi di abilità, attributi e schede.
+  Lang get lang => appLang;
 
   /// Server dell'Arena live (Nakama), es. "arena.iron-oath.it" o "192.168.1.10:7350".
   String serverAddress = '';
@@ -256,6 +260,7 @@ class GameState extends ChangeNotifier {
         'days': daysPerWeek,
         'limits': limitations,
         'camera': useCamera,
+        'lang': appLang.name,
         'server': serverAddress,
         'device': deviceId,
         'test': {for (final e in test.entries) e.key.name: e.value.toJson()},
@@ -304,6 +309,7 @@ class GameState extends ChangeNotifier {
     daysPerWeek = j['days'] as int;
     limitations = j['limits'] as String;
     useCamera = j['camera'] as bool? ?? true;
+    appLang = Lang.values.asNameMap()[j['lang']] ?? Lang.it;
     serverAddress = j['server'] as String? ?? '';
     deviceId = j['device'] as String? ?? '';
     test = {
@@ -453,6 +459,11 @@ class GameState extends ChangeNotifier {
     this.daysPerWeek = daysPerWeek.clamp(2, 6);
     this.limitations = limitations;
     this.mode = mode;
+    _changed();
+  }
+
+  void setLang(Lang value) {
+    appLang = value;
     _changed();
   }
 
@@ -682,13 +693,16 @@ class GameState extends ChangeNotifier {
     _rollDay();
     // La postura decide dove va l'esperienza di combattimento.
     final combatXp = reps.length * 4;
+    // Il bastone e il catalizzatore allenano la Magia; spade e archi l'Attacco.
+    final offense =
+        character.weapon.def.style == WeaponStyle.magic ? Skill.magic : Skill.attack;
     switch (stance) {
       case Stance.aggressive:
-        _gainSkill(Skill.attack, combatXp);
+        _gainSkill(offense, combatXp);
       case Stance.defensive:
         _gainSkill(Skill.defense, combatXp);
       case Stance.balanced:
-        _gainSkill(Skill.attack, combatXp ~/ 2);
+        _gainSkill(offense, combatXp ~/ 2);
         _gainSkill(Skill.defense, combatXp - combatXp ~/ 2);
     }
     final group = exercises[exercise]!.group;
@@ -736,10 +750,10 @@ class GameState extends ChangeNotifier {
     final m = weighted ? 2 : 1;
     // Il guardiano lascia i materiali base del suo gruppo.
     final base = switch (g) {
-      MuscleGroup.push => {'iron_ore': 3, 'coal': 2},
-      MuscleGroup.legs => {'ash_wood': 3, 'raw_hide': 2},
+      MuscleGroup.push => {'iron_ingot': 2, 'bone': 2},
+      MuscleGroup.legs => {'raw_hide': 3, 'bone': 2},
       MuscleGroup.core => {'bronze_ingot': 2, 'bone': 2},
-      MuscleGroup.cardio => {'moon_silver': 2, 'beast_essence': 2},
+      MuscleGroup.cardio => {'silver_ingot': 1, 'beast_essence': 2},
       MuscleGroup.stretching || MuscleGroup.mobility => {'gem_rough': 1, 'beast_essence': 2},
     };
     final loot = <String, int>{
@@ -841,6 +855,9 @@ class GameState extends ChangeNotifier {
 
   /// Il boss della spedizione è caduto.
   void clearExpedition(String id) {
+    final e = expeditionById(id);
+    // La prima volta vale di più; poi ogni ripetizione allena comunque.
+    _gainSkill(Skill.expeditions, (clearedExpeditions.contains(id) ? 40 : 120) + 10 * e.level);
     clearedExpeditions.add(id);
     _count('expeditions');
     _changed();
@@ -848,6 +865,12 @@ class GameState extends ChangeNotifier {
 
   /// Vittoria nello Stretching: lo spirito si calma se tieni la posa. Paga
   /// come un combattimento vinto, senza danni né fatica.
+  /// Un mostro di spedizione abbattuto: sale l'abilità Spedizioni.
+  void expeditionKill(EnemyDef e) {
+    _gainSkill(Skill.expeditions, e.isBoss ? 60 : 25);
+    _changed();
+  }
+
   CombatRewards holdVictory(EnemyDef e, {required int seconds, double lootMultiplier = 1}) {
     _rollDay();
     final materials = {
@@ -859,6 +882,7 @@ class GameState extends ChangeNotifier {
     final xp = seconds * 4 + (e.isBoss ? 60 : 25);
     _gainXp(xp);
     _gainSkill(Skill.defense, seconds);
+    _gainSkill(Skill.expeditions, e.isBoss ? 60 : 25);
     trainedGroups.putIfAbsent(today, () => {}).add(MuscleGroup.stretching);
     _count('wins');
     _markActive();

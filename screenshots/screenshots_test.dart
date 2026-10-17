@@ -83,7 +83,13 @@ void main() {
   testWidgets('apertura', (t) async {
     _phone(t);
     await t.pumpWidget(IronOathApp(state: await _state(), intro: true));
-    await t.pump(const Duration(milliseconds: 2400));
+    await t.pump(const Duration(milliseconds: 100));
+    await t.runAsync(() async {
+      for (final e in find.byType(Image).evaluate()) {
+        await precacheImage((e.widget as Image).image, e);
+      }
+    });
+    await t.pump(const Duration(milliseconds: 3000));
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('out/00_apertura.png'));
     await t.pump(const Duration(seconds: 2));
     await t.pumpAndSettle();
@@ -103,10 +109,24 @@ void main() {
     st.trainerEnabled = false;
     await t.pumpWidget(IronOathApp(state: st));
     await _shot(t, '10_home');
-    for (final (i, label) in ['Training', 'Forgia', 'Arena', 'Attributi'].indexed) {
+    for (final (i, label) in ['Training', 'Raccolta', 'Forgia', 'Mercato', 'Arena'].indexed) {
       await t.tap(find.widgetWithText(NavigationDestination, label));
       await _shot(t, '1${i + 1}_${label.toLowerCase()}');
     }
+  });
+
+  testWidgets('home con punti da spendere', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    st.character.disciplinePoints = 3;
+    await t.pumpWidget(IronOathApp(state: st));
+    await t.pumpAndSettle();
+    await t.drag(find.byType(ListView).first, const Offset(0, -560));
+    await t.pumpAndSettle();
+    await t.tap(find.byIcon(Icons.add_circle).first);
+    await t.tap(find.byIcon(Icons.add_circle).at(2));
+    await _shot(t, '16_home_attributi');
   });
 
   testWidgets('camminata e YOU DIED', (t) async {

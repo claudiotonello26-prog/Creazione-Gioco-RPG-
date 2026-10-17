@@ -68,15 +68,15 @@ const List<NoviceQuest> noviceQuests = [
     target: 1,
     action: NoviceAction.dailyQuest,
     runes: 80,
-    loot: {'ash_wood': 2},
+    loot: {'ash_wood': 20},
   ),
   NoviceQuest(
     title: 'Passi di cenere',
-    goal: 'Raccogli 2 Legni di frassino camminando',
-    trainer: 'Un cavaliere cammina. Collega i passi e scegli il bosco: ogni 400 '
+    goal: 'Raccogli 40 Legni di frassino camminando',
+    trainer: 'Un cavaliere cammina. Collega i passi e scegli il bosco: ogni 40 '
         'passi è un ciocco di frassino.',
     stat: 'gather:ash_wood',
-    target: 2,
+    target: 40,
     action: NoviceAction.walk,
     gather: 'ash_wood',
     runes: 40,
@@ -85,23 +85,23 @@ const List<NoviceQuest> noviceQuests = [
     title: 'Il primo attrezzo',
     goal: 'Costruisci il Piccone di frassino in Carpenteria',
     trainer: 'Il ferro sta sotto la roccia, e con le unghie non ci arrivi. '
-        'Un\'asse, due ciocchi, ed ecco il tuo primo piccone.',
+        'Un\'asse e venti ciocchi, ed ecco il tuo primo piccone.',
     stat: 'craft:ash_pickaxe',
     target: 1,
     action: NoviceAction.carpentry,
-    loot: {'coal': 1},
+    loot: {'coal': 10},
   ),
   NoviceQuest(
     title: 'Sotto la roccia',
-    goal: 'Raccogli 2 Minerali di ferro camminando',
+    goal: 'Raccogli 20 Minerali di ferro camminando',
     trainer: 'Ora il piccone ce l\'hai. Nella Camminata scegli la miniera e '
-        'cammina: 500 passi, un minerale.',
+        'cammina: 50 passi, un minerale.',
     stat: 'gather:iron_ore',
-    target: 2,
+    target: 20,
     action: NoviceAction.walk,
     gather: 'iron_ore',
     runes: 50,
-    loot: {'coal': 1},
+    loot: {'coal': 10},
   ),
   NoviceQuest(
     title: 'Fuoco e metallo',
@@ -111,7 +111,7 @@ const List<NoviceQuest> noviceQuests = [
     stat: 'craft:iron_ingot',
     target: 1,
     action: NoviceAction.furnace,
-    loot: {'ash_wood': 2, 'beast_essence': 2},
+    loot: {'ash_wood': 20, 'beast_essence': 2},
   ),
   NoviceQuest(
     title: 'Ferro addosso',
@@ -132,7 +132,7 @@ const List<NoviceQuest> noviceQuests = [
     target: 1,
     action: NoviceAction.training,
     runes: 40,
-    loot: {'iron_ore': 2, 'coal': 2},
+    loot: {'iron_ore': 20, 'coal': 20},
   ),
   NoviceQuest(
     title: 'Più forte',

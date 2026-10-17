@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/items.dart';
@@ -16,7 +17,10 @@ import '../widgets/trainer.dart';
 /// La Camminata: i passi di oggi (Samsung Health, Google Fit, smartwatch,
 /// tramite Health Connect o Salute) diventano minerale, legno e pietre.
 class WalkScreen extends StatefulWidget {
-  const WalkScreen({super.key});
+  const WalkScreen({super.key, this.asTab = false});
+
+  /// Come scheda in basso: il consiglio lo mostra la barra quando la apri.
+  final bool asTab;
 
   @override
   State<WalkScreen> createState() => _WalkScreenState();
@@ -32,7 +36,7 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    maybeShowHint(context, 'walk');
+    if (!widget.asTab) maybeShowHint(context, 'walk');
     _refresh();
   }
 
@@ -94,7 +98,7 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
     final fresh = (min(steps, dailyStepCap) - s.daily.claimedSteps).clamp(0, dailyStepCap);
     final ready = (fresh + s.stepBank) ~/ target.stepsPerUnit;
     return Scaffold(
-      appBar: AppBar(title: const Text('CAMMINATA')),
+      appBar: AppBar(title: Text(tr('Gathering').toUpperCase())),
       body: RefreshIndicator(
         onRefresh: _refresh,
         child: ListView(
@@ -125,7 +129,8 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
                 label: Text(ready > 0 ? 'RACCOGLI $ready × ${target.name.toUpperCase()}' : 'CAMMINA ANCORA'),
               ),
             for (final skill in [Skill.woodcutting, Skill.mining]) ...[
-              SectionTitle(skill.label,
+              SectionTitle(
+                  '${skill == Skill.woodcutting ? tr('Trees') : tr('Ores')} · ${skill.label}',
                   trailing: Text('Livello ${s.skillLevel(skill)}',
                       style: const TextStyle(color: Palette.goldBright))),
               Builder(builder: (_) {

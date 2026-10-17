@@ -6,6 +6,7 @@ import '../../data/game_state.dart';
 import '../../domain/combat.dart';
 import '../../domain/enemies.dart';
 import '../../domain/exercise.dart';
+import '../../domain/hunting.dart';
 import '../../domain/items.dart';
 import '../../domain/routine.dart';
 import '../widgets/common.dart';
@@ -71,6 +72,15 @@ class TrainTab extends StatelessWidget {
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
           ),
+        const SectionTitle('Caccia'),
+        const Text(
+          'Animali dei boschi: lasciano pelle, ossa ed essenza. Rinascono dopo ogni uccisione, '
+          'vai avanti finché ne hai e ritiri tutto alla fine.',
+          style: TextStyle(color: Palette.ash, fontSize: 13),
+        ),
+        const SizedBox(height: 6),
+        for (final a in huntAnimals)
+          _FreeFightTile(enemy: a, playerLevel: s.character.level, icon: Icons.pets),
         const SizedBox(height: 6),
         Text(
           'Piano per ${s.daysPerWeek} giorni: ${plan.map((d) => d.map((g) => g.label).join(' + ')).join(' · ')}',
@@ -191,6 +201,15 @@ class GroupScreen extends StatelessWidget {
                   .push(MaterialPageRoute(builder: (_) => ExpeditionScreen(expedition: e))),
             ),
           if (group != MuscleGroup.stretching) ...[
+            const SectionTitle('Combattimenti liberi'),
+            const Text(
+              'Il mostro rinasce dopo ogni uccisione: continua finché vuoi, il bottino lo '
+              'ritiri alla fine.',
+              style: TextStyle(color: Palette.ash, fontSize: 13),
+            ),
+            const SizedBox(height: 6),
+            for (final e in list)
+              _FreeFightTile(enemy: e.monster, playerLevel: s.character.level),
             const SectionTitle('Caccia infinita'),
             ActionTile(
               icon: Icons.all_inclusive,
@@ -202,6 +221,34 @@ class GroupScreen extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Un nemico da combattere in libero, che rinasce finché non ti fermi.
+class _FreeFightTile extends StatelessWidget {
+  const _FreeFightTile({required this.enemy, required this.playerLevel, this.icon});
+  final EnemyDef enemy;
+  final int playerLevel;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final under = playerLevel < enemy.level;
+    return Card(
+      child: ListTile(
+        leading: Icon(icon ?? Icons.repeat, color: under ? Palette.blood : Palette.goldBright),
+        title: Text(enemy.name),
+        subtitle: Text(
+          '${enemy.moves.map((m) => m.name).join(' o ')} · '
+          '${enemy.loot.keys.map((k) => materialNames[k] ?? k).join(', ')}',
+          style: const TextStyle(color: Palette.ash, fontSize: 13),
+        ),
+        trailing: Text('LV ${enemy.level}',
+            style: TextStyle(
+                color: under ? Palette.blood : Palette.goldBright, fontWeight: FontWeight.bold)),
+        onTap: () => startFreeFight(context, enemy, respawn: true),
       ),
     );
   }
@@ -266,7 +313,7 @@ class _ExpeditionCard extends StatelessWidget {
 /// Un combattimento: si sceglie l'esercizio del mostro e la postura. Ritorna
 /// true se il nemico cade.
 Future<bool> startFreeFight(BuildContext context, EnemyDef enemy,
-    {bool endless = false, double lootMultiplier = 1}) async {
+    {bool endless = false, bool respawn = false, double lootMultiplier = 1}) async {
   final st = context.read<GameState>();
   if (endless && st.trainerEnabled && st.markHint('hunt')) {
     await showTrainer(context, trainerHints['hunt']!);
@@ -285,6 +332,7 @@ Future<bool> startFreeFight(BuildContext context, EnemyDef enemy,
       move: choice.$1,
       stance: choice.$2,
       endless: endless,
+      respawn: respawn,
       lootMultiplier: lootMultiplier,
     ),
   ));
@@ -400,6 +448,7 @@ class _ExpeditionScreenState extends State<ExpeditionScreen> {
     if (!mounted) return;
     setState(() {
       if (won) {
+        if (!_stretching) s.expeditionKill(enemy);
         _stage++;
         if (_stage == 2) s.clearExpedition(widget.expedition.id);
       } else {

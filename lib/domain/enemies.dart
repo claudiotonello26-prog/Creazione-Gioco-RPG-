@@ -82,7 +82,7 @@ const Map<String, EnemyDef> enemyDefs = {
     moves: [
       Move('Push-up sulle ginocchia', ExerciseId.pushUp, ratio: 0.8),
     ],
-    loot: {'iron_ore': 3, 'coal': 2},
+    loot: {'iron_ingot': 1, 'bone': 2},
   ),
   'hollow_smith': EnemyDef(
     id: 'hollow_smith',
@@ -95,7 +95,7 @@ const Map<String, EnemyDef> enemyDefs = {
     moves: [
       Move('Push-up', ExerciseId.pushUp),
     ],
-    loot: {'iron_ingot': 2, 'coal': 2, 'forge_stone_1': 1},
+    loot: {'iron_ingot': 2, 'bone': 2, 'forge_stone_1': 1},
   ),
   'fallen_knight': EnemyDef(
     id: 'fallen_knight',
@@ -134,7 +134,7 @@ const Map<String, EnemyDef> enemyDefs = {
     moves: [
       Move('Push-up diamante', ExerciseId.pushUp, ratio: 0.4),
     ],
-    loot: {'ember_iron': 2, 'coal': 3},
+    loot: {'ember_iron': 2, 'bone': 3},
   ),
   'living_bellows': EnemyDef(
     id: 'living_bellows',
@@ -192,7 +192,7 @@ const Map<String, EnemyDef> enemyDefs = {
     moves: [
       Move('Squat', ExerciseId.squat),
     ],
-    loot: {'ash_wood': 3, 'raw_hide': 1},
+    loot: {'bone': 3, 'raw_hide': 1},
   ),
   'hollow_stag': EnemyDef(
     id: 'hollow_stag',
@@ -206,7 +206,7 @@ const Map<String, EnemyDef> enemyDefs = {
     moves: [
       Move('Affondi', ExerciseId.lunge),
     ],
-    loot: {'raw_hide': 3, 'ash_wood': 3, 'beast_essence': 2},
+    loot: {'raw_hide': 3, 'bone': 3, 'beast_essence': 2},
   ),
   'carrion_hound': EnemyDef(
     id: 'carrion_hound',
@@ -220,7 +220,7 @@ const Map<String, EnemyDef> enemyDefs = {
     moves: [
       Move('Affondi', ExerciseId.lunge),
     ],
-    loot: {'tanned_leather': 1, 'oak_wood': 2},
+    loot: {'tanned_leather': 1, 'beast_essence': 2},
   ),
   'marsh_matron': EnemyDef(
     id: 'marsh_matron',
@@ -235,7 +235,7 @@ const Map<String, EnemyDef> enemyDefs = {
       Move('Squat', ExerciseId.squat),
       Move('Affondi', ExerciseId.lunge),
     ],
-    loot: {'tanned_leather': 3, 'oak_wood': 3, 'forge_stone_2': 1},
+    loot: {'tanned_leather': 3, 'beast_essence': 3, 'forge_stone_2': 1},
   ),
   'gorge_harpy': EnemyDef(
     id: 'gorge_harpy',
@@ -414,7 +414,7 @@ const Map<String, EnemyDef> enemyDefs = {
     moves: [
       Move('Jumping jack', ExerciseId.jumpingJack),
     ],
-    loot: {'moon_silver': 2, 'beast_essence': 1},
+    loot: {'silver_ingot': 1, 'beast_essence': 1},
   ),
   'moon_moth': EnemyDef(
     id: 'moon_moth',
@@ -428,7 +428,7 @@ const Map<String, EnemyDef> enemyDefs = {
     moves: [
       Move('High knees', ExerciseId.jumpingJack, ratio: 0.6),
     ],
-    loot: {'moon_silver': 3, 'beast_essence': 2, 'coal': 2},
+    loot: {'silver_ingot': 1, 'beast_essence': 2, 'bone': 2},
   ),
   'drowned_scribe': EnemyDef(
     id: 'drowned_scribe',
@@ -441,7 +441,7 @@ const Map<String, EnemyDef> enemyDefs = {
     moves: [
       Move('High knees', ExerciseId.jumpingJack, ratio: 0.6),
     ],
-    loot: {'abyss_ink': 2, 'moon_silver': 1},
+    loot: {'abyss_ink': 2, 'silver_ingot': 1},
   ),
   'eyeless_librarian': EnemyDef(
     id: 'eyeless_librarian',

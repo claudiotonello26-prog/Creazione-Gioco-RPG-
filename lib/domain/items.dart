@@ -130,23 +130,23 @@ class MaterialRecipe {
 }
 
 const List<MaterialRecipe> materialRecipes = [
-  MaterialRecipe('ash_plank', Station.carpentry, {'ash_wood': 2}),
-  MaterialRecipe('ash_pickaxe', Station.carpentry, {'ash_plank': 1, 'ash_wood': 2}, tool: true),
+  MaterialRecipe('ash_plank', Station.carpentry, {'ash_wood': 20}),
+  MaterialRecipe('ash_pickaxe', Station.carpentry, {'ash_plank': 1, 'ash_wood': 20}, tool: true),
   MaterialRecipe('iron_axe', Station.anvil, {'iron_ingot': 2, 'ash_plank': 1}, level: 4, tool: true),
   MaterialRecipe('iron_pickaxe', Station.anvil, {'iron_ingot': 3, 'oak_plank': 1}, level: 6, tool: true),
   MaterialRecipe('steel_axe', Station.anvil, {'steel_ingot': 2, 'oak_plank': 1}, level: 10, tool: true),
   MaterialRecipe('steel_pickaxe', Station.anvil, {'steel_ingot': 3, 'yew_plank': 1}, level: 12, tool: true),
   MaterialRecipe('reinforced_grip', Station.carpentry, {'ash_plank': 1, 'beast_essence': 1}, level: 2),
-  MaterialRecipe('oak_plank', Station.carpentry, {'oak_wood': 2}, level: 5),
-  MaterialRecipe('yew_plank', Station.carpentry, {'yew_wood': 2}, level: 12),
-  MaterialRecipe('ebony_plank', Station.carpentry, {'ebony_wood': 2}, level: 20),
-  MaterialRecipe('iron_ingot', Station.furnace, {'iron_ore': 2, 'coal': 1}),
+  MaterialRecipe('oak_plank', Station.carpentry, {'oak_wood': 20}, level: 5),
+  MaterialRecipe('yew_plank', Station.carpentry, {'yew_wood': 20}, level: 12),
+  MaterialRecipe('ebony_plank', Station.carpentry, {'ebony_wood': 20}, level: 20),
+  MaterialRecipe('iron_ingot', Station.furnace, {'iron_ore': 20, 'coal': 10}),
   MaterialRecipe('forge_stone_1', Station.furnace, forgeStone1Recipe),
-  MaterialRecipe('steel_ingot', Station.furnace, {'iron_ingot': 2, 'coal': 2}, level: 6),
+  MaterialRecipe('steel_ingot', Station.furnace, {'iron_ingot': 2, 'coal': 20}, level: 6),
   MaterialRecipe('forge_stone_2', Station.furnace, {'forge_stone_1': 2, 'holy_shard': 1}, level: 8),
-  MaterialRecipe('silver_ingot', Station.furnace, {'moon_silver': 2, 'coal': 1}, level: 10),
+  MaterialRecipe('silver_ingot', Station.furnace, {'moon_silver': 20, 'coal': 10}, level: 10),
   MaterialRecipe('forge_stone_3', Station.furnace, {'forge_stone_2': 2, 'beast_essence': 3}, level: 14),
-  MaterialRecipe('star_ingot', Station.furnace, {'star_ore': 2, 'coal': 2}, level: 18),
+  MaterialRecipe('star_ingot', Station.furnace, {'star_ore': 20, 'coal': 20}, level: 18),
 ];
 
 /// Pezzi d'armatura: ogni armatura forgiata si indossa pezzo per pezzo, e
@@ -707,4 +707,4 @@ const Map<String, String> materialNames = {
 };
 
 /// Alla fornace: minerale dai passi + essenza dai mostri = Pietra di forgia I.
-const Map<String, int> forgeStone1Recipe = {'iron_ore': 3, 'beast_essence': 1};
+const Map<String, int> forgeStone1Recipe = {'iron_ore': 30, 'beast_essence': 1};

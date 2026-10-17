@@ -14,12 +14,13 @@ void main() {
   });
 
   test('i passi diventano legno di frassino e i resti si tengono', () {
-    expect(s.claimSteps(1000), (2, 0));
-    expect(s.character.materials['ash_wood'], 2);
-    expect(s.stepBank, 200);
+    // 40 passi per ciocco: 4000 passi sono 100 legni.
+    expect(s.claimSteps(1010).$1, 25);
+    expect(s.character.materials['ash_wood'], 25);
+    expect(s.stepBank, 10);
     // Riscuotere di nuovo lo stesso totale non dà nulla.
-    expect(s.claimSteps(1000).$1, 0);
-    expect(s.claimSteps(1200).$1, 1);
+    expect(s.claimSteps(1010).$1, 0);
+    expect(s.claimSteps(1040).$1, 1);
   });
 
   test('il tetto giornaliero vale anche a rate', () {
@@ -47,7 +48,7 @@ void main() {
     expect(s.canGather(ore), isFalse);
     final r = materialRecipes.firstWhere((r) => r.output == 'ash_pickaxe');
     s.character.addMaterial('ash_plank', 2);
-    s.character.addMaterial('ash_wood', 4);
+    s.character.addMaterial('ash_wood', 40);
     expect(s.canCraftMaterial(r), isTrue);
     s.craftMaterial(r);
     expect(s.canGather(ore), isTrue);

@@ -1,28 +1,35 @@
 import 'dart:math';
 
+import '../core/i18n.dart';
 import 'items.dart';
 
-/// Mestieri che salgono di livello come su Gymscape: i passi allenano
-/// Taglialegna e Minatore, la forgia allena Carpenteria, Fornace e Incudine.
+/// Abilità che salgono di livello come su Gymscape. Combattimento: Attacco,
+/// Difesa e Magia (la postura e l'arma decidono quale sale), Spedizioni
+/// (sale battendo i nemici delle spedizioni). Produzione: i passi allenano
+/// Boscaiolo e Minatore, la forgia Falegnameria, Fusione e Forgiatura.
 enum Skill {
-  woodcutting('Taglialegna'),
-  mining('Minatore'),
-  carpentry('Carpenteria'),
-  smelting('Fornace'),
-  smithing('Incudine'),
+  woodcutting('Woodcutting'),
+  mining('Mining'),
+  carpentry('Carpentry'),
+  smelting('Smelting'),
+  smithing('Smithing'),
+  attack('Attack'),
+  defense('Defence'),
+  magic('Magic'),
+  expeditions('Expeditions');
 
-  /// Combattimento: la postura decide quale dei due sale.
-  attack('Attacco'),
-  defense('Difesa');
+  const Skill(this.key);
 
-  const Skill(this.label);
-  final String label;
+  /// Nome inglese, che è anche la chiave della traduzione.
+  final String key;
+  String get label => tr(key);
 
-  bool get combat => this == attack || this == defense;
+  bool get combat => combatSkills.contains(this);
 
-  /// I mestieri arrivano al 30, Attacco e Difesa al 99.
+  /// I mestieri arrivano al 30, le abilità di combattimento al 99.
   int get maxLevel => combat ? 99 : maxSkillLevel;
 
+  static const List<Skill> combatSkills = [attack, defense, magic, expeditions];
   static const List<Skill> crafts = [woodcutting, mining, carpentry, smelting, smithing];
 
   static Skill forStation(Station s) => switch (s) {
@@ -72,14 +79,14 @@ class Resource {
 }
 
 const List<Resource> resources = [
-  Resource('ash_wood', Skill.woodcutting, 1, 400, 10, 'Boschi di cenere'),
-  Resource('oak_wood', Skill.woodcutting, 5, 700, 18, 'Querceto nero', tool: 'iron_axe'),
-  Resource('yew_wood', Skill.woodcutting, 12, 1100, 30, 'Cimitero dei tassi', tool: 'steel_axe'),
-  Resource('ebony_wood', Skill.woodcutting, 20, 1800, 50, 'Selva del crepuscolo', tool: 'steel_axe'),
-  Resource('coal', Skill.mining, 1, 300, 8, 'Cave di carbone'),
-  Resource('iron_ore', Skill.mining, 1, 500, 12, 'Miniera del pellegrino', tool: 'ash_pickaxe'),
-  Resource('moon_silver', Skill.mining, 8, 900, 24, 'Grotte lunari', tool: 'iron_pickaxe'),
-  Resource('star_ore', Skill.mining, 16, 1500, 40, 'Cratere della stella caduta', tool: 'steel_pickaxe'),
+  Resource('ash_wood', Skill.woodcutting, 1, 40, 1, 'Boschi di cenere'),
+  Resource('oak_wood', Skill.woodcutting, 5, 70, 2, 'Querceto nero', tool: 'iron_axe'),
+  Resource('yew_wood', Skill.woodcutting, 12, 110, 3, 'Cimitero dei tassi', tool: 'steel_axe'),
+  Resource('ebony_wood', Skill.woodcutting, 20, 180, 5, 'Selva del crepuscolo', tool: 'steel_axe'),
+  Resource('coal', Skill.mining, 1, 30, 1, 'Cave di carbone'),
+  Resource('iron_ore', Skill.mining, 1, 50, 1, 'Miniera del pellegrino', tool: 'ash_pickaxe'),
+  Resource('moon_silver', Skill.mining, 8, 90, 2, 'Grotte lunari', tool: 'iron_pickaxe'),
+  Resource('star_ore', Skill.mining, 16, 150, 4, 'Cratere della stella caduta', tool: 'steel_pickaxe'),
 ];
 
 /// Attrezzi in ordine di qualità: uno migliore vale anche per ciò che

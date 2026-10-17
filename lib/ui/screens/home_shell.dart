@@ -7,7 +7,9 @@ import 'arena_tab.dart';
 import 'forge_tab.dart';
 import 'home_tab.dart';
 import '../widgets/trainer.dart';
-import 'attributes_tab.dart';
+import '../../core/i18n.dart';
+import 'gear_screens.dart';
+import 'walk_screen.dart';
 import 'train_tab.dart';
 
 class HomeShell extends StatefulWidget {
@@ -38,7 +40,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     if (s == AppLifecycleState.resumed) context.read<GameState>().refreshDay();
   }
 
-  static const _hints = ['home', 'training', 'forge', 'arena', 'attributes'];
+  static const _hints = ['home', 'training', 'walk', 'forge', 'market', 'arena'];
 
   void goTo(int tab) {
     setState(() => _tab = tab);
@@ -52,12 +54,14 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     if (_lastPoints >= 0 && points > _lastPoints) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Livello su! Hai $points punti da spendere in Attributi.'),
-          backgroundColor: Palette.stoneLight,
-          behavior: SnackBarBehavior.floating,
-          action: SnackBarAction(label: 'VAI', onPressed: () => goTo(4)),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Livello su! Hai $points punti da spendere negli attributi.'),
+            backgroundColor: Palette.stoneLight,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(label: 'VAI', onPressed: () => goTo(0)),
+          ),
+        );
       });
     }
     _lastPoints = points;
@@ -70,29 +74,48 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     final tabs = [
       HomeTab(onNavigate: goTo),
       TrainTab(onNavigate: goTo),
+      const WalkScreen(asTab: true),
       const ForgeTab(),
+      const MarketScreen(),
       const ArenaTab(),
-      const AttributesTab(),
     ];
     return Scaffold(
-      body: SafeArea(child: IndexedStack(index: _tab, children: tabs)),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _tab,
-        onDestinationSelected: goTo,
-        destinations: [
-          const NavigationDestination(icon: Icon(Icons.castle_outlined), label: 'Home'),
-          const NavigationDestination(icon: Icon(Icons.fitness_center), label: 'Training'),
-          const NavigationDestination(icon: Icon(Icons.hardware), label: 'Forgia'),
-          const NavigationDestination(icon: Icon(Icons.sports_kabaddi), label: 'Arena'),
-          NavigationDestination(
-            icon: Badge(
-              isLabelVisible: points > 0,
-              label: Text('$points'),
-              child: const Icon(Icons.trending_up),
+      body: SafeArea(
+        child: IndexedStack(index: _tab, children: tabs),
+      ),
+      bottomNavigationBar: NavigationBarTheme(
+        // Sei schede: etichette più piccole perché stiano su una riga.
+        data: NavigationBarTheme.of(context).copyWith(
+          labelTextStyle: WidgetStateProperty.resolveWith(
+            (states) => TextStyle(
+              fontFamily: kTitleFont,
+              fontSize: 9.5,
+              letterSpacing: 0.2,
+              fontWeight: FontWeight.w700,
+              color: states.contains(WidgetState.selected) ? Palette.goldBright : Palette.ash,
             ),
-            label: 'Attributi',
           ),
-        ],
+        ),
+        child: NavigationBar(
+          selectedIndex: _tab,
+          onDestinationSelected: goTo,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          destinations: [
+            NavigationDestination(
+              icon: Badge(
+                isLabelVisible: points > 0,
+                label: Text('$points'),
+                child: const Icon(Icons.castle_outlined),
+              ),
+              label: tr('Home'),
+            ),
+            NavigationDestination(icon: const Icon(Icons.fitness_center), label: tr('Training')),
+            NavigationDestination(icon: const Icon(Icons.directions_walk), label: tr('Gathering')),
+            NavigationDestination(icon: const Icon(Icons.hardware), label: tr('Forge')),
+            NavigationDestination(icon: const Icon(Icons.storefront), label: tr('Market')),
+            NavigationDestination(icon: const Icon(Icons.sports_kabaddi), label: tr('Arena')),
+          ],
+        ),
       ),
     );
   }

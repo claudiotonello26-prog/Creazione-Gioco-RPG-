@@ -1,17 +1,20 @@
 import 'dart:math';
 
+import '../core/i18n.dart';
+
 import 'items.dart';
 
 enum Attribute {
-  vigor('Vigore', 'Punti vita: resisti di più ai colpi dei boss'),
-  endurance('Resistenza', 'Quanto dura il Rampage prima di calare'),
-  strength('Forza', 'Attacco con armi pesanti, armature pesanti'),
-  dexterity('Destrezza', 'Attacco con armi leggere, critici più forti'),
-  faith('Fede', 'Danno sacro, cure e benedizioni'),
-  intelligence('Intelligenza', 'Magie ed effetti di stato');
+  vigor('Vigor', 'Punti vita: resisti di più ai colpi dei boss'),
+  endurance('Endurance', 'Quanto dura il Rampage prima di calare'),
+  strength('Strength', 'Attacco con armi pesanti, armature pesanti'),
+  dexterity('Dexterity', 'Attacco con armi leggere, critici più forti'),
+  faith('Faith', 'Danno sacro, cure e benedizioni'),
+  intelligence('Intelligence', 'Magie ed effetti di stato');
 
-  const Attribute(this.label, this.description);
-  final String label;
+  const Attribute(this.key, this.description);
+  final String key;
+  String get label => tr(key);
   final String description;
 }
 

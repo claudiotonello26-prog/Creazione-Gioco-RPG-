@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
+import '../../core/i18n.dart';
 import '../../data/game_state.dart';
 import '../../online/nakama_client.dart';
 import '../widgets/common.dart';
@@ -40,6 +41,16 @@ class SettingsScreen extends StatelessWidget {
           ),
           trailing: const Icon(Icons.edit),
           onTap: () => _editServer(context, s),
+        ),
+        ListTile(
+          title: const Text('Lingua / Language'),
+          trailing: SegmentedButton<Lang>(
+            segments: [
+              for (final l in Lang.values) ButtonSegment(value: l, label: Text(l.label)),
+            ],
+            selected: {s.lang},
+            onSelectionChanged: (v) => s.setLang(v.first),
+          ),
         ),
         ListTile(
           title: const Text('Modalità di gioco'),

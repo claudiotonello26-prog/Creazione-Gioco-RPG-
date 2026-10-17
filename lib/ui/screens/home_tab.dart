@@ -12,6 +12,7 @@ import 'novice_card.dart';
 import 'onboarding.dart';
 import 'progress_screen.dart';
 import 'quest_screen.dart';
+import 'attributes_tab.dart';
 import 'settings_screen.dart';
 
 /// La schermata del personaggio: il cavaliere e i suoi numeri, i mestieri,
@@ -60,21 +61,19 @@ class HomeTab extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      top: 0,
-                      right: 0,
+                      top: 28,
+                      right: -4,
                       child: Column(
                         children: [
                           _GearButton(
                             icon: Icons.shield,
                             label: 'EQUIPAGGIAMENTO',
-                            filled: true,
                             onTap: () => openEquipment(context),
                           ),
                           const SizedBox(height: 10),
                           _GearButton(
                             icon: Icons.backpack,
                             label: 'INVENTARIO',
-                            filled: false,
                             onTap: () => openInventory(context),
                           ),
                         ],
@@ -105,40 +104,9 @@ class HomeTab extends StatelessWidget {
           ),
         ),
         const SectionTitle('Abilità'),
-        GridView.count(
-          crossAxisCount: 4,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          childAspectRatio: 0.85,
-          children: [
-            for (final k in [Skill.attack, Skill.defense, ...Skill.crafts])
-              _SkillTile(skill: k, progress: s.skillProgressOf(k)),
-          ],
-        ),
-        SectionTitle(
-          'Attributi',
-          trailing: c.availablePoints > 0
-              ? TextButton(
-                  onPressed: () => onNavigate(4),
-                  child: Text('${c.availablePoints} punti da spendere',
-                      style: const TextStyle(color: Palette.goldBright)),
-                )
-              : null,
-        ),
-        GridView.count(
-          crossAxisCount: 3,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          childAspectRatio: 1.7,
-          children: [
-            for (final a in Attribute.values)
-              _AttrTile(attribute: a, value: c.attr(a), onTap: () => onNavigate(4)),
-          ],
-        ),
+        _SkillRows(progress: s.skillProgressOf),
+        const SizedBox(height: 4),
+        const _AttributePanel(),
         const SizedBox(height: 8),
         NoviceCard(onNavigate: onNavigate),
         if (!s.questComplete) ...[
@@ -258,42 +226,41 @@ class HomeTab extends StatelessWidget {
   }
 }
 
-/// Pulsante grande e ben visibile in alto a destra.
+/// Pulsante d'oro sul lato destro del riquadro del personaggio.
 class _GearButton extends StatelessWidget {
-  const _GearButton(
-      {required this.icon, required this.label, required this.filled, required this.onTap});
+  const _GearButton({required this.icon, required this.label, required this.onTap});
   final IconData icon;
   final String label;
-  final bool filled;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final fg = filled ? Palette.night : Palette.goldBright;
     return Material(
-      color: filled ? Palette.goldBright : Palette.night,
+      color: Palette.goldBright,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: const BorderSide(color: Palette.goldBright, width: 2),
+        borderRadius: BorderRadius.circular(12),
+        side: const BorderSide(color: Palette.gold, width: 1.5),
       ),
-      elevation: 6,
       child: InkWell(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: SizedBox(
-          width: 108,
-          height: 84,
+          width: 80,
+          height: 60,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: fg, size: 34),
-              const SizedBox(height: 4),
+              Icon(icon, color: Palette.night, size: 26),
+              const SizedBox(height: 3),
               FittedBox(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Text(label,
-                      style: TextStyle(
-                          color: fg, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 0.5)),
+                      style: const TextStyle(
+                          color: Palette.night,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                          letterSpacing: 0.4)),
                 ),
               ),
             ],
@@ -304,9 +271,130 @@ class _GearButton extends StatelessWidget {
   }
 }
 
+/// Le abilità in due righe centrate: combattimento sopra, produzione sotto.
+/// Tutte le caselle hanno la stessa larghezza, così le righe si allineano.
+class _SkillRows extends StatelessWidget {
+  const _SkillRows({required this.progress});
+  final (int, int, int) Function(Skill) progress;
+
+  @override
+  Widget build(BuildContext context) {
+    const gap = 6.0;
+    return LayoutBuilder(builder: (context, box) {
+      final w = (box.maxWidth - gap * (Skill.crafts.length - 1)) / Skill.crafts.length;
+      Widget row(List<Skill> skills) => Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (final (i, k) in skills.indexed) ...[
+                if (i > 0) const SizedBox(width: gap),
+                SizedBox(width: w, height: 86, child: _SkillTile(skill: k, progress: progress(k))),
+              ],
+            ],
+          );
+      return Column(children: [
+        row(Skill.combatSkills),
+        const SizedBox(height: gap),
+        row(Skill.crafts),
+      ]);
+    });
+  }
+}
+
+/// Gli attributi: con punti liberi si distribuiscono con + e −, poi si
+/// conferma. Finché non confermi non cambia niente.
+class _AttributePanel extends StatefulWidget {
+  const _AttributePanel();
+
+  @override
+  State<_AttributePanel> createState() => _AttributePanelState();
+}
+
+class _AttributePanelState extends State<_AttributePanel> {
+  final Map<Attribute, int> _pending = {};
+
+  int get _spent => _pending.values.fold(0, (a, b) => a + b);
+
+  void _confirm(GameState s) {
+    _pending.forEach((a, n) {
+      for (var i = 0; i < n; i++) {
+        s.raiseAttribute(a);
+      }
+    });
+    setState(_pending.clear);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final c = s.character;
+    final left = c.availablePoints - _spent;
+    final allocating = c.availablePoints > 0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SectionTitle(
+          'Attributi',
+          trailing: allocating
+              ? Text('$left ${left == 1 ? 'punto' : 'punti'} da spendere',
+                  style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold))
+              : TextButton(
+                  onPressed: () => Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => const AttributesScreen())),
+                  child: const Text('Perk e record'),
+                ),
+        ),
+        GridView.count(
+          crossAxisCount: 3,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          childAspectRatio: allocating ? 1.25 : 1.7,
+          children: [
+            for (final a in Attribute.values)
+              _AttrTile(
+                attribute: a,
+                value: c.attr(a) + (_pending[a] ?? 0),
+                added: _pending[a] ?? 0,
+                onPlus: allocating && left > 0
+                    ? () => setState(() => _pending[a] = (_pending[a] ?? 0) + 1)
+                    : null,
+                onMinus: (_pending[a] ?? 0) > 0
+                    ? () => setState(() => _pending[a] = _pending[a]! - 1)
+                    : null,
+                allocating: allocating,
+              ),
+          ],
+        ),
+        if (allocating) ...[
+          const SizedBox(height: 8),
+          Row(children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: _spent > 0 ? () => setState(_pending.clear) : null,
+                child: const FittedBox(child: Text('ANNULLA')),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              flex: 2,
+              child: FilledButton(
+                onPressed: _spent > 0 ? () => _confirm(s) : null,
+                child: const Text('CONFERMA'),
+              ),
+            ),
+          ]),
+        ],
+      ],
+    );
+  }
+}
+
 IconData skillIcon(Skill k) => switch (k) {
       Skill.attack => Icons.gavel,
       Skill.defense => Icons.shield_outlined,
+      Skill.magic => Icons.auto_fix_high,
+      Skill.expeditions => Icons.explore,
       Skill.woodcutting => Icons.forest,
       Skill.mining => Icons.landscape,
       Skill.carpentry => Icons.carpenter,
@@ -346,25 +434,55 @@ class _SkillTile extends StatelessWidget {
 }
 
 class _AttrTile extends StatelessWidget {
-  const _AttrTile({required this.attribute, required this.value, required this.onTap});
+  const _AttrTile({
+    required this.attribute,
+    required this.value,
+    required this.added,
+    required this.onPlus,
+    required this.onMinus,
+    required this.allocating,
+  });
   final Attribute attribute;
   final int value;
-  final VoidCallback onTap;
+  final int added;
+  final VoidCallback? onPlus;
+  final VoidCallback? onMinus;
+  final bool allocating;
 
   @override
   Widget build(BuildContext context) {
+    Widget step(IconData icon, VoidCallback? onTap) => InkResponse(
+          onTap: onTap,
+          radius: 18,
+          child: Icon(icon, size: 26, color: onTap == null ? Palette.iron : Palette.goldBright),
+        );
     return Card(
       margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('$value', style: titleStyle(size: 20, color: Palette.goldBright, spacing: 0)),
-              Text(attribute.label, style: const TextStyle(color: Palette.ash, fontSize: 12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: added > 0 ? Palette.goldBright : Palette.iron),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('$value',
+                style: titleStyle(
+                    size: 20, color: added > 0 ? Palette.holy : Palette.goldBright, spacing: 0)),
+            FittedBox(
+              child: Text(attribute.label, style: const TextStyle(color: Palette.ash, fontSize: 12)),
+            ),
+            if (allocating) ...[
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  step(Icons.remove_circle_outline, onMinus),
+                  step(Icons.add_circle, onPlus),
+                ],
+              ),
             ],
-          ),
+          ],
         ),
       ),
     );

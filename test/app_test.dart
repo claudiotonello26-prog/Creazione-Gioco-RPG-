@@ -18,7 +18,7 @@ void main() {
     expect(find.text('IL TUO GIURAMENTO'), findsOneWidget);
   });
 
-  testWidgets('dopo il test si vedono le cinque schede', (tester) async {
+  testWidgets('dopo il test si vedono le sei schede', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final state = GameState();
     await state.load();
@@ -29,14 +29,14 @@ void main() {
     state.trainerEnabled = false;
     await tester.pumpWidget(IronOathApp(state: state));
     await tester.pumpAndSettle();
-    for (final label in ['Home', 'Training', 'Forgia', 'Arena', 'Attributi']) {
+    for (final label in ['Home', 'Training', 'Raccolta', 'Forgia', 'Mercato', 'Arena']) {
       expect(find.text(label), findsWidgets);
     }
-    for (final label in ['Training', 'Forgia', 'Arena', 'Attributi']) {
+    for (final label in ['Training', 'Raccolta', 'Forgia', 'Mercato', 'Arena', 'Home']) {
       await tester.tap(find.widgetWithText(NavigationDestination, label));
       await tester.pumpAndSettle();
     }
-    expect(find.text('VIGORE'), findsOneWidget);
+    expect(find.text('EQUIPAGGIAMENTO'), findsOneWidget);
   });
 
   testWidgets('Ser Corvino si presenta alla prima apertura', (tester) async {

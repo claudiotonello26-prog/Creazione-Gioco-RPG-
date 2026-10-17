@@ -59,7 +59,7 @@ void main() {
 
   test('salvataggio e ricaricamento', () async {
     s.addTraining(ExerciseId.squat, perfect(5));
-    s.character.addMaterial('iron_ore', 3);
+    s.character.addMaterial('iron_ore', 30);
     s.character.addMaterial('beast_essence', 1);
     expect(s.craftForgeStone(), isTrue);
     await Future<void>.delayed(Duration.zero);

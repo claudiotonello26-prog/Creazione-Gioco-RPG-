@@ -8,77 +8,26 @@ import '../../domain/exercise.dart';
 import '../widgets/common.dart';
 import 'settings_screen.dart';
 
-/// Ultima scheda: dove si spendono i punti negli attributi.
-class AttributesTab extends StatelessWidget {
-  const AttributesTab({super.key});
+/// Perk, equilibrio dei gruppi e record. I punti si spendono in Home.
+class AttributesScreen extends StatelessWidget {
+  const AttributesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     final c = s.character;
     final trained = s.trainedGroups.values.expand((g) => g).toSet();
-    final points = c.availablePoints;
-    return ListView(
+    return Scaffold(
+      appBar: AppBar(title: const Text('PERK E RECORD')),
+      body: ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: points > 0 ? Palette.goldBright : Palette.stoneLight,
-                    border: Border.all(color: Palette.gold),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text('$points',
-                      style: titleStyle(size: 26, color: points > 0 ? Palette.night : Palette.ash)),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    points > 0
-                        ? 'Punti da spendere: tocca + sull\'attributo che vuoi far crescere.'
-                        : 'Nessun punto libero. Ne guadagni uno a ogni livello e con '
-                            'stretching e mobilità (Punti Disciplina: ${c.disciplinePoints}).',
-                    style: TextStyle(color: points > 0 ? Palette.goldBright : Palette.ash),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
         for (final a in Attribute.values)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
-              child: Row(
-                children: [
-                  Icon(_icon(a), color: Palette.gold, size: 26),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(a.label.toUpperCase(), style: titleStyle(size: 15)),
-                        Text(_effect(a, c), style: const TextStyle(color: Palette.ash, fontSize: 13)),
-                      ],
-                    ),
-                  ),
-                  Text('${c.attr(a)}', style: titleStyle(size: 26, color: Palette.holy, spacing: 0)),
-                  IconButton(
-                    iconSize: 34,
-                    icon: Icon(Icons.add_circle,
-                        color: points > 0 ? Palette.goldBright : Palette.iron),
-                    onPressed: points > 0 ? () => s.raiseAttribute(a) : null,
-                  ),
-                ],
-              ),
-            ),
+          ListTile(
+            dense: true,
+            leading: Icon(_icon(a), color: Palette.gold),
+            title: Text('${a.label} ${c.attr(a)}'),
+            subtitle: Text(_effect(a, c), style: const TextStyle(color: Palette.ash)),
           ),
         if (c.unlockedPerkChoices.isNotEmpty) ...[
           const SectionTitle('Perk'),
@@ -157,6 +106,7 @@ class AttributesTab extends StatelessWidget {
               .push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
         ),
       ],
+      ),
     );
   }
 

@@ -11,17 +11,15 @@ import '../widgets/common.dart';
 import '../widgets/knight_view.dart';
 import '../widgets/trainer.dart';
 import 'forge_tab.dart';
-import 'gear_screens.dart';
 import 'quest_screen.dart';
 import 'train_tab.dart';
-import 'walk_screen.dart';
 
 /// Il Cammino del Novizio: una missione alla volta. Toccandola Ser Corvino
 /// spiega cosa fare e poi porta dritto dove si fa.
 class NoviceCard extends StatelessWidget {
   const NoviceCard({super.key, required this.onNavigate});
 
-  /// Cambia scheda in basso (1 = Training, 4 = Attributi).
+  /// Cambia scheda in basso (0 = Home, 1 = Training, 2 = Raccolta, 4 = Mercato).
   final void Function(int tab) onNavigate;
 
   Future<void> _claim(BuildContext context, GameState state) async {
@@ -109,7 +107,7 @@ void goToNoviceAction(
   void push(Widget w) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => w));
   switch (q.action) {
     case NoviceAction.fightGoblin:
-      startFreeFight(context, enemyDefs['hollow_goblin']!);
+      startFreeFight(context, enemyDefs['hollow_goblin']!, respawn: true);
     case NoviceAction.hunt:
       startFreeFight(context, enemyDefs['hollow_goblin']!, endless: true);
     case NoviceAction.dailyQuest:
@@ -117,7 +115,7 @@ void goToNoviceAction(
     case NoviceAction.walk:
       final r = q.gather == null ? null : resourceById(q.gather!);
       if (r != null && state.canGather(r)) state.setGatherTarget(r.id);
-      push(const WalkScreen());
+      onNavigate(2);
     case NoviceAction.carpentry:
       push(const StationScreen(station: Station.carpentry));
     case NoviceAction.furnace:
@@ -127,10 +125,10 @@ void goToNoviceAction(
     case NoviceAction.enchant:
       push(const StationScreen(station: Station.enchant));
     case NoviceAction.market:
-      openMarket(context);
+      onNavigate(4);
     case NoviceAction.training:
       onNavigate(1);
     case NoviceAction.attributes:
-      onNavigate(4);
+      onNavigate(0);
   }
 }

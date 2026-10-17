@@ -33,6 +33,7 @@ class CombatScreen extends StatefulWidget {
     this.stance = Stance.balanced,
     this.exerciseLabel,
     this.endless = false,
+    this.respawn = false,
     this.move,
     this.lootMultiplier = 1,
   });
@@ -48,6 +49,12 @@ class CombatScreen extends StatefulWidget {
   final Stance stance;
   final String? exerciseLabel;
   final bool endless;
+
+  /// Combattimento libero: il nemico rinasce uguale dopo ogni uccisione, si
+  /// va avanti finché si vuole e il bottino si ritira alla fine.
+  final bool respawn;
+
+  bool get looping => endless || respawn;
 
   @override
   State<CombatScreen> createState() => _CombatScreenState();
@@ -74,6 +81,7 @@ class _CombatScreenState extends State<CombatScreen> {
   bool _youDied = false;
 
   int _wave = 0;
+  int _kills = 0;
   int _totalReps = 0;
   int _totalXp = 0;
   int _totalRunes = 0;
@@ -196,10 +204,13 @@ class _CombatScreenState extends State<CombatScreen> {
     if (status == CombatStatus.victory) {
       _game.enemyDefeated();
       _collect(rewards, victory: true);
-      if (widget.endless) {
+      if (widget.looping) {
         // Il prossimo nemico arriva subito: niente pause lunghe.
-        _wave++;
-        context.read<GameState>().recordHuntWave(_wave);
+        _kills++;
+        if (widget.endless) {
+          _wave++;
+          context.read<GameState>().recordHuntWave(_wave);
+        }
         _engine = _newEngine(context.read<GameState>());
         await Future<void>.delayed(const Duration(milliseconds: 900));
         if (!mounted) return;
@@ -230,8 +241,8 @@ class _CombatScreenState extends State<CombatScreen> {
       barrierDismissible: false,
       builder: (_) => _ResultDialog(
         status: status,
-        endless: widget.endless,
-        wavesCleared: _wave,
+        endless: widget.looping,
+        wavesCleared: _kills,
         reps: _totalReps,
         xp: _totalXp,
         runes: _totalRunes,
@@ -248,7 +259,7 @@ class _CombatScreenState extends State<CombatScreen> {
     _countdownTimer?.cancel();
     if (_phase == _Phase.countdown) {
       // In caccia infinita tra un'ondata e l'altra: si esce col bottino.
-      if (widget.endless && _wave > 0) {
+      if (widget.looping && _kills > 0) {
         _phase = _Phase.fighting;
         _engine.status = CombatStatus.fled;
         await _checkEnd();
@@ -277,7 +288,9 @@ class _CombatScreenState extends State<CombatScreen> {
     final label = widget.move?.name ?? widget.exerciseLabel ?? exercises[widget.exercise]!.name;
     final title = widget.endless
         ? 'CACCIA · ONDATA ${_wave + 1}'
-        : widget.enemy.name.toUpperCase();
+        : widget.respawn
+            ? '${widget.enemy.name.toUpperCase()} · $_kills'
+            : widget.enemy.name.toUpperCase();
     return PopScope(
       canPop: _phase == _Phase.ended,
       onPopInvokedWithResult: (didPop, _) {
@@ -319,10 +332,16 @@ class _CombatScreenState extends State<CombatScreen> {
                       if (_phase == _Phase.countdown)
                         _CountdownOverlay(
                           seconds: _countdown,
-                          title: _wave == 0 ? 'PREPARATI' : 'ONDATA ${_wave + 1}',
-                          subtitle: _wave == 0
+                          title: _kills == 0
+                              ? 'PREPARATI'
+                              : widget.endless
+                                  ? 'ONDATA ${_wave + 1}'
+                                  : 'RINASCE',
+                          subtitle: _kills == 0
                               ? 'Mettiti in posizione davanti alla fotocamera'
-                              : 'Arriva un nemico più forte',
+                              : widget.endless
+                                  ? 'Arriva un nemico più forte'
+                                  : 'Si rialza: continua o ritirati col bottino',
                         ),
                     ],
                   ),
@@ -374,7 +393,7 @@ class _CombatScreenState extends State<CombatScreen> {
                   onPressed: _phase == _Phase.ended ? null : _flee,
                   icon: const Icon(Icons.directions_run, color: Palette.ash),
                   label: Text(
-                      widget.endless && _wave > 0
+                      widget.looping && _kills > 0
                           ? 'Ritirati col bottino'
                           : 'Fuggi (tieni gli XP delle rep fatte)',
                       style: const TextStyle(color: Palette.ash)),
