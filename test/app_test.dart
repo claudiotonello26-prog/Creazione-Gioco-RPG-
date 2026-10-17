@@ -28,13 +28,13 @@ void main() {
     });
     await tester.pumpWidget(IronOathApp(state: state));
     await tester.pumpAndSettle();
-    for (final label in ['Home', 'Allenati', 'Forgia', 'Arena', 'Profilo']) {
+    for (final label in ['Home', 'Allenati', 'Forgia', 'Arena', 'Eroe']) {
       expect(find.text(label), findsWidgets);
     }
-    for (final label in ['Allenati', 'Forgia', 'Arena', 'Profilo']) {
+    for (final label in ['Allenati', 'Forgia', 'Arena', 'Eroe']) {
       await tester.tap(find.widgetWithText(NavigationDestination, label));
       await tester.pumpAndSettle();
     }
-    expect(find.text('MAPPA DEL CORPO (7 GIORNI)'), findsOneWidget);
+    expect(find.text('VALORI'), findsOneWidget);
   });
 }
