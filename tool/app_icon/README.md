@@ -1,6 +1,6 @@
 # Icona dell'app
 
-Elmo templare a linee oro sfumate e luminose su fondo nero, occhi inclinati, disegnato in SVG (`helm.js`) e reso con Chromium (`render.js`).
+Elmo da cavaliere (armet con visiera a becco, dalla foto di riferimento) a linee oro nette e luminose su fondo nero, disegnato in SVG (`helm.js`) e reso con Chromium (`render.js`).
 Icona provvisoria: verrà sostituita dall'icona generata con Antigravity (`assets/art/ui/app_icon.png`).
 
 Rigenerare: `node render.js` (richiede Playwright), poi ridimensionare `icon_full.png`, `icon_fg.png`
