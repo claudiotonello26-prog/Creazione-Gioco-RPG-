@@ -62,6 +62,8 @@ class CombatEngine {
     required int testReps,
     this.stance = Stance.balanced,
     this.wave = 0,
+    this.attackLevel = 1,
+    this.defenseLevel = 1,
     Random? random,
   })  : _random = random ?? Random(),
         expectedReps = max(3, (testReps * enemy.repFactor).round()) {
@@ -98,6 +100,25 @@ class CombatEngine {
   final Stance stance;
   final int wave;
   final Random _random;
+
+  /// Livelli di Attacco e Difesa, allenati dalla postura.
+  final int attackLevel;
+  final int defenseLevel;
+
+  /// +2% di danno per livello di Attacco.
+  static double attackBonus(int level) => 0.02 * (level - 1);
+
+  /// +0,5% di colpi assorbiti per livello di Difesa, fino al 30%.
+  static double defenseBonus(int level) => min(0.3, 0.005 * (level - 1));
+
+  /// Probabilità di un drop non comune e di uno raro per nemico abbattuto:
+  /// in caccia infinita crescono del 35% a ondata.
+  static const double uncommonBase = 0.08, rareBase = 0.015, dropGrowth = 1.35;
+  double get dropMultiplier => pow(dropGrowth, wave).toDouble();
+  double get uncommonChance => min(0.9, uncommonBase * dropMultiplier);
+  double get rareChance => min(0.6, rareBase * dropMultiplier);
+  static const List<String> uncommonDrops = ['holy_shard', 'forge_stone_2', 'moon_silver'];
+  static const List<String> rareDrops = ['ancient_stone', 'somber_stone', 'star_ore'];
 
   /// Danno di ogni colpo del nemico, prima di postura e perk.
   late final double hitDamage;
@@ -151,7 +172,8 @@ class CombatEngine {
       bonus += 0.15;
     }
     var power = weapon.attackRating(character, amuletBonus: bonus) *
-        stance.penetrationMult;
+        stance.penetrationMult *
+        (1 + attackBonus(attackLevel));
     power *= 1 + (character.offhand?.damageBonus ?? 0);
     if (enemy.weakTo == weapon.def.style) power *= 1.25;
     if (enemy.strongAgainst == weapon.def.style) power *= 0.75;
@@ -231,7 +253,7 @@ class CombatEngine {
 
     var taken = hitDamage * stance.damageTakenMult;
     if (character.perks.contains('iron_skin')) taken *= 0.9;
-    taken *= 1 - character.damageReduction;
+    taken *= 1 - min(0.75, character.damageReduction + defenseBonus(defenseLevel));
     heroHp = max(0, heroHp - taken);
     if (heroHp <= 0) status = CombatStatus.defeated;
     return taken;
@@ -261,10 +283,21 @@ class CombatEngine {
     final materials = <String, int>{
       for (final e in enemy.loot.entries) e.key: max(1, (e.value * pay).round()),
     };
+    // Drop casuali: anche un nemico facile può lasciare qualcosa di buono,
+    // e più resisti in caccia più è probabile.
+    if (_random.nextDouble() < uncommonChance) {
+      final id = uncommonDrops[_random.nextInt(uncommonDrops.length)];
+      materials[id] = (materials[id] ?? 0) + 1;
+    }
+    if (_random.nextDouble() < rareChance) {
+      final id = rareDrops[_random.nextInt(rareDrops.length)];
+      materials[id] = (materials[id] ?? 0) + 1;
+    }
     String? rare;
-    var rareChance = enemy.rareDropChance;
-    if (enemy.isBeast) rareChance += _amulets.rareLoot;
-    if (enemy.rareDrop != null && _random.nextDouble() < rareChance * (1 + lootBonus) * waveBonus) {
+    var weaponChance = enemy.rareDropChance;
+    if (enemy.isBeast) weaponChance += _amulets.rareLoot;
+    if (enemy.rareDrop != null &&
+        _random.nextDouble() < weaponChance * (1 + lootBonus) * dropMultiplier) {
       rare = enemy.rareDrop;
     }
     return CombatRewards(

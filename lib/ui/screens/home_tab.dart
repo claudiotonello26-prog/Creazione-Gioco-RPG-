@@ -3,17 +3,19 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
+import '../../domain/character.dart';
+import '../../domain/skills.dart';
 import '../widgets/common.dart';
-import 'onboarding.dart';
-import '../../domain/items.dart';
-import '../../domain/novice.dart';
 import '../widgets/knight_view.dart';
-import '../widgets/trainer.dart';
+import 'gear_screens.dart';
+import 'novice_card.dart';
+import 'onboarding.dart';
 import 'progress_screen.dart';
 import 'quest_screen.dart';
 import 'settings_screen.dart';
-import 'walk_screen.dart';
 
+/// La schermata del personaggio: il cavaliere e i suoi numeri, i mestieri,
+/// gli attributi, il Cammino del Novizio, la quest e l'andamento.
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key, required this.onNavigate});
   final void Function(int tab) onNavigate;
@@ -23,9 +25,6 @@ class HomeTab extends StatelessWidget {
     final s = context.watch<GameState>();
     final c = s.character;
     final (xpIn, xpNeed) = c.levelProgress;
-    final materials = c.materials.entries
-        .where((e) => e.value > 0 && !e.key.startsWith('amulet_'))
-        .toList();
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       children: [
@@ -40,21 +39,48 @@ class HomeTab extends StatelessWidget {
             ),
           ],
         ),
-        // Il tuo cavaliere, come appare con l'equipaggiamento di oggi.
         Card(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             child: Column(
               children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: RadialGradient(
-                      center: Alignment(0, -0.1),
-                      radius: 0.8,
-                      colors: [Color(0xFF3A2C16), Color(0x00000000)],
+                Stack(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        gradient: RadialGradient(
+                          center: Alignment(-0.2, -0.1),
+                          radius: 0.8,
+                          colors: [Color(0xFF3A2C16), Color(0x00000000)],
+                        ),
+                      ),
+                      child: Align(
+                        alignment: const Alignment(-0.45, 0),
+                        child: KnightView(character: c, height: 270),
+                      ),
                     ),
-                  ),
-                  child: Center(child: KnightView(character: c, height: 290)),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Column(
+                        children: [
+                          _GearButton(
+                            icon: Icons.shield,
+                            label: 'EQUIPAGGIAMENTO',
+                            filled: true,
+                            onTap: () => openEquipment(context),
+                          ),
+                          const SizedBox(height: 10),
+                          _GearButton(
+                            icon: Icons.backpack,
+                            label: 'INVENTARIO',
+                            filled: false,
+                            onTap: () => openInventory(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Text(c.name.toUpperCase(), style: titleStyle(size: 22, spacing: 4)),
@@ -68,9 +94,8 @@ class HomeTab extends StatelessWidget {
                 Row(
                   children: [
                     _Stat('Vita', '${c.maxHp}', Icons.favorite, Palette.blood),
-                    _Stat('Attacco', '${c.weapon.attackRating(c).round()}', Icons.gavel,
-                        Palette.goldBright),
-                    _Stat('Difesa', '${(c.damageReduction * 100).round()}%',
+                    _Stat('Attacco', '${s.attackValue}', Icons.gavel, Palette.goldBright),
+                    _Stat('Difesa', '${(s.defenseValue * 100).round()}%',
                         Icons.shield_outlined, Palette.frost),
                     _Stat('Rune', '${c.runes}', Icons.diamond_outlined, Palette.gold),
                   ],
@@ -79,15 +104,43 @@ class HomeTab extends StatelessWidget {
             ),
           ),
         ),
-        if (s.noviceQuest != null) _NoviceCard(state: s),
-        if (c.availablePoints > 0)
-          ActionTile(
-            icon: Icons.add_circle,
-            title: '${c.availablePoints} punti da spendere',
-            subtitle: 'Vai su Attributi per far crescere il tuo cavaliere',
-            color: Palette.goldBright,
-            onTap: () => onNavigate(4),
-          ),
+        const SectionTitle('Abilità'),
+        GridView.count(
+          crossAxisCount: 4,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          childAspectRatio: 0.85,
+          children: [
+            for (final k in [Skill.attack, Skill.defense, ...Skill.crafts])
+              _SkillTile(skill: k, progress: s.skillProgressOf(k)),
+          ],
+        ),
+        SectionTitle(
+          'Attributi',
+          trailing: c.availablePoints > 0
+              ? TextButton(
+                  onPressed: () => onNavigate(4),
+                  child: Text('${c.availablePoints} punti da spendere',
+                      style: const TextStyle(color: Palette.goldBright)),
+                )
+              : null,
+        ),
+        GridView.count(
+          crossAxisCount: 3,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          childAspectRatio: 1.7,
+          children: [
+            for (final a in Attribute.values)
+              _AttrTile(attribute: a, value: c.attr(a), onTap: () => onNavigate(4)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        NoviceCard(onNavigate: onNavigate),
         if (!s.questComplete) ...[
           SectionTitle(
             'Quest giornaliera',
@@ -200,136 +253,116 @@ class HomeTab extends StatelessWidget {
         ],
         const SectionTitle('Il tuo andamento'),
         const ProgressCard(),
-        const SectionTitle('Oggi'),
-        ActionTile(
-          icon: Icons.directions_walk,
-          title: 'Camminata',
-          subtitle: 'Collega i passi del telefono: diventano materiali da forgia',
-          color: Palette.goldBright,
-          onTap: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const WalkScreen())),
-        ),
-        ActionTile(
-          icon: Icons.explore_outlined,
-          title: 'Spedizioni',
-          subtitle: s.daily.expeditionDone
-              ? 'Spedizione di oggi già fatta'
-              : '${s.expeditionKeys} chiavi disponibili',
-          onTap: () => onNavigate(1),
-        ),
-        ActionTile(
-          icon: Icons.sports_kabaddi,
-          title: 'Arena Pura',
-          subtitle: '${s.seasonTitle} · ${s.arenaPoints} punti',
-          onTap: () => onNavigate(3),
-        ),
-        ActionTile(
-          icon: Icons.hardware,
-          title: 'Forgia',
-          subtitle: 'Potenzia ${c.weapon.displayName}',
-          onTap: () => onNavigate(2),
-        ),
-        const SectionTitle('Equipaggiamento'),
-        ActionTile(
-          icon: Icons.gavel,
-          title: c.weapon.displayName,
-          subtitle: '${c.weapon.def.style.label} · aura di ${c.weapon.def.affinity.label.toLowerCase()}',
-          onTap: () => onNavigate(2),
-        ),
-        ActionTile(
-          icon: Icons.shield_outlined,
-          title: c.worn.isEmpty
-              ? 'Nessuna armatura'
-              : [
-                  for (final slot in ArmorSlot.values)
-                    if (c.piece(slot) != null) '${slot.label}: ${c.piece(slot)!.name}',
-                ].join(' · '),
-          subtitle: c.worn.isEmpty
-              ? 'Forgiala all\'Incudine'
-              : 'Assorbe il ${(c.damageReduction * 100).round()}% dei colpi',
-          onTap: () => onNavigate(2),
-        ),
-        for (final id in c.amulets)
-          ActionTile(
-            icon: Icons.brightness_7_outlined,
-            title: amuletDefs[id]?.name ?? id,
-            subtitle: amuletDefs[id]?.description,
-          ),
-        const SectionTitle('Bisaccia'),
-        if (materials.isEmpty)
-          const Text('Vuota. Sconfiggi mostri e cammina per raccogliere materiali.',
-              style: TextStyle(color: Palette.ash))
-        else
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final m in materials)
-                InfoChip(Icons.hexagon_outlined, '${m.value}× ${materialNames[m.key] ?? m.key}'),
-            ],
-          ),
       ],
     );
   }
 }
 
-/// Il Cammino del Novizio: una missione guidata alla volta.
-class _NoviceCard extends StatelessWidget {
-  const _NoviceCard({required this.state});
-  final GameState state;
-
-  Future<void> _claim(BuildContext context) async {
-    final done = state.claimNovice();
-    if (done == null) return;
-    final next = state.noviceQuest;
-    await showTrainer(context, [
-      TrainerLine(
-        TrainerPose.cheering,
-        'Missione "${done.title}" compiuta! '
-        '${[if (done.runes > 0) '+${done.runes} rune', for (final e in done.loot.entries) '+${e.value} ${materialNames[e.key]}'].join(', ')}.',
-      ),
-      if (next != null)
-        TrainerLine(TrainerPose.pointing, next.trainer)
-      else
-        const TrainerLine(TrainerPose.crossed,
-            'Il Cammino del Novizio è finito. Non sei più un novizio. Sei... appena accettabile. Continua così.'),
-    ]);
-  }
+/// Pulsante grande e ben visibile in alto a destra.
+class _GearButton extends StatelessWidget {
+  const _GearButton(
+      {required this.icon, required this.label, required this.filled, required this.onTap});
+  final IconData icon;
+  final String label;
+  final bool filled;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final q = state.noviceQuest!;
-    final have = state.stat(q.stat).clamp(0, q.target);
-    final ready = state.noviceReady;
-    return Card(
+    final fg = filled ? Palette.night : Palette.goldBright;
+    return Material(
+      color: filled ? Palette.goldBright : Palette.night,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: const BorderSide(color: Palette.goldBright, width: 2),
+      ),
+      elevation: 6,
       child: InkWell(
-        onTap: () => ready
-            ? _claim(context)
-            : showTrainer(context, [TrainerLine(TrainerPose.pointing, q.trainer)]),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: SizedBox(
+          width: 108,
+          height: 84,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const TrainerFigure(pose: TrainerPose.crossed, height: 84),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('CAMMINO DEL NOVIZIO · ${state.noviceStep + 1}/${noviceQuests.length}',
-                        style: titleStyle(size: 11, color: Palette.gold, spacing: 1.5)),
-                    const SizedBox(height: 2),
-                    Text(q.title, style: titleStyle(size: 17, color: Palette.holy, spacing: 0.5)),
-                    Text(q.goal, style: const TextStyle(color: Palette.ash, fontSize: 13)),
-                    const SizedBox(height: 6),
-                    StatBar(value: have / q.target, color: Palette.gold, label: '$have / ${q.target}'),
-                    if (ready) ...[
-                      const SizedBox(height: 6),
-                      FilledButton(onPressed: () => _claim(context), child: const Text('RISCUOTI')),
-                    ],
-                  ],
+              Icon(icon, color: fg, size: 34),
+              const SizedBox(height: 4),
+              FittedBox(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Text(label,
+                      style: TextStyle(
+                          color: fg, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 0.5)),
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+IconData skillIcon(Skill k) => switch (k) {
+      Skill.attack => Icons.gavel,
+      Skill.defense => Icons.shield_outlined,
+      Skill.woodcutting => Icons.forest,
+      Skill.mining => Icons.landscape,
+      Skill.carpentry => Icons.carpenter,
+      Skill.smelting => Icons.local_fire_department,
+      Skill.smithing => Icons.hardware,
+    };
+
+class _SkillTile extends StatelessWidget {
+  const _SkillTile({required this.skill, required this.progress});
+  final Skill skill;
+  final (int, int, int) progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final (lvl, xpIn, xpNeed) = progress;
+    final color = skill.combat ? Palette.ember : Palette.gold;
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(skillIcon(skill), color: color, size: 22),
+            Text('$lvl', style: titleStyle(size: 18, color: Palette.holy, spacing: 0)),
+            FittedBox(
+              child: Text(skill.label,
+                  style: const TextStyle(color: Palette.ash, fontSize: 11)),
+            ),
+            const SizedBox(height: 3),
+            StatBar(value: xpNeed == 0 ? 1 : xpIn / xpNeed, color: color, height: 4),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AttrTile extends StatelessWidget {
+  const _AttrTile({required this.attribute, required this.value, required this.onTap});
+  final Attribute attribute;
+  final int value;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: onTap,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('$value', style: titleStyle(size: 20, color: Palette.goldBright, spacing: 0)),
+              Text(attribute.label, style: const TextStyle(color: Palette.ash, fontSize: 12)),
             ],
           ),
         ),

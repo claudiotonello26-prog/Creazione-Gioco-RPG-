@@ -8,6 +8,7 @@ import '../domain/character.dart';
 import '../domain/combat.dart';
 import '../domain/exercise.dart';
 import '../domain/items.dart';
+import '../domain/market.dart';
 import '../domain/pvp.dart';
 import '../domain/routine.dart';
 import '../domain/novice.dart';
@@ -352,6 +353,11 @@ class GameState extends ChangeNotifier {
         Skill.values.byName(e.key as String): e.value as int,
     };
     gatherTarget = j['gather'] as String? ?? 'ash_wood';
+    // Prima degli attrezzi si poteva minare a mani nude: chi l'ha già fatto
+    // tiene il piccone.
+    if ((skillXp[Skill.mining] ?? 0) > 0 && (character.materials['ash_pickaxe'] ?? 0) == 0) {
+      character.materials['ash_pickaxe'] = 1;
+    }
     stepBank = j['bank'] as int? ?? 0;
     stats = Map<String, int>.from(j['stats'] as Map? ?? const {});
     noviceStep = j['novice'] as int? ?? 0;
@@ -665,8 +671,19 @@ class GameState extends ChangeNotifier {
   /// ricompense effettivamente date dopo la fatica.
   (int, CombatRewards, double) applyCombatRewards(
       CombatRewards r, ExerciseId exercise, List<RepQuality> reps,
-      {required bool victory, Random? random}) {
+      {required bool victory, Stance stance = Stance.balanced, Random? random}) {
     _rollDay();
+    // La postura decide dove va l'esperienza di combattimento.
+    final combatXp = reps.length * 4;
+    switch (stance) {
+      case Stance.aggressive:
+        _gainSkill(Skill.attack, combatXp);
+      case Stance.defensive:
+        _gainSkill(Skill.defense, combatXp);
+      case Stance.balanced:
+        _gainSkill(Skill.attack, combatXp ~/ 2);
+        _gainSkill(Skill.defense, combatXp - combatXp ~/ 2);
+    }
     final group = exercises[exercise]!.group;
     final before = daily.combatReps[group] ?? 0;
     final fatigue = fatigueFor(before, reps.length);
@@ -760,7 +777,7 @@ class GameState extends ChangeNotifier {
 
   void setGatherTarget(String id) {
     final r = resourceById(id);
-    if (skillLevel(r.skill) < r.level) return;
+    if (!canGather(r)) return;
     gatherTarget = id;
     _changed();
   }
@@ -774,9 +791,15 @@ class GameState extends ChangeNotifier {
     if (capped <= daily.claimedSteps) return (0, 0);
     stepBank += capped - daily.claimedSteps;
     daily.claimedSteps = capped;
-    final r = resourceById(gatherTarget);
-    final units = stepBank ~/ r.stepsPerUnit;
-    stepBank %= r.stepsPerUnit;
+    var r = resourceById(gatherTarget);
+    if (!canGather(r)) {
+      r = resourceById('ash_wood');
+      gatherTarget = r.id;
+    }
+    // L'attrezzo migliore fa rendere di più gli stessi passi.
+    final per = (r.stepsPerUnit / (1 + gatherBonus(r.skill))).round();
+    final units = stepBank ~/ per;
+    stepBank %= per;
     var levels = 0;
     if (units > 0) {
       character.addMaterial(r.id, units);
@@ -809,7 +832,46 @@ class GameState extends ChangeNotifier {
 
   // ----------------------------------------------------------------- mestieri
 
-  int skillLevel(Skill k) => skillProgress(skillXp[k] ?? 0).$1;
+  int skillLevel(Skill k) => skillProgress(skillXp[k] ?? 0, max: k.maxLevel).$1;
+
+  (int, int, int) skillProgressOf(Skill k) => skillProgress(skillXp[k] ?? 0, max: k.maxLevel);
+
+  int get attackLevel => skillLevel(Skill.attack);
+  int get defenseLevel => skillLevel(Skill.defense);
+
+  /// Potere d'attacco mostrato nella Home: arma, attributi e livello di Attacco.
+  int get attackValue =>
+      (character.weapon.attackRating(character) * (1 + CombatEngine.attackBonus(attackLevel))).round();
+
+  /// Colpi assorbiti: armatura, scudo e livello di Difesa.
+  double get defenseValue =>
+      min(0.75, character.damageReduction + CombatEngine.defenseBonus(defenseLevel));
+
+  /// Attrezzi posseduti (stanno nell'inventario come oggetti singoli).
+  bool hasTool(String id) => (character.materials[id] ?? 0) > 0;
+
+  /// Il miglior attrezzo della famiglia vale anche per quelli sotto.
+  bool hasToolAtLeast(String id) {
+    final family = axes.contains(id) ? axes : pickaxes;
+    final need = family.indexOf(id);
+    for (var i = need; i < family.length; i++) {
+      if (hasTool(family[i])) return true;
+    }
+    return false;
+  }
+
+  bool canGather(Resource r) =>
+      skillLevel(r.skill) >= r.level && (r.tool == null || hasToolAtLeast(r.tool!));
+
+  /// Raccolta in più grazie al miglior attrezzo della famiglia.
+  double gatherBonus(Skill skill) {
+    final family = skill == Skill.woodcutting ? axes : pickaxes;
+    var best = 0.0;
+    for (final t in family) {
+      if (hasTool(t)) best = max(best, toolYield[t]!);
+    }
+    return best;
+  }
 
   int stationLevel(Station s) => skillLevel(Skill.forStation(s));
 
@@ -822,11 +884,16 @@ class GameState extends ChangeNotifier {
 
   void _count(String key, [int n = 1]) => stats[key] = (stats[key] ?? 0) + n;
 
-  int stat(String key) => stats[key] ?? 0;
+  int stat(String key) => key == 'hunt_wave' ? bestHuntWave : (stats[key] ?? 0);
 
   /// Fornace e Carpenteria: trasforma materiali in altri materiali.
+  bool canCraftMaterial(MaterialRecipe r) =>
+      stationLevel(r.station) >= r.level &&
+      hasMaterials(r.inputs) &&
+      !(r.tool && hasTool(r.output));
+
   bool craftMaterial(MaterialRecipe r) {
-    if (stationLevel(r.station) < r.level || !hasMaterials(r.inputs)) return false;
+    if (!canCraftMaterial(r)) return false;
     r.inputs.forEach(character.spendMaterial);
     character.addMaterial(r.output, r.qty);
     _gainSkill(Skill.forStation(r.station), craftXp(r.level));
@@ -936,6 +1003,34 @@ class GameState extends ChangeNotifier {
     }
     character.runes -= price;
     character.addMaterial('amulet_$id', 1);
+    _changed();
+    return true;
+  }
+
+  // ---------------------------------------------------------------- mercato
+
+  bool sellMaterial(String id, [int n = 1]) {
+    if (!sellable(id) || !character.spendMaterial(id, n)) return false;
+    character.runes += sellPrice(id) * n;
+    _count('sell', n);
+    _changed();
+    return true;
+  }
+
+  bool buyMaterial(String id, [int n = 1]) {
+    final cost = buyPrice(id) * n;
+    if (cost <= 0 || character.runes < cost) return false;
+    character.runes -= cost;
+    character.addMaterial(id, n);
+    _changed();
+    return true;
+  }
+
+  /// Vende un'arma della rastrelliera (non quella impugnata).
+  bool sellWeapon(WeaponInstance w) {
+    if (identical(w, character.weapon) || !character.weapons.remove(w)) return false;
+    character.runes += weaponValue(w);
+    _count('sell');
     _changed();
     return true;
   }

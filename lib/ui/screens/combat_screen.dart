@@ -105,6 +105,8 @@ class _CombatScreenState extends State<CombatScreen> {
         testReps: state.testRepsFor(widget.exercise),
         stance: widget.stance,
         wave: _wave,
+        attackLevel: state.attackLevel,
+        defenseLevel: state.defenseLevel,
       );
 
   void _startCountdown(int seconds) {
@@ -154,7 +156,8 @@ class _CombatScreenState extends State<CombatScreen> {
   int _collect(CombatRewards rewards, {required bool victory}) {
     final (xp, granted, fatigue) = context
         .read<GameState>()
-        .applyCombatRewards(rewards, widget.exercise, List.of(_reps), victory: victory);
+        .applyCombatRewards(rewards, widget.exercise, List.of(_reps),
+            victory: victory, stance: widget.stance);
     if (victory && fatigue < 1) _minFatigue = fatigue < _minFatigue ? fatigue : _minFatigue;
     _totalReps += _reps.length;
     _totalXp += xp;

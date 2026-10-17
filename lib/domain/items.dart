@@ -117,7 +117,11 @@ enum Affinity {
 /// Lavorazione di un materiale in un altro (Fornace e Carpenteria), sbloccata
 /// dal livello della postazione.
 class MaterialRecipe {
-  const MaterialRecipe(this.output, this.station, this.inputs, {this.level = 1, this.qty = 1});
+  const MaterialRecipe(this.output, this.station, this.inputs,
+      {this.level = 1, this.qty = 1, this.tool = false});
+
+  /// Attrezzo: se ne costruisce uno solo.
+  final bool tool;
   final String output;
   final Station station;
   final Map<String, int> inputs;
@@ -127,6 +131,11 @@ class MaterialRecipe {
 
 const List<MaterialRecipe> materialRecipes = [
   MaterialRecipe('ash_plank', Station.carpentry, {'ash_wood': 2}),
+  MaterialRecipe('ash_pickaxe', Station.carpentry, {'ash_plank': 1, 'ash_wood': 2}, tool: true),
+  MaterialRecipe('iron_axe', Station.anvil, {'iron_ingot': 2, 'ash_plank': 1}, level: 4, tool: true),
+  MaterialRecipe('iron_pickaxe', Station.anvil, {'iron_ingot': 3, 'oak_plank': 1}, level: 6, tool: true),
+  MaterialRecipe('steel_axe', Station.anvil, {'steel_ingot': 2, 'oak_plank': 1}, level: 10, tool: true),
+  MaterialRecipe('steel_pickaxe', Station.anvil, {'steel_ingot': 3, 'yew_plank': 1}, level: 12, tool: true),
   MaterialRecipe('reinforced_grip', Station.carpentry, {'ash_plank': 1, 'beast_essence': 1}, level: 2),
   MaterialRecipe('oak_plank', Station.carpentry, {'oak_wood': 2}, level: 5),
   MaterialRecipe('yew_plank', Station.carpentry, {'yew_wood': 2}, level: 12),
@@ -472,6 +481,11 @@ const Map<String, String> materialNames = {
   'iron_ore': 'Minerale di ferro',
   'ash_wood': 'Legno di frassino cenere',
   'beast_essence': 'Essenza di bestia',
+  'ash_pickaxe': 'Piccone di frassino',
+  'iron_axe': 'Accetta di ferro',
+  'iron_pickaxe': 'Piccone di ferro',
+  'steel_axe': 'Accetta d\'acciaio',
+  'steel_pickaxe': 'Piccone d\'acciaio',
   'holy_shard': 'Scheggia sacra',
   'forge_stone_1': 'Pietra di forgia I',
   'forge_stone_2': 'Pietra di forgia II',

@@ -69,7 +69,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     _notifyPoints(points);
     final tabs = [
       HomeTab(onNavigate: goTo),
-      const TrainTab(),
+      TrainTab(onNavigate: goTo),
       const ForgeTab(),
       const ArenaTab(),
       const AttributesTab(),

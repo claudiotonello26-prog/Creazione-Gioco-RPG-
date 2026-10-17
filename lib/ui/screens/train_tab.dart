@@ -10,11 +10,13 @@ import '../../domain/routine.dart';
 import '../widgets/common.dart';
 import '../widgets/trainer.dart';
 import 'combat_screen.dart';
+import 'novice_card.dart';
 import 'path_screen.dart';
 import 'quest_screen.dart';
 
 class TrainTab extends StatelessWidget {
-  const TrainTab({super.key});
+  const TrainTab({super.key, this.onNavigate});
+  final void Function(int tab)? onNavigate;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class TrainTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (onNavigate != null) NoviceCard(onNavigate: onNavigate!),
         ActionTile(
           icon: Icons.assignment_outlined,
           title: 'Quest giornaliera',
@@ -78,37 +81,19 @@ class TrainTab extends StatelessWidget {
           subtitle: 'Ogni nemico abbattuto ne arriva uno più forte, finché resisti'
               '${s.bestHuntWave > 0 ? ' · record ${s.bestHuntWave}' : ''}',
           color: Palette.ember,
-          onTap: () => _freeFight(context, enemyDefs['hollow_goblin']!, endless: true),
+          onTap: () => startFreeFight(context, enemyDefs['hollow_goblin']!, endless: true),
         ),
         const SectionTitle('Combattimenti liberi'),
         for (final e in enemyDefs.values.where((e) => e.region == regionCathedral))
           ActionTile(
             icon: Icons.whatshot,
             title: e.name,
-            subtitle: 'Gradino ${e.tier}'
+            subtitle: 'Gradino ${e.tier} · ${e.exercises.map((x) => exercises[x]!.name).join(' o ')}'
                 '${e.weakTo != null ? ' · debole a ${e.weakTo!.label.toLowerCase()}' : ''}',
-            onTap: () => _freeFight(context, e),
+            onTap: () => startFreeFight(context, e),
           ),
       ],
     );
-  }
-
-  Future<void> _freeFight(BuildContext context, EnemyDef enemy, {bool endless = false}) async {
-    final st = context.read<GameState>();
-    if (endless && st.trainerEnabled && st.markHint('hunt')) {
-      await showTrainer(context, trainerHints['hunt']!);
-      if (!context.mounted) return;
-    }
-    final choice = await showModalBottomSheet<(ExerciseId, Stance)>(
-      context: context,
-      backgroundColor: Palette.stone,
-      builder: (_) => const _FightSetup(),
-    );
-    if (choice == null || !context.mounted) return;
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => CombatScreen(
-          enemy: enemy, exercise: choice.$1, stance: choice.$2, endless: endless),
-    ));
   }
 
   Future<void> _startExpedition(BuildContext context, Expedition e) async {
@@ -120,6 +105,25 @@ class TrainTab extends StatelessWidget {
     await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => ExpeditionScreen(expedition: e)));
   }
+}
+
+/// Un combattimento libero: si sceglie l'esercizio del mostro e la postura.
+Future<void> startFreeFight(BuildContext context, EnemyDef enemy, {bool endless = false}) async {
+  final st = context.read<GameState>();
+  if (endless && st.trainerEnabled && st.markHint('hunt')) {
+    await showTrainer(context, trainerHints['hunt']!);
+    if (!context.mounted) return;
+  }
+  final choice = await showModalBottomSheet<(ExerciseId, Stance)>(
+    context: context,
+    backgroundColor: Palette.stone,
+    builder: (_) => _FightSetup(enemy: enemy),
+  );
+  if (choice == null || !context.mounted) return;
+  await Navigator.of(context).push(MaterialPageRoute(
+    builder: (_) => CombatScreen(
+        enemy: enemy, exercise: choice.$1, stance: choice.$2, endless: endless),
+  ));
 }
 
 class _PathCard extends StatelessWidget {
@@ -179,14 +183,15 @@ class _PathCard extends StatelessWidget {
 }
 
 class _FightSetup extends StatefulWidget {
-  const _FightSetup();
+  const _FightSetup({required this.enemy});
+  final EnemyDef enemy;
 
   @override
   State<_FightSetup> createState() => _FightSetupState();
 }
 
 class _FightSetupState extends State<_FightSetup> {
-  ExerciseId _exercise = ExerciseId.pushUp;
+  late ExerciseId _exercise = widget.enemy.exercises.first;
   Stance _stance = Stance.balanced;
 
   @override
@@ -197,12 +202,14 @@ class _FightSetupState extends State<_FightSetup> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SectionTitle('Scegli l\'esercizio'),
+          SectionTitle(widget.enemy.exercises.length > 1
+              ? '${widget.enemy.name}: scegli l\'esercizio'
+              : '${widget.enemy.name} si batte con'),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
-              for (final id in baseExercises)
+              for (final id in widget.enemy.exercises)
                 ChoiceChip(
                   label: Text(exercises[id]!.name),
                   selected: _exercise == id,
@@ -221,9 +228,11 @@ class _FightSetupState extends State<_FightSetup> {
           const SizedBox(height: 6),
           Text(
             switch (_stance) {
-              Stance.aggressive => 'Colpi più penetranti, ma subisci più danni.',
-              Stance.balanced => 'Nessun vantaggio né svantaggio.',
-              Stance.defensive => 'Subisci un quarto di danni in meno, colpi meno penetranti.',
+              Stance.aggressive =>
+                'Colpi più penetranti, ma subisci più danni. Ogni rep fa salire Attacco.',
+              Stance.balanced => 'Nessun vantaggio né svantaggio. Le rep vanno metà ad Attacco, metà a Difesa.',
+              Stance.defensive =>
+                'Subisci un quarto di danni in meno, colpi meno penetranti. Ogni rep fa salire Difesa.',
             },
             style: const TextStyle(color: Palette.ash),
           ),

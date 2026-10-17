@@ -14,7 +14,11 @@ class EnemyDef {
     this.loot = const {},
     this.rareDrop,
     this.rareDropChance = 0,
+    this.exercises = const [ExerciseId.pushUp],
   });
+
+  /// Con cosa lo si batte: se sono due, sceglie il giocatore.
+  final List<ExerciseId> exercises;
 
   final String id;
   final String name;
@@ -57,6 +61,7 @@ const String regionCathedral = 'Cattedrali in Rovina';
 const Map<String, EnemyDef> enemyDefs = {
   'hollow_goblin': EnemyDef(
     id: 'hollow_goblin',
+    exercises: [ExerciseId.squat],
     name: 'Goblin Svuotato',
     tier: 1,
     region: regionCathedral,
@@ -66,6 +71,7 @@ const Map<String, EnemyDef> enemyDefs = {
   ),
   'carrion_hound': EnemyDef(
     id: 'carrion_hound',
+    exercises: [ExerciseId.lunge],
     name: 'Segugio della Carogna',
     tier: 2,
     region: regionCathedral,
@@ -75,6 +81,7 @@ const Map<String, EnemyDef> enemyDefs = {
   ),
   'fallen_knight': EnemyDef(
     id: 'fallen_knight',
+    exercises: [ExerciseId.pushUp],
     name: 'Cavaliere Caduto',
     tier: 3,
     region: regionCathedral,
@@ -84,6 +91,7 @@ const Map<String, EnemyDef> enemyDefs = {
   ),
   'ash_wyrm': EnemyDef(
     id: 'ash_wyrm',
+    exercises: [ExerciseId.crunch, ExerciseId.legRaise],
     name: 'Viverna di Cenere',
     tier: 5,
     region: regionCathedral,
@@ -94,6 +102,7 @@ const Map<String, EnemyDef> enemyDefs = {
   // Spedizione Spinta "La Rocca del Penitente".
   'keep_sentinel': EnemyDef(
     id: 'keep_sentinel',
+    exercises: [ExerciseId.legRaise],
     name: 'Sentinella',
     tier: 2,
     region: 'La Rocca del Penitente',
@@ -101,6 +110,7 @@ const Map<String, EnemyDef> enemyDefs = {
   ),
   'wall_archer': EnemyDef(
     id: 'wall_archer',
+    exercises: [ExerciseId.jumpingJack],
     name: 'Arciere delle Mura',
     tier: 2,
     region: 'La Rocca del Penitente',
@@ -108,6 +118,7 @@ const Map<String, EnemyDef> enemyDefs = {
   ),
   'keep_brute': EnemyDef(
     id: 'keep_brute',
+    exercises: [ExerciseId.squat],
     name: 'Bruto',
     tier: 3,
     region: 'La Rocca del Penitente',
@@ -115,6 +126,7 @@ const Map<String, EnemyDef> enemyDefs = {
   ),
   'keep_fallen_knight': EnemyDef(
     id: 'keep_fallen_knight',
+    exercises: [ExerciseId.pushUp],
     name: 'Cavaliere Caduto',
     tier: 3,
     region: 'La Rocca del Penitente',
@@ -122,6 +134,7 @@ const Map<String, EnemyDef> enemyDefs = {
   ),
   'lord_of_the_keep': EnemyDef(
     id: 'lord_of_the_keep',
+    exercises: [ExerciseId.pushUp, ExerciseId.squat],
     name: 'Signore della Rocca',
     tier: 3,
     isBoss: true,
@@ -132,6 +145,7 @@ const Map<String, EnemyDef> enemyDefs = {
   ),
   'marsh_matron': EnemyDef(
     id: 'marsh_matron',
+    exercises: [ExerciseId.lunge, ExerciseId.crunch],
     name: 'Matrona della Palude',
     tier: 3,
     isBoss: true,

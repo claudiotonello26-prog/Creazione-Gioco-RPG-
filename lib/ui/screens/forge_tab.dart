@@ -3,18 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
-import '../../domain/character.dart';
 import '../../domain/items.dart';
 import '../../domain/skills.dart';
 import '../widgets/common.dart';
 import '../widgets/knight_view.dart';
-
-const Map<String, int> amuletPrices = {
-  'fervent': 600,
-  'colossus_seal': 600,
-  'hunter_heart': 450,
-  'martyr_relic': 800,
-};
+import 'gear_screens.dart';
 
 IconData stationIcon(Station s) => switch (s) {
       Station.carpentry => Icons.carpenter,
@@ -23,14 +16,13 @@ IconData stationIcon(Station s) => switch (s) {
       Station.enchant => Icons.auto_awesome,
     };
 
-/// La Forgia: quattro postazioni come su Gymscape, poi armeria e amuleti.
+/// La Forgia: quattro postazioni come su Gymscape, poi equipaggiamento e mercato.
 class ForgeTab extends StatelessWidget {
   const ForgeTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    final c = s.character;
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -51,95 +43,23 @@ class ForgeTab extends StatelessWidget {
               ),
           ],
         ),
-        const SectionTitle('Armeria'),
-        for (final w in [c.weapon, ...c.weapons])
-          ActionTile(
-            icon: identical(w, c.weapon) ? Icons.check_circle : Icons.gavel,
-            title: w.displayName,
-            subtitle: '${w.def.style.label} · potere ${w.attackRating(c).round()}'
-                '${identical(w, c.weapon) ? ' · impugnata' : ' · tocca per impugnare'}',
-            color: identical(w, c.weapon) ? Palette.goldBright : Palette.gold,
-            onTap: identical(w, c.weapon) ? null : () => s.equip(w),
-          ),
-        const SectionTitle('Armatura'),
-        if (c.armors.isEmpty)
-          const Text('Nessuna armatura: la prima si forgia all\'Incudine.',
-              style: TextStyle(color: Palette.ash)),
-        if (c.armors.isNotEmpty)
-          for (final slot in ArmorSlot.values)
-            ActionTile(
-              icon: Icons.shield_outlined,
-              title: '${slot.label}: ${c.piece(slot)?.name ?? 'nessuno'}',
-              subtitle: 'Vale il ${(slot.weight * 100).round()}% della protezione · tocca per cambiare',
-              color: c.piece(slot) != null ? Palette.goldBright : Palette.ash,
-              onTap: () => _pickPiece(context, s, slot),
-            ),
-        if (c.offhands.isNotEmpty) ...[
-          const SectionTitle('Mano sinistra'),
-          if (!c.weapon.def.oneHanded)
-            Text('${c.weapon.def.name} si impugna a due mani: scudo e seconda lama restano sulla schiena.',
-                style: const TextStyle(color: Palette.ash)),
-          for (final id in c.offhands)
-            ActionTile(
-              icon: c.offhandId == id ? Icons.check_circle : Icons.shield_moon_outlined,
-              title: offhandDefs[id]!.name,
-              subtitle: '${offhandDefs[id]!.effect}'
-                  '${c.offhandId == id ? ' · in mano' : ' · tocca per impugnare'}',
-              color: c.offhandId == id ? Palette.goldBright : Palette.gold,
-              onTap: () => s.holdOffhand(c.offhandId == id ? null : id),
-            ),
-        ],
-        SectionTitle('Amuleti (${c.amulets.length}/${Character.maxAmuletSlots})'),
-        for (final a in amuletDefs.values)
-          ActionTile(
-            icon: Icons.brightness_7_outlined,
-            title: a.name,
-            subtitle: a.description,
-            color: c.amulets.contains(a.id) ? Palette.goldBright : Palette.ash,
-            trailing: s.ownsAmulet(a.id)
-                ? Switch(value: c.amulets.contains(a.id), onChanged: (_) => s.toggleAmulet(a.id))
-                : TextButton(
-                    onPressed: () {
-                      if (!s.buyAmulet(a.id, amuletPrices[a.id]!)) {
-                        toast(context, 'Rune insufficienti');
-                      }
-                    },
-                    child: Text('${amuletPrices[a.id]} rune'),
-                  ),
-          ),
+        const SizedBox(height: 12),
+        ActionTile(
+          icon: Icons.shield,
+          title: 'Equipaggiamento',
+          subtitle: 'Arma, armatura pezzo per pezzo, mano sinistra, amuleti',
+          color: Palette.goldBright,
+          onTap: () => openEquipment(context),
+        ),
+        ActionTile(
+          icon: Icons.storefront,
+          title: 'Mercato',
+          subtitle: 'Vendi quello che avanza, compra materiali, amuleti dalla Fattucchiera',
+          onTap: () => openMarket(context),
+        ),
       ],
     );
   }
-}
-
-void _pickPiece(BuildContext context, GameState s, ArmorSlot slot) {
-  final c = s.character;
-  showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: Palette.night,
-    builder: (ctx) => SafeArea(
-      child: ListView(
-        shrinkWrap: true,
-        padding: const EdgeInsets.all(16),
-        children: [
-          SectionTitle(slot.label),
-          for (final id in [null, ...c.armors])
-            ActionTile(
-              icon: c.worn[slot] == id ? Icons.check_circle : Icons.shield_outlined,
-              title: id == null ? 'Nessuno' : armorDefs[id]!.name,
-              subtitle: id == null
-                  ? 'Solo la tunica'
-                  : 'Assorbe il ${(armorDefs[id]!.reduction * slot.weight * 100).round()}% dei colpi',
-              color: c.worn[slot] == id ? Palette.goldBright : Palette.gold,
-              onTap: () {
-                s.wearPiece(slot, id);
-                Navigator.pop(ctx);
-              },
-            ),
-        ],
-      ),
-    ),
-  );
 }
 
 class _StationButton extends StatelessWidget {
@@ -226,7 +146,8 @@ class StationScreen extends StatelessWidget {
           level: r.level,
           unlocked: lvl >= r.level,
           have: s.character.materials[r.output] ?? 0,
-          canMake: lvl >= r.level && s.hasMaterials(r.inputs),
+          canMake: s.canCraftMaterial(r),
+          done: r.tool && s.hasTool(r.output),
           onMake: () => s.craftMaterial(r),
           icon: Icons.hexagon_outlined,
           stationLabel: station.label,

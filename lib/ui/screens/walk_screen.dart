@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
+import '../../domain/items.dart';
 import '../../domain/skills.dart';
 import '../../domain/walking.dart';
 import '../../health/step_source.dart';
@@ -148,17 +149,24 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
   }
 
   Widget _resourceTile(GameState s, Resource r) {
-    final unlocked = s.skillLevel(r.skill) >= r.level;
+    final levelOk = s.skillLevel(r.skill) >= r.level;
+    final unlocked = s.canGather(r);
     final selected = s.gatherTarget == r.id;
+    final bonus = s.gatherBonus(r.skill);
+    final steps = (r.stepsPerUnit / (1 + bonus)).round();
     return ActionTile(
       icon: unlocked
           ? (selected ? Icons.radio_button_checked : Icons.radio_button_off)
           : Icons.lock_outline,
       color: selected ? Palette.goldBright : (unlocked ? Palette.gold : Palette.iron),
       title: r.name,
-      subtitle: unlocked
-          ? '${r.where} · ${r.stepsPerUnit} passi · hai ${s.character.materials[r.id] ?? 0}'
-          : 'Si sblocca a ${r.skill.label} livello ${r.level}',
+      subtitle: !levelOk
+          ? 'Si sblocca a ${r.skill.label} livello ${r.level}'
+          : !unlocked
+              ? 'Serve: ${materialNames[r.tool]} (si crea in Forgia)'
+              : '${r.where} · $steps passi'
+                  '${bonus > 0 ? ' (attrezzo +${(bonus * 100).round()}%)' : ''}'
+                  ' · hai ${s.character.materials[r.id] ?? 0}',
       enabled: unlocked,
       onTap: unlocked ? () => s.setGatherTarget(r.id) : null,
     );

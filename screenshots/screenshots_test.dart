@@ -18,6 +18,7 @@ import 'package:iron_oath/domain/progress.dart';
 import 'package:iron_oath/ui/widgets/exercise_demo.dart';
 import 'package:iron_oath/ui/screens/forge_tab.dart';
 import 'package:iron_oath/domain/items.dart';
+import 'package:iron_oath/ui/screens/gear_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFont(String family, List<String> paths) async {
@@ -140,6 +141,31 @@ void main() {
     await t.pumpAndSettle();
     nav.push(MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.enchant)));
     await _shot(t, '34_incantamento');
+  });
+
+  testWidgets('equipaggiamento, inventario, mercato', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    st.character.runes = 900;
+    st.character.addMaterial('iron_ore', 7);
+    st.character.addMaterial('forge_stone_1', 2);
+    st.character.addMaterial('holy_shard', 1);
+    st.character.armors.add('gambeson');
+    st.character.worn[ArmorSlot.chest] = 'gambeson';
+    await t.pumpWidget(IronOathApp(state: st));
+    await t.pumpAndSettle();
+    final nav = Navigator.of(t.element(find.byType(NavigationBar)));
+    nav.push(MaterialPageRoute<void>(builder: (_) => const EquipmentScreen()));
+    await _shot(t, '50_equipaggiamento');
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(MaterialPageRoute<void>(builder: (_) => const InventoryScreen()));
+    await _shot(t, '51_inventario');
+    nav.pop();
+    await t.pumpAndSettle();
+    nav.push(MaterialPageRoute<void>(builder: (_) => const MarketScreen()));
+    await _shot(t, '52_mercato');
   });
 
   testWidgets('andamento della forza', (t) async {
