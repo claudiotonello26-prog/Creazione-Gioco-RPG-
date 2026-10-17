@@ -54,6 +54,10 @@ class DailyState {
   /// Tappe del sentiero completate oggi per gruppo (4 esercizi + boss).
   final Map<MuscleGroup, int> pathDone = {};
 
+  /// Punto raggiunto oggi su ogni mappa: 0-3 tappe, 4 boss, 5 forziere da
+  /// aprire, 6 finita.
+  final Map<String, int> expeditionStep = {};
+
   Map<String, dynamic> toJson() => {
         'day': day,
         'quest': {for (final e in questDone.entries) e.key.name: e.value},
@@ -66,6 +70,7 @@ class DailyState {
         'steps': claimedSteps,
         'combat': {for (final e in combatReps.entries) e.key.name: e.value},
         'path': {for (final e in pathDone.entries) e.key.name: e.value},
+        'map': expeditionStep,
       };
 
   factory DailyState.fromJson(Map<String, dynamic> j) {
@@ -84,6 +89,7 @@ class DailyState {
         (k, v) => d.combatReps[MuscleGroup.parse(k as String)] = v as int);
     ((j['path'] as Map?) ?? const {}).forEach(
         (k, v) => d.pathDone[MuscleGroup.parse(k as String)] = v as int);
+    ((j['map'] as Map?) ?? const {}).forEach((k, v) => d.expeditionStep[k as String] = v as int);
     return d;
   }
 }
@@ -865,6 +871,79 @@ class GameState extends ChangeNotifier {
 
   /// Vittoria nello Stretching: lo spirito si calma se tieni la posa. Paga
   /// come un combattimento vinto, senza danni né fatica.
+  // --------------------------------------------------------------- mappe
+
+  static const int mapBoss = 4, mapChest = 5, mapDone = 6;
+
+  int expeditionProgress(String id) {
+    _rollDay();
+    return daily.expeditionStep[id] ?? 0;
+  }
+
+  /// Una tappa della mappa superata: si accende la successiva.
+  void completeExpeditionStep(String id, int step) {
+    _rollDay();
+    if (step != (daily.expeditionStep[id] ?? 0) || step >= mapBoss) return;
+    daily.expeditionStep[id] = step + 1;
+    _count('path_steps');
+    _changed();
+  }
+
+  /// Il boss della mappa cade dopo il circuito: lascia il suo bottino e
+  /// mostra il forziere.
+  Map<String, int> expeditionBossDown(Expedition e, {bool weighted = false}) {
+    _rollDay();
+    final m = weighted ? 2 : 1;
+    final loot = {for (final l in e.boss.loot.entries) l.key: l.value * m};
+    loot.forEach(character.addMaterial);
+    _gainXp(150 * m);
+    _gainSkill(Skill.expeditions, 60);
+    daily.expeditionStep[e.id] = mapChest;
+    daily.pathDone[e.group] = (daily.pathDone[e.group] ?? 0) + 1;
+    clearExpedition(e.id);
+    _count('boss_wins');
+    _markActive();
+    _changed();
+    return loot;
+  }
+
+  /// Apre il forziere: prima i garantiti, poi i rari. [multiplier] è 2 con lo
+  /// Zavorrato o la chiave, 4 con entrambi: moltiplica quantità e probabilità.
+  /// Ritorna gli oggetti nell'ordine in cui escono e quali sono rari.
+  List<(String, int, bool)> openChest(Expedition e, {int multiplier = 1, Random? random}) {
+    _rollDay();
+    if ((daily.expeditionStep[e.id] ?? 0) != mapChest) return const [];
+    final r = random ?? Random();
+    final out = <(String, int, bool)>[];
+    final runes = e.chest.runes * multiplier;
+    character.runes += runes;
+    out.add(('runes', runes, false));
+    for (final g in e.chest.guaranteed.entries) {
+      character.addMaterial(g.key, g.value * multiplier);
+      out.add((g.key, g.value * multiplier, false));
+    }
+    for (final (id, p) in e.chest.rares) {
+      if (r.nextDouble() >= min(1.0, p * multiplier)) continue;
+      out.add((_grantItem(id), 1, true));
+    }
+    daily.expeditionStep[e.id] = mapDone;
+    _count('chests');
+    _changed();
+    return out;
+  }
+
+  /// Dà un oggetto qualunque: arma, amuleto o materiale. Ritorna la chiave
+  /// con cui lo si ritrova.
+  String _grantItem(String id) {
+    if (weaponDefs.containsKey(id)) {
+      character.weapons.add(WeaponInstance(weaponId: id));
+      return id;
+    }
+    final key = amuletDefs.containsKey(id) ? 'amulet_$id' : id;
+    character.addMaterial(key, 1);
+    return key;
+  }
+
   /// Un mostro di spedizione abbattuto: sale l'abilità Spedizioni.
   void expeditionKill(EnemyDef e) {
     _gainSkill(Skill.expeditions, e.isBoss ? 60 : 25);

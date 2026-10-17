@@ -49,6 +49,11 @@ const Map<String, int> materialValues = {
   'gem_cut': 50,
   'gem_pure': 120,
   'gem_perfect': 300,
+  'ember_heart': 400,
+  'storm_eye': 400,
+  'martyr_tear': 400,
+  'star_core': 400,
+  'dream_pearl': 400,
 };
 
 int sellPrice(String id) => materialValues[id] ?? 0;

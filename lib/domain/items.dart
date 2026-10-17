@@ -568,6 +568,45 @@ const Map<String, WeaponDef> weaponDefs = {
     scaling: {Attribute.strength: ScalingGrade.a, Attribute.faith: ScalingGrade.d},
     damageType: DamageType.physical,
   ),
+  // Le armi rare dei forzieri d'oro: una per build.
+  'smith_god_hammer': WeaponDef(
+    id: 'smith_god_hammer',
+    name: 'Martello del Dio Fabbro',
+    style: WeaponStyle.melee,
+    baseDamage: 44,
+    rare: true,
+    heavy: true,
+    scaling: {Attribute.strength: ScalingGrade.s},
+    damageType: DamageType.physical,
+  ),
+  'storm_king_spear': WeaponDef(
+    id: 'storm_king_spear',
+    name: 'Lancia del Re della Tempesta',
+    style: WeaponStyle.melee,
+    baseDamage: 40,
+    rare: true,
+    scaling: {Attribute.dexterity: ScalingGrade.s},
+    damageType: DamageType.physical,
+  ),
+  'eternal_martyr_blade': WeaponDef(
+    id: 'eternal_martyr_blade',
+    name: 'Lama del Martire Eterno',
+    style: WeaponStyle.melee,
+    baseDamage: 44,
+    rare: true,
+    heavy: true,
+    scaling: {Attribute.faith: ScalingGrade.s},
+    damageType: DamageType.holy,
+  ),
+  'devourer_eye': WeaponDef(
+    id: 'devourer_eye',
+    name: 'Occhio del Divoratore',
+    style: WeaponStyle.magic,
+    baseDamage: 42,
+    rare: true,
+    scaling: {Attribute.intelligence: ScalingGrade.s},
+    damageType: DamageType.magic,
+  ),
 };
 
 class WeaponInstance {
@@ -633,11 +672,23 @@ class AmuletEffect {
     this.heavyDamage = 0,
     this.rareLoot = 0,
     this.lowHpDamage = 0,
+    this.damage = 0,
+    this.lootBonus = 0,
+    this.aura,
   });
   final double holyDamage;
   final double heavyDamage;
   final double rareLoot;
   final double lowHpDamage;
+
+  /// Danno in più con qualunque arma.
+  final double damage;
+
+  /// Rune e materiali in più da ogni vittoria.
+  final double lootBonus;
+
+  /// L'aura che l'arma prende, qualunque sia il suo scaling.
+  final Affinity? aura;
 }
 
 const Map<String, Amulet> amuletDefs = {
@@ -651,7 +702,33 @@ const Map<String, Amulet> amuletDefs = {
   'martyr_relic': Amulet('martyr_relic', 'Reliquia del Martire',
       '+15% danno quando la vita è sotto il 30%',
       AmuletEffect(lowHpDamage: 0.15)),
+  'ember_amulet': Amulet('ember_amulet', 'Amuleto della Brace',
+      'L\'arma prende l\'aura di fuoco rosso, +5% danno',
+      AmuletEffect(damage: 0.05, aura: Affinity.fire)),
+  'gale_amulet': Amulet('gale_amulet', 'Amuleto della Bufera',
+      'Aura di vento verde, +5% danno', AmuletEffect(damage: 0.05, aura: Affinity.wind)),
+  'holy_amulet': Amulet('holy_amulet', 'Amuleto della Luce',
+      'Aura di luce dorata, +5% danno', AmuletEffect(damage: 0.05, aura: Affinity.holy)),
+  'abyss_amulet': Amulet('abyss_amulet', 'Amuleto dell\'Abisso',
+      'Aura neon azzurra, +5% danno', AmuletEffect(damage: 0.05, aura: Affinity.arcane)),
+  'sleepless_seal': Amulet('sleepless_seal', 'Sigillo dell\'Insonne',
+      '+10% rune e materiali da ogni vittoria', AmuletEffect(lootBonus: 0.10)),
 };
+
+/// Gli amuleti d'aura si incantano con il cuore della build.
+const Map<String, Map<String, int>> amuletRecipes = {
+  'ember_amulet': {'ember_heart': 1, 'gem_pure': 1, 'ember_iron': 4},
+  'gale_amulet': {'storm_eye': 1, 'gem_pure': 1, 'gale_silver': 4},
+  'holy_amulet': {'martyr_tear': 1, 'gem_pure': 1, 'hallowed_gold': 4},
+  'abyss_amulet': {'star_core': 1, 'gem_pure': 1, 'abyss_crystal': 4},
+};
+
+/// Il nome di qualunque oggetto: materiale, arma o amuleto.
+String itemName(String id) =>
+    materialNames[id] ??
+    weaponDefs[id]?.name ??
+    amuletDefs[id.replaceFirst('amulet_', '')]?.name ??
+    id;
 
 const Map<String, String> materialNames = {
   'iron_ore': 'Minerale di ferro',
@@ -698,6 +775,12 @@ const Map<String, String> materialNames = {
   'hallowed_gold': 'Oro Consacrato',
   'martyr_obsidian': 'Ossidiana del Martire',
   'abyss_crystal': 'Cristallo d\'Abisso',
+  // Componenti rari delle build.
+  'ember_heart': 'Cuore di Brace',
+  'storm_eye': 'Occhio della Tempesta',
+  'martyr_tear': 'Lacrima del Martire',
+  'star_core': 'Nucleo Stellare',
+  'dream_pearl': 'Perla del Sogno',
   'star_iron': 'Ferro Stellare',
   // Gemme dello Stretching: serviranno agli amuleti da innestare nell'arma.
   'gem_rough': 'Gemma grezza',

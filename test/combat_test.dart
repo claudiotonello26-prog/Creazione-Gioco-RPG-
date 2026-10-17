@@ -14,7 +14,7 @@ void main() {
         },
       );
 
-  test('rep richieste per gradino: 12 / 14 / 20 con test di 20', () {
+  test('rep richieste per gradino: 12 / 14 / 18 con test di 20', () {
     int reps(String id) => CombatEngine(
           enemy: enemyDefs[id]!,
           character: Character(),
@@ -22,7 +22,7 @@ void main() {
         ).expectedReps;
     expect(reps('hollow_goblin'), 12);
     expect(reps('carrion_hound'), 14);
-    expect(reps('forge_servant'), 20);
+    expect(reps('forge_servant'), 18);
   });
 
   test('con rep perfette e build sufficiente il nemico cade al numero previsto', () {

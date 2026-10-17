@@ -47,6 +47,10 @@ enum DemoMove {
 DemoMove demoFor(String name, ExerciseId trackAs) {
   final n = name.toLowerCase();
   const byWord = [
+    ('affondi saltati', DemoMove.lunge),
+    ('skater', DemoMove.jumpingJack),
+    ('gatto', DemoMove.childPose),
+    ('spaccata', DemoMove.lungeHold),
     ('piegamento', DemoMove.forwardFold),
     ('affondo statico', DemoMove.lungeHold),
     ('piccione', DemoMove.lungeHold),

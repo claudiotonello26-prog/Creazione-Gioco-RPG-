@@ -50,10 +50,10 @@ void main() {
   });
 
   test('ogni mostro ha il suo esercizio', () {
-    expect(enemyDefs['hollow_goblin']!.exercises, [ExerciseId.squat]);
-    expect(enemyDefs['carrion_hound']!.exercises, [ExerciseId.lunge]);
+    expect(enemyDefs['hollow_goblin']!.moves.map((m) => m.name), ['Squat', 'Ponte per glutei']);
+    expect(enemyDefs['carrion_hound']!.exercises, [ExerciseId.squat, ExerciseId.squat]);
     expect(enemyDefs['fallen_knight']!.exercises, [ExerciseId.pushUp]);
-    expect(enemyDefs['ash_wyrm']!.exercises, [ExerciseId.crunch, ExerciseId.legRaise]);
+    expect(enemyDefs['ash_wyrm']!.exercises, [ExerciseId.crunch, ExerciseId.plank]);
   });
 
   test('il Mercante compra a metà e vende al doppio', () {

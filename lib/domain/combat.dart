@@ -145,7 +145,7 @@ class CombatEngine {
   double get attackTimerProgress => 1 - _attackTimer / enemy.attackInterval;
 
   AmuletEffect get _amulets {
-    var holy = 0.0, heavy = 0.0, rare = 0.0, lowHp = 0.0;
+    var holy = 0.0, heavy = 0.0, rare = 0.0, lowHp = 0.0, damage = 0.0, loot = 0.0;
     for (final id in character.amulets) {
       final a = amuletDefs[id]?.apply;
       if (a == null) continue;
@@ -153,16 +153,23 @@ class CombatEngine {
       heavy += a.heavyDamage;
       rare += a.rareLoot;
       lowHp += a.lowHpDamage;
+      damage += a.damage;
+      loot += a.lootBonus;
     }
     return AmuletEffect(
-        holyDamage: holy, heavyDamage: heavy, rareLoot: rare, lowHpDamage: lowHp);
+        holyDamage: holy,
+        heavyDamage: heavy,
+        rareLoot: rare,
+        lowHpDamage: lowHp,
+        damage: damage,
+        lootBonus: loot);
   }
 
   /// Potere d'attacco effettivo contro questo nemico.
   double get attackPower {
     final weapon = character.weapon;
     final a = _amulets;
-    var bonus = 0.0;
+    var bonus = a.damage;
     if (weapon.def.damageType == DamageType.holy) bonus += a.holyDamage;
     if (weapon.def.heavy) bonus += a.heavyDamage;
     if (heroHp < heroMaxHp * 0.3) bonus += a.lowHpDamage;
@@ -279,7 +286,7 @@ class CombatEngine {
     if (status != CombatStatus.victory) {
       return CombatRewards(xp: xp, runes: 0, materials: const {});
     }
-    final pay = (1 + lootBonus) * effortFactor * averageQuality * waveBonus;
+    final pay = (1 + lootBonus + _amulets.lootBonus) * effortFactor * averageQuality * waveBonus;
     final materials = <String, int>{
       for (final e in enemy.loot.entries) e.key: max(1, (e.value * pay).round()),
     };
@@ -298,7 +305,14 @@ class CombatEngine {
     if (enemy.isBeast) weaponChance += _amulets.rareLoot;
     if (enemy.rareDrop != null &&
         _random.nextDouble() < weaponChance * (1 + lootBonus) * dropMultiplier) {
-      rare = enemy.rareDrop;
+      // Il raro può essere un'arma, un amuleto o un materiale.
+      final id = enemy.rareDrop!;
+      if (weaponDefs.containsKey(id)) {
+        rare = id;
+      } else {
+        final key = amuletDefs.containsKey(id) ? 'amulet_$id' : id;
+        materials[key] = (materials[key] ?? 0) + 1;
+      }
     }
     return CombatRewards(
       xp: xp,

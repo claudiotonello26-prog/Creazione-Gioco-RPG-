@@ -15,18 +15,62 @@ void main() {
     MuscleGroup.stretching,
   ];
 
-  test('40 nemici in 20 spedizioni, quattro per gruppo a livelli crescenti', () {
-    expect(enemyDefs.length, 40);
+  test('63 nemici in 20 mappe: quattro tappe, Veterani dalla terza, boss e forziere', () {
+    expect(enemyDefs.length, 63);
     expect(expeditions.length, 20);
     for (final g in groups) {
       final list = expeditionsOf(g);
       expect(list.map((e) => e.level), [1, 10, 25, 45], reason: g.label);
       for (final e in list) {
-        expect(e.monster.group, g);
+        expect(e.steps.length, 4, reason: e.name);
+        // Il Bastione di Ferro ha quattro mostri diversi, gli altri due e i Veterani.
+        final bastion = e.id == 'iron_bastion';
+        expect(
+          e.steps.map((s) => s.veteran),
+          bastion ? [false, false, false, false] : [false, false, true, true],
+          reason: e.name,
+        );
+        for (final st in e.steps) {
+          expect(st.monster.group, g);
+          expect(st.monster.isBoss, isFalse);
+          expect(st.monster.moves, [st.move]);
+        }
+        if (bastion) continue;
+        // Il Veterano è un gradino sopra e lascia di più.
+        final vet = e.steps[2].monster, base = enemyDefs[e.steps[2].monsterId]!;
+        expect(vet.isVeteran, isTrue);
+        expect(vet.rareDropChance, base.rareDropChance * 2);
+      }
+      for (final e in list) {
         expect(e.boss.isBoss, isTrue);
-        expect(e.monster.isBoss, isFalse);
+        expect(e.chest.guaranteed, isNotEmpty);
+        for (final (id, p) in e.chest.rares) {
+          expect(itemName(id), isNot(id), reason: '$id nel forziere di ${e.name}');
+          expect(p, inExclusiveRange(0, 1));
+        }
       }
     }
+  });
+
+  test('la mappa: tappe in ordine, boss, forziere una volta sola', () async {
+    SharedPreferences.setMockInitialValues({});
+    final s = GameState();
+    await s.load();
+    final e = expeditionById('buried_forges');
+    s.completeExpeditionStep(e.id, 1);
+    expect(s.expeditionProgress(e.id), 0, reason: 'si parte dalla prima tappa');
+    for (var i = 0; i < 4; i++) {
+      s.completeExpeditionStep(e.id, i);
+    }
+    expect(s.expeditionProgress(e.id), GameState.mapBoss);
+    s.expeditionBossDown(e);
+    expect(s.clearedExpeditions, contains(e.id));
+    final runes = s.character.runes;
+    final items = s.openChest(e, multiplier: 2);
+    expect(items.first, ('runes', e.chest.runes * 2, false));
+    expect(s.character.runes, runes + e.chest.runes * 2);
+    expect(s.character.materials['bone']! >= 8, isTrue);
+    expect(s.openChest(e), isEmpty, reason: 'un forziere al giorno');
   });
 
   test('lo Stretching si fa tenendo le pose, gli altri gruppi coi loro esercizi', () {
@@ -43,8 +87,16 @@ void main() {
         where.putIfAbsent(m, () => {}).add(e.group);
       }
     }
-    for (final build in ['ember_iron', 'gale_silver', 'hallowed_gold', 'abyss_crystal',
-        'godforge_steel', 'steel_feather', 'martyr_obsidian', 'star_iron']) {
+    for (final build in [
+      'ember_iron',
+      'gale_silver',
+      'hallowed_gold',
+      'abyss_crystal',
+      'godforge_steel',
+      'steel_feather',
+      'martyr_obsidian',
+      'star_iron',
+    ]) {
       expect(where[build]?.length, 1, reason: build);
     }
   });

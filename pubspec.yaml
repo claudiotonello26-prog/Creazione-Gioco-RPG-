@@ -67,6 +67,12 @@ flutter:
 
   assets:
     - assets/images/
+    # Le illustrazioni di Antigravity: basta copiarle qui con il nome del piano.
+    - assets/art/enemies/
+    - assets/art/bosses/
+    - assets/art/animals/
+    - assets/art/maps/
+    - assets/art/chests/
 
   fonts:
     - family: Cinzel

@@ -262,7 +262,7 @@ mixin _Flash on PositionComponent implements OpacityProvider {
 
 /// Dove sta l'illustrazione di un nemico.
 String enemyArtPath(EnemyDef e) =>
-    'assets/art/${e.isBoss ? 'bosses' : 'enemies'}/${e.id}_idle.png';
+    'assets/art/${e.isAnimal ? 'animals' : e.isBoss ? 'bosses' : 'enemies'}/${e.id}_idle.png';
 
 class _Hero extends PositionComponent with _Flash {
   _Hero({required this.weaponTier, this.layers = const [], this.weaponLayer = -1, this.weaponTint});

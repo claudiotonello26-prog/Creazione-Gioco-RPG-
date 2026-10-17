@@ -20,6 +20,7 @@ import 'package:iron_oath/ui/screens/forge_tab.dart';
 import 'package:iron_oath/domain/items.dart';
 import 'package:iron_oath/ui/screens/gear_screens.dart';
 import 'package:iron_oath/ui/screens/train_tab.dart';
+import 'package:iron_oath/ui/screens/expedition_map.dart';
 import 'package:iron_oath/domain/enemies.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -210,8 +211,25 @@ void main() {
     final nav = Navigator.of(t.element(find.byType(NavigationBar)));
     nav.push(MaterialPageRoute<void>(builder: (_) => const GroupScreen(group: MuscleGroup.push)));
     await _shot(t, '60_gruppo_spinta');
-    nav.push(MaterialPageRoute<void>(builder: (_) => ExpeditionScreen(expedition: expeditionById('giants_furnace'))));
+    st.completeExpeditionStep('buried_forges', 0);
+    st.completeExpeditionStep('buried_forges', 1);
+    nav.push(MaterialPageRoute<void>(
+        builder: (_) => ExpeditionMapScreen(expedition: expeditionById('buried_forges'))));
     await _shot(t, '61_spedizione');
+    nav.pop();
+    await t.pumpAndSettle();
+    final e = expeditionById('lunar_ruins');
+    for (var i = 0; i < 4; i++) {
+      st.completeExpeditionStep(e.id, i);
+    }
+    st.expeditionBossDown(e);
+    nav.push(MaterialPageRoute<void>(builder: (_) => ExpeditionMapScreen(expedition: e)));
+    await _shot(t, '63_mappa_forziere');
+    await t.tap(find.text('Tocca per aprire'));
+    await t.pump(const Duration(seconds: 5));
+    await _shot(t, '64_forziere_aperto');
+    await t.tap(find.text('PRENDI TUTTO'));
+    await t.pumpAndSettle();
     nav.pop();
     nav.pop();
     await t.pumpAndSettle();
