@@ -196,6 +196,8 @@ var ARENA_OP = {
     READY: 1,
     POSE: 2,
     REP: 3,
+    /** Allenamento di gilda: chi l'ha aperto dà il via. */
+    START: 4,
     // Server → client
     STATE: 10,
     RESULT: 11,
@@ -207,8 +209,27 @@ var ARENA_TICK_MS = 1000 / ARENA_TICK_RATE;
 var ARENA_COUNTDOWN_TICKS = 5 * ARENA_TICK_RATE;
 var ARENA_JOIN_TIMEOUT_TICKS = 30 * ARENA_TICK_RATE;
 var ARENA_LINGER_TICKS = 3 * ARENA_TICK_RATE;
+/** Sfide tra amici e allenamenti di gilda: c'è tempo perché l'altro arrivi. */
+var ARENA_PRIVATE_JOIN_TIMEOUT_TICKS = 5 * 60 * ARENA_TICK_RATE;
+/** In un allenamento di gilda si entra in quattro al massimo. */
+var ARENA_GROUP_MAX_PLAYERS = 4;
 /** Il plank finisce dopo 2 secondi fuori posizione. */
 var ARENA_HOLD_BREAK_MS = 2000;
+function arenaMaxPlayers(state) {
+    return state.mode === 'group' ? ARENA_GROUP_MAX_PLAYERS : 2;
+}
+/** Etichetta della partita: la lista degli allenamenti di gilda la legge. */
+function arenaLabel(state) {
+    return JSON.stringify({
+        mode: state.mode,
+        exercise: state.exercise,
+        guild: state.guild,
+        host: state.host,
+        hostName: state.hostName,
+        to: state.mode === 'friendly' ? state.expected.filter(function (id) { return id !== state.host; }).join(',') : '',
+        open: state.open ? 1 : 0,
+    });
+}
 function arenaNewPlayer(p) {
     return {
         presence: p,
@@ -287,6 +308,8 @@ function arenaBroadcastState(dispatcher, state, tick) {
     dispatcher.broadcastMessage(ARENA_OP.STATE, JSON.stringify({
         phase: state.phase,
         exercise: state.exercise,
+        mode: state.mode,
+        host: state.host,
         countdown: countdown,
         elapsed: Math.round(now) / 1000,
         players: players,
@@ -299,6 +322,10 @@ function arenaHandleMessage(state, tick, userId, opCode, payload, receiveTimeMs)
         return {};
     if (opCode === ARENA_OP.READY && state.phase === 'waiting') {
         p.ready = true;
+        return {};
+    }
+    if (opCode === ARENA_OP.START && state.phase === 'waiting' && userId === state.host) {
+        state.started = true;
         return {};
     }
     if (state.phase !== 'running' || p.done)
@@ -357,7 +384,9 @@ function arenaAdvance(state, tick, wallMs) {
         for (var i = 0; i < ids.length; i++)
             if (state.players[ids[i]].ready)
                 readyCount++;
-        if (ids.length === 2 && readyCount === 2) {
+        var min = 2;
+        var go = state.mode !== 'group' || state.started;
+        if (go && ids.length >= min && ids.length <= arenaMaxPlayers(state) && readyCount === ids.length) {
             state.phase = 'countdown';
             state.phaseTick = tick;
         }
@@ -381,14 +410,15 @@ function arenaAdvance(state, tick, wallMs) {
     var anyLeft = false;
     for (var i = 0; i < ids.length; i++) {
         var p = state.players[ids[i]];
-        if (p.left)
+        // In gilda chi se ne va non ferma gli altri.
+        if (p.left && state.mode !== 'group')
             anyLeft = true;
         if (c.goal === 'longestHold' && !p.done && p.heldMs > 0 &&
             now - p.lastAlignedMs > ARENA_HOLD_BREAK_MS) {
             p.done = true;
             p.doneMs = now;
         }
-        if (!p.done)
+        if (!p.done && !p.left)
             allDone = false;
     }
     var limit = c.goal === 'mostRepsInTime'
@@ -404,6 +434,8 @@ function arenaComputeResult(state, tick) {
     for (var i = 0; i < ids.length; i++) {
         results[ids[i]] = arenaPlayerResult(state, state.players[ids[i]], now);
     }
+    if (state.mode === 'group')
+        return arenaGroupResult(state, ids, results);
     var cmp = 0;
     if (ids.length === 2) {
         var a = state.players[ids[0]], b = state.players[ids[1]];
@@ -416,13 +448,34 @@ function arenaComputeResult(state, tick) {
     for (var i = 0; i < ids.length; i++) {
         var mine = i === 0 ? cmp : -cmp;
         results[ids[i]].outcome = mine;
-        results[ids[i]].delta = ids.length === 2 ? arenaRankDelta(mine) : 0;
+        results[ids[i]].delta = ids.length === 2 && state.mode === 'arena' ? arenaRankDelta(mine) : 0;
         results[ids[i]].name = state.players[ids[i]].username;
         results[ids[i]].forfeit = state.players[ids[i]].left;
     }
     return { winner: winner, exercise: state.exercise, results: results };
 }
+/** Allenamento di gilda: nessun vincitore, solo la classifica del gruppo. */
+function arenaGroupResult(state, ids, results) {
+    var order = ids.slice().sort(function (a, b) {
+        var pa = state.players[a], pb = state.players[b];
+        if (pa.left !== pb.left)
+            return pa.left ? 1 : -1;
+        return -arenaCompare(state.challenge, results[a], results[b]);
+    });
+    for (var i = 0; i < order.length; i++) {
+        var r = results[order[i]];
+        r.place = i + 1;
+        r.outcome = 0;
+        r.delta = 0;
+        r.name = state.players[order[i]].username;
+        r.forfeit = state.players[order[i]].left;
+    }
+    return { winner: null, mode: state.mode, exercise: state.exercise, results: results };
+}
 function arenaSaveResult(nk, logger, state, result) {
+    // Solo i duelli del matchmaker contano per la stagione e i record.
+    if (state.mode !== 'arena')
+        return;
     var ids = Object.keys(result.results);
     for (var i = 0; i < ids.length; i++) {
         var id = ids[i];
@@ -452,7 +505,14 @@ function arenaSaveResult(nk, logger, state, result) {
 // ----------------------------------------------------------------- handler
 function arenaMatchInit(ctx, logger, nk, params) {
     var exercise = ARENA_CHALLENGES[params.exercise] ? params.exercise : 'pushUp';
+    var mode = params.mode === 'friendly' || params.mode === 'group' ? params.mode : 'arena';
     var state = {
+        mode: mode,
+        guild: params.guild || '',
+        host: params.host || '',
+        hostName: params.hostName || '',
+        open: true,
+        started: false,
         exercise: exercise,
         challenge: ARENA_CHALLENGES[exercise],
         expected: params.players ? params.players.split(',') : [],
@@ -466,7 +526,7 @@ function arenaMatchInit(ctx, logger, nk, params) {
     return {
         state: state,
         tickRate: ARENA_TICK_RATE,
-        label: JSON.stringify({ mode: 'arena', exercise: exercise }),
+        label: arenaLabel(state),
     };
 }
 function arenaMatchJoinAttempt(ctx, logger, nk, dispatcher, tick, state, presence, metadata) {
@@ -476,8 +536,8 @@ function arenaMatchJoinAttempt(ctx, logger, nk, dispatcher, tick, state, presenc
     if (s.expected.length > 0 && s.expected.indexOf(presence.userId) < 0) {
         return { state: s, accept: false, rejectMessage: 'Non sei in questo duello' };
     }
-    if (!s.players[presence.userId] && Object.keys(s.players).length >= 2) {
-        return { state: s, accept: false, rejectMessage: 'Duello pieno' };
+    if (!s.players[presence.userId] && Object.keys(s.players).length >= arenaMaxPlayers(s)) {
+        return { state: s, accept: false, rejectMessage: s.mode === 'group' ? 'Allenamento pieno' : 'Duello pieno' };
     }
     return { state: s, accept: true };
 }
@@ -537,11 +597,17 @@ function arenaMatchLoop(ctx, logger, nk, dispatcher, tick, state, messages) {
     if (s.phase === 'finished') {
         return tick - s.phaseTick >= ARENA_LINGER_TICKS ? null : { state: s };
     }
-    if (s.phase === 'waiting' && tick - s.createdTick > ARENA_JOIN_TIMEOUT_TICKS) {
+    var timeout = s.mode === 'arena' ? ARENA_JOIN_TIMEOUT_TICKS : ARENA_PRIVATE_JOIN_TIMEOUT_TICKS;
+    if (s.phase === 'waiting' && tick - s.createdTick > timeout) {
         logger.info('Duello abbandonato prima di iniziare');
         return null;
     }
     var ended = arenaAdvance(s, tick, Date.now());
+    var open = s.phase === 'waiting' && Object.keys(s.players).length < arenaMaxPlayers(s);
+    if (open !== s.open) {
+        s.open = open;
+        dispatcher.matchLabelUpdate(arenaLabel(s));
+    }
     if (ended) {
         s.result = arenaComputeResult(s, tick);
         s.phase = 'finished';
@@ -568,7 +634,93 @@ function arenaMatchTerminate(ctx, logger, nk, dispatcher, tick, state, graceSeco
 function arenaMatchSignal(ctx, logger, nk, dispatcher, tick, state, data) {
     return { state: state };
 }
-// Modulo server di Iron Oath per Nakama: Arena Pura live e classifiche.
+// Gilde: i gruppi sono quelli di Nakama (creazione, inviti, membri passano
+// dalle API REST standard). Qui ci sono solo le sfide tra amici e gli
+// allenamenti di gilda, che sono duelli dell'Arena senza punti stagione.
+/** Codice della notifica di sfida: l'app la mostra tra le sfide ricevute. */
+var GUILD_CHALLENGE_CODE = 100;
+/** Stato nel gruppo: 0 superadmin, 1 admin, 2 membro, 3 richiesta in attesa. */
+var GUILD_MEMBER_MAX_STATE = 2;
+function guildIsMember(nk, userId, guild) {
+    var list = nk.userGroupsList(userId, 100, null);
+    var groups = list.userGroups || [];
+    for (var i = 0; i < groups.length; i++) {
+        if (groups[i].group.id === guild && groups[i].state <= GUILD_MEMBER_MAX_STATE)
+            return true;
+    }
+    return false;
+}
+/**
+ * Crea una sfida tra amici (mode friendly, con opponent) o un allenamento di
+ * gilda (mode group). Ritorna l'id della partita in cui entrare.
+ */
+function rpcGuildSessionCreate(ctx, logger, nk, payload) {
+    var userId = ctx.userId || '';
+    var req = JSON.parse(payload || '{}');
+    var guild = String(req.guild || '');
+    var mode = req.mode === 'friendly' ? 'friendly' : 'group';
+    var exercise = ARENA_CHALLENGES[req.exercise] ? String(req.exercise) : 'pushUp';
+    var opponent = mode === 'friendly' ? String(req.opponent || '') : '';
+    if (!guildIsMember(nk, userId, guild))
+        throw Error('Non sei in questa gilda');
+    if (mode === 'friendly') {
+        if (!opponent || opponent === userId)
+            throw Error('Avversario mancante');
+        if (!guildIsMember(nk, opponent, guild))
+            throw Error("L'avversario non è nella gilda");
+    }
+    var matchId = nk.matchCreate(ARENA_MATCH_MODULE, {
+        exercise: exercise,
+        mode: mode,
+        guild: guild,
+        host: userId,
+        hostName: ctx.username || '',
+        players: mode === 'friendly' ? userId + ',' + opponent : '',
+    });
+    if (mode === 'friendly') {
+        nk.notificationSend(opponent, 'Sfida', {
+            matchId: matchId,
+            exercise: exercise,
+            from: ctx.username || '',
+            guild: guild,
+        }, GUILD_CHALLENGE_CODE, userId, true);
+    }
+    return JSON.stringify({ matchId: matchId });
+}
+/** Allenamenti di gilda aperti e sfide in attesa rivolte a chi chiede. */
+function rpcGuildSessions(ctx, logger, nk, payload) {
+    var userId = ctx.userId || '';
+    var req = JSON.parse(payload || '{}');
+    var guild = String(req.guild || '');
+    if (!guildIsMember(nk, userId, guild))
+        throw Error('Non sei in questa gilda');
+    // Con i filtri di dimensione Nakama ignora la query: si filtra qui sotto.
+    var matches = nk.matchList(50, true, null, null, null, '+label.guild:' + guild + ' +label.open:1');
+    var sessions = [];
+    for (var i = 0; i < matches.length; i++) {
+        var label = void 0;
+        try {
+            label = JSON.parse(matches[i].label);
+        }
+        catch (e) {
+            continue;
+        }
+        if (label.guild !== guild || label.open !== 1)
+            continue;
+        if (label.mode === 'friendly' && label.to !== userId && label.host !== userId)
+            continue;
+        sessions.push({
+            matchId: matches[i].matchId,
+            mode: label.mode,
+            exercise: label.exercise,
+            host: label.host,
+            hostName: label.hostName,
+            size: matches[i].size,
+        });
+    }
+    return JSON.stringify({ sessions: sessions });
+}
+// Modulo server di Iron Oath per Nakama: Arena Pura live, classifiche e gilde.
 var ARENA_MATCH_MODULE = 'arena_duel';
 var ARENA_SEASON_BOARD = 'arena_season';
 var ARENA_BEST_BOARD_PREFIX = 'arena_best_';
@@ -656,5 +808,7 @@ function InitModule(ctx, logger, nk, initializer) {
     initializer.registerMatchmakerMatched(arenaMatchmakerMatched);
     initializer.registerRpc('arena_profile', rpcArenaProfile);
     initializer.registerRpc('arena_top', rpcArenaTop);
+    initializer.registerRpc('guild_session_create', rpcGuildSessionCreate);
+    initializer.registerRpc('guild_sessions', rpcGuildSessions);
     logger.info('Iron Oath: modulo Arena caricato');
 }
