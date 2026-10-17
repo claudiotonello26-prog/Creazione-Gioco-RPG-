@@ -5,7 +5,7 @@ import '../../data/game_state.dart';
 import 'arena_tab.dart';
 import 'forge_tab.dart';
 import 'home_tab.dart';
-import 'profile_tab.dart';
+import 'hero_tab.dart';
 import 'train_tab.dart';
 
 class HomeShell extends StatefulWidget {
@@ -44,7 +44,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
       const TrainTab(),
       const ForgeTab(),
       const ArenaTab(),
-      const ProfileTab(),
+      const HeroTab(),
     ];
     return Scaffold(
       body: SafeArea(child: IndexedStack(index: _tab, children: tabs)),
@@ -56,7 +56,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
           NavigationDestination(icon: Icon(Icons.fitness_center), label: 'Allenati'),
           NavigationDestination(icon: Icon(Icons.hardware), label: 'Forgia'),
           NavigationDestination(icon: Icon(Icons.sports_kabaddi), label: 'Arena'),
-          NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profilo'),
+          NavigationDestination(icon: Icon(Icons.shield_outlined), label: 'Eroe'),
         ],
       ),
     );

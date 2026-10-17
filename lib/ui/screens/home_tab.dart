@@ -6,6 +6,7 @@ import '../../data/game_state.dart';
 import '../widgets/common.dart';
 import 'onboarding.dart';
 import 'quest_screen.dart';
+import 'walk_screen.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key, required this.onNavigate});
@@ -186,6 +187,14 @@ class HomeTab extends StatelessWidget {
           ),
         ),
         const SectionTitle('Oggi'),
+        ActionTile(
+          icon: Icons.directions_walk,
+          title: 'Camminata',
+          subtitle: 'Collega i passi del telefono: diventano materiali da forgia',
+          color: Palette.goldBright,
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const WalkScreen())),
+        ),
         ActionTile(
           icon: Icons.explore_outlined,
           title: 'Spedizioni',

@@ -10,6 +10,8 @@ import 'package:iron_oath/data/game_state.dart';
 import 'package:iron_oath/domain/exercise.dart';
 import 'package:iron_oath/domain/routine.dart';
 import 'package:iron_oath/main.dart';
+import 'package:iron_oath/ui/screens/combat_screen.dart';
+import 'package:iron_oath/ui/screens/walk_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFont(String family, List<String> paths) async {
@@ -37,6 +39,8 @@ Future<void> _fonts() async {
 void _phone(WidgetTester t) {
   t.view.physicalSize = const Size(1080, 2340);
   t.view.devicePixelRatio = 3;
+  // Barra di navigazione di Android a tre tasti, come sul Galaxy A35.
+  t.view.padding = const FakeViewPadding(top: 72, bottom: 144);
 }
 
 Future<GameState> _state({bool onboarded = true}) async {
@@ -79,9 +83,22 @@ void main() {
     _phone(t);
     await t.pumpWidget(IronOathApp(state: await _state()));
     await _shot(t, '10_home');
-    for (final (i, label) in ['Allenati', 'Forgia', 'Arena', 'Profilo'].indexed) {
+    for (final (i, label) in ['Allenati', 'Forgia', 'Arena', 'Eroe'].indexed) {
       await t.tap(find.widgetWithText(NavigationDestination, label));
       await _shot(t, '1${i + 1}_${label.toLowerCase()}');
     }
+  });
+
+  testWidgets('camminata e YOU DIED', (t) async {
+    _phone(t);
+    await t.pumpWidget(IronOathApp(state: await _state()));
+    await t.pumpAndSettle();
+    Navigator.of(t.element(find.byType(NavigationBar)))
+        .push(MaterialPageRoute<void>(builder: (_) => const WalkScreen()));
+    await _shot(t, '20_camminata');
+    await t.pumpWidget(const MaterialApp(
+      home: Scaffold(backgroundColor: Color(0xFF1C1712), body: YouDiedOverlay()),
+    ));
+    await _shot(t, '21_you_died');
   });
 }
