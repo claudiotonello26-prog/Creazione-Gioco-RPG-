@@ -1,0 +1,2264 @@
+[
+  {
+    "id": "knight_s1_idle",
+    "file": "assets/art/knight/knight_s1_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword, idle combat stance, sword held ready in both hands, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [],
+    "status": "done"
+  },
+  {
+    "id": "knight_s1_attack_v1",
+    "file": "assets/art/knight/knight_s1_attack_v1.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful diagonal overhead slash from top-right to bottom-left, sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "done"
+  },
+  {
+    "id": "knight_s1_attack_v2",
+    "file": "assets/art/knight/knight_s1_attack_v2.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful horizontal slash from right to left at chest height, sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "done"
+  },
+  {
+    "id": "knight_s1_attack_v3",
+    "file": "assets/art/knight/knight_s1_attack_v3.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful downward vertical chop, sword coming straight down with motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "done"
+  },
+  {
+    "id": "knight_s1_attack_v4",
+    "file": "assets/art/knight/knight_s1_attack_v4.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful rising slash from bottom-left to top-right (montante), sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "done"
+  },
+  {
+    "id": "knight_s1_critical",
+    "file": "assets/art/knight/knight_s1_critical.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword. Full fencing lunge: front knee deeply bent, back leg fully extended behind, arms fully stretched forward thrusting the sword at maximum reach, burst of golden light at the sword tip, dynamic athletic pose, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "done"
+  },
+  {
+    "id": "knight_s1_hit",
+    "file": "assets/art/knight/knight_s1_hit.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword, staggering backwards, recoiling from a heavy hit, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "done"
+  },
+  {
+    "id": "knight_s1_block",
+    "file": "assets/art/knight/knight_s1_block.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword. Defensive half-sword blocking stance: one hand gripping the hilt, the other hand gripping the blade midway (medieval half-sword technique), sword held horizontally to parry, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "done"
+  },
+  {
+    "id": "knight_s1_victory",
+    "file": "assets/art/knight/knight_s1_victory.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword. Spectacular triumphant victory pose: sword raised high above head in celebration, standing tall and proud, golden light radiating from the blade, embers swirling around, heroic and powerful, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s1_defeat",
+    "file": "assets/art/knight/knight_s1_defeat.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, tattered penitent robes over patched leather and rusted chain mail, hood down, scarred bare forearms, simple worn longsword. Defeat pose: collapsed on one knee, using the sword planted in the ground as support to stay up, head bowed in exhaustion, other hand on the ground, battered and beaten, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s2_idle",
+    "file": "assets/art/knight/knight_s2_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge, idle combat stance, sword held ready in both hands, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "done"
+  },
+  {
+    "id": "knight_s2_attack_v1",
+    "file": "assets/art/knight/knight_s2_attack_v1.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful diagonal overhead slash from top-right to bottom-left, sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s2_attack_v2",
+    "file": "assets/art/knight/knight_s2_attack_v2.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful horizontal slash from right to left at chest height, sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s2_attack_v3",
+    "file": "assets/art/knight/knight_s2_attack_v3.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful downward vertical chop, sword coming straight down with motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s2_attack_v4",
+    "file": "assets/art/knight/knight_s2_attack_v4.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful rising slash from bottom-left to top-right (montante), sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s2_critical",
+    "file": "assets/art/knight/knight_s2_critical.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge. Full fencing lunge: front knee deeply bent, back leg fully extended behind, arms fully stretched forward thrusting the sword at maximum reach, burst of golden light at the sword tip, dynamic athletic pose, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s2_hit",
+    "file": "assets/art/knight/knight_s2_hit.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge, staggering backwards, recoiling from a heavy hit, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s2_block",
+    "file": "assets/art/knight/knight_s2_block.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge. Defensive half-sword blocking stance: one hand gripping the hilt, the other hand gripping the blade midway (medieval half-sword technique), sword held horizontally to parry, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s2_victory",
+    "file": "assets/art/knight/knight_s2_victory.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge. Spectacular triumphant victory pose: sword raised high above head in celebration, standing tall and proud, golden light radiating from the blade, embers swirling around, heroic and powerful, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s2_defeat",
+    "file": "assets/art/knight/knight_s2_defeat.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, dented iron breastplate and pauldrons over chain mail, torn dark cloak, leather gauntlets, longsword with a faint golden glow on the edge. Defeat pose: collapsed on one knee, using the sword planted in the ground as support to stay up, head bowed in exhaustion, other hand on the ground, battered and beaten, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_idle",
+    "file": "assets/art/knight/knight_s3_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade, idle combat stance, sword held ready in both hands, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_attack_v1",
+    "file": "assets/art/knight/knight_s3_attack_v1.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful diagonal overhead slash from top-right to bottom-left, sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_attack_v2",
+    "file": "assets/art/knight/knight_s3_attack_v2.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful horizontal slash from right to left at chest height, sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_attack_v3",
+    "file": "assets/art/knight/knight_s3_attack_v3.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful downward vertical chop, sword coming straight down with motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_attack_v4",
+    "file": "assets/art/knight/knight_s3_attack_v4.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful rising slash from bottom-left to top-right (montante), sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_critical",
+    "file": "assets/art/knight/knight_s3_critical.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade. Full fencing lunge: front knee deeply bent, back leg fully extended behind, arms fully stretched forward thrusting the sword at maximum reach, burst of golden light at the sword tip, dynamic athletic pose, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_hit",
+    "file": "assets/art/knight/knight_s3_hit.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade, staggering backwards, recoiling from a heavy hit, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_block",
+    "file": "assets/art/knight/knight_s3_block.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade. Defensive half-sword blocking stance: one hand gripping the hilt, the other hand gripping the blade midway (medieval half-sword technique), sword held horizontally to parry, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_victory",
+    "file": "assets/art/knight/knight_s3_victory.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade. Spectacular triumphant victory pose: sword raised high above head in celebration, standing tall and proud, golden light radiating from the blade, embers swirling around, heroic and powerful, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s3_defeat",
+    "file": "assets/art/knight/knight_s3_defeat.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, full blackened plate armor with antique gold trim, closed great helm with narrow visor slit, heavy fur-lined cloak, glowing golden runes on the blade. Defeat pose: collapsed on one knee, using the sword planted in the ground as support to stay up, head bowed in exhaustion, other hand on the ground, battered and beaten, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_idle",
+    "file": "assets/art/knight/knight_s4_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers, idle combat stance, sword held ready in both hands, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_attack_v1",
+    "file": "assets/art/knight/knight_s4_attack_v1.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful diagonal overhead slash from top-right to bottom-left, sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_attack_v2",
+    "file": "assets/art/knight/knight_s4_attack_v2.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful horizontal slash from right to left at chest height, sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_attack_v3",
+    "file": "assets/art/knight/knight_s4_attack_v3.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful downward vertical chop, sword coming straight down with motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_attack_v4",
+    "file": "assets/art/knight/knight_s4_attack_v4.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers. Wide athletic power stance with legs spread apart, feet firmly planted. Powerful rising slash from bottom-left to top-right (montante), sword motion blur, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_critical",
+    "file": "assets/art/knight/knight_s4_critical.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers. Full fencing lunge: front knee deeply bent, back leg fully extended behind, arms fully stretched forward thrusting the sword at maximum reach, burst of golden light at the sword tip, dynamic athletic pose, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_hit",
+    "file": "assets/art/knight/knight_s4_hit.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers, staggering backwards, recoiling from a heavy hit, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_block",
+    "file": "assets/art/knight/knight_s4_block.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers. Defensive half-sword blocking stance: one hand gripping the hilt, the other hand gripping the blade midway (medieval half-sword technique), sword held horizontally to parry, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_victory",
+    "file": "assets/art/knight/knight_s4_victory.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers. Spectacular triumphant victory pose: sword raised high above head in celebration, standing tall and proud, golden light radiating from the blade, embers swirling around, heroic and powerful, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_s4_defeat",
+    "file": "assets/art/knight/knight_s4_defeat.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same knight as the reference image (same face, body proportions and art style). Full body male knight, ornate gothic plate armor engraved with gold filigree, crown-like crest on the helm, tattered royal banner cape, blade wreathed in golden holy light and drifting embers. Defeat pose: collapsed on one knee, using the sword planted in the ground as support to stay up, head bowed in exhaustion, other hand on the ground, battered and beaten, three-quarter view facing right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "hollow_goblin_idle",
+    "file": "assets/art/enemies/hollow_goblin_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: small emaciated hollow goblin with grey cracked skin, empty glowing ember eyes, rusty jagged dagger, hunched feral pose, rags, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "done"
+  },
+  {
+    "id": "hollow_goblin_attack",
+    "file": "assets/art/enemies/hollow_goblin_attack.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same creature as the reference image: small emaciated hollow goblin with grey cracked skin, empty glowing ember eyes, rusty jagged dagger, hunched feral pose, rags, lunging attack pose, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "carrion_hound_idle",
+    "file": "assets/art/enemies/carrion_hound_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: gaunt undead hound with exposed ribs and patchy fur, pale glowing eyes, drooling jaws, chains hanging from a broken collar, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "carrion_hound_attack",
+    "file": "assets/art/enemies/carrion_hound_attack.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same creature as the reference image: gaunt undead hound with exposed ribs and patchy fur, pale glowing eyes, drooling jaws, chains hanging from a broken collar, lunging attack pose, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "carrion_hound_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "fallen_knight_idle",
+    "file": "assets/art/enemies/fallen_knight_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: fallen knight in corroded black plate armor, cracked helm leaking faint red light, broken greatsword, tattered cape, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "done",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "fallen_knight_attack",
+    "file": "assets/art/enemies/fallen_knight_attack.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same creature as the reference image: fallen knight in corroded black plate armor, cracked helm leaking faint red light, broken greatsword, tattered cape, lunging attack pose, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "fallen_knight_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ash_wyrm_idle",
+    "file": "assets/art/enemies/ash_wyrm_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: ash wyvern with charred grey scales cracking to reveal glowing ember veins, torn leathery wings, smoke pouring from its jaws, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ash_wyrm_attack",
+    "file": "assets/art/enemies/ash_wyrm_attack.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same creature as the reference image: ash wyvern with charred grey scales cracking to reveal glowing ember veins, torn leathery wings, smoke pouring from its jaws, lunging attack pose, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ash_wyrm_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "keep_sentinel_idle",
+    "file": "assets/art/enemies/keep_sentinel_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: armored keep sentinel with a tall rectangular tower shield and a spear, visored kettle helm, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "done",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "keep_sentinel_attack",
+    "file": "assets/art/enemies/keep_sentinel_attack.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same creature as the reference image: armored keep sentinel with a tall rectangular tower shield and a spear, visored kettle helm, lunging attack pose, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "keep_sentinel_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "wall_archer_idle",
+    "file": "assets/art/enemies/wall_archer_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: hooded archer in rotting leather armor with a longbow and a quiver of black-fletched arrows, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "done",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "wall_archer_attack",
+    "file": "assets/art/enemies/wall_archer_attack.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same creature as the reference image: hooded archer in rotting leather armor with a longbow and a quiver of black-fletched arrows, lunging attack pose, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "wall_archer_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "keep_brute_idle",
+    "file": "assets/art/enemies/keep_brute_idle.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: hulking brute jailer with massive bare arms, iron mask, huge spiked club, chains wrapped around his torso, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "done",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "keep_brute_attack",
+    "file": "assets/art/enemies/keep_brute_attack.png",
+    "size": 1024,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same creature as the reference image: hulking brute jailer with massive bare arms, iron mask, huge spiked club, chains wrapped around his torso, lunging attack pose, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "keep_brute_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "lord_of_the_keep_idle",
+    "file": "assets/art/bosses/lord_of_the_keep_idle.png",
+    "size": 1536,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Boss: towering Lord of the Keep, gaunt king in ornate rusted gold armor fused to his body, tattered crimson royal mantle, cracked crown, colossal cursed greatsword dripping dark light, epic low angle, imposing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "lord_of_the_keep_attack",
+    "file": "assets/art/bosses/lord_of_the_keep_attack.png",
+    "size": 1536,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same boss as the reference image: towering Lord of the Keep, gaunt king in ornate rusted gold armor fused to his body, tattered crimson royal mantle, cracked crown, colossal cursed greatsword dripping dark light, devastating attack pose, epic low angle, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "lord_of_the_keep_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "marsh_matron_idle",
+    "file": "assets/art/bosses/marsh_matron_idle.png",
+    "size": 1536,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Boss: Marsh Matron, enormous bloated hag-like creature rising from black swamp water, drowned corpses tangled in her moss hair, long clawed arms, sickly green glow, lantern hanging from a bone staff, epic low angle, imposing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "marsh_matron_attack",
+    "file": "assets/art/bosses/marsh_matron_attack.png",
+    "size": 1536,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same boss as the reference image: Marsh Matron, enormous bloated hag-like creature rising from black swamp water, drowned corpses tangled in her moss hair, long clawed arms, sickly green glow, lantern hanging from a bone staff, devastating attack pose, epic low angle, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "marsh_matron_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "pilgrim_blade_t0",
+    "file": "assets/art/weapons/pilgrim_blade_t0.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Single weapon: worn pilgrim longsword, simple cross guard wrapped in cloth, nicked blade, diagonal from bottom-left to top-right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "pilgrim_blade_t1",
+    "file": "assets/art/weapons/pilgrim_blade_t1.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: worn pilgrim longsword, simple cross guard wrapped in cloth, nicked blade, diagonal from bottom-left to top-right. Upgraded: faint golden glow along the edge. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "pilgrim_blade_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "pilgrim_blade_t2",
+    "file": "assets/art/weapons/pilgrim_blade_t2.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: worn pilgrim longsword, simple cross guard wrapped in cloth, nicked blade, diagonal from bottom-left to top-right. Upgraded further: glowing golden runes engraved along it. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "pilgrim_blade_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "pilgrim_blade_t3",
+    "file": "assets/art/weapons/pilgrim_blade_t3.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: worn pilgrim longsword, simple cross guard wrapped in cloth, nicked blade, diagonal from bottom-left to top-right. Fully upgraded: wreathed in holy golden light and drifting embers. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "pilgrim_blade_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "penitent_greatsword_t0",
+    "file": "assets/art/weapons/penitent_greatsword_t0.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Single weapon: massive two-handed penitent greatsword, chipped iron blade, prayer beads tied to the hilt, diagonal from bottom-left to top-right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "penitent_greatsword_t1",
+    "file": "assets/art/weapons/penitent_greatsword_t1.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: massive two-handed penitent greatsword, chipped iron blade, prayer beads tied to the hilt, diagonal from bottom-left to top-right. Upgraded: faint golden glow along the edge. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "penitent_greatsword_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "penitent_greatsword_t2",
+    "file": "assets/art/weapons/penitent_greatsword_t2.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: massive two-handed penitent greatsword, chipped iron blade, prayer beads tied to the hilt, diagonal from bottom-left to top-right. Upgraded further: glowing golden runes engraved along it. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "penitent_greatsword_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "penitent_greatsword_t3",
+    "file": "assets/art/weapons/penitent_greatsword_t3.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: massive two-handed penitent greatsword, chipped iron blade, prayer beads tied to the hilt, diagonal from bottom-left to top-right. Fully upgraded: wreathed in holy golden light and drifting embers. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "penitent_greatsword_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "cathedral_hammer_t0",
+    "file": "assets/art/weapons/cathedral_hammer_t0.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Single weapon: heavy cathedral warhammer, head shaped like a gothic bell tower, gold inlay, diagonal from bottom-left to top-right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "cathedral_hammer_t1",
+    "file": "assets/art/weapons/cathedral_hammer_t1.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: heavy cathedral warhammer, head shaped like a gothic bell tower, gold inlay, diagonal from bottom-left to top-right. Upgraded: faint golden glow along the edge. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "cathedral_hammer_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "cathedral_hammer_t2",
+    "file": "assets/art/weapons/cathedral_hammer_t2.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: heavy cathedral warhammer, head shaped like a gothic bell tower, gold inlay, diagonal from bottom-left to top-right. Upgraded further: glowing golden runes engraved along it. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "cathedral_hammer_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "cathedral_hammer_t3",
+    "file": "assets/art/weapons/cathedral_hammer_t3.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: heavy cathedral warhammer, head shaped like a gothic bell tower, gold inlay, diagonal from bottom-left to top-right. Fully upgraded: wreathed in holy golden light and drifting embers. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "cathedral_hammer_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ashwood_bow_t0",
+    "file": "assets/art/weapons/ashwood_bow_t0.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Single weapon: longbow carved from pale ash-grey wood, frayed string, small bone charms, diagonal from bottom-left to top-right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ashwood_bow_t1",
+    "file": "assets/art/weapons/ashwood_bow_t1.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: longbow carved from pale ash-grey wood, frayed string, small bone charms, diagonal from bottom-left to top-right. Upgraded: faint golden glow along the edge. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ashwood_bow_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ashwood_bow_t2",
+    "file": "assets/art/weapons/ashwood_bow_t2.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: longbow carved from pale ash-grey wood, frayed string, small bone charms, diagonal from bottom-left to top-right. Upgraded further: glowing golden runes engraved along it. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ashwood_bow_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ashwood_bow_t3",
+    "file": "assets/art/weapons/ashwood_bow_t3.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: longbow carved from pale ash-grey wood, frayed string, small bone charms, diagonal from bottom-left to top-right. Fully upgraded: wreathed in holy golden light and drifting embers. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ashwood_bow_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ember_staff_t0",
+    "file": "assets/art/weapons/ember_staff_t0.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Single weapon: gnarled blackened staff with a smouldering ember crystal caged at the top, diagonal from bottom-left to top-right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ember_staff_t1",
+    "file": "assets/art/weapons/ember_staff_t1.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: gnarled blackened staff with a smouldering ember crystal caged at the top, diagonal from bottom-left to top-right. Upgraded: faint golden glow along the edge. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ember_staff_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ember_staff_t2",
+    "file": "assets/art/weapons/ember_staff_t2.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: gnarled blackened staff with a smouldering ember crystal caged at the top, diagonal from bottom-left to top-right. Upgraded further: glowing golden runes engraved along it. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ember_staff_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ember_staff_t3",
+    "file": "assets/art/weapons/ember_staff_t3.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: gnarled blackened staff with a smouldering ember crystal caged at the top, diagonal from bottom-left to top-right. Fully upgraded: wreathed in holy golden light and drifting embers. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ember_staff_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "lord_of_the_keep_blade_t0",
+    "file": "assets/art/weapons/lord_of_the_keep_blade_t0.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Single weapon: cursed royal greatsword, rusted gold hilt with a crown motif, blade leaking dark crimson light, diagonal from bottom-left to top-right. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "lord_of_the_keep_blade_t1",
+    "file": "assets/art/weapons/lord_of_the_keep_blade_t1.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: cursed royal greatsword, rusted gold hilt with a crown motif, blade leaking dark crimson light, diagonal from bottom-left to top-right. Upgraded: faint golden glow along the edge. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "lord_of_the_keep_blade_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "lord_of_the_keep_blade_t2",
+    "file": "assets/art/weapons/lord_of_the_keep_blade_t2.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: cursed royal greatsword, rusted gold hilt with a crown motif, blade leaking dark crimson light, diagonal from bottom-left to top-right. Upgraded further: glowing golden runes engraved along it. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "lord_of_the_keep_blade_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "lord_of_the_keep_blade_t3",
+    "file": "assets/art/weapons/lord_of_the_keep_blade_t3.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. The same weapon as the reference image. Single weapon: cursed royal greatsword, rusted gold hilt with a crown motif, blade leaking dark crimson light, diagonal from bottom-left to top-right. Fully upgraded: wreathed in holy golden light and drifting embers. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "lord_of_the_keep_blade_t0.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "amulet_fervent",
+    "file": "assets/art/amulets/fervent.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Ornate amulet on a chain, close-up: gold sun pendant with a burning holy core. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "amulet_colossus_seal",
+    "file": "assets/art/amulets/colossus_seal.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Ornate amulet on a chain, close-up: heavy iron seal pendant engraved with a giant's fist. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "amulet_hunter_heart",
+    "file": "assets/art/amulets/hunter_heart.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Ornate amulet on a chain, close-up: dried beast heart in a silver cage, wrapped in leather. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "amulet_martyr_relic",
+    "file": "assets/art/amulets/martyr_relic.png",
+    "size": 512,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Ornate amulet on a chain, close-up: cracked reliquary holding a bloodied finger bone, faint red glow. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "material_iron_ore",
+    "file": "assets/art/materials/iron_ore.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Small game inventory icon, single object: chunk of raw dark iron ore with metallic glints. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "material_ash_wood",
+    "file": "assets/art/materials/ash_wood.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Small game inventory icon, single object: bundle of pale grey ash-wood branches. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "material_iron_ore.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "material_beast_essence",
+    "file": "assets/art/materials/beast_essence.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Small game inventory icon, single object: glass vial of murky red beast essence. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "material_iron_ore.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "material_holy_shard",
+    "file": "assets/art/materials/holy_shard.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Small game inventory icon, single object: small glowing golden crystal shard. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "material_iron_ore.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "material_forge_stone_1",
+    "file": "assets/art/materials/forge_stone_1.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Small game inventory icon, single object: smithing whetstone with one glowing gold rune. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "material_iron_ore.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "material_forge_stone_2",
+    "file": "assets/art/materials/forge_stone_2.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Small game inventory icon, single object: smithing whetstone with two glowing gold runes. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "material_iron_ore.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "material_forge_stone_3",
+    "file": "assets/art/materials/forge_stone_3.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Small game inventory icon, single object: smithing whetstone with three glowing gold runes. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "material_iron_ore.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "material_ancient_stone",
+    "file": "assets/art/materials/ancient_stone.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Small game inventory icon, single object: fragment of an ancient carved stone tablet with faint runes. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "material_iron_ore.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "material_somber_stone",
+    "file": "assets/art/materials/somber_stone.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Small game inventory icon, single object: dark smooth stone with a faint violet glow. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "material_iron_ore.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "bg_free_fight",
+    "file": "assets/art/backgrounds/bg_free_fight.png",
+    "size": "1080x1920",
+    "cutout": false,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Vertical 9:16 mobile game background: desolate ashen battlefield at dusk, broken swords stuck in the ground, distant ruined cathedral, falling ash. Empty ground in the lower third for characters, no characters, slightly dark so the interface stays readable.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "bg_penitent_keep",
+    "file": "assets/art/backgrounds/bg_penitent_keep.png",
+    "size": "1080x1920",
+    "cutout": false,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Vertical 9:16 mobile game background: interior of a ruined gothic fortress, collapsed vaults, hanging iron cages, candles and torchlight, dust in golden light beams. Empty ground in the lower third for characters, no characters, slightly dark so the interface stays readable.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "bg_drowned_marsh",
+    "file": "assets/art/backgrounds/bg_drowned_marsh.png",
+    "size": "1080x1920",
+    "cutout": false,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Vertical 9:16 mobile game background: black flooded swamp, dead twisted trees, drowned stone statues, green will-o'-wisps, thick fog. Empty ground in the lower third for characters, no characters, slightly dark so the interface stays readable.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "bg_arena",
+    "file": "assets/art/backgrounds/bg_arena.png",
+    "size": "1080x1920",
+    "cutout": false,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Vertical 9:16 mobile game background: circular stone colosseum in ruins under a stormy sky, torches around the ring, faded banners, dark stained sand. Empty ground in the lower third for characters, no characters, slightly dark so the interface stays readable.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "bg_forge",
+    "file": "assets/art/backgrounds/bg_forge.png",
+    "size": "1080x1920",
+    "cutout": false,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Vertical 9:16 mobile game background: blacksmith forge inside a crumbling chapel, glowing furnace, anvil, hanging chains, sparks and embers. Empty ground in the lower third for characters, no characters, slightly dark so the interface stays readable.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "bg_home",
+    "file": "assets/art/backgrounds/bg_home.png",
+    "size": "1080x1920",
+    "cutout": false,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Vertical 9:16 mobile game background: small bonfire camp at the edge of a ruined kingdom, a sword planted beside the fire, a giant golden tree glowing on the far horizon. Empty ground in the lower third for characters, no characters, slightly dark so the interface stays readable.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "logo",
+    "file": "assets/art/ui/logo.png",
+    "size": "1024x512",
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Game logo with the exact text \"IRON OATH\": engraved gothic serif lettering in forged dark iron with antique gold edges, a sword piercing the letter O, faint ember glow. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "app_icon",
+    "file": "assets/art/ui/app_icon.png",
+    "size": 1024,
+    "cutout": false,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Square mobile app icon: a knight's great helm in profile with a golden sword behind it, dark stone background filling the whole square, bold simple shapes readable at small size, no text.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "tab_home",
+    "file": "assets/art/ui/tab_home.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Flat monochrome antique gold line icon of a bonfire, simple, thick strokes, matching icon set. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "tab_train",
+    "file": "assets/art/ui/tab_train.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Flat monochrome antique gold line icon of a crossed sword and kettlebell, simple, thick strokes, matching icon set. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "tab_home.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "tab_forge",
+    "file": "assets/art/ui/tab_forge.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Flat monochrome antique gold line icon of an anvil and hammer, simple, thick strokes, matching icon set. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "tab_home.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "tab_arena",
+    "file": "assets/art/ui/tab_arena.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Flat monochrome antique gold line icon of two crossed swords over a shield, simple, thick strokes, matching icon set. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "tab_home.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "tab_profile",
+    "file": "assets/art/ui/tab_profile.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Flat monochrome antique gold line icon of a knight helm, simple, thick strokes, matching icon set. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "tab_home.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "division_recruit",
+    "file": "assets/art/ui/division_recruit.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Heraldic rank badge: plain worn iron shield emblem. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "division_squire",
+    "file": "assets/art/ui/division_squire.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Heraldic rank badge: bronze shield emblem with a single sword. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "division_recruit.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "division_knight",
+    "file": "assets/art/ui/division_knight.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Heraldic rank badge: silver shield emblem with crossed swords and a laurel. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "division_recruit.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "division_champion",
+    "file": "assets/art/ui/division_champion.png",
+    "size": 256,
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Heraldic rank badge: gold shield emblem with a crown, crossed swords and radiant light. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "division_recruit.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ui_panel_frame",
+    "file": "assets/art/ui/panel_frame.png",
+    "size": "1024x512",
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Mobile game UI element, flat front view: ornate empty rectangular panel frame in stone and dark iron with antique gold corner ornaments, empty transparent center. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ui_button",
+    "file": "assets/art/ui/button.png",
+    "size": "1024x512",
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Mobile game UI element, flat front view: wide horizontal game button plate in dark iron with an antique gold border, no text. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ui_panel_frame.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ui_bar_hp",
+    "file": "assets/art/ui/bar_hp.png",
+    "size": "1024x512",
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Mobile game UI element, flat front view: long horizontal health bar frame in dark iron filled with blood red, no text. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ui_panel_frame.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "ui_bar_xp",
+    "file": "assets/art/ui/bar_xp.png",
+    "size": "1024x512",
+    "cutout": true,
+    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Mobile game UI element, flat front view: long horizontal experience bar frame in dark iron filled with antique gold, no text. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "references": [
+      "knight_s1_idle.png",
+      "ui_panel_frame.png"
+    ],
+    "status": "pending",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+  },
+  {
+    "id": "knight_idle_base",
+    "file": "assets/art/knight/idle/base.png",
+    "type": "base",
+    "prompt": "An athletic male knight-to-be with NO armor and NO weapon: simple dark linen undershirt, dark fitted trousers, worn leather boots, dark leather gloves, short dark hair and a short beard, stern scarred face. No cape, no belt pouches, no loose cloth sticking out of the silhouette. RELAXED IDLE pose for the character screen: standing tall and athletic, feet a bit wider than shoulder width, weight balanced, calm and confident. Body in three-quarter view facing right. Right arm lowered with the right fist closed at hip height slightly in front of the body (ready to hold a weapon pointing down). Left arm relaxed slightly away from the body, left fist closed at upper-thigh height.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_base",
+    "file": "assets/art/knight/attack/base.png",
+    "type": "base",
+    "prompt": "An athletic male knight-to-be with NO armor and NO weapon: simple dark linen undershirt, dark fitted trousers, worn leather boots, dark leather gloves, short dark hair and a short beard, stern scarred face. No cape, no belt pouches, no loose cloth sticking out of the silhouette. ATTACK-READY combat stance used during training and fights: wide low stance, knees bent, left foot forward, torso in three-quarter view facing right toward an unseen enemy. Right fist raised forward at chest height (ready to hold a weapon pointing forward and up). Left forearm raised in front of the chest with the left fist closed (where a shield is strapped or a second blade or a bow is held). Tense, athletic, about to strike.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_helm_gambeson",
+    "file": "assets/art/knight/idle/helm_gambeson.png",
+    "type": "layer",
+    "prompt": "Add ONLY a helmet that fully covers the head and hair. For this set: an extremely worn padded quilted gambeson in faded brown cloth, frayed, patched and stained, with cracked leather straps. Use an armet-style helm with angled aggressive eye slits.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_chest_gambeson",
+    "file": "assets/art/knight/idle/chest_gambeson.png",
+    "type": "layer",
+    "prompt": "Add ONLY the torso armor: breastplate or coat, pauldrons and arm armor down to the wrists. The dark leather gloves stay exactly as they are. For this set: an extremely worn padded quilted gambeson in faded brown cloth, frayed, patched and stained, with cracked leather straps. No cape.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_legs_gambeson",
+    "file": "assets/art/knight/idle/legs_gambeson.png",
+    "type": "layer",
+    "prompt": "Add ONLY the leg armor: tassets, thigh and knee guards, greaves over the boots. For this set: an extremely worn padded quilted gambeson in faded brown cloth, frayed, patched and stained, with cracked leather straps.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_helm_chainmail",
+    "file": "assets/art/knight/idle/helm_chainmail.png",
+    "type": "layer",
+    "prompt": "Add ONLY a helmet that fully covers the head and hair. For this set: rusty riveted chain mail with a torn dark leather surcoat, dented and battle-scarred. Use an armet-style helm with angled aggressive eye slits.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_chest_chainmail",
+    "file": "assets/art/knight/idle/chest_chainmail.png",
+    "type": "layer",
+    "prompt": "Add ONLY the torso armor: breastplate or coat, pauldrons and arm armor down to the wrists. The dark leather gloves stay exactly as they are. For this set: rusty riveted chain mail with a torn dark leather surcoat, dented and battle-scarred. No cape.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_legs_chainmail",
+    "file": "assets/art/knight/idle/legs_chainmail.png",
+    "type": "layer",
+    "prompt": "Add ONLY the leg armor: tassets, thigh and knee guards, greaves over the boots. For this set: rusty riveted chain mail with a torn dark leather surcoat, dented and battle-scarred.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_helm_templar_plate",
+    "file": "assets/art/knight/idle/helm_templar_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY a helmet that fully covers the head and hair. For this set: detailed steel plate armor with a white tabard bearing a red templar cross and gold trim, scratched, dented and soot-stained from battle. Use an armet-style helm with angled aggressive eye slits.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_chest_templar_plate",
+    "file": "assets/art/knight/idle/chest_templar_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY the torso armor: breastplate or coat, pauldrons and arm armor down to the wrists. The dark leather gloves stay exactly as they are. For this set: detailed steel plate armor with a white tabard bearing a red templar cross and gold trim, scratched, dented and soot-stained from battle. No cape.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_legs_templar_plate",
+    "file": "assets/art/knight/idle/legs_templar_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY the leg armor: tassets, thigh and knee guards, greaves over the boots. For this set: detailed steel plate armor with a white tabard bearing a red templar cross and gold trim, scratched, dented and soot-stained from battle.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_helm_star_plate",
+    "file": "assets/art/knight/idle/helm_star_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY a helmet that fully covers the head and hair. For this set: ornate, gleaming blue-black star-metal plate armor with fine gold filigree and tiny silver star inlays, still scratched and dented from battle. Use an armet-style helm with angled aggressive eye slits.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_chest_star_plate",
+    "file": "assets/art/knight/idle/chest_star_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY the torso armor: breastplate or coat, pauldrons and arm armor down to the wrists. The dark leather gloves stay exactly as they are. For this set: ornate, gleaming blue-black star-metal plate armor with fine gold filigree and tiny silver star inlays, still scratched and dented from battle. No cape.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_legs_star_plate",
+    "file": "assets/art/knight/idle/legs_star_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY the leg armor: tassets, thigh and knee guards, greaves over the boots. For this set: ornate, gleaming blue-black star-metal plate armor with fine gold filigree and tiny silver star inlays, still scratched and dented from battle.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_helm_gambeson",
+    "file": "assets/art/knight/attack/helm_gambeson.png",
+    "type": "layer",
+    "prompt": "Add ONLY a helmet that fully covers the head and hair. For this set: an extremely worn padded quilted gambeson in faded brown cloth, frayed, patched and stained, with cracked leather straps. Use an armet-style helm with angled aggressive eye slits.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_chest_gambeson",
+    "file": "assets/art/knight/attack/chest_gambeson.png",
+    "type": "layer",
+    "prompt": "Add ONLY the torso armor: breastplate or coat, pauldrons and arm armor down to the wrists. The dark leather gloves stay exactly as they are. For this set: an extremely worn padded quilted gambeson in faded brown cloth, frayed, patched and stained, with cracked leather straps. No cape.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_legs_gambeson",
+    "file": "assets/art/knight/attack/legs_gambeson.png",
+    "type": "layer",
+    "prompt": "Add ONLY the leg armor: tassets, thigh and knee guards, greaves over the boots. For this set: an extremely worn padded quilted gambeson in faded brown cloth, frayed, patched and stained, with cracked leather straps.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_helm_chainmail",
+    "file": "assets/art/knight/attack/helm_chainmail.png",
+    "type": "layer",
+    "prompt": "Add ONLY a helmet that fully covers the head and hair. For this set: rusty riveted chain mail with a torn dark leather surcoat, dented and battle-scarred. Use an armet-style helm with angled aggressive eye slits.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_chest_chainmail",
+    "file": "assets/art/knight/attack/chest_chainmail.png",
+    "type": "layer",
+    "prompt": "Add ONLY the torso armor: breastplate or coat, pauldrons and arm armor down to the wrists. The dark leather gloves stay exactly as they are. For this set: rusty riveted chain mail with a torn dark leather surcoat, dented and battle-scarred. No cape.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_legs_chainmail",
+    "file": "assets/art/knight/attack/legs_chainmail.png",
+    "type": "layer",
+    "prompt": "Add ONLY the leg armor: tassets, thigh and knee guards, greaves over the boots. For this set: rusty riveted chain mail with a torn dark leather surcoat, dented and battle-scarred.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_helm_templar_plate",
+    "file": "assets/art/knight/attack/helm_templar_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY a helmet that fully covers the head and hair. For this set: detailed steel plate armor with a white tabard bearing a red templar cross and gold trim, scratched, dented and soot-stained from battle. Use an armet-style helm with angled aggressive eye slits.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_chest_templar_plate",
+    "file": "assets/art/knight/attack/chest_templar_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY the torso armor: breastplate or coat, pauldrons and arm armor down to the wrists. The dark leather gloves stay exactly as they are. For this set: detailed steel plate armor with a white tabard bearing a red templar cross and gold trim, scratched, dented and soot-stained from battle. No cape.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_legs_templar_plate",
+    "file": "assets/art/knight/attack/legs_templar_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY the leg armor: tassets, thigh and knee guards, greaves over the boots. For this set: detailed steel plate armor with a white tabard bearing a red templar cross and gold trim, scratched, dented and soot-stained from battle.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_helm_star_plate",
+    "file": "assets/art/knight/attack/helm_star_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY a helmet that fully covers the head and hair. For this set: ornate, gleaming blue-black star-metal plate armor with fine gold filigree and tiny silver star inlays, still scratched and dented from battle. Use an armet-style helm with angled aggressive eye slits.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_chest_star_plate",
+    "file": "assets/art/knight/attack/chest_star_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY the torso armor: breastplate or coat, pauldrons and arm armor down to the wrists. The dark leather gloves stay exactly as they are. For this set: ornate, gleaming blue-black star-metal plate armor with fine gold filigree and tiny silver star inlays, still scratched and dented from battle. No cape.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_legs_star_plate",
+    "file": "assets/art/knight/attack/legs_star_plate.png",
+    "type": "layer",
+    "prompt": "Add ONLY the leg armor: tassets, thigh and knee guards, greaves over the boots. For this set: ornate, gleaming blue-black star-metal plate armor with fine gold filigree and tiny silver star inlays, still scratched and dented from battle.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_pilgrim_blade",
+    "file": "assets/art/knight/idle/weapon_pilgrim_blade.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: an extremely worn pilgrim longsword, rusty nicked blade, simple cross guard wrapped in frayed cloth, held in the right fist, blade pointing down and slightly forward. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_steel_longsword",
+    "file": "assets/art/knight/idle/weapon_steel_longsword.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a solid steel longsword with a fuller and a simple steel cross guard, scratched from use, held in the right fist, blade pointing down and slightly forward. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_moon_blade",
+    "file": "assets/art/knight/idle/weapon_moon_blade.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a slender, finely engraved curved silver sword with a crescent moon pommel, battle-scratched, held in the right fist, blade pointing down and slightly forward. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_penitent_greatsword",
+    "file": "assets/art/knight/idle/weapon_penitent_greatsword.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a heavy two-handed greatsword with a rough iron blade and a chained hilt, held in the right fist, resting with the tip on the ground in front-right of the knight. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_star_greatsword",
+    "file": "assets/art/knight/idle/weapon_star_greatsword.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a huge, ornate two-handed greatsword of dark star metal with silver star inlays, chipped edges, held in the right fist, resting with the tip on the ground in front-right of the knight. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_lord_of_the_keep_blade",
+    "file": "assets/art/knight/idle/weapon_lord_of_the_keep_blade.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a colossal royal greatsword of tarnished gold with a cracked crown-shaped guard, ancient and battle-worn, held in the right fist, resting with the tip on the ground in front-right of the knight. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_cathedral_hammer",
+    "file": "assets/art/knight/idle/weapon_cathedral_hammer.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a heavy cathedral war hammer with a chipped stone-and-iron head engraved with holy symbols, held in the right fist, resting with the tip on the ground in front-right of the knight. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_ashwood_bow",
+    "file": "assets/art/knight/idle/weapon_ashwood_bow.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: an extremely worn ash-wood longbow with a cracked leather grip and a frayed string, held vertically in the LEFT fist, low at the side. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_yew_longbow",
+    "file": "assets/art/knight/idle/weapon_yew_longbow.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a tall elegant reddish yew longbow with carved limbs and a leather grip, scuffed from use, held vertically in the LEFT fist, low at the side. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_ember_staff",
+    "file": "assets/art/knight/idle/weapon_ember_staff.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: an extremely worn gnarled wooden staff topped with a dull rough red stone, no glow, held vertically in the right fist like a walking staff, its base on the ground. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_weapon_ebony_staff",
+    "file": "assets/art/knight/idle/weapon_ebony_staff.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: an ornate black ebony sorcerer staff topped with a clear cut crystal in silver claws, no glow, scratched, held vertically in the right fist like a walking staff, its base on the ground. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_pilgrim_blade",
+    "file": "assets/art/knight/attack/weapon_pilgrim_blade.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: an extremely worn pilgrim longsword, rusty nicked blade, simple cross guard wrapped in frayed cloth, held in the right fist, blade pointing forward and up toward the enemy. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_steel_longsword",
+    "file": "assets/art/knight/attack/weapon_steel_longsword.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a solid steel longsword with a fuller and a simple steel cross guard, scratched from use, held in the right fist, blade pointing forward and up toward the enemy. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_moon_blade",
+    "file": "assets/art/knight/attack/weapon_moon_blade.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a slender, finely engraved curved silver sword with a crescent moon pommel, battle-scratched, held in the right fist, blade pointing forward and up toward the enemy. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_penitent_greatsword",
+    "file": "assets/art/knight/attack/weapon_penitent_greatsword.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a heavy two-handed greatsword with a rough iron blade and a chained hilt, held in the right fist, blade raised forward and up toward the enemy, away from the head. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_star_greatsword",
+    "file": "assets/art/knight/attack/weapon_star_greatsword.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a huge, ornate two-handed greatsword of dark star metal with silver star inlays, chipped edges, held in the right fist, blade raised forward and up toward the enemy, away from the head. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_lord_of_the_keep_blade",
+    "file": "assets/art/knight/attack/weapon_lord_of_the_keep_blade.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a colossal royal greatsword of tarnished gold with a cracked crown-shaped guard, ancient and battle-worn, held in the right fist, blade raised forward and up toward the enemy, away from the head. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_cathedral_hammer",
+    "file": "assets/art/knight/attack/weapon_cathedral_hammer.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a heavy cathedral war hammer with a chipped stone-and-iron head engraved with holy symbols, held in the right fist, blade raised forward and up toward the enemy, away from the head. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_ashwood_bow",
+    "file": "assets/art/knight/attack/weapon_ashwood_bow.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: an extremely worn ash-wood longbow with a cracked leather grip and a frayed string, held vertically in the raised LEFT fist, ready to draw. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_yew_longbow",
+    "file": "assets/art/knight/attack/weapon_yew_longbow.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: a tall elegant reddish yew longbow with carved limbs and a leather grip, scuffed from use, held vertically in the raised LEFT fist, ready to draw. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_ember_staff",
+    "file": "assets/art/knight/attack/weapon_ember_staff.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: an extremely worn gnarled wooden staff topped with a dull rough red stone, no glow, held in the right fist, pointed forward toward the enemy. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_weapon_ebony_staff",
+    "file": "assets/art/knight/attack/weapon_ebony_staff.png",
+    "type": "layer",
+    "prompt": "Add ONLY this weapon: an ornate black ebony sorcerer staff topped with a clear cut crystal in silver claws, no glow, scratched, held in the right fist, pointed forward toward the enemy. The fingers close around the grip; nothing else changes.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_offhand_wooden_shield",
+    "file": "assets/art/knight/idle/offhand_wooden_shield.png",
+    "type": "layer",
+    "prompt": "Add ONLY a battered round oak shield with an iron rim and boss, strapped to the left forearm.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_offhand_kite_shield",
+    "file": "assets/art/knight/idle/offhand_kite_shield.png",
+    "type": "layer",
+    "prompt": "Add ONLY a detailed steel kite shield painted with a faded red cross, dented and scratched, strapped to the left forearm.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_idle_offhand_twin_blade",
+    "file": "assets/art/knight/idle/offhand_twin_blade.png",
+    "type": "layer",
+    "prompt": "Add ONLY a shorter steel companion sword, nicked from battle, held in the LEFT fist, blade pointing forward.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_offhand_wooden_shield",
+    "file": "assets/art/knight/attack/offhand_wooden_shield.png",
+    "type": "layer",
+    "prompt": "Add ONLY a battered round oak shield with an iron rim and boss, strapped to the left forearm.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_offhand_kite_shield",
+    "file": "assets/art/knight/attack/offhand_kite_shield.png",
+    "type": "layer",
+    "prompt": "Add ONLY a detailed steel kite shield painted with a faded red cross, dented and scratched, strapped to the left forearm.",
+    "status": "pending"
+  },
+  {
+    "id": "knight_attack_offhand_twin_blade",
+    "file": "assets/art/knight/attack/offhand_twin_blade.png",
+    "type": "layer",
+    "prompt": "Add ONLY a shorter steel companion sword, nicked from battle, held in the LEFT fist, blade pointing forward.",
+    "status": "pending"
+  },
+  {
+    "id": "trainer_crossed",
+    "file": "assets/art/trainer/trainer_crossed.png",
+    "type": "cutout",
+    "prompt": "Dark souls-like knight trainer named Ser Corvino: tall, lean, very stylish black plate armor with fluted edges and subtle dark-gold filigree, armet helm with a black raven-feather crest, long tattered black cape with a high collar, charismatic and confident presence. Full body, front three-quarter view, centered. Arms crossed over his chest, weight on one leg, head slightly tilted, cool and charismatic.",
+    "status": "pending"
+  },
+  {
+    "id": "trainer_goofy",
+    "file": "assets/art/trainer/trainer_goofy.png",
+    "type": "cutout",
+    "prompt": "The same character as the reference image. Dark souls-like knight trainer named Ser Corvino: tall, lean, very stylish black plate armor with fluted edges and subtle dark-gold filigree, armet helm with a black raven-feather crest, long tattered black cape with a high collar, charismatic and confident presence. Full body, front three-quarter view, centered. Goofy funny pose: doing an awkward flexing bodybuilder pose, one leg raised, cape tangled, clearly joking around.",
+    "status": "pending"
+  },
+  {
+    "id": "slag_goblin_idle",
+    "file": "assets/art/enemies/slag_goblin_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: small hunched goblin crusted with black slag and soot, cracked grey skin with thin glowing ember seams, a burned-through leather apron, holding a dented pair of iron forge tongs like a weapon, mean toothy grin, menacing idle stance, facing left.",
+    "status": "done"
+  },
+  {
+    "id": "hollow_apprentice_idle",
+    "file": "assets/art/enemies/hollow_apprentice_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: thin hollow undead blacksmith apprentice, sunken pale glowing eyes, scorched leather apron and soot-stained rags, dragging a heavy rusted forge hammer, iron rings hanging from his belt, menacing idle stance, facing left.",
+    "status": "done"
+  },
+  {
+    "id": "hollow_smith_idle",
+    "file": "assets/art/bosses/hollow_smith_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: hulking hollow undead blacksmith with skin like cooled grey slag, one forearm fused with a fragment of red-hot anvil, a giant two-handed forge hammer, smouldering leather apron, a faint furnace glow from cracks in his chest, epic low angle, imposing idle stance, facing left.",
+    "status": "done"
+  },
+  {
+    "id": "iron_castellan_idle",
+    "file": "assets/art/bosses/iron_castellan_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: massive castellan in thick layered iron plate scarred by a hundred sieges, a tower shield bolted to his left arm, a giant flanged mace, a ring of huge iron keys at his belt, a visor shaped like a fortress portcullis, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "ember_giant_idle",
+    "file": "assets/art/enemies/ember_giant_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: hulking giant (whole body visible) with skin of cracked black rock and molten orange seams, a broken iron collar with chains, carrying a slab of furnace brick as a club, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "chained_stoker_idle",
+    "file": "assets/art/enemies/chained_stoker_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: gaunt undead stoker chained to a small iron coal cart, holding a shovel heaped with glowing coals, face wrapped in burned cloth, ember eyes, scorched bare arms, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "living_bellows_idle",
+    "file": "assets/art/bosses/living_bellows_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: colossal living forge-bellows creature: a body of stitched black leather and iron bands that heaves like lungs, wooden ribs, a glowing furnace mouth breathing fire, several long iron arms ending in forge tongs, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "forge_servant_idle",
+    "file": "assets/art/enemies/forge_servant_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: towering animated construct of dark god-forged steel with gold rivets, a faceless mask with a single slit of white-gold light, carrying an enormous chisel-like blade, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "anvil_golem_idle",
+    "file": "assets/art/enemies/anvil_golem_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: squat massive golem whose torso is a giant ancient anvil, arms built from stacked iron ingots, small head of riveted iron, faint gold runes on the anvil face, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "fallen_smith_god_idle",
+    "file": "assets/art/bosses/fallen_smith_god_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: fallen god of smithing, a gaunt giant divine body cracked like old porcelain with molten gold in the cracks, a broken iron halo, a colossal hammer whose head is a star-metal anvil, a tattered ceremonial leather apron with gold embroidery, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "ash_scarecrow_idle",
+    "file": "assets/art/enemies/ash_scarecrow_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: scarecrow made of burned ash-wood branches and torn sackcloth, a crow skull for a head with small ember eyes, a rusted sickle in one hand, crows' feathers stuck in the straw, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "hollow_stag_idle",
+    "file": "assets/art/bosses/hollow_stag_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: huge undead stag with a hollow ribcage full of ash and drifting embers, enormous antlers like burned branches, patchy grey hide, pale glowing eyes, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "bog_drowned_idle",
+    "file": "assets/art/enemies/bog_drowned_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: drowned hunter corpse rising from the bog, waterlogged leather armor, a rusty boar spear, moss and reeds hanging from his body, pale green eyes, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "gorge_harpy_idle",
+    "file": "assets/art/enemies/gorge_harpy_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: lean harpy with ragged grey-green feathered wings for arms, bird talons, a cracked bone mask, long wind-whipped hair, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "cliff_raider_idle",
+    "file": "assets/art/enemies/cliff_raider_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: agile masked raider in wind-torn leather and feathers, two curved daggers, coiled rope and climbing hooks, crouched and ready to leap, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "weightless_knight_idle",
+    "file": "assets/art/bosses/weightless_knight_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: slender knight in elegant tarnished silver armor with green-grey patina, floating just above the ground, long tattered scarves flowing in the wind, a thin long rapier, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "wind_sentinel_idle",
+    "file": "assets/art/enemies/wind_sentinel_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: tall weathered stone-and-bronze statue sentinel come alive, folded wings of steel feathers, a long spear, a cracked face with storm-grey eyes, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "thunder_ram_idle",
+    "file": "assets/art/enemies/thunder_ram_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: massive mountain ram beast with huge spiralling stone horns, shaggy frost-covered fur, small sparks crackling between the horns, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "storm_king_idle",
+    "file": "assets/art/bosses/storm_king_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: gigantic storm king, a gaunt bearded giant in ancient bronze-and-steel armor, a crown of jagged steel feathers, a cloak made of storm clouds, a great spear, lit by lightning, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "bronze_skeleton_idle",
+    "file": "assets/art/enemies/bronze_skeleton_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: skeleton warrior with bones stained green-bronze, a dented bronze helmet, a round bronze shield and a short bronze sword, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "tomb_crawler_idle",
+    "file": "assets/art/enemies/tomb_crawler_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: long segmented crypt crawler, centipede-like, with a skull-shaped head, bronze funeral rings embedded in its pale carapace, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "crypt_keeper_idle",
+    "file": "assets/art/bosses/crypt_keeper_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: towering skeletal keeper in a green-bronze funeral mask and tattered burial robes, a ring of huge bronze keys, a stone sarcophagus lid used as a shield, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "gilded_acolyte_idle",
+    "file": "assets/art/enemies/gilded_acolyte_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: gaunt temple acolyte with gold leaf peeling from his skin, a smooth gold mask, cream robes stained with soot, a censer on a chain swung like a flail, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "golden_priest_idle",
+    "file": "assets/art/bosses/golden_priest_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: tall emaciated high priest fused with a golden reliquary on his back, a tall golden mitre, a golden staff topped by a sun disc, gold dripping from him like wax, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "penitent_idle",
+    "file": "assets/art/enemies/penitent_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: hooded penitent flagellant with a scarred bare back, a heavy iron cage around his head, a whip with small golden hooks, chains around his waist, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "censer_bearer_idle",
+    "file": "assets/art/enemies/censer_bearer_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: massive hunched monk carrying a giant golden censer on a chain, thick holy smoke pouring out, face hidden under a tall pointed hood, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "chained_maiden_idle",
+    "file": "assets/art/bosses/chained_maiden_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: tall sorrowful armored maiden in worn white-gold plate, bound by heavy golden chains to a broken altar slab on her back, face covered by a veil, a long holy blade, tears of molten gold, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "black_inquisitor_idle",
+    "file": "assets/art/enemies/black_inquisitor_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: inquisitor in black and gold robes, a tall pointed black hat, an iron mask, a branding iron in one hand and a heavy book chained to his wrist, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "cathedral_gargoyle_idle",
+    "file": "assets/art/enemies/cathedral_gargoyle_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: black stone gargoyle with gold-veined cracks, bat-like stone wings, crouched on a broken fragment of cathedral column, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "eternal_martyr_idle",
+    "file": "assets/art/bosses/eternal_martyr_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: gigantic martyr saint pierced by many gold-tipped spears, ornate black-and-gold armor, an obsidian halo, rising from one knee, a colossal halberd, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "spectral_archer_idle",
+    "file": "assets/art/enemies/spectral_archer_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: translucent pale-blue ghostly archer in a tattered hood, a silver bow, faint mist trailing below the knees, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "lunar_wisp_idle",
+    "file": "assets/art/enemies/lunar_wisp_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: small floating will-o-the-wisp spirit: a pale silver-blue flame with a tiny skull-like face inside, trailing two ragged moth wings, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "moon_moth_idle",
+    "file": "assets/art/bosses/moon_moth_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: giant moth with huge silver-white wings patterned like the phases of the moon, a furry pale body, glowing pale blue eyes, silver dust falling from the wings, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "drowned_scribe_idle",
+    "file": "assets/art/enemies/drowned_scribe_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: drowned scribe in soaked dark robes, black ink dripping from his fingers and mouth, a giant sharpened quill used as a weapon, wet scrolls tied to his belt, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "living_tome_idle",
+    "file": "assets/art/enemies/living_tome_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: floating giant ancient book with teeth along the edges of its pages, tentacles of black ink, a broken padlock and chain, one large eye on the cover, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "eyeless_librarian_idle",
+    "file": "assets/art/bosses/eyeless_librarian_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: towering gaunt librarian with empty eye sockets weeping ink, many long thin arms holding books and candles, a tall wooden ladder strapped to his back, soaked robes, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "mad_astrologer_idle",
+    "file": "assets/art/enemies/mad_astrologer_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: wild-haired old astrologer in star-embroidered dark-blue robes, cracked spectacles, a small brass armillary sphere floating above his open hand, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "brass_automaton_idle",
+    "file": "assets/art/enemies/brass_automaton_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: tall clockwork brass automaton with a telescope lens for one eye, exposed gear joints, a small blue crystal core in its chest, long thin limbs, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "star_eye_idle",
+    "file": "assets/art/bosses/star_eye_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: enormous floating eye creature inside a broken brass orrery, rotating metal rings around it, a pupil like a star, dangling cables and small telescopes, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "star_shard_idle",
+    "file": "assets/art/enemies/star_shard_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: humanoid figure made of jagged dark star-iron crystals with azure cracks, small crystal fragments hovering around it, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "void_stalker_idle",
+    "file": "assets/art/enemies/void_stalker_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: lean four-legged void beast whose body shows a starry night sky inside its silhouette, long jaws, azure eyes, smoky edges, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "star_devourer_idle",
+    "file": "assets/art/bosses/star_devourer_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: colossal cosmic serpent-like devourer coiling out of a well, a gaping mouth swallowing falling stars, a body of star-iron plates and void, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "restless_spirit_idle",
+    "file": "assets/art/enemies/restless_spirit_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: small hunched restless ghost wrapped in a faded shroud, a long sad pale face, floating above the ground, wisps of mist, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "wandering_lantern_idle",
+    "file": "assets/art/enemies/wandering_lantern_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: old mossy stone garden lantern come alive, walking on short stone legs, a pale ghost flame flickering inside, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "mute_gardener_idle",
+    "file": "assets/art/bosses/mute_gardener_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: tall silent gardener with his mouth sewn shut, a wide straw hat, body overgrown with moss and vines, holding huge rusted pruning shears, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "broken_monk_idle",
+    "file": "assets/art/enemies/broken_monk_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: bent old monk with a twisted spine, prayer beads made of bone, a ragged ochre robe, leaning on a long wooden staff, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "bell_wraith_idle",
+    "file": "assets/art/enemies/bell_wraith_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: ghost whose lower body is a cracked bronze temple bell, long pale arms, a hooded skull face, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "twisted_abbot_idle",
+    "file": "assets/art/bosses/twisted_abbot_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: giant abbot whose limbs bend in impossible directions, ornate ochre-and-gold vestments, many strings of prayer beads, a serene and terrifying face, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "steam_nymph_idle",
+    "file": "assets/art/enemies/steam_nymph_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: graceful nymph formed of swirling steam and pale stone, small gems on her forehead, a long veil of vapour covering her body, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "bath_serpent_idle",
+    "file": "assets/art/enemies/bath_serpent_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: large pale serpent with marble-like scales and small gems embedded along its back, coiled around a broken column, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "baths_queen_idle",
+    "file": "assets/art/bosses/baths_queen_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: ancient queen statue come alive, marble body with gold-filled cracks, a crown of gems, a long serpent-like lower body rising from a steaming pool, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "dreamer_idle",
+    "file": "assets/art/enemies/dreamer_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: sleeping figure floating upright inside a cocoon of pale sheets, eyes closed, peaceful face, dark violet dream mist around, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "sleepwalker_idle",
+    "file": "assets/art/enemies/sleepwalker_idle.png",
+    "type": "cutout",
+    "prompt": "Enemy: tall gaunt sleepwalker in a long grey nightgown, eyes and lips stitched closed, arms stretched forward, a candle lantern hanging from one hand, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "sleepless_one_idle",
+    "file": "assets/art/bosses/sleepless_one_idle.png",
+    "type": "cutout",
+    "prompt": "Boss: gigantic gaunt figure with dozens of open eyes all over its body, tattered grey robes, huge long-fingered hands, a crown of extinguished candles, epic low angle, imposing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "ash_deer_idle",
+    "file": "assets/art/animals/ash_deer_idle.png",
+    "type": "cutout",
+    "prompt": "Wild animal: wild deer with ash-grey fur and short burned-looking antlers, alert stance, a few embers caught in its fur, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "tusk_boar_idle",
+    "file": "assets/art/animals/tusk_boar_idle.png",
+    "type": "cutout",
+    "prompt": "Wild animal: big angry black boar with long yellowed tusks, bristly scarred hide, head lowered to charge, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "grave_wolf_idle",
+    "file": "assets/art/animals/grave_wolf_idle.png",
+    "type": "cutout",
+    "prompt": "Wild animal: large lean grey wolf with pale eyes, a torn ear and scars, snarling, a broken grave chain around its neck, menacing idle stance, facing left.",
+    "status": "pending"
+  },
+  {
+    "id": "dusk_bear_idle",
+    "file": "assets/art/animals/dusk_bear_idle.png",
+    "type": "cutout",
+    "prompt": "Wild animal: huge dark-brown bear rearing up on its hind legs, scarred muzzle, broken arrows stuck in its shoulder, dusk light on its fur, menacing idle stance, facing left.",
+    "status": "pending"
+  }
+]
