@@ -35,7 +35,7 @@ class HomeTab extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             child: Column(
               children: [
-                // Cavaliere al centro, Equipaggiamento e Inventario ai lati.
+                // Il cavaliere al centro; Armeria e Inventario sotto la scheda.
                 Container(
                   decoration: const BoxDecoration(
                     gradient: RadialGradient(
@@ -43,21 +43,7 @@ class HomeTab extends StatelessWidget {
                       colors: [Color(0xFF3A2C16), Color(0x00000000)],
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      _GearButton(
-                        icon: Icons.shield,
-                        label: 'ARMERIA',
-                        onTap: () => openEquipment(context),
-                      ),
-                      Expanded(child: Center(child: KnightView(character: c, height: 270))),
-                      _GearButton(
-                        icon: Icons.backpack,
-                        label: 'INVENTARIO',
-                        onTap: () => openInventory(context),
-                      ),
-                    ],
-                  ),
+                  child: Center(child: KnightView(character: c, height: 300)),
                 ),
                 const SizedBox(height: 8),
                 Text(c.name.toUpperCase(), style: titleStyle(size: 22, spacing: 4)),
@@ -86,6 +72,19 @@ class HomeTab extends StatelessWidget {
               ],
             ),
           ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _GearButton(icon: Icons.shield, label: 'ARMERIA', onTap: () => openEquipment(context)),
+            const SizedBox(width: 12),
+            _GearButton(
+              icon: Icons.backpack,
+              label: 'INVENTARIO',
+              onTap: () => openInventory(context),
+            ),
+          ],
         ),
         const SectionTitle('Abilità'),
         _SkillRows(progress: s.skillProgressOf),
@@ -152,8 +151,9 @@ class HomeTab extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   FilledButton(
-                    onPressed: () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_) => const QuestScreen())),
+                    onPressed: () =>
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) => const QuestScreen())),
                     child: Text(s.questComplete ? 'QUEST COMPLETATA' : 'CONTINUA LA QUEST'),
                   ),
                   if (s.questComplete)
@@ -199,7 +199,7 @@ class HomeTab extends StatelessWidget {
   }
 }
 
-/// Pulsante d'oro sul lato destro del riquadro del personaggio.
+/// Pulsante d'oro sotto la scheda del personaggio.
 class _GearButton extends StatelessWidget {
   const _GearButton({required this.icon, required this.label, required this.onTap});
   final IconData icon;
@@ -218,23 +218,22 @@ class _GearButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: SizedBox(
-          width: 74,
-          height: 70,
-          child: Column(
+          width: 148,
+          height: 46,
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Palette.night, size: 26),
-              const SizedBox(height: 3),
-              FittedBox(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
+              Icon(icon, color: Palette.night, size: 20),
+              const SizedBox(width: 6),
+              Flexible(
+                child: FittedBox(
                   child: Text(
                     label,
                     style: const TextStyle(
                       color: Palette.night,
                       fontWeight: FontWeight.bold,
-                      fontSize: 11,
-                      letterSpacing: 0.6,
+                      fontSize: 13,
+                      letterSpacing: 0.8,
                     ),
                   ),
                 ),
@@ -260,18 +259,18 @@ class _SkillRows extends StatelessWidget {
       builder: (context, box) {
         final w = (box.maxWidth - gap * (Skill.crafts.length - 1)) / Skill.crafts.length;
         Widget row(List<Skill> skills) => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (final (i, k) in skills.indexed) ...[
-                  if (i > 0) const SizedBox(width: gap),
-                  SizedBox(
-                    width: w,
-                    height: 86,
-                    child: _SkillTile(skill: k, progress: progress(k)),
-                  ),
-                ],
-              ],
-            );
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (final (i, k) in skills.indexed) ...[
+              if (i > 0) const SizedBox(width: gap),
+              SizedBox(
+                width: w,
+                height: 86,
+                child: _SkillTile(skill: k, progress: progress(k)),
+              ),
+            ],
+          ],
+        );
         return Column(
           children: [
             row(Skill.combatSkills),
@@ -324,8 +323,9 @@ class _AttributePanelState extends State<_AttributePanel> {
                   style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold),
                 )
               : TextButton(
-                  onPressed: () => Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => const AttributesScreen())),
+                  onPressed: () =>
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => const AttributesScreen())),
                   child: const Text('Perk e record'),
                 ),
         ),
@@ -381,16 +381,16 @@ class _AttributePanelState extends State<_AttributePanel> {
 }
 
 IconData skillIcon(Skill k) => switch (k) {
-      Skill.attack => Icons.gavel,
-      Skill.defense => Icons.shield_outlined,
-      Skill.magic => Icons.auto_fix_high,
-      Skill.expeditions => Icons.explore,
-      Skill.woodcutting => Icons.forest,
-      Skill.mining => Icons.landscape,
-      Skill.carpentry => Icons.carpenter,
-      Skill.smelting => Icons.local_fire_department,
-      Skill.smithing => Icons.hardware,
-    };
+  Skill.attack => Icons.gavel,
+  Skill.defense => Icons.shield_outlined,
+  Skill.magic => Icons.auto_fix_high,
+  Skill.expeditions => Icons.explore,
+  Skill.woodcutting => Icons.forest,
+  Skill.mining => Icons.landscape,
+  Skill.carpentry => Icons.carpenter,
+  Skill.smelting => Icons.local_fire_department,
+  Skill.smithing => Icons.hardware,
+};
 
 class _SkillTile extends StatelessWidget {
   const _SkillTile({required this.skill, required this.progress});
@@ -441,10 +441,10 @@ class _AttrTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget step(IconData icon, VoidCallback? onTap) => InkResponse(
-          onTap: onTap,
-          radius: 18,
-          child: Icon(icon, size: 26, color: onTap == null ? Palette.iron : Palette.goldBright),
-        );
+      onTap: onTap,
+      radius: 18,
+      child: Icon(icon, size: 26, color: onTap == null ? Palette.iron : Palette.goldBright),
+    );
     return Card(
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(

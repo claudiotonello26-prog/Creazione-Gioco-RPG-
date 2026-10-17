@@ -143,40 +143,47 @@ void main() {
     await t.pumpAndSettle();
     await t.tap(find.widgetWithText(Tab, 'Arena'));
     await _shot(t, '16_training_arena');
-    final g = GuildService(
-      client: NakamaClient(ServerConfig.parse('127.0.0.1')!),
-      deviceId: 'x',
-      username: 'Aldric',
-    )
-      ..guild = Guild(
-          id: 'g', name: 'Ordine del Ferro', description: 'Mai saltare il giorno gambe', count: 4)
-      ..myState = 0
-      ..members = [
-        GuildMember(id: '', name: 'Aldric', state: 0, online: true),
-        GuildMember(id: 'b', name: 'Brenna', state: 1, online: true),
-        GuildMember(id: 'c', name: 'Corvo', state: 2, online: false),
-        GuildMember(id: 'd', name: 'Dario', state: 3, online: false),
-      ]
-      ..sessions = [
-        GuildSession(
-          matchId: 'm',
-          friendly: false,
-          exercise: ExerciseId.squat,
-          host: 'b',
-          hostName: 'Brenna',
-          size: 2,
-        ),
-      ]
-      ..challenges = [
-        Challenge(id: 'n', matchId: 'm2', exercise: ExerciseId.pushUp, from: 'Corvo'),
-      ];
+    final g =
+        GuildService(
+            client: NakamaClient(ServerConfig.parse('127.0.0.1')!),
+            deviceId: 'x',
+            username: 'Aldric',
+          )
+          ..guild = Guild(
+            id: 'g',
+            name: 'Ordine del Ferro',
+            description: 'Mai saltare il giorno gambe',
+            count: 4,
+          )
+          ..myState = 0
+          ..members = [
+            GuildMember(id: '', name: 'Aldric', state: 0, online: true),
+            GuildMember(id: 'b', name: 'Brenna', state: 1, online: true),
+            GuildMember(id: 'c', name: 'Corvo', state: 2, online: false),
+            GuildMember(id: 'd', name: 'Dario', state: 3, online: false),
+          ]
+          ..sessions = [
+            GuildSession(
+              matchId: 'm',
+              friendly: false,
+              exercise: ExerciseId.squat,
+              host: 'b',
+              hostName: 'Brenna',
+              size: 2,
+            ),
+          ]
+          ..challenges = [
+            Challenge(id: 'n', matchId: 'm2', exercise: ExerciseId.pushUp, from: 'Corvo'),
+          ];
     final nav = Navigator.of(t.element(find.byType(NavigationBar)));
-    nav.push(MaterialPageRoute<void>(
-      builder: (_) => Scaffold(
-        appBar: const OathBar(title: Text('GILDA'), accent: Sections.guild),
-        body: GuildTab(service: g),
+    nav.push(
+      MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          appBar: const OathBar(title: Text('GILDA'), accent: Sections.guild),
+          body: GuildTab(service: g),
+        ),
       ),
-    ));
+    );
     await _shot(t, '17_gilda');
     await t.drag(find.byType(ListView).last, const Offset(0, -700));
     await _shot(t, '18_gilda_membri');
@@ -305,7 +312,8 @@ void main() {
     nav.pop();
     await t.pumpAndSettle();
     nav.push(
-        MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.carpentry)));
+      MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.carpentry)),
+    );
     await _shot(t, '35_carpenteria');
     await t.tap(find.text('CREA').first);
     await t.pump();
@@ -313,11 +321,12 @@ void main() {
     await t.pump(const Duration(milliseconds: 1200));
     expect(find.text('ANNULLA'), findsOneWidget);
     await expectLater(
-        find.byType(MaterialApp), matchesGoldenFile('out/36_creazione_countdown.png'));
+      find.byType(MaterialApp),
+      matchesGoldenFile('out/36_creazione_countdown.png'),
+    );
     await t.tap(find.text('ANNULLA'));
     await t.pumpAndSettle();
   });
-
 
   testWidgets('personaggio disegnato', (t) async {
     _phone(t);
@@ -342,6 +351,15 @@ void main() {
     await t.pumpAndSettle();
     await t.tap(find.byType(GestureDetector).at(0));
     await _shot(t, '72_creazione_donna');
+    nav.pop();
+    st.character.look
+      ..female = true
+      ..style = 6;
+    for (final slot in [ArmorSlot.helm, ArmorSlot.chest, ArmorSlot.gloves, ArmorSlot.legs]) {
+      st.character.worn[slot] = 'gambeson';
+    }
+    st.notifyListeners();
+    await _shot(t, '73_home_giaco');
   });
 
   testWidgets('creazione personaggio e pausa tra esercizi', (t) async {
@@ -365,35 +383,41 @@ void main() {
     nav.pop();
     await t.pumpAndSettle();
     st.claimStepMilestones(4300);
-    nav.push(MaterialPageRoute<void>(
-      builder: (_) => Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 80, 16, 16),
-          child: Column(
-            children: [
-              StepsCard(onOpenGathering: () {}, debugSteps: 4300),
-              StepsCard(onOpenGathering: () {}, debugSteps: 10450),
-            ],
+    nav.push(
+      MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 80, 16, 16),
+            child: Column(
+              children: [
+                StepsCard(onOpenGathering: () {}, debugSteps: 4300),
+                StepsCard(onOpenGathering: () {}, debugSteps: 10450),
+              ],
+            ),
           ),
         ),
       ),
-    ));
+    );
     await _shot(t, '38_passi_home');
     nav.pop();
     await t.pumpAndSettle();
-    nav.push(MaterialPageRoute<void>(
-      builder: (_) => const RestScreen(
-        name: 'Crunch',
-        exercise: ExerciseId.crunch,
-        index: 2,
-        total: 4,
-        movePhone: true,
+    nav.push(
+      MaterialPageRoute<void>(
+        builder: (_) => const RestScreen(
+          name: 'Crunch',
+          exercise: ExerciseId.crunch,
+          index: 2,
+          total: 4,
+          movePhone: true,
+        ),
       ),
-    ));
+    );
     await t.pump();
     await t.pump(const Duration(milliseconds: 600));
     await expectLater(
-        find.byType(MaterialApp), matchesGoldenFile('out/37_pausa_sposta_telefono.png'));
+      find.byType(MaterialApp),
+      matchesGoldenFile('out/37_pausa_sposta_telefono.png'),
+    );
     nav.pop();
     await t.pump(const Duration(seconds: 1));
   });

@@ -77,7 +77,7 @@ class KnightView extends StatelessWidget {
       return SizedBox(
         height: height,
         width: height * 0.8,
-        child: HeroView(look: character.look, height: height, weapon: weapon),
+        child: HeroView(look: character.look, height: height, weapon: weapon, worn: character.worn),
       );
     }
     return SizedBox(
@@ -93,25 +93,30 @@ class KnightView extends StatelessWidget {
                       : Image.asset(path, fit: BoxFit.contain),
               ],
             )
-          : CustomPaint(
-              size: Size(height * 0.8, height),
-              painter: KnightPainter.of(character),
-            ),
+          : CustomPaint(size: Size(height * 0.8, height), painter: KnightPainter.of(character)),
     );
   }
 }
 
-
 /// Il personaggio disegnato (Gemini) a livelli: corpo, maglia e pantaloni
 /// colorabili, testa scelta (viso, capelli e barba), capelli e occhi
 /// colorabili. Tutti i PNG di un corpo hanno la stessa tela, già allineati.
-/// Per ora c'è solo senza armatura: con un pezzo addosso torna il disegno a
-/// vettori finché non arrivano gli strati delle armature.
+/// I pezzi d'armatura sono strati `armor_<id>_<posto>.png`; con l'elmo la
+/// testa usa `head_<n>_helm_<id>.png`, senza i capelli che uscirebbero.
+/// Se un pezzo indossato non ha ancora il suo strato (gli stivali possono
+/// mancare: restano quelli di base), torna il disegno a vettori.
 class HeroView extends StatelessWidget {
-  const HeroView({super.key, required this.look, required this.height, this.weapon});
+  const HeroView({
+    super.key,
+    required this.look,
+    required this.height,
+    this.weapon,
+    this.worn = const {},
+  });
   final Appearance look;
   final double height;
   final WeaponInstance? weapon;
+  final Map<ArmorSlot, String> worn;
 
   /// Proporzioni della tela dei PNG.
   static const double aspect = 645 / 1896;
@@ -123,11 +128,17 @@ class HeroView extends StatelessWidget {
   };
 
   static String dir(bool female) => 'assets/art/hero/${female ? 'f' : 'm'}';
-  static bool get available => Art.has('${dir(false)}/body.png') && Art.has('${dir(true)}/body.png');
+  static bool get available =>
+      Art.has('${dir(false)}/body.png') && Art.has('${dir(true)}/body.png');
+
+  static String armorPath(bool female, ArmorSlot slot, String id) =>
+      '${dir(female)}/armor_${id}_${slot.name}.png';
 
   static bool canShow(Character c) =>
       available &&
-      ArmorSlot.values.every((s) => c.worn[s] == null) &&
+      c.worn.entries.every(
+        (e) => e.key == ArmorSlot.boots || Art.has(armorPath(c.look.female, e.key, e.value)),
+      ) &&
       c.cape == null &&
       c.offhand == null;
 
@@ -146,47 +157,65 @@ class HeroView extends StatelessWidget {
       return img;
     }
 
+    String? armor(ArmorSlot slot) {
+      final id = worn[slot];
+      if (id == null) return null;
+      final p = armorPath(look.female, slot, id);
+      return Art.has(p) ? p.substring(d.length + 1, p.length - 4) : null;
+    }
+
+    final helm = armor(ArmorSlot.helm);
+    final helmId = worn[ArmorSlot.helm];
+    final hidden = helm != null && Art.has('$d/head_${k}_helm_$helmId.png') ? '_helm_$helmId' : '';
     final w = height * aspect;
     final layers = Stack(
       fit: StackFit.expand,
       children: [
         layer('body'),
-        if (look.shirt >= 0) layer('shirt', tint: look.shirtColor),
-        if (look.pants >= 0) layer('pants', tint: look.pantsColor),
-        layer('head_$k'),
-        if (look.hair >= 0) layer('hair_$k', tint: look.hairColor),
+        // Sotto l'armatura i vestiti restano del colore originale: dalle
+        // fessure si vede la tela chiara, non una macchia di colore.
+        if (look.shirt >= 0 && armor(ArmorSlot.chest) == null)
+          layer('shirt', tint: look.shirtColor),
+        if (look.pants >= 0 && armor(ArmorSlot.legs) == null) layer('pants', tint: look.pantsColor),
+        for (final slot in [ArmorSlot.legs, ArmorSlot.boots, ArmorSlot.chest, ArmorSlot.gloves])
+          if (armor(slot) case final a?) layer(a),
+        layer('head_$k$hidden'),
+        if (look.hair >= 0) layer('hair_$k$hidden', tint: look.hairColor),
         if (look.eyes >= 0) layer('eyes_$k', tint: look.eyeColor, opacity: 0.8),
+        if (helm != null) layer(helm),
       ],
     );
-    return LayoutBuilder(builder: (context, box) {
-      final bw = box.maxWidth.isFinite ? box.maxWidth : w;
-      final left = (bw - w) / 2;
-      final (right, leftFist) = _fists[look.female]!;
-      return Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(left: left, top: 0, width: w, height: height, child: layers),
-          if (weapon != null)
-            Positioned.fill(
-              child: CustomPaint(
-                painter: _HeroWeapon(
-                  weapon!,
-                  Offset(left + right.dx * w, right.dy * height),
-                  Offset(left + leftFist.dx * w, leftFist.dy * height),
-                  height,
+    return LayoutBuilder(
+      builder: (context, box) {
+        final bw = box.maxWidth.isFinite ? box.maxWidth : w;
+        final left = (bw - w) / 2;
+        final (right, leftFist) = _fists[look.female]!;
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(left: left, top: 0, width: w, height: height, child: layers),
+            if (weapon != null)
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _HeroWeapon(
+                    weapon!,
+                    Offset(left + right.dx * w, right.dy * height),
+                    Offset(left + leftFist.dx * w, leftFist.dy * height),
+                    height,
+                  ),
                 ),
               ),
-            ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 }
 
 /// L'arma del disegno a vettori, spostata nel pugno del personaggio disegnato.
 class _HeroWeapon extends KnightPainter {
   _HeroWeapon(WeaponInstance w, this.rightFist, this.leftFist, this.figure)
-      : super(weapon: w, armorLook: -1);
+    : super(weapon: w, armorLook: -1);
   final Offset rightFist;
   final Offset leftFist;
   final double figure;
@@ -225,22 +254,28 @@ class _TintedWeapon extends StatelessWidget {
     Widget img = Image.asset(path, fit: BoxFit.contain);
     if (tier == 0) return img;
     img = ColorFiltered(
-      colorFilter:
-          ColorFilter.mode(color.withValues(alpha: [0.0, 0.35, 0.6, 0.7][tier]), BlendMode.srcATop),
+      colorFilter: ColorFilter.mode(
+        color.withValues(alpha: [0.0, 0.35, 0.6, 0.7][tier]),
+        BlendMode.srcATop,
+      ),
       child: img,
     );
-    return Stack(fit: StackFit.expand, children: [
-      ImageFiltered(
-        imageFilter: ImageFilter.blur(sigmaX: tier * 5.0, sigmaY: tier * 5.0),
-        child: ColorFiltered(
-          colorFilter: ColorFilter.mode(
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ImageFiltered(
+          imageFilter: ImageFilter.blur(sigmaX: tier * 5.0, sigmaY: tier * 5.0),
+          child: ColorFiltered(
+            colorFilter: ColorFilter.mode(
               (weapon.aura ?? Affinity.fire).glow.withValues(alpha: [0.0, 0.4, 0.7, 1.0][tier]),
-              BlendMode.srcIn),
-          child: Image.asset(path, fit: BoxFit.contain),
+              BlendMode.srcIn,
+            ),
+            child: Image.asset(path, fit: BoxFit.contain),
+          ),
         ),
-      ),
-      img,
-    ]);
+        img,
+      ],
+    );
   }
 }
 
@@ -255,24 +290,24 @@ class KnightPainter extends CustomPainter {
     int? capeColor,
     this.offhand,
     Appearance? look,
-  })  : look = look ?? Appearance(),
-        helmLook = helmLook ?? armorLook,
-        legsLook = legsLook ?? armorLook,
-        glovesLook = glovesLook ?? armorLook,
-        bootsLook = bootsLook ?? legsLook ?? armorLook,
-        capeColor = capeColor ?? (armorLook >= 0 ? 0xFF4A1612 : null);
+  }) : look = look ?? Appearance(),
+       helmLook = helmLook ?? armorLook,
+       legsLook = legsLook ?? armorLook,
+       glovesLook = glovesLook ?? armorLook,
+       bootsLook = bootsLook ?? legsLook ?? armorLook,
+       capeColor = capeColor ?? (armorLook >= 0 ? 0xFF4A1612 : null);
 
   factory KnightPainter.of(Character c) => KnightPainter(
-        weapon: c.weapon,
-        armorLook: c.piece(ArmorSlot.chest)?.look ?? -1,
-        helmLook: c.piece(ArmorSlot.helm)?.look ?? -1,
-        legsLook: c.piece(ArmorSlot.legs)?.look ?? -1,
-        glovesLook: c.piece(ArmorSlot.gloves)?.look ?? -1,
-        bootsLook: c.piece(ArmorSlot.boots)?.look ?? -1,
-        capeColor: c.cape?.color ?? 0,
-        offhand: c.offhand,
-        look: c.look,
-      );
+    weapon: c.weapon,
+    armorLook: c.piece(ArmorSlot.chest)?.look ?? -1,
+    helmLook: c.piece(ArmorSlot.helm)?.look ?? -1,
+    legsLook: c.piece(ArmorSlot.legs)?.look ?? -1,
+    glovesLook: c.piece(ArmorSlot.gloves)?.look ?? -1,
+    bootsLook: c.piece(ArmorSlot.boots)?.look ?? -1,
+    capeColor: c.cape?.color ?? 0,
+    offhand: c.offhand,
+    look: c.look,
+  );
 
   final WeaponInstance weapon;
 
@@ -295,11 +330,11 @@ class KnightPainter extends CustomPainter {
   Color get _pants => Color(look.pantsColor);
 
   static Color _steelOf(int look) => switch (look) {
-        2 => const Color(0xFF9DA3AB),
-        1 => const Color(0xFF7D8288),
-        0 => const Color(0xFF6B5A44),
-        _ => const Color(0xFF4E4236),
-      };
+    2 => const Color(0xFF9DA3AB),
+    1 => const Color(0xFF7D8288),
+    0 => const Color(0xFF6B5A44),
+    _ => const Color(0xFF4E4236),
+  };
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -337,7 +372,7 @@ class KnightPainter extends CustomPainter {
           Color.lerp(c, Colors.black, 0.45)!,
           Color.lerp(c, Colors.white, 0.25)!,
           c,
-          Color.lerp(c, Colors.black, 0.55)!
+          Color.lerp(c, Colors.black, 0.55)!,
         ],
         stops: const [0, 0.35, 0.6, 1],
       ).createShader(r);
@@ -356,13 +391,14 @@ class KnightPainter extends CustomPainter {
         ..close();
       canvas.drawPath(cape, fill(Color(capeColor!)));
       canvas.drawPath(
-          cape,
-          Paint()
-            ..shader = const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0x00000000), Color(0x99000000)],
-            ).createShader(Rect.fromLTWH(0, h * 0.27, w, h * 0.66)));
+        cape,
+        Paint()
+          ..shader = const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0x00000000), Color(0x99000000)],
+          ).createShader(Rect.fromLTWH(0, h * 0.27, w, h * 0.66)),
+      );
     }
 
     // Gambe e schinieri.
@@ -376,16 +412,22 @@ class KnightPainter extends CustomPainter {
       // Stivali: cuoio senza armatura, gambiera e scarpa di metallo con.
       final boot = Rect.fromLTWH(r.left - w * 0.005, h * 0.84, r.width + w * 0.01, h * 0.065);
       if (bootsLook >= 0) {
-        canvas.drawRRect(RRect.fromRectAndRadius(boot, Radius.circular(w * 0.02)),
-            shade(boot, _steelOf(bootsLook)));
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(boot, Radius.circular(w * 0.02)),
+          shade(boot, _steelOf(bootsLook)),
+        );
       }
       canvas.drawRRect(
-          RRect.fromRectAndRadius(
-              Rect.fromLTWH(r.left - w * 0.01, h * 0.9, r.width + w * 0.03, h * 0.04),
-              Radius.circular(w * 0.02)),
-          fill(bootsLook < 0
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(r.left - w * 0.01, h * 0.9, r.width + w * 0.03, h * 0.04),
+          Radius.circular(w * 0.02),
+        ),
+        fill(
+          bootsLook < 0
               ? const Color(0xFF3A2A1A)
-              : Color.lerp(_steelOf(bootsLook), Colors.black, 0.45)!));
+              : Color.lerp(_steelOf(bootsLook), Colors.black, 0.45)!,
+        ),
+      );
     }
 
     // Busto.
@@ -410,7 +452,12 @@ class KnightPainter extends CustomPainter {
       for (var y = h * 0.29; y < h * 0.66; y += w * 0.025) {
         for (var x = cx - w * 0.2; x < cx + w * 0.2; x += w * 0.03) {
           canvas.drawArc(
-              Rect.fromCircle(center: Offset(x, y), radius: w * 0.014), 0, pi, false, ring);
+            Rect.fromCircle(center: Offset(x, y), radius: w * 0.014),
+            0,
+            pi,
+            false,
+            ring,
+          );
         }
       }
       canvas.restore();
@@ -424,7 +471,9 @@ class KnightPainter extends CustomPainter {
     canvas.drawPath(torso, line);
     // Cintura.
     canvas.drawRect(
-        Rect.fromLTWH(cx - w * 0.17, h * 0.555, w * 0.34, h * 0.03), fill(const Color(0xFF3A2A1A)));
+      Rect.fromLTWH(cx - w * 0.17, h * 0.555, w * 0.34, h * 0.03),
+      fill(const Color(0xFF3A2A1A)),
+    );
     canvas.drawRect(Rect.fromLTWH(cx - w * 0.025, h * 0.552, w * 0.05, h * 0.036), fill(trim));
 
     // Braccia e spallacci (senza armatura: maniche e avambracci nudi).
@@ -432,15 +481,22 @@ class KnightPainter extends CustomPainter {
       final arm = Rect.fromLTWH(cx + side * w * 0.235 - w * 0.055, h * 0.3, w * 0.11, h * 0.26);
       if (armorLook < 0) {
         canvas.drawRRect(
-            RRect.fromRectAndRadius(arm, Radius.circular(w * 0.04)), shade(arm, _skin));
+          RRect.fromRectAndRadius(arm, Radius.circular(w * 0.04)),
+          shade(arm, _skin),
+        );
         final sleeve = Rect.fromLTWH(arm.left, arm.top, arm.width, arm.height * 0.45);
         canvas.drawRRect(
-            RRect.fromRectAndRadius(sleeve, Radius.circular(w * 0.04)), shade(sleeve, _shirt));
+          RRect.fromRectAndRadius(sleeve, Radius.circular(w * 0.04)),
+          shade(sleeve, _shirt),
+        );
         continue;
       }
       canvas.drawRRect(RRect.fromRectAndRadius(arm, Radius.circular(w * 0.04)), shade(arm, steel));
       final pauldron = Rect.fromCenter(
-          center: Offset(cx + side * w * 0.215, h * 0.3), width: w * 0.2, height: h * 0.1);
+        center: Offset(cx + side * w * 0.215, h * 0.3),
+        width: w * 0.2,
+        height: h * 0.1,
+      );
       canvas.drawOval(pauldron, shade(pauldron, steel));
       canvas.drawArc(pauldron, pi, pi, false, line);
     }
@@ -448,8 +504,10 @@ class KnightPainter extends CustomPainter {
     if (glovesLook >= 0) {
       for (final side in [-1, 1]) {
         final bracer = Rect.fromLTWH(cx + side * w * 0.235 - w * 0.06, h * 0.45, w * 0.12, h * 0.1);
-        canvas.drawRRect(RRect.fromRectAndRadius(bracer, Radius.circular(w * 0.03)),
-            shade(bracer, _steelOf(glovesLook)));
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(bracer, Radius.circular(w * 0.03)),
+          shade(bracer, _steelOf(glovesLook)),
+        );
         canvas.drawRRect(RRect.fromRectAndRadius(bracer, Radius.circular(w * 0.03)), line);
       }
     }
@@ -459,8 +517,11 @@ class KnightPainter extends CustomPainter {
 
     // Mani sul pomolo.
     for (final side in [-1, 1]) {
-      canvas.drawCircle(Offset(cx + side * w * 0.035, h * 0.555), w * 0.04,
-          fill(glovesLook < 0 ? _skin : Color.lerp(_steelOf(glovesLook), Colors.black, 0.4)!));
+      canvas.drawCircle(
+        Offset(cx + side * w * 0.035, h * 0.555),
+        w * 0.04,
+        fill(glovesLook < 0 ? _skin : Color.lerp(_steelOf(glovesLook), Colors.black, 0.4)!),
+      );
     }
 
     // Mano sinistra: scudo o seconda lama.
@@ -470,8 +531,13 @@ class KnightPainter extends CustomPainter {
     if (helmLook < 0) {
       _head(canvas, Offset(cx, h * 0.17), w * 0.2);
     } else {
-      _helm(canvas, Offset(cx, h * 0.17), w * 0.2, _steelOf(helmLook),
-          helmLook >= 2 ? Palette.goldBright : Palette.gold.withValues(alpha: 0.7));
+      _helm(
+        canvas,
+        Offset(cx, h * 0.17),
+        w * 0.2,
+        _steelOf(helmLook),
+        helmLook >= 2 ? Palette.goldBright : Palette.gold.withValues(alpha: 0.7),
+      );
     }
   }
 
@@ -485,37 +551,50 @@ class KnightPainter extends CustomPainter {
     final center = c.translate(0, r * 0.12);
     // Collo.
     canvas.drawRect(
-        Rect.fromCenter(center: center.translate(0, r * 0.95), width: r * 0.5, height: r * 0.6),
-        Paint()..color = shadow);
+      Rect.fromCenter(center: center.translate(0, r * 0.95), width: r * 0.5, height: r * 0.6),
+      Paint()..color = shadow,
+    );
     // Capelli lunghi dietro la testa.
     if (look.female) {
       canvas.drawRRect(
-          RRect.fromRectAndCorners(
-            Rect.fromCenter(center: center.translate(0, r * 0.45), width: r * 1.7, height: r * 2.1),
-            topLeft: Radius.circular(r * 0.85),
-            topRight: Radius.circular(r * 0.85),
-            bottomLeft: Radius.circular(r * 0.3),
-            bottomRight: Radius.circular(r * 0.3),
-          ),
-          Paint()..color = Color.lerp(hair, Colors.black, 0.2)!);
+        RRect.fromRectAndCorners(
+          Rect.fromCenter(center: center.translate(0, r * 0.45), width: r * 1.7, height: r * 2.1),
+          topLeft: Radius.circular(r * 0.85),
+          topRight: Radius.circular(r * 0.85),
+          bottomLeft: Radius.circular(r * 0.3),
+          bottomRight: Radius.circular(r * 0.3),
+        ),
+        Paint()..color = Color.lerp(hair, Colors.black, 0.2)!,
+      );
     }
     final face = Path();
     switch (look.face % Appearance.faces) {
       case 0:
         face.addOval(Rect.fromCenter(center: center, width: r * 1.3, height: r * 1.65));
       case 1:
-        face.addRRect(RRect.fromRectAndRadius(
+        face.addRRect(
+          RRect.fromRectAndRadius(
             Rect.fromCenter(center: center, width: r * 1.38, height: r * 1.6),
-            Radius.circular(r * 0.35)));
+            Radius.circular(r * 0.35),
+          ),
+        );
       case 2:
         face.addOval(Rect.fromCenter(center: center, width: r * 1.5, height: r * 1.55));
       default:
         face
           ..moveTo(center.dx - r * 0.66, center.dy - r * 0.35)
           ..quadraticBezierTo(
-              center.dx - r * 0.66, center.dy - r * 0.82, center.dx, center.dy - r * 0.82)
-          ..quadraticBezierTo(center.dx + r * 0.66, center.dy - r * 0.82, center.dx + r * 0.66,
-              center.dy - r * 0.35)
+            center.dx - r * 0.66,
+            center.dy - r * 0.82,
+            center.dx,
+            center.dy - r * 0.82,
+          )
+          ..quadraticBezierTo(
+            center.dx + r * 0.66,
+            center.dy - r * 0.82,
+            center.dx + r * 0.66,
+            center.dy - r * 0.35,
+          )
           ..lineTo(center.dx + r * 0.5, center.dy + r * 0.45)
           ..lineTo(center.dx, center.dy + r * 0.85)
           ..lineTo(center.dx - r * 0.5, center.dy + r * 0.45)
@@ -523,58 +602,81 @@ class KnightPainter extends CustomPainter {
     }
     final bounds = face.getBounds();
     canvas.drawPath(
-        face,
-        Paint()
-          ..shader =
-              LinearGradient(colors: [shadow, skin, skin, shadow], stops: const [0, 0.3, 0.7, 1])
-                  .createShader(bounds));
+      face,
+      Paint()
+        ..shader = LinearGradient(
+          colors: [shadow, skin, skin, shadow],
+          stops: const [0, 0.3, 0.7, 1],
+        ).createShader(bounds),
+    );
     // Barba sulla mascella, con la bocca libera.
     if (look.hasBeard) {
       canvas.save();
       canvas.clipPath(face);
       canvas.drawPath(
-          Path()
-            ..moveTo(bounds.left, center.dy + r * 0.05)
-            ..quadraticBezierTo(center.dx, center.dy + r * 0.3, bounds.right, center.dy + r * 0.05)
-            ..lineTo(bounds.right, bounds.bottom)
-            ..lineTo(bounds.left, bounds.bottom)
-            ..close(),
-          Paint()..color = beard);
+        Path()
+          ..moveTo(bounds.left, center.dy + r * 0.05)
+          ..quadraticBezierTo(center.dx, center.dy + r * 0.3, bounds.right, center.dy + r * 0.05)
+          ..lineTo(bounds.right, bounds.bottom)
+          ..lineTo(bounds.left, bounds.bottom)
+          ..close(),
+        Paint()..color = beard,
+      );
       canvas.restore();
     }
     // Occhi, sopracciglia e bocca.
     for (final side in [-1, 1]) {
       final e = center.translate(side * r * 0.28, -r * 0.08);
-      canvas.drawOval(Rect.fromCenter(center: e, width: r * 0.28, height: r * 0.15),
-          Paint()..color = const Color(0xFFF4EEE4));
+      canvas.drawOval(
+        Rect.fromCenter(center: e, width: r * 0.28, height: r * 0.15),
+        Paint()..color = const Color(0xFFF4EEE4),
+      );
       canvas.drawCircle(e, r * 0.065, Paint()..color = eye);
       canvas.drawCircle(e, r * 0.03, Paint()..color = Colors.black);
       canvas.drawLine(
-          e.translate(-r * 0.15, -r * 0.16 - (look.female ? r * 0.02 : 0)),
-          e.translate(r * 0.15, -r * 0.13),
-          Paint()
-            ..color = hair
-            ..strokeWidth = r * (look.female ? 0.04 : 0.07)
-            ..strokeCap = StrokeCap.round);
+        e.translate(-r * 0.15, -r * 0.16 - (look.female ? r * 0.02 : 0)),
+        e.translate(r * 0.15, -r * 0.13),
+        Paint()
+          ..color = hair
+          ..strokeWidth = r * (look.female ? 0.04 : 0.07)
+          ..strokeCap = StrokeCap.round,
+      );
     }
     canvas.drawLine(
-        center.translate(-r * 0.15, r * 0.4),
-        center.translate(r * 0.15, r * 0.4),
-        Paint()
-          ..color = Color.lerp(skin, const Color(0xFF7A2A20), 0.6)!
-          ..strokeWidth = r * 0.05
-          ..strokeCap = StrokeCap.round);
+      center.translate(-r * 0.15, r * 0.4),
+      center.translate(r * 0.15, r * 0.4),
+      Paint()
+        ..color = Color.lerp(skin, const Color(0xFF7A2A20), 0.6)!
+        ..strokeWidth = r * 0.05
+        ..strokeCap = StrokeCap.round,
+    );
     // Capelli sopra: calotta corta, più piena per i capelli lunghi.
     final top = Path()
       ..moveTo(bounds.left - r * 0.06, center.dy - r * 0.18)
       ..quadraticBezierTo(
-          bounds.left - r * 0.04, bounds.top - r * 0.22, center.dx, bounds.top - r * 0.2)
-      ..quadraticBezierTo(bounds.right + r * 0.04, bounds.top - r * 0.22, bounds.right + r * 0.06,
-          center.dy - r * 0.18)
+        bounds.left - r * 0.04,
+        bounds.top - r * 0.22,
+        center.dx,
+        bounds.top - r * 0.2,
+      )
       ..quadraticBezierTo(
-          center.dx + r * 0.3, bounds.top + r * 0.18, center.dx, bounds.top + r * 0.16)
+        bounds.right + r * 0.04,
+        bounds.top - r * 0.22,
+        bounds.right + r * 0.06,
+        center.dy - r * 0.18,
+      )
       ..quadraticBezierTo(
-          center.dx - r * 0.3, bounds.top + r * 0.18, bounds.left - r * 0.06, center.dy - r * 0.18)
+        center.dx + r * 0.3,
+        bounds.top + r * 0.18,
+        center.dx,
+        bounds.top + r * 0.16,
+      )
+      ..quadraticBezierTo(
+        center.dx - r * 0.3,
+        bounds.top + r * 0.18,
+        bounds.left - r * 0.06,
+        center.dy - r * 0.18,
+      )
       ..close();
     canvas.drawPath(top, Paint()..color = hair);
   }
@@ -597,24 +699,29 @@ class KnightPainter extends CustomPainter {
       }
       final r = shield.getBounds();
       canvas.drawPath(
-          shield,
-          Paint()
-            ..shader = LinearGradient(colors: [
+        shield,
+        Paint()
+          ..shader = LinearGradient(
+            colors: [
               Color.lerp(kite ? steel : const Color(0xFF6A4A2C), Colors.black, 0.4)!,
               kite ? steel : const Color(0xFF7A5634),
-            ]).createShader(r));
+            ],
+          ).createShader(r),
+      );
       canvas.drawPath(
-          shield,
-          Paint()
-            ..color = trim
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = w * 0.012);
+        shield,
+        Paint()
+          ..color = trim
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = w * 0.012,
+      );
       if (kite) {
         final cross = Paint()..color = const Color(0xFF9E2B25);
         canvas.drawRect(Rect.fromCenter(center: c, width: w * 0.03, height: h * 0.18), cross);
         canvas.drawRect(
-            Rect.fromCenter(center: c - Offset(0, h * 0.03), width: w * 0.14, height: h * 0.022),
-            cross);
+          Rect.fromCenter(center: c - Offset(0, h * 0.03), width: w * 0.14, height: h * 0.022),
+          cross,
+        );
       } else {
         canvas.drawCircle(c, w * 0.035, Paint()..color = Palette.gold);
       }
@@ -622,18 +729,23 @@ class KnightPainter extends CustomPainter {
       // Lama gemella, più corta, tenuta bassa a sinistra.
       final x = w * 0.18;
       canvas.drawPath(
-          Path()
-            ..moveTo(x - w * 0.02, h * 0.58)
-            ..lineTo(x + w * 0.02, h * 0.58)
-            ..lineTo(x + w * 0.02, h * 0.82)
-            ..lineTo(x, h * 0.87)
-            ..lineTo(x - w * 0.02, h * 0.82)
-            ..close(),
-          Paint()..color = const Color(0xFFB9BEC6));
-      canvas.drawRect(Rect.fromLTWH(x - w * 0.07, h * 0.57, w * 0.14, h * 0.016),
-          Paint()..color = Palette.gold);
-      canvas.drawRect(Rect.fromLTWH(x - w * 0.015, h * 0.51, w * 0.03, h * 0.06),
-          Paint()..color = const Color(0xFF3A2416));
+        Path()
+          ..moveTo(x - w * 0.02, h * 0.58)
+          ..lineTo(x + w * 0.02, h * 0.58)
+          ..lineTo(x + w * 0.02, h * 0.82)
+          ..lineTo(x, h * 0.87)
+          ..lineTo(x - w * 0.02, h * 0.82)
+          ..close(),
+        Paint()..color = const Color(0xFFB9BEC6),
+      );
+      canvas.drawRect(
+        Rect.fromLTWH(x - w * 0.07, h * 0.57, w * 0.14, h * 0.016),
+        Paint()..color = Palette.gold,
+      );
+      canvas.drawRect(
+        Rect.fromLTWH(x - w * 0.015, h * 0.51, w * 0.03, h * 0.06),
+        Paint()..color = const Color(0xFF3A2416),
+      );
     }
   }
 
@@ -642,22 +754,37 @@ class KnightPainter extends CustomPainter {
     final dome = Path()
       ..moveTo(c.dx, c.dy - r * 1.25)
       ..cubicTo(
-          c.dx + r * 0.25, c.dy - r * 0.9, c.dx + r * 0.95, c.dy - r * 0.75, c.dx + r * 0.95, c.dy)
+        c.dx + r * 0.25,
+        c.dy - r * 0.9,
+        c.dx + r * 0.95,
+        c.dy - r * 0.75,
+        c.dx + r * 0.95,
+        c.dy,
+      )
       ..lineTo(c.dx + r * 0.85, c.dy + r * 0.7)
       ..lineTo(c.dx, c.dy + r * 1.1)
       ..lineTo(c.dx - r * 0.85, c.dy + r * 0.7)
       ..lineTo(c.dx - r * 0.95, c.dy)
       ..cubicTo(
-          c.dx - r * 0.95, c.dy - r * 0.75, c.dx - r * 0.25, c.dy - r * 0.9, c.dx, c.dy - r * 1.25)
+        c.dx - r * 0.95,
+        c.dy - r * 0.75,
+        c.dx - r * 0.25,
+        c.dy - r * 0.9,
+        c.dx,
+        c.dy - r * 1.25,
+      )
       ..close();
     canvas.drawPath(
-        dome,
-        Paint()
-          ..shader = LinearGradient(colors: [
+      dome,
+      Paint()
+        ..shader = LinearGradient(
+          colors: [
             Color.lerp(steel, Colors.black, 0.4)!,
             Color.lerp(steel, Colors.white, 0.35)!,
             Color.lerp(steel, Colors.black, 0.5)!,
-          ]).createShader(rect));
+          ],
+        ).createShader(rect),
+    );
     final line = Paint()
       ..color = trim
       ..style = PaintingStyle.stroke
@@ -683,9 +810,10 @@ class KnightPainter extends CustomPainter {
       for (var i = 0; i < 3; i++) {
         for (var j = 0; j < 2; j++) {
           canvas.drawCircle(
-              Offset(c.dx + side * r * (0.22 + j * 0.18), c.dy + r * (0.42 + i * 0.16)),
-              r * 0.035,
-              Paint()..color = Colors.black.withValues(alpha: 0.7));
+            Offset(c.dx + side * r * (0.22 + j * 0.18), c.dy + r * (0.42 + i * 0.16)),
+            r * 0.035,
+            Paint()..color = Colors.black.withValues(alpha: 0.7),
+          );
         }
       }
     }
@@ -716,19 +844,23 @@ class KnightPainter extends CustomPainter {
         _aura(canvas, blade, aff, tier, w);
         canvas.drawPath(blade, metal);
         canvas.drawLine(
-            Offset(cx, h * 0.6),
-            Offset(cx, h * 0.93),
-            Paint()
-              ..color = Colors.white.withValues(alpha: 0.35)
-              ..strokeWidth = 1.2);
+          Offset(cx, h * 0.6),
+          Offset(cx, h * 0.93),
+          Paint()
+            ..color = Colors.white.withValues(alpha: 0.35)
+            ..strokeWidth = 1.2,
+        );
         canvas.drawRect(Rect.fromLTWH(cx - w * 0.13, h * 0.585, w * 0.26, h * 0.022), hilt);
         canvas.drawRect(Rect.fromLTWH(cx - w * 0.02, h * 0.5, w * 0.04, h * 0.085), grip);
         canvas.drawCircle(Offset(cx, h * 0.495), w * 0.028, hilt);
       case WeaponShape.hammer:
         blade = Path()
-          ..addRRect(RRect.fromRectAndRadius(
+          ..addRRect(
+            RRect.fromRectAndRadius(
               Rect.fromLTWH(cx - w * 0.12, h * 0.84, w * 0.24, h * 0.1),
-              Radius.circular(w * 0.02)));
+              Radius.circular(w * 0.02),
+            ),
+          );
         _aura(canvas, blade, aff, tier, w);
         canvas.drawRect(Rect.fromLTWH(cx - w * 0.02, h * 0.5, w * 0.04, h * 0.36), grip);
         canvas.drawPath(blade, metal);
@@ -740,12 +872,13 @@ class KnightPainter extends CustomPainter {
         _aura(canvas, blade, aff, tier, w);
         canvas.drawPath(blade, metal);
         canvas.drawCircle(
-            Offset(x, h * 0.18),
-            w * 0.06,
-            Paint()
-              ..color = Palette.gold
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 2);
+          Offset(x, h * 0.18),
+          w * 0.06,
+          Paint()
+            ..color = Palette.gold
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2,
+        );
       case WeaponShape.bow:
         final x = cx + w * 0.33;
         blade = Path()
@@ -759,11 +892,12 @@ class KnightPainter extends CustomPainter {
         _aura(canvas, blade, aff, tier, w, stroke: true);
         canvas.drawPath(blade, limb);
         canvas.drawLine(
-            Offset(x, h * 0.25),
-            Offset(x, h * 0.78),
-            Paint()
-              ..color = Palette.holy.withValues(alpha: 0.7)
-              ..strokeWidth = 1);
+          Offset(x, h * 0.25),
+          Offset(x, h * 0.78),
+          Paint()
+            ..color = Palette.holy.withValues(alpha: 0.7)
+            ..strokeWidth = 1,
+        );
     }
   }
 
@@ -801,48 +935,59 @@ class KnightPainter extends CustomPainter {
         for (var i = 0; i < 4; i++) {
           final y = b.top + b.height * (0.15 + i * 0.22);
           canvas.drawArc(
-              Rect.fromCenter(center: Offset(b.center.dx, y), width: b.width + 30, height: 12),
-              pi * 0.1,
-              pi * 1.3,
-              false,
-              accent);
+            Rect.fromCenter(center: Offset(b.center.dx, y), width: b.width + 30, height: 12),
+            pi * 0.1,
+            pi * 1.3,
+            false,
+            accent,
+          );
         }
       case Affinity.arcane:
         // Neon azzurro e puntini di luce, niente di più.
         canvas.drawPath(
-            shape,
-            Paint()
-              ..color = const Color(0xFF7FF4FF)
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 2);
+          shape,
+          Paint()
+            ..color = const Color(0xFF7FF4FF)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2,
+        );
         for (var i = 0; i < 14; i++) {
           final p = Offset(
-              b.left - 10 + rnd.nextDouble() * (b.width + 20), b.top + rnd.nextDouble() * b.height);
-          canvas.drawCircle(p, 1.2 + rnd.nextDouble() * 1.6,
-              Paint()..color = const Color(0xFF7FF4FF).withValues(alpha: 0.85));
+            b.left - 10 + rnd.nextDouble() * (b.width + 20),
+            b.top + rnd.nextDouble() * b.height,
+          );
+          canvas.drawCircle(
+            p,
+            1.2 + rnd.nextDouble() * 1.6,
+            Paint()..color = const Color(0xFF7FF4FF).withValues(alpha: 0.85),
+          );
         }
       case Affinity.holy:
         // Aura d'oro e qualche fulmine oro-azzurro, da divinità greca.
         for (var i = 0; i < 3; i++) {
           var p = Offset(
-              b.left + rnd.nextDouble() * b.width, b.top + rnd.nextDouble() * b.height * 0.3);
+            b.left + rnd.nextDouble() * b.width,
+            b.top + rnd.nextDouble() * b.height * 0.3,
+          );
           final bolt = Path()..moveTo(p.dx, p.dy);
           for (var k = 0; k < 5; k++) {
             p += Offset(rnd.nextDouble() * 16 - 8, b.height * 0.12);
             bolt.lineTo(p.dx, p.dy);
           }
           canvas.drawPath(
-              bolt,
-              Paint()
-                ..color = const Color(0xFFBFE6FF).withValues(alpha: 0.7)
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = 4
-                ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
+            bolt,
+            Paint()
+              ..color = const Color(0xFFBFE6FF).withValues(alpha: 0.7)
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 4
+              ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
+          );
           canvas.drawPath(
-              bolt,
-              accent
-                ..color = const Color(0xFFFFF4C2)
-                ..strokeWidth = 1.4);
+            bolt,
+            accent
+              ..color = const Color(0xFFFFF4C2)
+              ..strokeWidth = 1.4,
+          );
         }
     }
   }
@@ -898,7 +1043,7 @@ enum TrainerPose { crossed, pointing, cheering, facepalm, thinking, goofy }
 
 class TrainerPainter extends KnightPainter {
   TrainerPainter(this.pose)
-      : super(weapon: WeaponInstance(weaponId: 'pilgrim_blade'), armorLook: 2);
+    : super(weapon: WeaponInstance(weaponId: 'pilgrim_blade'), armorLook: 2);
   final TrainerPose pose;
 
   @override
@@ -913,11 +1058,13 @@ class TrainerPainter extends KnightPainter {
       ..strokeWidth = w * 0.012
       ..strokeJoin = StrokeJoin.round;
     Paint metal(Rect r) => Paint()
-      ..shader = LinearGradient(colors: [
-        Color.lerp(steel, Colors.black, 0.5)!,
-        Color.lerp(steel, Colors.white, 0.3)!,
-        Color.lerp(steel, Colors.black, 0.6)!,
-      ]).createShader(r);
+      ..shader = LinearGradient(
+        colors: [
+          Color.lerp(steel, Colors.black, 0.5)!,
+          Color.lerp(steel, Colors.white, 0.3)!,
+          Color.lerp(steel, Colors.black, 0.6)!,
+        ],
+      ).createShader(r);
 
     // Mantello logoro con collo di pelliccia.
     final cape = Path()
@@ -930,13 +1077,21 @@ class TrainerPainter extends KnightPainter {
     // Busto.
     final torso = Rect.fromLTWH(cx - w * 0.27, h * 0.33, w * 0.54, h * 0.67);
     canvas.drawRRect(
-        RRect.fromRectAndCorners(torso,
-            topLeft: Radius.circular(w * 0.1), topRight: Radius.circular(w * 0.1)),
-        metal(torso));
+      RRect.fromRectAndCorners(
+        torso,
+        topLeft: Radius.circular(w * 0.1),
+        topRight: Radius.circular(w * 0.1),
+      ),
+      metal(torso),
+    );
     canvas.drawRRect(
-        RRect.fromRectAndCorners(torso,
-            topLeft: Radius.circular(w * 0.1), topRight: Radius.circular(w * 0.1)),
-        line);
+      RRect.fromRectAndCorners(
+        torso,
+        topLeft: Radius.circular(w * 0.1),
+        topRight: Radius.circular(w * 0.1),
+      ),
+      line,
+    );
     // Croce sul petto.
     final cross = Paint()..color = const Color(0xFF7E1F1A);
     canvas.drawRect(Rect.fromLTWH(cx - w * 0.03, h * 0.42, w * 0.06, h * 0.3), cross);
@@ -944,12 +1099,17 @@ class TrainerPainter extends KnightPainter {
     // Spallacci.
     for (final side in [-1, 1]) {
       final p = Rect.fromCenter(
-          center: Offset(cx + side * w * 0.3, h * 0.38), width: w * 0.3, height: h * 0.16);
+        center: Offset(cx + side * w * 0.3, h * 0.38),
+        width: w * 0.3,
+        height: h * 0.16,
+      );
       canvas.drawOval(p, metal(p));
       canvas.drawArc(p, pi, pi, false, line);
     }
-    canvas.drawOval(Rect.fromCenter(center: Offset(cx, h * 0.32), width: w * 0.5, height: h * 0.09),
-        Paint()..color = const Color(0xFF4A3B2C));
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(cx, h * 0.32), width: w * 0.5, height: h * 0.09),
+      Paint()..color = const Color(0xFF4A3B2C),
+    );
 
     // Braccia secondo la posa.
     final arm = Paint()

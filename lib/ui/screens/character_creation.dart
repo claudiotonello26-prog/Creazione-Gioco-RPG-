@@ -19,8 +19,9 @@ class CharacterCreationScreen extends StatefulWidget {
 }
 
 class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
-  late final Appearance _look =
-      Appearance.fromJson(context.read<GameState>().character.look.toJson());
+  late final Appearance _look = Appearance.fromJson(
+    context.read<GameState>().character.look.toJson(),
+  );
 
   void _set(void Function() f) => setState(f);
 
@@ -40,10 +41,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
             child: Center(
               child: drawn
                   ? HeroView(look: look, height: 292)
-                  : CustomPaint(
-                      size: const Size(184, 230),
-                      painter: KnightPainter.of(preview),
-                    ),
+                  : CustomPaint(size: const Size(184, 230), painter: KnightPainter.of(preview)),
             ),
           ),
           Expanded(
@@ -173,8 +171,10 @@ class _Styles extends StatelessWidget {
               OneLine('ASPETTO', style: titleStyle(size: 12, spacing: 1.2)),
               const SizedBox(width: 10),
               Expanded(
-                child: OneLine(names[look.styleIndex],
-                    style: const TextStyle(color: Palette.ash, fontSize: 13)),
+                child: OneLine(
+                  names[look.styleIndex],
+                  style: const TextStyle(color: Palette.ash, fontSize: 13),
+                ),
               ),
             ],
           ),
@@ -200,7 +200,11 @@ class _Styles extends StatelessWidget {
                       ),
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: Image.asset('$dir/thumb_$i.png', fit: BoxFit.cover, gaplessPlayback: true),
+                    child: Image.asset(
+                      '$dir/thumb_$i.png',
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
+                    ),
                   ),
                 );
               },
@@ -255,23 +259,21 @@ class _Swatches extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget dot(int i, int color, {bool original = false}) => GestureDetector(
-          onTap: () => onPick(i),
-          child: Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: Color(color),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: i == selected ? Palette.goldBright : Palette.iron,
-                width: i == selected ? 3 : 1,
-              ),
-            ),
-            child: original
-                ? const Icon(Icons.auto_awesome, size: 14, color: Palette.holy)
-                : null,
+      onTap: () => onPick(i),
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: Color(color),
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: i == selected ? Palette.goldBright : Palette.iron,
+            width: i == selected ? 3 : 1,
           ),
-        );
+        ),
+        child: original ? const Icon(Icons.auto_awesome, size: 14, color: Palette.holy) : null,
+      ),
+    );
     return _Row(
       label: label,
       child: Wrap(
@@ -288,10 +290,14 @@ class _Swatches extends StatelessWidget {
 
 /// Apre la creazione del personaggio dalle impostazioni (per cambiare aspetto).
 void openCharacterCreation(BuildContext context) {
-  Navigator.of(context).push(MaterialPageRoute(
-    builder: (ctx) => CharacterCreationScreen(onDone: () {
-      Navigator.of(ctx).pop();
-      toast(ctx, 'Aspetto aggiornato.');
-    }),
-  ));
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (ctx) => CharacterCreationScreen(
+        onDone: () {
+          Navigator.of(ctx).pop();
+          toast(ctx, 'Aspetto aggiornato.');
+        },
+      ),
+    ),
+  );
 }
