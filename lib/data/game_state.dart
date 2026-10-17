@@ -48,6 +48,9 @@ class DailyState {
   /// Passi di oggi già trasformati in materiali.
   int claimedSteps = 0;
 
+  /// Traguardi di passi di oggi già riscattati (0-4).
+  int stepMilestones = 0;
+
   /// Rep fatte oggi in combattimento per gruppo muscolare (fatica).
   final Map<MuscleGroup, int> combatReps = {};
 
@@ -72,6 +75,7 @@ class DailyState {
         'xp': xpEarned,
         'good': goodForm,
         'steps': claimedSteps,
+        'smile': stepMilestones,
         'combat': {for (final e in combatReps.entries) e.key.name: e.value},
         'path': {for (final e in pathDone.entries) e.key.name: e.value},
         'map': expeditionStep,
@@ -84,7 +88,8 @@ class DailyState {
       ..expeditionDone = j['exp'] as bool
       ..xpEarned = j['xp'] as int
       ..goodForm = j['good'] as bool? ?? true
-      ..claimedSteps = j['steps'] as int? ?? 0;
+      ..claimedSteps = j['steps'] as int? ?? 0
+      ..stepMilestones = j['smile'] as int? ?? 0;
     (j['quest'] as Map).forEach(
       (k, v) => d.questDone[ExerciseId.values.byName(k as String)] = v as int,
     );
@@ -878,6 +883,28 @@ class GameState extends ChangeNotifier {
     if (!canGather(r)) return;
     gatherTarget = id;
     _changed();
+  }
+
+  /// Traguardi raggiunti ma non ancora riscattati.
+  int pendingStepMilestones(int stepsToday) {
+    _rollDay();
+    return stepMilestones.where((m) => stepsToday >= m).length - daily.stepMilestones;
+  }
+
+  /// Riscatta i traguardi di passi raggiunti oggi: ritorna le rune date.
+  int claimStepMilestones(int stepsToday) {
+    _rollDay();
+    var runes = 0;
+    while (daily.stepMilestones < stepMilestones.length &&
+        stepsToday >= stepMilestones[daily.stepMilestones]) {
+      runes += stepMilestoneRunes(daily.stepMilestones);
+      daily.stepMilestones++;
+    }
+    if (runes > 0) {
+      character.runes += runes;
+      _changed();
+    }
+    return runes;
   }
 
   /// I passi nuovi di oggi vanno nella raccolta scelta: ogni [Resource.stepsPerUnit]

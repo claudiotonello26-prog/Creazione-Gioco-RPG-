@@ -111,7 +111,7 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
           children: [
             Center(
               child: _StepRing(
-                steps: steps,
+                steps: fresh + s.stepBank,
                 goal: target.stepsPerUnit,
                 progress: ((fresh + s.stepBank) % target.stepsPerUnit) / target.stepsPerUnit,
                 known: _steps != null,
@@ -269,7 +269,7 @@ class _StepRing extends StatelessWidget {
             children: [
               const Icon(Icons.directions_walk, color: Palette.gold, size: 28),
               Text(known ? '$steps' : '—', style: titleStyle(size: 34, color: Palette.holy)),
-              const Text('passi oggi', style: TextStyle(color: Palette.ash)),
+              const Text('da consumare', style: TextStyle(color: Palette.ash)),
             ],
           ),
         ),

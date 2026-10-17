@@ -27,6 +27,7 @@ import 'package:iron_oath/ui/screens/guide_screen.dart';
 import 'package:iron_oath/ui/screens/quest_screen.dart';
 import 'package:iron_oath/ui/screens/character_creation.dart';
 import 'package:iron_oath/ui/screens/rest_screen.dart';
+import 'package:iron_oath/ui/screens/steps_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFont(String family, List<String> paths) async {
@@ -275,6 +276,23 @@ void main() {
     await t.tap(find.text('DONNA'));
     await t.pumpAndSettle();
     await _shot(t, '03b_creazione_donna');
+    nav.pop();
+    await t.pumpAndSettle();
+    st.claimStepMilestones(4300);
+    nav.push(MaterialPageRoute<void>(
+      builder: (_) => Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 80, 16, 16),
+          child: Column(
+            children: [
+              StepsCard(onOpenGathering: () {}, debugSteps: 4300),
+              StepsCard(onOpenGathering: () {}, debugSteps: 10450),
+            ],
+          ),
+        ),
+      ),
+    ));
+    await _shot(t, '38_passi_home');
     nav.pop();
     await t.pumpAndSettle();
     nav.push(MaterialPageRoute<void>(

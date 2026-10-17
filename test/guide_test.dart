@@ -78,4 +78,17 @@ void main() {
     expect(high['gale_silver'], 2);
     expect(high['steel_feather'], 1);
   });
+
+  test('traguardi di passi: 20 rune ciascuno, 26 a 10000, una volta al giorno', () async {
+    SharedPreferences.setMockInitialValues({});
+    final s = GameState();
+    await s.load();
+    final start = s.character.runes;
+    expect(s.pendingStepMilestones(1500), 0);
+    expect(s.claimStepMilestones(4500), 40);
+    expect(s.claimStepMilestones(4500), 0);
+    expect(s.pendingStepMilestones(12000), 2);
+    expect(s.claimStepMilestones(12000), 46);
+    expect(s.character.runes - start, 86);
+  });
 }

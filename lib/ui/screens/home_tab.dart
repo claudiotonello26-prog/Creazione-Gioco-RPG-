@@ -13,6 +13,7 @@ import 'novice_card.dart';
 import 'onboarding.dart';
 import 'progress_screen.dart';
 import 'quest_screen.dart';
+import 'steps_card.dart';
 import 'attributes_tab.dart';
 
 /// La schermata del personaggio: il cavaliere e i suoi numeri, i mestieri,
@@ -103,6 +104,7 @@ class HomeTab extends StatelessWidget {
         const SizedBox(height: 4),
         const _AttributePanel(),
         const SizedBox(height: 8),
+        StepsCard(onOpenGathering: () => onNavigate(2)),
         NoviceCard(onNavigate: onNavigate),
         if (!s.questComplete) ...[
           SectionTitle(

@@ -91,7 +91,15 @@ class GuideScreen extends StatelessWidget {
       Icons.directions_walk,
       'Raccolta',
       'I passi del giorno (da mezzanotte, fino a un massimo giornaliero) si spendono su una '
-          'risorsa: ogni tot passi un\'unità. Le risorse migliori chiedono livello e attrezzo.',
+          'risorsa: ogni tot passi un\'unità. La Raccolta mostra i passi ancora da consumare. '
+          'Le risorse migliori chiedono livello e attrezzo.',
+    ),
+    (
+      Icons.directions_run,
+      'Traguardi di passi',
+      'Nella Home vedi i passi totali di oggi. A 2.000, 4.000 e 6.000 passi ricevi 20 rune, '
+          'a 10.000 (l\'obiettivo consigliato) 26 rune. Si riscattano una volta al giorno e '
+          'sono a parte dalla quest giornaliera.',
     ),
     (
       Icons.blur_on,
