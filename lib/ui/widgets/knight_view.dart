@@ -499,18 +499,36 @@ class KnightPainter extends CustomPainter {
               pi * 0.1, pi * 1.3, false, accent);
         }
       case Affinity.arcane:
+        // Neon azzurro e puntini di luce, niente di più.
         canvas.drawPath(
             shape,
             Paint()
               ..color = const Color(0xFF7FF4FF)
               ..style = PaintingStyle.stroke
               ..strokeWidth = 2);
+        for (var i = 0; i < 14; i++) {
+          final p = Offset(b.left - 10 + rnd.nextDouble() * (b.width + 20),
+              b.top + rnd.nextDouble() * b.height);
+          canvas.drawCircle(p, 1.2 + rnd.nextDouble() * 1.6,
+              Paint()..color = const Color(0xFF7FF4FF).withValues(alpha: 0.85));
+        }
       case Affinity.holy:
-        for (var i = 0; i < 12; i++) {
-          final a = i * pi / 6;
-          final c = b.center;
-          canvas.drawLine(c + Offset(cos(a), sin(a)) * (b.shortestSide / 2 + 6),
-              c + Offset(cos(a), sin(a)) * (b.longestSide / 2 + 18), accent..strokeWidth = 1);
+        // Aura d'oro e qualche fulmine oro-azzurro, da divinità greca.
+        for (var i = 0; i < 3; i++) {
+          var p = Offset(b.left + rnd.nextDouble() * b.width, b.top + rnd.nextDouble() * b.height * 0.3);
+          final bolt = Path()..moveTo(p.dx, p.dy);
+          for (var k = 0; k < 5; k++) {
+            p += Offset(rnd.nextDouble() * 16 - 8, b.height * 0.12);
+            bolt.lineTo(p.dx, p.dy);
+          }
+          canvas.drawPath(
+              bolt,
+              Paint()
+                ..color = const Color(0xFFBFE6FF).withValues(alpha: 0.7)
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 4
+                ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
+          canvas.drawPath(bolt, accent..color = const Color(0xFFFFF4C2)..strokeWidth = 1.4);
         }
     }
   }
