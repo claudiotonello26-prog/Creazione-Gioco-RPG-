@@ -55,8 +55,21 @@ npm run build                 # compila src/ in build/index.js
 docker compose up -d          # Nakama + PostgreSQL sulla porta 7350
 ```
 
-In produzione imposta `POSTGRES_PASSWORD` e `NAKAMA_SERVER_KEY`, e metti
-davanti un proxy HTTPS (l'app accetta anche `https://dominio`).
+## Online (produzione)
+
+Su un server Linux nuovo (Ubuntu 24.04, 2 GB di RAM bastano), da root:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/claudiotonello26-prog/Creazione-Gioco-RPG-/main/server/deploy/install.sh | bash
+```
+
+Lo script installa Docker, scarica il codice, crea le password in
+`/opt/gym-oath/server/.env` e avvia Nakama, PostgreSQL e Caddy
+(`docker-compose.prod.yml`). Caddy prende da solo il certificato HTTPS:
+senza un dominio usa `<ip-con-trattini>.sslip.io`, che è gratis. Android
+accetta solo HTTPS, quindi nell'app va scritto `https://<host>`.
+Rilanciare lo script aggiorna il server all'ultimo codice del ramo
+(`BRANCH=altro-ramo` per usarne un altro).
 
 ## Test
 

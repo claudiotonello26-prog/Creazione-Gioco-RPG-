@@ -126,7 +126,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
       SectionBackdrop(
         art: 'guild',
         color: Sections.guild,
-        child: framed('Guild', Sections.guild, const GuildTab()),
+        child: const GuildTab(),
       ),
     ];
     return Scaffold(

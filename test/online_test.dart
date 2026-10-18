@@ -6,7 +6,9 @@ import 'package:iron_oath/domain/combat.dart';
 import 'package:iron_oath/domain/exercise.dart';
 import 'package:iron_oath/domain/pvp.dart';
 import 'package:iron_oath/online/arena_live.dart';
+import 'package:iron_oath/domain/character.dart';
 import 'package:iron_oath/online/guild_service.dart';
+import 'package:iron_oath/online/hero_card.dart';
 import 'package:iron_oath/online/nakama_client.dart';
 import 'package:iron_oath/pose/pose_frame.dart';
 import 'package:iron_oath/pose/rep_counter.dart';
@@ -121,9 +123,19 @@ void main() {
     final config = ServerConfig.parse(url!)!;
     final run = DateTime.now().millisecondsSinceEpoch;
     final a =
-        GuildService(client: NakamaClient(config), deviceId: 'gd-a-$run', username: 'gdA$run');
+        NakamaGuildService(
+          client: NakamaClient(config),
+          deviceId: 'gd-a-$run',
+          username: 'gdA$run',
+          me: () => HeroCard(name: 'gdA$run', level: 7),
+        );
     final b =
-        GuildService(client: NakamaClient(config), deviceId: 'gd-b-$run', username: 'gdB$run');
+        NakamaGuildService(
+          client: NakamaClient(config),
+          deviceId: 'gd-b-$run',
+          username: 'gdB$run',
+          me: () => HeroCard(name: 'gdB$run', level: 3, look: Appearance(female: true)),
+        );
     await b.refresh();
     expect(b.guild, isNull);
 
@@ -135,6 +147,13 @@ void main() {
     expect(b.guild!.id, a.guild!.id);
     expect(b.members.length, 2);
     expect(b.friends.single.state, 2, reason: 'B ha la richiesta d\'amicizia di A');
+    // Si vedono i cavalieri pubblicati, nella gilda e nella ricerca.
+    expect(b.members.firstWhere((m) => m.name == 'gdA$run').hero!.level, 7);
+    await a.searchPlayers('gdb$run');
+    expect(a.players.single.name, 'gdB$run');
+    expect(a.players.single.hero!.look.female, isTrue);
+    final inside = await b.preview(a.guild!);
+    expect(inside.map((m) => m.hero?.level).toSet(), {7, 3});
 
     // Sfida: B la trova tra le sfide ricevute.
     final duel = await a.openSession(ExerciseId.squat, opponent: b.myId);

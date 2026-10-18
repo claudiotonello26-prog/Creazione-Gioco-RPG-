@@ -161,6 +161,9 @@ class GameState extends ChangeNotifier {
   /// Identificativo anonimo del telefono per l'account online.
   String deviceId = '';
 
+  /// Gilda e amici di prova finché il server non c'è (LocalGuildService).
+  Map<String, dynamic> socialLocal = {};
+
   Map<ExerciseId, TestResult> test = {};
   DateTime? testDate;
   Map<ExerciseId, int> records = {};
@@ -275,6 +278,9 @@ class GameState extends ChangeNotifier {
     return List.generate(16, (_) => r.nextInt(256).toRadixString(16).padLeft(2, '0')).join();
   }
 
+  /// Salva la gilda di prova dopo che LocalGuildService l'ha cambiata.
+  void saveSocial() => _save();
+
   void setServerAddress(String value) {
     serverAddress = value.trim();
     _changed();
@@ -325,6 +331,7 @@ class GameState extends ChangeNotifier {
         'langPref': langPref.name,
         'server': serverAddress,
         'device': deviceId,
+        'social': socialLocal,
         'test': {for (final e in test.entries) e.key.name: e.value.toJson()},
         'testDate': testDate?.toIso8601String(),
         'records': {for (final e in records.entries) e.key.name: e.value},
@@ -377,6 +384,7 @@ class GameState extends ChangeNotifier {
     appLang = resolveLang(langPref);
     serverAddress = j['server'] as String? ?? '';
     deviceId = j['device'] as String? ?? '';
+    socialLocal = j['social'] is Map ? Map<String, dynamic>.from(j['social'] as Map) : {};
     test = {
       for (final e in (j['test'] as Map).entries)
         ExerciseId.values.byName(e.key as String): TestResult.fromJson(

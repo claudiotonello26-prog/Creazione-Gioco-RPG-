@@ -95,6 +95,7 @@ declare namespace nkruntime {
   interface User {
     userId: string;
     username: string;
+    online?: boolean;
   }
 
   interface UserGroupList {
@@ -132,6 +133,8 @@ declare namespace nkruntime {
     ): Match[];
     matchCreate(module: string, params?: { [key: string]: any }): string;
     storageRead(keys: StorageReadRequest[]): StorageObject[];
+    usersGetId(userIds: string[]): User[];
+    sqlQuery(query: string, parameters?: any[]): { [column: string]: any }[];
     storageWrite(objects: StorageWriteRequest[]): any;
     leaderboardCreate(
       id: string,
