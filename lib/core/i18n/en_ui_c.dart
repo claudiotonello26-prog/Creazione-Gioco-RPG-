@@ -277,4 +277,5 @@ const Map<String, String> enUiC = {
   'Guarda nella Guida cosa sblocca questo livello': 'Check the Guide to see what this level unlocks',
   'SEI SALITO DI LIVELLO': 'LEVEL UP',
   'MIGLIORATO': 'IMPROVED',
+  'A mani vuote': 'Empty-handed',
 };
