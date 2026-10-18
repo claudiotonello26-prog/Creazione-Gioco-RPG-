@@ -108,7 +108,7 @@ class KnightView extends StatelessWidget {
 /// colorabili, testa scelta (viso, capelli e barba), capelli e occhi
 /// colorabili. Tutti i PNG di un corpo hanno la stessa tela, già allineati.
 /// I pezzi d'armatura sono strati `armor_<id>_<posto>.png`; con l'elmo la
-/// testa usa `head_<n>_helm_<id>.png`, senza i capelli che uscirebbero.
+/// testa usa `head_<n>_helm.png`: niente capelli, restano barba e baffi.
 /// Un pezzo che non ha ancora il suo strato semplicemente non si vede:
 /// il personaggio disegnato resta lo stesso in tutte le schermate.
 class HeroView extends StatelessWidget {
@@ -179,7 +179,8 @@ class HeroView extends StatelessWidget {
 
     final helm = armor(ArmorSlot.helm);
     final helmId = worn[ArmorSlot.helm];
-    final hidden = helm != null && Art.has('$d/head_${k}_helm_$helmId.png') ? '_helm_$helmId' : '';
+    // Sotto qualsiasi elmo i capelli spariscono; restano barba e baffi.
+    final hidden = helm != null && Art.has('$d/head_${k}_helm.png') ? '_helm' : '';
     // L'elmo col camaglio copre tutta la testa e porta il suo viso.
     final fullHelm = helm != null && fullHelms.contains(helmId);
     final chestId = worn[ArmorSlot.chest];
@@ -200,13 +201,15 @@ class HeroView extends StatelessWidget {
       if (capeUnder && capeFront != null) (capeFront, null, 1),
       for (final slot in [ArmorSlot.chest, ArmorSlot.gloves])
         if (armor(slot) case final a?) (a, null, 1),
-      if (!capeUnder && capeFront != null) (capeFront, null, 1),
+      if (!capeUnder && !fullHelm && capeFront != null) (capeFront, null, 1),
       if (!fullHelm) ...[
         ('$d/head_$k$hidden.png', null, 1),
         if (look.hair >= 0) ('$d/hair_$k$hidden.png', look.hairColor, 1),
         if (look.eyes >= 0) ('$d/eyes_$k.png', look.eyeColor, 0.8),
       ],
       if (helm != null) (helm, null, 1),
+      // Il camaglio di maglia è ingombrante: il mantello gli passa sopra.
+      if (!capeUnder && fullHelm && capeFront != null) (capeFront, null, 1),
     ];
   }
 
