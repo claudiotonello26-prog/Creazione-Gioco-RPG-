@@ -10,6 +10,7 @@ import '../core/art.dart';
 import '../core/theme.dart';
 import '../domain/enemies.dart';
 import '../domain/items.dart';
+import '../ui/widgets/knight_view.dart' show HeroView;
 
 /// Scena del combattimento disegnata con Flame. Le figure sono silhouette
 /// vettoriali provvisorie, da sostituire con le illustrazioni 2D e le
@@ -20,6 +21,11 @@ class BattleGame extends FlameGame {
     required this.weaponTier,
     required this.style,
     this.heroLayers = const [],
+    this.heroTints = const [],
+    this.heroFist,
+    this.heroLeftFist,
+    this.heroSword,
+    this.heroShield,
     this.weaponTint,
   });
 
@@ -27,6 +33,17 @@ class BattleGame extends FlameGame {
 
   /// Strati del cavaliere in guardia (vuoto = figura vettoriale).
   final List<String> heroLayers;
+
+  /// Tinta di ogni strato (personaggio a livelli: capelli, occhi, vestiti).
+  final List<Color?> heroTints;
+
+  /// Pugno sulla tela del personaggio a livelli (0..1): lì va la spada.
+  final Offset? heroFist;
+  final Offset? heroLeftFist;
+
+  /// Spada e scudo dipinti del personaggio a livelli (null: spada a vettori).
+  final String? heroSword;
+  final String? heroShield;
 
   /// Colore della build che tinge l'arma dal +3 in su.
   final Color? weaponTint;
@@ -48,6 +65,8 @@ class BattleGame extends FlameGame {
     final heroSprites = [
       for (final p in heroLayers) await Sprite.load(p, images: images),
     ];
+    final sword = heroSword == null ? null : await Sprite.load(heroSword!, images: images);
+    final shield = heroShield == null ? null : await Sprite.load(heroShield!, images: images);
     final enemyArt = enemyArtPath(enemy);
     final enemySprite =
         Art.has(enemyArt) ? await Sprite.load(enemyArt, images: images) : null;
@@ -56,9 +75,16 @@ class BattleGame extends FlameGame {
       layers: heroSprites,
       weaponLayer: heroLayers.indexWhere((p) => p.contains('/weapon_')),
       weaponTint: weaponTint,
+      tints: heroTints,
+      fist: heroFist,
+      leftFist: heroLeftFist,
+      sword: sword,
+      shield: shield,
     )
       ..anchor = Anchor.bottomCenter
-      ..size = heroSprites.isEmpty ? Vector2(90, 150) : Vector2(176, 220)
+      ..size = heroSprites.isEmpty
+          ? Vector2(90, 150)
+          : (heroFist != null ? Vector2(120, 250) : Vector2(176, 220))
       ..position = Vector2(size.x * 0.25, size.y * 0.86);
     final scale = enemy.isBoss ? 1.7 : (1.0 + enemy.tier * 0.1);
     _enemy = _Enemy(enemy, sprite: enemySprite)
@@ -239,7 +265,13 @@ mixin _Flash on PositionComponent implements OpacityProvider {
 
   /// Disegna le illustrazioni: durante il lampo diventano del colore del
   /// colpo, come le figure vettoriali.
-  void renderSprites(Canvas canvas, List<Sprite> sprites, {int tinted = -1, Color? tint}) {
+  void renderSprites(
+    Canvas canvas,
+    List<Sprite> sprites, {
+    int tinted = -1,
+    Color? tint,
+    List<Color?> tints = const [],
+  }) {
     final flashing = _flashTime > 0 && _flashColor != null;
     for (var i = 0; i < sprites.length; i++) {
       final sp = sprites[i];
@@ -248,13 +280,18 @@ mixin _Flash on PositionComponent implements OpacityProvider {
       final d = sp.srcSize * k;
       final at = Vector2((size.x - d.x) / 2, size.y - d.y);
       final color = flashing ? _flashColor! : (i == tinted ? tint : null);
+      final modulate = flashing || i >= tints.length ? null : tints[i];
       sp.render(
         canvas,
         position: at,
         size: d,
-        overridePaint: color == null
-            ? null
-            : (Paint()..colorFilter = ColorFilter.mode(color, BlendMode.srcATop)),
+        overridePaint: color != null
+            ? (Paint()..colorFilter = ColorFilter.mode(color, BlendMode.srcATop))
+            : modulate != null
+                ? (Paint()
+                  ..colorFilter = ColorFilter.mode(modulate, BlendMode.modulate)
+                  ..color = Color.fromRGBO(0, 0, 0, modulate.a))
+                : null,
       );
     }
   }
@@ -265,16 +302,69 @@ String enemyArtPath(EnemyDef e) =>
     'assets/art/${e.isAnimal ? 'animals' : e.isBoss ? 'bosses' : 'enemies'}/${e.id}_idle.png';
 
 class _Hero extends PositionComponent with _Flash {
-  _Hero({required this.weaponTier, this.layers = const [], this.weaponLayer = -1, this.weaponTint});
+  _Hero({
+    required this.weaponTier,
+    this.layers = const [],
+    this.weaponLayer = -1,
+    this.weaponTint,
+    this.tints = const [],
+    this.fist,
+    this.leftFist,
+    this.sword,
+    this.shield,
+  });
   final int weaponTier;
+  final Offset? leftFist;
+  final Sprite? sword;
+  final Sprite? shield;
   final List<Sprite> layers;
   final int weaponLayer;
   final Color? weaponTint;
+  final List<Color?> tints;
+  final Offset? fist;
 
   @override
   void render(Canvas canvas) {
     if (layers.isNotEmpty) {
-      return renderSprites(canvas, layers, tinted: weaponLayer, tint: weaponTint);
+      renderSprites(canvas, layers, tinted: weaponLayer, tint: weaponTint, tints: tints);
+      if (fist case final f?) {
+        // Personaggio a livelli in posa rilassata: la spada esce dal pugno,
+        // puntata verso il nemico, finché non c'è la posa d'attacco.
+        final sp = layers.first;
+        final k = min(size.x / sp.srcSize.x, size.y / sp.srcSize.y);
+        final d = sp.srcSize * k;
+        Offset onCanvas(Offset p) => Offset((size.x - d.x) / 2 + p.dx * d.x, size.y - d.y + p.dy * d.y);
+        final at = onCanvas(f);
+        final px = d.y / 1896;
+        if (sword case final s?) {
+          // Spada dipinta alzata verso il nemico, il manico nel pugno.
+          canvas.save();
+          canvas.translate(at.dx, at.dy);
+          canvas.rotate(-145 * pi / 180);
+          s.render(
+            canvas,
+            position: Vector2(-HeroView.swordGrip.dx * px, -HeroView.swordGrip.dy * px),
+            size: Vector2(HeroView.swordSize.width * px, HeroView.swordSize.height * px),
+            overridePaint: _flashTime > 0 && _flashColor != null
+                ? (Paint()..colorFilter = ColorFilter.mode(_flashColor!, BlendMode.srcATop))
+                : weaponTint != null
+                    ? (Paint()..colorFilter = ColorFilter.mode(weaponTint!, BlendMode.srcATop))
+                    : null,
+          );
+          canvas.restore();
+        } else {
+          _blade(canvas, at, d.y * 0.42);
+        }
+        if ((shield, leftFist) case (final s?, final lf?)) {
+          final c = onCanvas(lf);
+          s.render(
+            canvas,
+            position: Vector2(c.dx - HeroView.shieldSize.width / 2 * px, c.dy - HeroView.shieldSize.height / 2 * px),
+            size: Vector2(HeroView.shieldSize.width * px, HeroView.shieldSize.height * px),
+          );
+        }
+      }
+      return;
     }
     final w = size.x, h = size.y;
     final body = Paint()..color = flashTint(const Color(0xFF4A423A));
@@ -328,6 +418,37 @@ class _Hero extends PositionComponent with _Flash {
         Paint()
           ..color = Palette.gold
           ..strokeWidth = 4);
+  }
+
+  void _blade(Canvas canvas, Offset grip, double len) {
+    final bladeColor = [Palette.ash, Palette.holy, Palette.goldBright, Palette.goldBright][weaponTier];
+    final tip = grip + Offset(len * 0.55, -len * 0.83);
+    if (weaponTier >= 2) {
+      canvas.drawLine(
+        grip,
+        tip,
+        Paint()
+          ..color = Palette.gold.withValues(alpha: 0.5)
+          ..strokeWidth = 10
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
+      );
+    }
+    canvas.drawLine(
+      grip,
+      tip,
+      Paint()
+        ..color = weaponTint ?? bladeColor
+        ..strokeWidth = 4
+        ..strokeCap = StrokeCap.round,
+    );
+    final guard = Offset(len * 0.1, len * 0.07);
+    canvas.drawLine(
+      grip + Offset(len * 0.04, -len * 0.06) - guard,
+      grip + Offset(len * 0.04, -len * 0.06) + guard,
+      Paint()
+        ..color = Palette.gold
+        ..strokeWidth = 3.5,
+    );
   }
 }
 

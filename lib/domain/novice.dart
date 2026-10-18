@@ -2,6 +2,7 @@
 /// volta, che insegnano il gioco come la quest iniziale di Gymscape.
 /// Dove porta il pulsante della missione.
 enum NoviceAction {
+  arm,
   fightGoblin,
   dailyQuest,
   walk,
@@ -48,6 +49,16 @@ class NoviceQuest {
 }
 
 const List<NoviceQuest> noviceQuests = [
+  NoviceQuest(
+    title: 'Armati',
+    goal: 'Prendi spada e scudo ed equipaggiali',
+    trainer: 'A mani nude non vai da nessuna parte. Tieni: la Lama del Pellegrino '
+        'e uno Scudo di Quercia. Non sono un granché, ma sono tuoi.',
+    stat: 'armed',
+    target: 1,
+    action: NoviceAction.arm,
+    runes: 20,
+  ),
   NoviceQuest(
     title: 'Primo sangue',
     goal: 'Batti il Goblin Svuotato a colpi di squat',

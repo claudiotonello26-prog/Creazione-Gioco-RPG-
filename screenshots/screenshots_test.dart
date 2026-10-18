@@ -18,6 +18,7 @@ import 'package:iron_oath/domain/progress.dart';
 import 'package:iron_oath/ui/widgets/exercise_demo.dart';
 import 'package:iron_oath/ui/screens/forge_tab.dart';
 import 'package:iron_oath/domain/items.dart';
+import 'package:iron_oath/domain/character.dart';
 import 'package:iron_oath/ui/screens/gear_screens.dart';
 import 'package:iron_oath/ui/screens/train_tab.dart';
 import 'package:iron_oath/ui/screens/expedition_map.dart';
@@ -29,6 +30,7 @@ import 'package:iron_oath/ui/screens/character_creation.dart';
 import 'package:iron_oath/ui/screens/rest_screen.dart';
 import 'package:iron_oath/ui/screens/steps_card.dart';
 import 'package:iron_oath/core/theme.dart';
+import 'package:iron_oath/core/art.dart';
 import 'package:iron_oath/online/guild_service.dart';
 import 'package:iron_oath/online/nakama_client.dart';
 import 'package:iron_oath/ui/screens/guild_tab.dart';
@@ -141,40 +143,47 @@ void main() {
     await t.pumpAndSettle();
     await t.tap(find.widgetWithText(Tab, 'Arena'));
     await _shot(t, '16_training_arena');
-    final g = GuildService(
-      client: NakamaClient(ServerConfig.parse('127.0.0.1')!),
-      deviceId: 'x',
-      username: 'Aldric',
-    )
-      ..guild = Guild(
-          id: 'g', name: 'Ordine del Ferro', description: 'Mai saltare il giorno gambe', count: 4)
-      ..myState = 0
-      ..members = [
-        GuildMember(id: '', name: 'Aldric', state: 0, online: true),
-        GuildMember(id: 'b', name: 'Brenna', state: 1, online: true),
-        GuildMember(id: 'c', name: 'Corvo', state: 2, online: false),
-        GuildMember(id: 'd', name: 'Dario', state: 3, online: false),
-      ]
-      ..sessions = [
-        GuildSession(
-          matchId: 'm',
-          friendly: false,
-          exercise: ExerciseId.squat,
-          host: 'b',
-          hostName: 'Brenna',
-          size: 2,
-        ),
-      ]
-      ..challenges = [
-        Challenge(id: 'n', matchId: 'm2', exercise: ExerciseId.pushUp, from: 'Corvo'),
-      ];
+    final g =
+        GuildService(
+            client: NakamaClient(ServerConfig.parse('127.0.0.1')!),
+            deviceId: 'x',
+            username: 'Aldric',
+          )
+          ..guild = Guild(
+            id: 'g',
+            name: 'Ordine del Ferro',
+            description: 'Mai saltare il giorno gambe',
+            count: 4,
+          )
+          ..myState = 0
+          ..members = [
+            GuildMember(id: '', name: 'Aldric', state: 0, online: true),
+            GuildMember(id: 'b', name: 'Brenna', state: 1, online: true),
+            GuildMember(id: 'c', name: 'Corvo', state: 2, online: false),
+            GuildMember(id: 'd', name: 'Dario', state: 3, online: false),
+          ]
+          ..sessions = [
+            GuildSession(
+              matchId: 'm',
+              friendly: false,
+              exercise: ExerciseId.squat,
+              host: 'b',
+              hostName: 'Brenna',
+              size: 2,
+            ),
+          ]
+          ..challenges = [
+            Challenge(id: 'n', matchId: 'm2', exercise: ExerciseId.pushUp, from: 'Corvo'),
+          ];
     final nav = Navigator.of(t.element(find.byType(NavigationBar)));
-    nav.push(MaterialPageRoute<void>(
-      builder: (_) => Scaffold(
-        appBar: const OathBar(title: Text('GILDA'), accent: Sections.guild),
-        body: GuildTab(service: g),
+    nav.push(
+      MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          appBar: const OathBar(title: Text('GILDA'), accent: Sections.guild),
+          body: GuildTab(service: g),
+        ),
       ),
-    ));
+    );
     await _shot(t, '17_gilda');
     await t.drag(find.byType(ListView).last, const Offset(0, -700));
     await _shot(t, '18_gilda_membri');
@@ -303,7 +312,8 @@ void main() {
     nav.pop();
     await t.pumpAndSettle();
     nav.push(
-        MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.carpentry)));
+      MaterialPageRoute<void>(builder: (_) => const StationScreen(station: Station.carpentry)),
+    );
     await _shot(t, '35_carpenteria');
     await t.tap(find.text('CREA').first);
     await t.pump();
@@ -311,9 +321,130 @@ void main() {
     await t.pump(const Duration(milliseconds: 1200));
     expect(find.text('ANNULLA'), findsOneWidget);
     await expectLater(
-        find.byType(MaterialApp), matchesGoldenFile('out/36_creazione_countdown.png'));
+      find.byType(MaterialApp),
+      matchesGoldenFile('out/36_creazione_countdown.png'),
+    );
     await t.tap(find.text('ANNULLA'));
     await t.pumpAndSettle();
+  });
+
+  testWidgets('personaggio disegnato', (t) async {
+    _phone(t);
+    final st = await _state();
+    st.trainerEnabled = false;
+    st.character.worn.clear();
+    st.character.capeId = null;
+    st.character.offhandId = null;
+    st.character.look
+      ..female = false
+      ..style = 4
+      ..hairStyle = 4
+      ..beardStyle = 4
+      ..hair = Appearance.natural
+      ..shirt = 2
+      ..pants = Appearance.natural;
+    await t.runAsync(Art.init);
+    await t.pumpWidget(IronOathApp(state: st));
+    await _shot(t, '70_home_personaggio');
+    final nav = Navigator.of(t.element(find.byType(NavigationBar)));
+    nav.push(MaterialPageRoute<void>(builder: (_) => CharacterCreationScreen(onDone: () {})));
+    await _shot(t, '71_creazione_uomo');
+    await t.tap(find.text('DONNA'));
+    await t.pumpAndSettle();
+    await t.tap(find.byType(GestureDetector).at(0));
+    await _shot(t, '72_creazione_donna');
+    nav.pop();
+    st.character.look
+      ..female = true
+      ..style = 6
+      ..hairStyle = 6
+      ..beardStyle = 6;
+    // Da qui in poi ha già fatto la prima missione: spada in mano.
+    st.character.armed = true;
+    for (final slot in [ArmorSlot.helm, ArmorSlot.chest, ArmorSlot.gloves, ArmorSlot.legs]) {
+      st.character.worn[slot] = 'gambeson';
+    }
+    st.notifyListeners();
+    await _shot(t, '73_home_giaco');
+    st.character.worn[ArmorSlot.boots] = 'gambeson';
+    st.notifyListeners();
+    await _shot(t, '74_home_giaco_stivali');
+    st.character.worn
+      ..clear()
+      ..[ArmorSlot.chest] = 'leather_armor'
+      ..[ArmorSlot.legs] = 'leather_armor'
+      ..[ArmorSlot.helm] = 'leather_armor';
+    st.character.look
+      ..female = false
+      ..style = 3
+      ..hairStyle = 3
+      ..beardStyle = 3;
+    st.notifyListeners();
+    await _shot(t, '75_home_cuoio');
+    for (final slot in [ArmorSlot.helm, ArmorSlot.chest, ArmorSlot.gloves, ArmorSlot.legs]) {
+      st.character.worn[slot] = 'chainmail';
+    }
+    st.notifyListeners();
+    await _shot(t, '76_home_maglia');
+    st.character.look
+      ..female = true
+      ..style = 7
+      ..hairStyle = 7
+      ..beardStyle = 7;
+    st.notifyListeners();
+    await _shot(t, '77_home_maglia_donna');
+    st.character.capeId = 'pilgrim_cape';
+    st.character.worn
+      ..clear()
+      ..[ArmorSlot.chest] = 'leather_armor'
+      ..[ArmorSlot.legs] = 'leather_armor';
+    st.notifyListeners();
+    await _shot(t, '78_home_mantello');
+    st.character.worn.clear();
+    st.character.look
+      ..female = false
+      ..style = 4
+      ..hairStyle = 4
+      ..beardStyle = 4;
+    st.notifyListeners();
+    await _shot(t, '79_home_mantello_uomo');
+    st.character.worn
+      ..[ArmorSlot.chest] = 'chainmail'
+      ..[ArmorSlot.helm] = 'chainmail';
+    st.notifyListeners();
+    await _shot(t, '80_mantello_maglia');
+    st.character.worn
+      ..clear()
+      ..[ArmorSlot.chest] = 'gambeson';
+    st.notifyListeners();
+    await _shot(t, '81_mantello_giaco');
+    // Viso, capelli e barba presi da teste diverse.
+    st.character.capeId = null;
+    st.character.worn.clear();
+    st.character.look
+      ..style = 1
+      ..hairStyle = 8
+      ..beardStyle = 4;
+    st.notifyListeners();
+    await _shot(t, '82_mix_uomo');
+    st.character.worn[ArmorSlot.helm] = 'leather_armor';
+    st.notifyListeners();
+    await _shot(t, '83_mix_uomo_elmo');
+    st.character.worn.clear();
+    st.character.look
+      ..female = true
+      ..style = 2
+      ..hairStyle = 4
+      ..hair = 3;
+    st.notifyListeners();
+    await _shot(t, '84_mix_donna');
+    st.character.offhandId = 'wooden_shield';
+    st.notifyListeners();
+    await _shot(t, '85_spada_scudo');
+    st.character.look.female = false;
+    st.character.worn[ArmorSlot.chest] = 'chainmail';
+    st.notifyListeners();
+    await _shot(t, '86_spada_scudo_uomo');
   });
 
   testWidgets('creazione personaggio e pausa tra esercizi', (t) async {
@@ -337,35 +468,41 @@ void main() {
     nav.pop();
     await t.pumpAndSettle();
     st.claimStepMilestones(4300);
-    nav.push(MaterialPageRoute<void>(
-      builder: (_) => Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 80, 16, 16),
-          child: Column(
-            children: [
-              StepsCard(onOpenGathering: () {}, debugSteps: 4300),
-              StepsCard(onOpenGathering: () {}, debugSteps: 10450),
-            ],
+    nav.push(
+      MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 80, 16, 16),
+            child: Column(
+              children: [
+                StepsCard(onOpenGathering: () {}, debugSteps: 4300),
+                StepsCard(onOpenGathering: () {}, debugSteps: 10450),
+              ],
+            ),
           ),
         ),
       ),
-    ));
+    );
     await _shot(t, '38_passi_home');
     nav.pop();
     await t.pumpAndSettle();
-    nav.push(MaterialPageRoute<void>(
-      builder: (_) => const RestScreen(
-        name: 'Crunch',
-        exercise: ExerciseId.crunch,
-        index: 2,
-        total: 4,
-        movePhone: true,
+    nav.push(
+      MaterialPageRoute<void>(
+        builder: (_) => const RestScreen(
+          name: 'Crunch',
+          exercise: ExerciseId.crunch,
+          index: 2,
+          total: 4,
+          movePhone: true,
+        ),
       ),
-    ));
+    );
     await t.pump();
     await t.pump(const Duration(milliseconds: 600));
     await expectLater(
-        find.byType(MaterialApp), matchesGoldenFile('out/37_pausa_sposta_telefono.png'));
+      find.byType(MaterialApp),
+      matchesGoldenFile('out/37_pausa_sposta_telefono.png'),
+    );
     nav.pop();
     await t.pump(const Duration(seconds: 1));
   });
