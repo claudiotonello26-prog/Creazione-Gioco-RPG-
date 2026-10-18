@@ -77,7 +77,13 @@ class KnightView extends StatelessWidget {
       return SizedBox(
         height: height,
         width: height * 0.8,
-        child: HeroView(look: character.look, height: height, weapon: weapon, worn: character.worn),
+        child: HeroView(
+          look: character.look,
+          height: height,
+          weapon: weapon,
+          worn: character.worn,
+          cape: character.capeId,
+        ),
       );
     }
     return SizedBox(
@@ -103,8 +109,8 @@ class KnightView extends StatelessWidget {
 /// colorabili. Tutti i PNG di un corpo hanno la stessa tela, già allineati.
 /// I pezzi d'armatura sono strati `armor_<id>_<posto>.png`; con l'elmo la
 /// testa usa `head_<n>_helm_<id>.png`, senza i capelli che uscirebbero.
-/// Se un pezzo indossato non ha ancora il suo strato (gli stivali possono
-/// mancare: restano quelli di base), torna il disegno a vettori.
+/// Un pezzo che non ha ancora il suo strato semplicemente non si vede:
+/// il personaggio disegnato resta lo stesso in tutte le schermate.
 class HeroView extends StatelessWidget {
   const HeroView({
     super.key,
@@ -112,11 +118,15 @@ class HeroView extends StatelessWidget {
     required this.height,
     this.weapon,
     this.worn = const {},
+    this.cape,
   });
   final Appearance look;
   final double height;
   final WeaponInstance? weapon;
   final Map<ArmorSlot, String> worn;
+
+  /// Id del mantello indossato (strati `cape_<id>_back` e `_front`).
+  final String? cape;
 
   /// Proporzioni della tela dei PNG.
   static const double aspect = 645 / 1896;
@@ -139,18 +149,21 @@ class HeroView extends StatelessWidget {
   static String armorPath(bool female, ArmorSlot slot, String id) =>
       '${dir(female)}/armor_${id}_${slot.name}.png';
 
-  static bool canShow(Character c) =>
-      available &&
-      c.worn.entries.every(
-        (e) => e.key == ArmorSlot.boots || Art.has(armorPath(c.look.female, e.key, e.value)),
-      ) &&
-      c.cape == null &&
-      c.offhand == null;
+  static bool canShow(Character c) => available;
 
   /// Strati dal basso verso l'alto: percorso, tinta (null = colori
   /// originali) e opacità. Li usano la Home e il combattimento.
-  static List<(String, int?, double)> layersOf(Appearance look, Map<ArmorSlot, String> worn) {
+  static List<(String, int?, double)> layersOf(
+    Appearance look,
+    Map<ArmorSlot, String> worn, {
+    String? cape,
+  }) {
     final d = dir(look.female);
+    String? capeLayer(String side) {
+      final p = '$d/cape_${cape}_$side.png';
+      return cape != null && Art.has(p) ? p : null;
+    }
+
     final k = look.styleIndex;
     String? armor(ArmorSlot slot) {
       final id = worn[slot];
@@ -165,6 +178,8 @@ class HeroView extends StatelessWidget {
     // L'elmo col camaglio copre tutta la testa e porta il suo viso.
     final fullHelm = helm != null && fullHelms.contains(helmId);
     return [
+      // Il mantello passa dietro al corpo e torna davanti sulle spalle.
+      if (capeLayer('back') case final c?) (c, null, 1),
       ('$d/body.png', null, 1),
       // Sotto l'armatura i vestiti restano del colore originale: dalle
       // fessure si vede la tela chiara, non una macchia di colore.
@@ -172,6 +187,7 @@ class HeroView extends StatelessWidget {
       if (look.pants >= 0 && armor(ArmorSlot.legs) == null) ('$d/pants.png', look.pantsColor, 1),
       for (final slot in [ArmorSlot.legs, ArmorSlot.boots, ArmorSlot.chest, ArmorSlot.gloves])
         if (armor(slot) case final a?) (a, null, 1),
+      if (capeLayer('front') case final c?) (c, null, 1),
       if (!fullHelm) ...[
         ('$d/head_$k$hidden.png', null, 1),
         if (look.hair >= 0) ('$d/hair_$k$hidden.png', look.hairColor, 1),
@@ -187,7 +203,7 @@ class HeroView extends StatelessWidget {
     final layers = Stack(
       fit: StackFit.expand,
       children: [
-        for (final (path, tint, opacity) in layersOf(look, worn))
+        for (final (path, tint, opacity) in layersOf(look, worn, cape: cape))
           Image.asset(
             path,
             fit: BoxFit.contain,

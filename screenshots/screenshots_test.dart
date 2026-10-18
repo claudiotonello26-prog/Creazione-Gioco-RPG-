@@ -383,6 +383,19 @@ void main() {
       ..style = 7;
     st.notifyListeners();
     await _shot(t, '77_home_maglia_donna');
+    st.character.capeId = 'pilgrim_cape';
+    st.character.worn
+      ..clear()
+      ..[ArmorSlot.chest] = 'leather_armor'
+      ..[ArmorSlot.legs] = 'leather_armor';
+    st.notifyListeners();
+    await _shot(t, '78_home_mantello');
+    st.character.worn.clear();
+    st.character.look
+      ..female = false
+      ..style = 4;
+    st.notifyListeners();
+    await _shot(t, '79_home_mantello_uomo');
   });
 
   testWidgets('creazione personaggio e pausa tra esercizi', (t) async {
