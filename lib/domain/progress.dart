@@ -9,6 +9,7 @@ library;
 
 import 'dart:math';
 
+import '../core/i18n.dart';
 import 'exercise.dart';
 
 enum BodyRegion {
@@ -16,8 +17,9 @@ enum BodyRegion {
   core('Core'),
   legs('Gambe');
 
-  const BodyRegion(this.label);
-  final String label;
+  const BodyRegion(this._label);
+  final String _label;
+  String get label => tr(_label);
 
   static BodyRegion? of(ExerciseId id, {MuscleGroup? group}) {
     if (group == MuscleGroup.push) return upper;
@@ -92,8 +94,9 @@ enum ProgressSpan {
   week('Settimana', 12),
   month('Mese', 12);
 
-  const ProgressSpan(this.label, this.buckets);
-  final String label;
+  const ProgressSpan(this._label, this.buckets);
+  final String _label;
+  String get label => tr(_label);
 
   /// Quanti periodi mostra il grafico.
   final int buckets;
@@ -117,6 +120,7 @@ String dayKeyOf(DateTime d) =>
 DateTime _parseDay(String k) => DateTime.parse(k);
 
 const _months = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+const _monthsEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 /// Periodi da mostrare, dal più vecchio a oggi.
 List<ProgressPoint> progressBuckets(DateTime now, ProgressSpan span) {
@@ -129,11 +133,15 @@ List<ProgressPoint> progressBuckets(DateTime now, ProgressSpan span) {
         out.add(ProgressPoint('${d.day}', d, d.add(const Duration(days: 1))));
       case ProgressSpan.week:
         final monday = today.subtract(Duration(days: today.weekday - 1 + 7 * i));
-        out.add(ProgressPoint('${monday.day}/${monday.month}', monday,
+        final label = appLang == Lang.it
+            ? '${monday.day}/${monday.month}'
+            : '${monday.month}/${monday.day}';
+        out.add(ProgressPoint(label, monday,
             monday.add(const Duration(days: 7))));
       case ProgressSpan.month:
         final m = DateTime(today.year, today.month - i);
-        out.add(ProgressPoint(_months[m.month - 1], m, DateTime(m.year, m.month + 1)));
+        final names = appLang == Lang.it ? _months : _monthsEn;
+        out.add(ProgressPoint(names[m.month - 1], m, DateTime(m.year, m.month + 1)));
     }
   }
   return out;
@@ -177,7 +185,12 @@ List<ProgressPoint> computeProgress(
 /// Riepilogo di un esercizio per la pagina di dettaglio.
 class ExerciseSummary {
   ExerciseSummary(this.name, this.trackAs);
+
+  /// Il nome come sta nello storico (italiano): è la chiave.
   final String name;
+
+  /// Il nome tradotto, da mostrare.
+  String get label => tr(name);
   final ExerciseId trackAs;
   int repsInPeriod = 0;
   int daysInPeriod = 0;

@@ -4,6 +4,8 @@
 /// "Sfide per gruppo muscolare".
 library;
 
+import '../core/i18n.dart';
+
 enum MuscleGroup {
   push('Spinta'),
   stretching('Stretching'),
@@ -12,8 +14,9 @@ enum MuscleGroup {
   cardio('Cardio'),
   mobility('Mobilità');
 
-  const MuscleGroup(this.label);
-  final String label;
+  const MuscleGroup(this._label);
+  final String _label;
+  String get label => tr(_label);
 
   /// Dai salvataggi: 'back' (Dorso e postura) è diventato Stretching.
   static MuscleGroup parse(String name) =>
@@ -59,8 +62,14 @@ extension ExerciseKind on ExerciseId {
 /// rep del test di [trackAs] che vale una serie normale: 0.5 = come la
 /// versione base, più basso = più duro.
 class Move {
-  const Move(this.name, this.trackAs, {this.ratio = 0.5});
-  final String name;
+  const Move(String name, this.trackAs, {this.ratio = 0.5}) : _name = name;
+  final String _name;
+
+  /// Il nome tradotto, da mostrare.
+  String get name => tr(_name);
+
+  /// Il nome italiano, come lo salva lo storico.
+  String get nameIt => _name;
   final ExerciseId trackAs;
   final double ratio;
 
@@ -71,9 +80,15 @@ class Move {
 }
 
 class ExerciseVariant {
-  const ExerciseVariant(this.name, {this.level = 0});
+  const ExerciseVariant(String name, {this.level = 0}) : _name = name;
 
-  final String name;
+  final String _name;
+
+  /// Il nome tradotto, da mostrare.
+  String get name => tr(_name);
+
+  /// Il nome italiano, come lo salva lo storico.
+  String get nameIt => _name;
 
   /// 0 = versione completa; numeri più alti = più facilitata.
   final int level;
@@ -82,7 +97,7 @@ class ExerciseVariant {
 class Exercise {
   const Exercise({
     required this.id,
-    required this.name,
+    required this._name,
     required this.group,
     required this.testMode,
     required this.variants,
@@ -90,7 +105,9 @@ class Exercise {
   });
 
   final ExerciseId id;
-  final String name;
+  final String _name;
+  String get name => tr(_name);
+  String get nameIt => _name;
   final MuscleGroup group;
   final TestMode testMode;
 

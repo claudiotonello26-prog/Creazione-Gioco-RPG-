@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/sound.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
@@ -57,7 +58,7 @@ class _StepsCardState extends State<StepsCard> with WidgetsBindingObserver {
     final runes = s.claimStepMilestones(_steps ?? 0);
     if (runes == 0) return;
     Sound.play(Sfx.questDone);
-    toast(context, '+$runes rune per i passi di oggi.');
+    toast(context, tr('+{runes} rune per i passi di oggi.', {'runes': runes}));
   }
 
   @override
@@ -80,10 +81,10 @@ class _StepsCardState extends State<StepsCard> with WidgetsBindingObserver {
                   const Icon(Icons.directions_walk, color: Palette.gold, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: OneLine('PASSI DI OGGI', style: titleStyle(size: 13, spacing: 1.6)),
+                    child: OneLine(tr('PASSI DI OGGI'), style: titleStyle(size: 13, spacing: 1.6)),
                   ),
                   Text(
-                    steps == null ? 'Collega i passi' : '${_fmt(steps)} / ${_fmt(top)}',
+                    steps == null ? tr('Collega i passi') : '${_fmt(steps)} / ${_fmt(top)}',
                     style: TextStyle(
                       color: steps == null ? Palette.ash : Palette.holy,
                       fontWeight: FontWeight.w600,
@@ -98,7 +99,7 @@ class _StepsCardState extends State<StepsCard> with WidgetsBindingObserver {
                 FilledButton(
                   onPressed: () => _claim(s),
                   child: OneLine(
-                    'RISCATTA +${_pendingRunes(claimed, pending)} RUNE',
+                    tr('RISCATTA +{runes} RUNE', {'runes': _pendingRunes(claimed, pending)}),
                     align: Alignment.center,
                   ),
                 ),
@@ -115,7 +116,7 @@ class _StepsCardState extends State<StepsCard> with WidgetsBindingObserver {
       ].fold(0, (a, b) => a + b);
 }
 
-String _fmt(int n) => n >= 1000 ? '${n ~/ 1000}.${(n % 1000).toString().padLeft(3, '0')}' : '$n';
+String _fmt(int n) => n >= 1000 ? '${n ~/ 1000}${appLang == Lang.it ? '.' : ','}${(n % 1000).toString().padLeft(3, '0')}' : '$n';
 
 /// Barra fino a 10000 con le quattro tappe: oro se riscattata, accesa se
 /// raggiunta, spenta se ancora da fare.

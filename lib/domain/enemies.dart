@@ -1,12 +1,16 @@
+// I nomi restano in italiano nel campo privato e si traducono nel getter.
+// ignore_for_file: prefer_initializing_formals
+
+import '../core/i18n.dart';
 import 'exercise.dart';
 import 'items.dart';
 
 class EnemyDef {
   const EnemyDef({
     required this.id,
-    required this.name,
+    required String name,
     required this.tier,
-    required this.region,
+    required String region,
     this.isBoss = false,
     this.isBeast = false,
     this.isAnimal = false,
@@ -19,7 +23,8 @@ class EnemyDef {
     required this.moves,
     required this.level,
     required this.group,
-  });
+  })  : _name = name,
+        _region = region;
 
   /// Con cosa lo si batte: se sono più d'uno, sceglie il giocatore (il boss
   /// li alterna).
@@ -33,11 +38,20 @@ class EnemyDef {
   final MuscleGroup group;
 
   final String id;
-  final String name;
+  final String _name;
+
+  /// Il nome base in italiano, senza «(Veterano)»: per confronti e chiavi.
+  String get nameIt => _name;
+
+  /// Il nome da mostrare, nella lingua corrente, con «(Veterano)» se serve.
+  String get name => isVeteran
+      ? tr('{name} (Veterano)', {'name': tr(_name)})
+      : tr(_name);
 
   /// Gradino 1–5: decide rep richieste, difesa e forza dei colpi.
   final int tier;
-  final String region;
+  final String _region;
+  String get region => tr(_region);
   final bool isBoss;
   final bool isBeast;
 
@@ -56,9 +70,9 @@ class EnemyDef {
   /// tappa, e da Veterano bottino ×1,5 e raro ×2.
   EnemyDef atStep(ExpeditionStep step) => EnemyDef(
         id: id,
-        name: step.veteran ? '$name (Veterano)' : name,
+        name: _name,
         tier: step.tier,
-        region: region,
+        region: _region,
         isBoss: isBoss,
         isBeast: isBeast,
         isAnimal: isAnimal,
@@ -1148,13 +1162,14 @@ class ExpeditionStep {
 /// loro probabilità. Zavorrato o con la chiave raddoppia entrambi.
 class Chest {
   const Chest({
-    required this.name,
+    required String name,
     required this.art,
     required this.runes,
     required this.guaranteed,
     required this.rares,
-  });
-  final String name;
+  }) : _name = name;
+  final String _name;
+  String get name => tr(_name);
   final String art;
   final int runes;
   final Map<String, int> guaranteed;
@@ -1165,24 +1180,27 @@ class Chest {
 class Expedition {
   const Expedition({
     required this.id,
-    required this.name,
+    required String name,
     required this.roman,
     required this.group,
     required this.level,
-    required this.blurb,
+    required String blurb,
     required this.steps,
     required this.bossId,
     required this.chest,
-  });
+  })  : _name = name,
+        _blurb = blurb;
 
   final String id;
-  final String name;
+  final String _name;
+  String get name => tr(_name);
   final String roman;
   final MuscleGroup group;
 
   /// Livello consigliato: sotto, senza l'equipaggiamento giusto, si muore.
   final int level;
-  final String blurb;
+  final String _blurb;
+  String get blurb => tr(_blurb);
   final List<ExpeditionStep> steps;
   final String bossId;
   final Chest chest;

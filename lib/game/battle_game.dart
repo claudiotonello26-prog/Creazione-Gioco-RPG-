@@ -7,6 +7,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/painting.dart' show TextStyle, FontWeight;
 
 import '../core/art.dart';
+import '../core/i18n.dart';
 import '../core/theme.dart';
 import '../domain/enemies.dart';
 import '../domain/items.dart';
@@ -91,8 +92,10 @@ class BattleGame extends FlameGame {
     }
     _enemy.flash(critical ? Palette.goldBright : Palette.holy);
     final text = bounced
-        ? 'RIMBALZA'
-        : (critical ? 'CRITICO ${(damage * 100).round()}' : '${(damage * 100).round()}');
+        ? tr('RIMBALZA')
+        : (critical
+            ? tr('CRITICO {n}', {'n': (damage * 100).round()})
+            : '${(damage * 100).round()}');
     _floating(
       text,
       _enemy.position + Vector2(Random().nextDouble() * 40 - 20, -_enemy.size.y - 10),
@@ -115,7 +118,7 @@ class BattleGame extends FlameGame {
   void enemyDefeated() {
     if (!isLoaded) return;
     _enemy.add(OpacityEffect.to(0, EffectController(duration: 1.2)));
-    _floating('NEMICO ABBATTUTO', Vector2(size.x / 2, size.y * 0.3), Palette.goldBright, 26);
+    _floating(tr('NEMICO ABBATTUTO'), Vector2(size.x / 2, size.y * 0.3), Palette.goldBright, 26);
   }
 
   /// Caccia infinita: un nuovo nemico emerge dalle rovine.
@@ -126,7 +129,7 @@ class BattleGame extends FlameGame {
       ..position = Vector2(size.x * 1.1, size.y * 0.86);
     _enemy.add(OpacityEffect.to(1, EffectController(duration: 0.6)));
     _enemy.add(MoveToEffect(Vector2(size.x * 0.72, size.y * 0.86), EffectController(duration: 0.6)));
-    _floating('ONDATA ${wave + 1}', Vector2(size.x / 2, size.y * 0.3), Palette.ember, 26);
+    _floating(tr('ONDATA {n}', {'n': wave + 1}), Vector2(size.x / 2, size.y * 0.3), Palette.ember, 26);
   }
 
   void heroDied() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/enemies.dart';
@@ -21,23 +22,23 @@ class GuideScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     return Scaffold(
-      appBar: const OathBar(title: Text('GUIDA'), tools: false),
+      appBar: OathBar(title: Text(tr('GUIDA')), tools: false),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
             child: Text(
-              '"Ogni abilità è una strada. Qui c\'è scritto dove porta." '
-              'Tocca un\'abilità per vedere cosa sblocca, livello per livello.',
+              tr('"Ogni abilità è una strada. Qui c\'è scritto dove porta." '
+                  'Tocca un\'abilità per vedere cosa sblocca, livello per livello.'),
               textAlign: TextAlign.center,
-              style: TextStyle(color: Palette.ash, fontStyle: FontStyle.italic),
+              style: const TextStyle(color: Palette.ash, fontStyle: FontStyle.italic),
             ),
           ),
-          const SectionTitle('Come funziona'),
+          SectionTitle(tr('Come funziona')),
           for (final (icon, title, text) in _rules)
             _RuleChapter(icon: icon, title: title, text: text),
-          const SectionTitle('Abilità'),
+          SectionTitle(tr('Abilità')),
           for (final k in Skill.values)
             _SkillChapter(
               skill: k,
@@ -50,115 +51,115 @@ class GuideScreen extends StatelessWidget {
     );
   }
 
-  static const List<(IconData, String, String)> _rules = [
+  static List<(IconData, String, String)> get _rules => [
     (
       Icons.assignment_turned_in_outlined,
-      'Quest giornaliera',
-      'Ogni esercizio della quest si fa combattendo un nemico del tuo livello: le rep contano '
+      tr('Quest giornaliera'),
+      tr('Ogni esercizio della quest si fa combattendo un nemico del tuo livello: le rep contano '
           'per la quest e ogni uccisione lascia bottino. Chiusa la quest ricevi rune, XP, una '
           'Chiave della Spedizione e un forziere di materiali della tua fascia. Lo stretching '
-          'finale dà un Punto Disciplina.',
+          'finale dà un Punto Disciplina.'),
     ),
     (
       Icons.map_outlined,
-      'Spedizioni',
-      'Ogni gruppo muscolare ha quattro spedizioni a mappa: quattro tappe, il boss in cima e un '
+      tr('Spedizioni'),
+      tr('Ogni gruppo muscolare ha quattro spedizioni a mappa: quattro tappe, il boss in cima e un '
           'forziere. Sotto il livello consigliato si muore facilmente. "Zavorrato" raddoppia le '
-          'rep e il bottino; una Chiave raddoppia il forziere.',
+          'rep e il bottino; una Chiave raddoppia il forziere.'),
     ),
     (
       Icons.local_fire_department_outlined,
-      'Giuramento e build',
-      'Ogni gruppo lascia i suoi materiali base (ferro, bronzo, argento, pelle, gemme), utili a '
+      tr('Giuramento e build'),
+      tr('Ogni gruppo lascia i suoi materiali base (ferro, bronzo, argento, pelle, gemme), utili a '
           'tutti. I componenti di build (Ferro di Brace, Argento di Bufera, Oro Consacrato, '
           'Cristallo d\'Abisso e i loro cuori rari) arrivano invece sempre per la build del tuo '
           'Giuramento, da qualunque gruppo. Così chi gioca Forza non deve fare solo Spinta, e '
-          'chi fa cardio non raccoglie roba inutile. Il Giuramento si cambia dalla Home.',
+          'chi fa cardio non raccoglie roba inutile. Il Giuramento si cambia dalla Home.'),
     ),
     (
       Icons.pets,
-      'Caccia e combattimenti liberi',
-      'Qualunque nemico, anche sopra il tuo livello. Rinasce dopo ogni uccisione e il bottino '
+      tr('Caccia e combattimenti liberi'),
+      tr('Qualunque nemico, anche sopra il tuo livello. Rinasce dopo ogni uccisione e il bottino '
           'si ritira alla fine. La fatica riduce il bottino se insisti troppo sullo stesso '
-          'gruppo nello stesso giorno. La caccia infinita chiama nemici sempre più forti.',
+          'gruppo nello stesso giorno. La caccia infinita chiama nemici sempre più forti.'),
     ),
     (
       Icons.shield_outlined,
-      'Postura',
-      'Aggressiva: più danni dati e subiti, sale l\'Attacco. Equilibrata: metà e metà. '
-          'Difensiva: un quarto di danni in meno, sale la Difesa.',
+      tr('Postura'),
+      tr('Aggressiva: più danni dati e subiti, sale l\'Attacco. Equilibrata: metà e metà. '
+          'Difensiva: un quarto di danni in meno, sale la Difesa.'),
     ),
     (
       Icons.directions_walk,
-      'Raccolta',
-      'I passi del giorno (da mezzanotte, fino a un massimo giornaliero) si spendono su una '
+      tr('Raccolta'),
+      tr('I passi del giorno (da mezzanotte, fino a un massimo giornaliero) si spendono su una '
           'risorsa: ogni tot passi un\'unità. La Raccolta mostra i passi ancora da consumare. '
-          'Le risorse migliori chiedono livello e attrezzo.',
+          'Le risorse migliori chiedono livello e attrezzo.'),
     ),
     (
       Icons.directions_run,
-      'Traguardi di passi',
-      'Nella Home vedi i passi totali di oggi. A 2.000, 4.000 e 6.000 passi ricevi 20 rune, '
+      tr('Traguardi di passi'),
+      tr('Nella Home vedi i passi totali di oggi. A 2.000, 4.000 e 6.000 passi ricevi 20 rune, '
           'a 10.000 (l\'obiettivo consigliato) 40 rune, il doppio. Si riscattano una volta al giorno e '
-          'sono a parte dalla quest giornaliera.',
+          'sono a parte dalla quest giornaliera.'),
     ),
     (
       Icons.blur_on,
-      'Incantamento',
-      'Ogni livello si fa con la sua pietra. Armi normali: Pietra di forgia I fino a +3, '
+      tr('Incantamento'),
+      tr('Ogni livello si fa con la sua pietra. Armi normali: Pietra di forgia I fino a +3, '
           'II da +4 a +6, III da +7 a +9, la Pietra di forgia astrale per il +10. Armi speciali '
           '(più rare, con effetti diversi): Pietra delle Tenebre I, II, III, IV per +1..+4 e la '
           'Pietra Epica dell\'Eclissi per il +5. Le pietre delle Tenebre si fondono alla '
-          'Fornace partendo dalla precedente.',
+          'Fornace partendo dalla precedente.'),
     ),
     (
       Icons.auto_awesome,
-      'Amuleti dell\'arma',
-      'Ogni arma ha tre incastri. Il primo è per un amuleto d\'affinità (fuoco, vento, '
+      tr('Amuleti dell\'arma'),
+      tr('Ogni arma ha tre incastri. Il primo è per un amuleto d\'affinità (fuoco, vento, '
           'arcano, luce): dà colore e aura alla lama e la fa crescere con un attributo. A +3 '
           'la lama si tinge, a +6 si accende, a +10 ha l\'aura completa; senza amuleto resta '
           'acciaio. Gli altri due sono passivi (contro i boss, critici, danno). Si mettono e '
           'tolgono dalla Fattucchiera, dall\'Armeria o dall\'Incantamento: quello tolto torna '
-          'nella borsa.',
+          'nella borsa.'),
     ),
     (
       Icons.storefront,
-      'Mercato',
-      'Il mercante compra a metà prezzo e vende al doppio. La fattucchiera crea gli amuleti '
-          'd\'affinità, vende i passivi e li incastra nell\'arma.',
+      tr('Mercato'),
+      tr('Il mercante compra a metà prezzo e vende al doppio. La fattucchiera crea gli amuleti '
+          'd\'affinità, vende i passivi e li incastra nell\'arma.'),
     ),
     (
       Icons.sports_kabaddi,
-      'Arena',
-      'Sta nel Training, in alto accanto all\'Allenamento. Niente statistiche né build: vince '
+      tr('Arena'),
+      tr('Sta nel Training, in alto accanto all\'Allenamento. Niente statistiche né build: vince '
           'chi si allena meglio, e le rep scorrette non contano. Il live contro persone vere '
-          'richiede la fotocamera.',
+          'richiede la fotocamera.'),
     ),
     (
       Icons.shield_outlined,
-      'Gilda',
-      'Fonda una gilda o entra in quella dei tuoi amici. Fondatore e ufficiali invitano per '
+      tr('Gilda'),
+      tr('Fonda una gilda o entra in quella dei tuoi amici. Fondatore e ufficiali invitano per '
           'nome. Apri un allenamento e fino a quattro membri si uniscono in diretta: chi l\'ha '
           'aperto dà il via. Puoi sfidare un membro: è un duello vero, ma non tocca i punti '
-          'dell\'Arena. Serve il server online e la fotocamera.',
+          'dell\'Arena. Serve il server online e la fotocamera.'),
     ),
   ];
 
-  static const Map<Skill, String> _intro = {
-    Skill.woodcutting: 'Spendi i passi nei boschi della Raccolta. Ogni albero nuovo chiede '
-        'un livello e spesso un\'ascia migliore.',
-    Skill.mining: 'Spendi i passi nelle cave. Prima pietra e carbone, poi ferro, argento '
-        'lunare e minerale stellare.',
-    Skill.carpentry: 'Alla Carpenteria il legno diventa assi, impugnature, archi, bastoni e scudi.',
-    Skill.smelting: 'Alla Fornace il minerale diventa lingotti e pietre di forgia.',
-    Skill.smithing: 'All\'Incudine nascono spade, martelli, armature e attrezzi di metallo.',
-    Skill.attack: 'Cresce colpendo con armi da mischia e a distanza. +2% di danno per livello, '
-        'e le armi migliori chiedono un livello minimo per essere impugnate.',
-    Skill.defense: 'Cresce incassando colpi e tenendo le posizioni. +0,5% di colpi assorbiti per '
-        'livello (fino al 30%), e le armature pesanti chiedono un livello minimo.',
-    Skill.magic: 'Cresce combattendo con un bastone. Decide quali bastoni puoi impugnare.',
-    Skill.expeditions: 'Cresce completando le spedizioni e abbattendo i loro boss. Indica il '
-        'livello consigliato per ogni mappa.',
+  static Map<Skill, String> get _intro => {
+    Skill.woodcutting: tr('Spendi i passi nei boschi della Raccolta. Ogni albero nuovo chiede '
+        'un livello e spesso un\'ascia migliore.'),
+    Skill.mining: tr('Spendi i passi nelle cave. Prima pietra e carbone, poi ferro, argento '
+        'lunare e minerale stellare.'),
+    Skill.carpentry: tr('Alla Carpenteria il legno diventa assi, impugnature, archi, bastoni e scudi.'),
+    Skill.smelting: tr('Alla Fornace il minerale diventa lingotti e pietre di forgia.'),
+    Skill.smithing: tr('All\'Incudine nascono spade, martelli, armature e attrezzi di metallo.'),
+    Skill.attack: tr('Cresce colpendo con armi da mischia e a distanza. +2% di danno per livello, '
+        'e le armi migliori chiedono un livello minimo per essere impugnate.'),
+    Skill.defense: tr('Cresce incassando colpi e tenendo le posizioni. +0,5% di colpi assorbiti per '
+        'livello (fino al 30%), e le armature pesanti chiedono un livello minimo.'),
+    Skill.magic: tr('Cresce combattendo con un bastone. Decide quali bastoni puoi impugnare.'),
+    Skill.expeditions: tr('Cresce completando le spedizioni e abbattendo i loro boss. Indica il '
+        'livello consigliato per ogni mappa.'),
   };
 }
 
@@ -170,7 +171,7 @@ List<Unlock> guideFor(Skill k) {
       for (final r in resources.where((r) => r.skill == k)) {
         out.add((
           r.level,
-          '${r.name} · ${r.where}${r.tool != null ? ' · serve ${materialNames[r.tool]}' : ''}',
+          '${r.name} · ${r.where}${r.tool != null ? tr(' · serve {tool}', {'tool': materialNames[r.tool]}) : ''}',
           r.id,
         ));
       }
@@ -179,7 +180,7 @@ List<Unlock> guideFor(Skill k) {
       for (final r in materialRecipes.where((r) => mine(r.station))) {
         out.add((
           r.level,
-          '${materialNames[r.output] ?? r.output}${r.tool ? ' (attrezzo)' : ''}',
+          '${materialNames[r.output] ?? r.output}${r.tool ? tr(' (attrezzo)') : ''}',
           r.output,
         ));
       }
@@ -190,32 +191,36 @@ List<Unlock> guideFor(Skill k) {
       }
       if (k == Skill.smithing) {
         for (final a in armorDefs.values) {
-          out.add((a.craftLevel, '${a.name} · armatura', a.id));
+          out.add((a.craftLevel, tr('{name} · armatura', {'name': a.name}), a.id));
         }
       }
       for (final o in offhandDefs.values.where((o) => mine(o.station))) {
-        out.add((o.craftLevel, '${o.name} · ${o.isShield ? 'scudo' : 'seconda lama'}', o.id));
+        out.add((o.craftLevel, '${o.name} · ${o.isShield ? tr('scudo') : tr('seconda lama')}', o.id));
       }
     case Skill.attack || Skill.magic:
       final magic = k == Skill.magic;
       for (final w in weaponDefs.values.where((w) => w.usesMagic == magic)) {
         out.add((
           w.wieldLevel,
-          'Impugni ${w.name}${w.rare ? ' (rara, dai boss)' : ''} · danno ${w.baseDamage}',
+          tr('Impugni {name}{rare} · danno {dmg}', {
+            'name': w.name,
+            'rare': w.rare ? tr(' (rara, dai boss)') : '',
+            'dmg': w.baseDamage,
+          }),
           w.id,
         ));
       }
       if (!magic) {
         for (final l in [10, 20, 30, 50, 99]) {
-          out.add((l, '+${2 * (l - 1)}% di danno con ogni arma', null));
+          out.add((l, tr('+{n}% di danno con ogni arma', {'n': 2 * (l - 1)}), null));
         }
       }
     case Skill.defense:
       for (final a in armorDefs.values) {
-        out.add((a.wearLevel, 'Indossi ${a.name} · assorbe ${(a.reduction * 100).round()}%', a.id));
+        out.add((a.wearLevel, tr('Indossi {name} · assorbe {pct}%', {'name': a.name, 'pct': (a.reduction * 100).round()}), a.id));
       }
       for (final l in [11, 21, 41, 61]) {
-        out.add((l, '+${((l - 1) * 0.5).toStringAsFixed(0)}% di colpi assorbiti', null));
+        out.add((l, tr('+{n}% di colpi assorbiti', {'n': ((l - 1) * 0.5).toStringAsFixed(0)}), null));
       }
     case Skill.expeditions:
       for (final e in expeditions) {
@@ -276,7 +281,9 @@ class _SkillChapter extends StatelessWidget {
           collapsedIconColor: Palette.gold,
           title: OneLine(skill.label.toUpperCase(), style: titleStyle(size: 14, spacing: 1.5)),
           subtitle: Text(
-            'Livello $level${next != null ? ' · prossimo sblocco al ${next.$1}' : ''}',
+            next != null
+                ? tr('Livello {lvl} · prossimo sblocco al {next}', {'lvl': level, 'next': next.$1})
+                : tr('Livello {lvl}', {'lvl': level}),
             style: const TextStyle(color: Palette.ash, fontSize: 12.5),
           ),
           childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),

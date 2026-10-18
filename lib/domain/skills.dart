@@ -63,7 +63,7 @@ class Resource {
     this.level,
     this.stepsPerUnit,
     this.xp,
-    this.where, {
+    this._where, {
     this.tool,
   });
   final String id;
@@ -77,12 +77,13 @@ class Resource {
   final int xp;
 
   /// Dove la si trova, per il racconto.
-  final String where;
+  final String _where;
+  String get where => tr(_where);
 
   /// Attrezzo minimo per raccoglierla (null = a mani nude).
   final String? tool;
 
-  String get name => materialNames[id] ?? id;
+  String get name => tr(materialNames[id] ?? id);
 }
 
 const List<Resource> resources = [

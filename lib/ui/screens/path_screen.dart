@@ -6,6 +6,7 @@ import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/exercise.dart';
@@ -128,8 +129,8 @@ class _PathScreenState extends State<PathScreen> {
       MaterialPageRoute(
         builder: (_) => TrainingScreen(
           exercise: e.trackAs,
-          title: e.name,
-          subtitle: 'Tappa ${index + 1} del sentiero',
+          title: tr(e.name),
+          subtitle: tr('Tappa {n} del sentiero', {'n': index + 1}),
           target: e.hold ? null : _target(s, e),
           timeLimit: e.hold ? const Duration(seconds: 60) : null,
         ),
@@ -159,9 +160,9 @@ class _PathScreenState extends State<PathScreen> {
     }
     if (ok) {
       s.completePathStep(widget.group, index);
-      toast(context, index == 3 ? 'Il guardiano ti aspetta in cima.' : 'Tappa superata.');
+      toast(context, index == 3 ? tr('Il guardiano ti aspetta in cima.') : tr('Tappa superata.'));
     } else {
-      toast(context, 'Quasi: riprova la tappa.');
+      toast(context, tr('Quasi: riprova la tappa.'));
     }
   }
 
@@ -176,16 +177,20 @@ class _PathScreenState extends State<PathScreen> {
         MaterialPageRoute(
           builder: (_) => TrainingScreen(
             exercise: e.trackAs,
-            title: e.name,
-            subtitle: '${pathBosses[widget.group]} · esercizio ${i + 1}/${steps.length} · '
-                '$bossSeconds secondi a sfinimento',
+            title: tr(e.name),
+            subtitle: tr('{boss} · esercizio {i}/{n} · {sec} secondi a sfinimento', {
+              'boss': tr(pathBosses[widget.group]!),
+              'i': i + 1,
+              'n': steps.length,
+              'sec': bossSeconds,
+            }),
             timeLimit: const Duration(seconds: bossSeconds),
           ),
         ),
       );
       if (!mounted) return;
       if (r == null) {
-        toast(context, 'Il guardiano resta in piedi. Riprova quando vuoi.');
+        toast(context, tr('Il guardiano resta in piedi. Riprova quando vuoi.'));
         return;
       }
       if (r.reps.isNotEmpty) {
@@ -206,7 +211,7 @@ class _PathScreenState extends State<PathScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: Palette.stone,
         title: Text(
-          'GUARDIANO ABBATTUTO',
+          tr('GUARDIANO ABBATTUTO'),
           textAlign: TextAlign.center,
           style: titleStyle(size: 18),
         ),
@@ -214,7 +219,7 @@ class _PathScreenState extends State<PathScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${pathBosses[widget.group]} è caduto.'),
+            Text(tr('{boss} è caduto.', {'boss': tr(pathBosses[widget.group]!)})),
             const SizedBox(height: 8),
             for (final e in loot.entries)
               Text(
@@ -235,7 +240,7 @@ class _PathScreenState extends State<PathScreen> {
               ),
           ],
         ),
-        actions: [FilledButton(onPressed: () => Navigator.pop(ctx), child: const Text('CONTINUA'))],
+        actions: [FilledButton(onPressed: () => Navigator.pop(ctx), child: Text(tr('CONTINUA')))],
       ),
     );
   }
@@ -252,8 +257,8 @@ class _PathScreenState extends State<PathScreen> {
         children: [
           OathChoice<bool>(
             options: [
-              (false, _stretch ? 'Base' : 'Corpo libero'),
-              (true, _stretch ? 'Profondo' : 'Zavorrato'),
+              (false, _stretch ? tr('Base') : tr('Corpo libero')),
+              (true, _stretch ? tr('Profondo') : tr('Zavorrato')),
             ],
             selected: _weighted,
             onChanged: (v) => setState(() => _weighted = v),
@@ -262,11 +267,11 @@ class _PathScreenState extends State<PathScreen> {
           Text(
             _stretch
                 ? (_weighted
-                    ? 'Pose più profonde. Il guardiano lascia il doppio del bottino.'
-                    : 'Tieni ogni posa: conta restare fermi, non quanto arrivi giù.')
+                    ? tr('Pose più profonde. Il guardiano lascia il doppio del bottino.')
+                    : tr('Tieni ogni posa: conta restare fermi, non quanto arrivi giù.'))
                 : _weighted
-                    ? 'Con sedia, zaino o manubri. Il guardiano lascia il doppio del bottino.'
-                    : 'Nessun attrezzo: solo il tuo corpo.',
+                    ? tr('Con sedia, zaino o manubri. Il guardiano lascia il doppio del bottino.')
+                    : tr('Nessun attrezzo: solo il tuo corpo.'),
             textAlign: TextAlign.center,
             style: const TextStyle(color: Palette.ash, fontSize: 13),
           ),
@@ -296,10 +301,12 @@ class _PathScreenState extends State<PathScreen> {
                           state: i < progress
                               ? _NodeState.done
                               : (i == progress ? _NodeState.open : _NodeState.locked),
-                          title: i == 4 ? pathBosses[widget.group]! : steps[i].name,
+                          title: tr(i == 4 ? pathBosses[widget.group]! : steps[i].name),
                           subtitle: i == 4
-                              ? 'Circuito ${steps.length}×$bossSeconds s'
-                              : (steps[i].hold ? 'Tieni 20 s' : '${_target(s, steps[i])} rep'),
+                              ? tr('Circuito {n}×{sec} s', {'n': steps.length, 'sec': bossSeconds})
+                              : (steps[i].hold
+                                  ? tr('Tieni 20 s')
+                                  : tr('{n} rep', {'n': _target(s, steps[i])})),
                           onTap: i != progress ? null : (i == 4 ? _boss : () => _run(steps[i], i)),
                         ),
                       ),
@@ -309,10 +316,10 @@ class _PathScreenState extends State<PathScreen> {
             },
           ),
           if (progress >= 5)
-            const Text(
-              'Sentiero completato oggi. Domani il guardiano torna più affamato.',
+            Text(
+              tr('Sentiero completato oggi. Domani il guardiano torna più affamato.'),
               textAlign: TextAlign.center,
-              style: TextStyle(color: Palette.goldBright),
+              style: const TextStyle(color: Palette.goldBright),
             ),
         ],
       ),

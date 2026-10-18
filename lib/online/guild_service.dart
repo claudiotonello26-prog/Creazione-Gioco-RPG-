@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import '../core/i18n.dart';
 import '../domain/exercise.dart';
 import 'nakama_client.dart';
 
@@ -246,14 +247,14 @@ class GuildService extends ChangeNotifier {
   Future<String> invite(String name) async {
     final res = await _run((s) => client.api(s, 'GET', '/v2/user', query: {'usernames': name}));
     final users = (res['users'] as List? ?? const []).cast<Map<String, dynamic>>();
-    if (users.isEmpty) return 'Nessun giocatore si chiama $name.';
+    if (users.isEmpty) return tr('Nessun giocatore si chiama {name}.', {'name': name});
     final id = users.first['id'] as String;
     await _run((s) => client.api(s, 'POST', '/v2/friend', query: {'ids': id}));
     final g = guild;
-    var text = 'Richiesta di amicizia inviata a $name.';
+    var text = tr('Richiesta di amicizia inviata a {name}.', {'name': name});
     if (g != null && isLeader) {
       await _run((s) => client.api(s, 'POST', '/v2/group/${g.id}/add', query: {'user_ids': id}));
-      text = '$name è entrato nella gilda.';
+      text = tr('{name} è entrato nella gilda.', {'name': name});
     }
     await refresh();
     return text;

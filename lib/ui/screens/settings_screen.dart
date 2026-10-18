@@ -19,33 +19,33 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     return Scaffold(
-      appBar: const OathBar(title: Text('IMPOSTAZIONI'), tools: false),
+      appBar: OathBar(title: Text(tr('IMPOSTAZIONI')), tools: false),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           SwitchListTile(
             value: s.useCamera,
             onChanged: s.setUseCamera,
-            title: const Text('Conta le rep con la fotocamera'),
-            subtitle: const Text(
-              'Spento: inserimento manuale, rep non verificate',
-              style: TextStyle(color: Palette.ash),
+            title: Text(tr('Conta le rep con la fotocamera')),
+            subtitle: Text(
+              tr('Spento: inserimento manuale, rep non verificate'),
+              style: const TextStyle(color: Palette.ash),
             ),
           ),
           SwitchListTile(
             value: s.trainerEnabled,
             onChanged: s.setTrainerEnabled,
-            title: const Text('Consigli di Ser Corvino'),
-            subtitle: const Text(
-              'Riaccendendolo, rivedi tutti i consigli dall\'inizio',
-              style: TextStyle(color: Palette.ash),
+            title: Text(tr('Consigli di Ser Corvino')),
+            subtitle: Text(
+              tr('Riaccendendolo, rivedi tutti i consigli dall\'inizio'),
+              style: const TextStyle(color: Palette.ash),
             ),
           ),
           const _SoundSwitches(),
           ListTile(
-            title: const Text('Server dell\'Arena live'),
+            title: Text(tr('Server dell\'Arena live')),
             subtitle: Text(
-              s.serverAddress.isEmpty ? 'Non impostato' : s.serverAddress,
+              s.serverAddress.isEmpty ? tr('Non impostato') : s.serverAddress,
               style: const TextStyle(color: Palette.ash),
             ),
             trailing: const Icon(Icons.edit),
@@ -77,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text('Modalità di gioco'),
+            title: Text(tr('Modalità di gioco')),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 8),
               child: OathChoice<PlayMode>(
@@ -90,14 +90,14 @@ class SettingsScreen extends StatelessWidget {
           ),
           ActionTile(
             icon: Icons.emoji_events_outlined,
-            title: 'Rifai il test',
-            subtitle: 'Ricalcola la quest sui tuoi numeri di oggi',
+            title: tr('Rifai il test'),
+            subtitle: tr('Ricalcola la quest sui tuoi numeri di oggi'),
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => const FitnessTestScreen(isRetest: true))),
           ),
           ActionTile(
             icon: Icons.delete_forever_outlined,
-            title: 'Ricomincia da capo',
+            title: tr('Ricomincia da capo'),
             color: Palette.blood,
             onTap: () => _confirmReset(context, s),
           ),
@@ -112,17 +112,17 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Palette.stone,
-        title: const Text('Server dell\'Arena'),
+        title: Text(tr('Server dell\'Arena')),
         content: TextField(
           controller: controller,
           autofocus: true,
           keyboardType: TextInputType.url,
-          decoration: const InputDecoration(
-            hintText: 'es. arena.iron-oath.it oppure 192.168.1.10:7350',
+          decoration: InputDecoration(
+            hintText: tr('es. arena.iron-oath.it oppure 192.168.1.10:7350'),
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annulla')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(tr('Annulla'))),
           FilledButton(
             onPressed: () {
               if (controller.text.trim().isNotEmpty &&
@@ -132,7 +132,7 @@ class SettingsScreen extends StatelessWidget {
               s.setServerAddress(controller.text);
               Navigator.pop(ctx);
             },
-            child: const Text('Salva'),
+            child: Text(tr('Salva')),
           ),
         ],
       ),
@@ -144,17 +144,17 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Palette.stone,
-        title: const Text('Ricominciare?'),
-        content: const Text('Perderai eroe, progressi e record salvati su questo telefono.'),
+        title: Text(tr('Ricominciare?')),
+        content: Text(tr('Perderai eroe, progressi e record salvati su questo telefono.')),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annulla')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(tr('Annulla'))),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Palette.blood),
             onPressed: () {
               Navigator.pop(ctx);
               s.resetAll();
             },
-            child: const Text('Ricomincia'),
+            child: Text(tr('Ricomincia')),
           ),
         ],
       ),
@@ -183,9 +183,9 @@ class _SoundSwitchesState extends State<_SoundSwitches> {
         );
     return Column(
       children: [
-        sw('Effetti sonori', Sound.sfxOn, Sound.setSfx),
-        sw('Musica', Sound.musicOn, Sound.setMusic),
-        sw('Voce di Ser Corvino', Sound.voiceOn, Sound.setVoice),
+        sw(tr('Effetti sonori'), Sound.sfxOn, Sound.setSfx),
+        sw(tr('Musica'), Sound.musicOn, Sound.setMusic),
+        sw(tr('Voce di Ser Corvino'), Sound.voiceOn, Sound.setVoice),
       ],
     );
   }

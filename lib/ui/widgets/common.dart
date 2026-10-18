@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n.dart';
 import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../core/sound.dart';
@@ -355,7 +356,7 @@ class _CraftCountdownState extends State<_CraftCountdown> with SingleTickerProvi
           style:
               FilledButton.styleFrom(backgroundColor: Palette.blood, foregroundColor: Palette.holy),
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('ANNULLA'),
+          child: Text(tr('ANNULLA')),
         ),
       ],
     );

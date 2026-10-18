@@ -1,5 +1,9 @@
 /// Il Cammino del Novizio: le prime missioni guidate dal trainer, una alla
 /// volta, che insegnano il gioco come la quest iniziale di Gymscape.
+library;
+
+import '../core/i18n.dart';
+
 /// Dove porta il pulsante della missione.
 enum NoviceAction {
   fightGoblin,
@@ -17,9 +21,9 @@ enum NoviceAction {
 
 class NoviceQuest {
   const NoviceQuest({
-    required this.title,
-    required this.goal,
-    required this.trainer,
+    required this._title,
+    required this._goal,
+    required this._trainer,
     required this.stat,
     required this.target,
     required this.action,
@@ -28,13 +32,17 @@ class NoviceQuest {
     this.gather,
   });
 
-  final String title;
+  final String _title;
+  final String _goal;
+  final String _trainer;
+
+  String get title => tr(_title);
 
   /// Cosa fare, in breve.
-  final String goal;
+  String get goal => tr(_goal);
 
   /// Cosa dice il trainer quando la missione si apre.
-  final String trainer;
+  String get trainer => tr(_trainer);
 
   /// Contatore di GameState.stats da raggiungere.
   final String stat;

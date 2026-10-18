@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/oath_bar.dart';
+import '../../core/i18n.dart';
 
 import 'package:provider/provider.dart';
 
@@ -88,31 +89,34 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
   }
 
   String get _phaseText => switch (_session.phase) {
-        LivePhase.idle || LivePhase.connecting => 'Connessione al server…',
-        LivePhase.searching => 'Cerco un avversario per ${exercises[c.exercise]!.name}…',
+        LivePhase.idle || LivePhase.connecting => tr('Connessione al server…'),
+        LivePhase.searching =>
+          tr('Cerco un avversario per {exercise}…', {'exercise': exercises[c.exercise]!.name}),
         LivePhase.joining || LivePhase.waiting => _waitingText,
-        LivePhase.countdown => 'Inizia tra ${_session.countdown}',
+        LivePhase.countdown => tr('Inizia tra {n}', {'n': _session.countdown}),
         LivePhase.running => '${_session.elapsed.toStringAsFixed(0)} s',
-        LivePhase.finished => 'Duello concluso',
-        LivePhase.error => _session.error ?? 'Errore',
+        LivePhase.finished => tr('Duello concluso'),
+        LivePhase.error => _session.error ?? tr('Errore'),
       };
 
   String get _waitingText {
     final s = _session;
-    if (mode == LiveMode.arena) return 'Avversario trovato. Mettiti in posizione.';
+    if (mode == LiveMode.arena) return tr('Avversario trovato. Mettiti in posizione.');
     if (mode == LiveMode.friendly) {
-      return s.opponent == null ? 'In attesa che l\'amico accetti…' : 'Mettiti in posizione.';
+      return s.opponent == null ? tr('In attesa che l\'amico accetti…') : tr('Mettiti in posizione.');
     }
     final n = s.others.length + 1;
     return s.isHost
-        ? (n < 2 ? 'In attesa della gilda…' : 'Siete in $n. Dai il via quando ci siete tutti.')
-        : 'Siete in $n. Aspetta il via.';
+        ? (n < 2
+            ? tr('In attesa della gilda…')
+            : tr('Siete in {n}. Dai il via quando ci siete tutti.', {'n': n}))
+        : tr('Siete in {n}. Aspetta il via.', {'n': n});
   }
 
   String _score(LivePlayer? p) {
     if (p == null) return '—';
     if (c.goal == ChallengeGoal.longestHold) return '${p.held.toStringAsFixed(0)} s';
-    return c.goal == ChallengeGoal.fastestReps ? '${p.reps}/${c.targetReps}' : '${p.reps} rep';
+    return c.goal == ChallengeGoal.fastestReps ? '${p.reps}/${c.targetReps}' : tr('{n} rep', {'n': p.reps});
   }
 
   @override
@@ -126,7 +130,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
       child: Scaffold(
         appBar: OathBar(
           title: Text(
-            '${_group ? 'GILDA' : 'LIVE'} · ${exercises[c.exercise]!.name.toUpperCase()}',
+            '${_group ? tr('GILDA') : 'LIVE'} · ${exercises[c.exercise]!.name.toUpperCase()}',
           ),
         ),
         body: Column(
@@ -147,7 +151,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
                 children: [
                   Expanded(
                     child: _PlayerPanel(
-                      name: s.opponent?.name ?? (_group ? 'Gilda' : 'Avversario'),
+                      name: s.opponent?.name ?? (_group ? tr('Gilda') : tr('Avversario')),
                       score: _score(s.opponent),
                       color: Palette.blood,
                       child: CustomPaint(
@@ -158,7 +162,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
                   ),
                   Expanded(
                     child: _PlayerPanel(
-                      name: 'Tu',
+                      name: tr('Tu'),
                       score: _score(s.me),
                       color: Palette.goldBright,
                       child: ListenableBuilder(
@@ -191,7 +195,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
               ),
             if (s.rejected > 0)
               Text(
-                '${s.rejected} rep non valide per il server (movimento incompleto)',
+                tr('{n} rep non valide per il server (movimento incompleto)', {'n': s.rejected}),
                 style: const TextStyle(color: Palette.ember, fontSize: 12),
               ),
             if (s.phase == LivePhase.finished && s.result != null)
@@ -210,7 +214,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
                             Expanded(
                               child: OutlinedButton(
                                 onPressed: _confirmLeave,
-                                child: const Text('Abbandona'),
+                                child: Text(tr('Abbandona')),
                               ),
                             ),
                             if (_group && s.isHost && s.phase == LivePhase.waiting) ...[
@@ -218,7 +222,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
                               Expanded(
                                 child: FilledButton(
                                   onPressed: s.others.isEmpty ? null : s.begin,
-                                  child: const OneLine('DAI IL VIA', align: Alignment.center),
+                                  child: OneLine(tr('DAI IL VIA'), align: Alignment.center),
                                 ),
                               ),
                             ],
@@ -227,7 +231,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
                       : FilledButton(
                           onPressed: () => Navigator.of(context).pop(),
                           child: Text(
-                              mode == LiveMode.arena ? 'TORNA ALL\'ARENA' : 'TORNA ALLA GILDA'),
+                              mode == LiveMode.arena ? tr('TORNA ALL\'ARENA') : tr('TORNA ALLA GILDA')),
                         ),
                 ),
               ),
@@ -249,13 +253,13 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Palette.stone,
-        title: Text(_group ? 'Lasciare l\'allenamento?' : 'Abbandonare il duello?'),
+        title: Text(_group ? tr('Lasciare l\'allenamento?') : tr('Abbandonare il duello?')),
         content: Text(
-          _group ? 'Gli altri continuano senza di te.' : 'Chi abbandona perde a tavolino.',
+          _group ? tr('Gli altri continuano senza di te.') : tr('Chi abbandona perde a tavolino.'),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Resto')),
-          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Abbandono')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(tr('Resto'))),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(tr('Abbandono'))),
         ],
       ),
     );
@@ -318,9 +322,9 @@ class _ResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (mode == LiveMode.group) return _groupResult();
     final title = switch (result.outcome) {
-      > 0 => result.forfeit ? 'VITTORIA A TAVOLINO' : 'VITTORIA',
-      < 0 => 'SCONFITTA',
-      _ => 'PAREGGIO',
+      > 0 => result.forfeit ? tr('VITTORIA A TAVOLINO') : tr('VITTORIA'),
+      < 0 => tr('SCONFITTA'),
+      _ => tr('PAREGGIO'),
     };
     return Card(
       child: Padding(
@@ -338,14 +342,14 @@ class _ResultCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               mode == LiveMode.friendly
-                  ? 'Sfida tra amici: niente punti stagione.'
-                  : 'Punti stagione ${result.delta >= 0 ? '+' : ''}${result.delta}'
-                      '${result.points != null ? ' · totale ${result.points}' : ''}',
+                  ? tr('Sfida tra amici: niente punti stagione.')
+                  : tr('Punti stagione {delta}', {'delta': '${result.delta >= 0 ? '+' : ''}${result.delta}'}) +
+                      (result.points != null ? tr(' · totale {points}', {'points': result.points}) : ''),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'Risultato verificato dal server sulle rep valide.',
-              style: TextStyle(color: Palette.ash, fontSize: 12),
+            Text(
+              tr('Risultato verificato dal server sulle rep valide.'),
+              style: const TextStyle(color: Palette.ash, fontSize: 12),
             ),
           ],
         ),
@@ -359,7 +363,7 @@ class _ResultCard extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                '${result.place ?? '-'}° POSTO',
+                tr('{place}° POSTO', {'place': result.place ?? '-'}),
                 style: TextStyle(
                   fontSize: 24,
                   letterSpacing: 4,
@@ -369,14 +373,14 @@ class _ResultCard extends StatelessWidget {
               const SizedBox(height: 6),
               for (final r in result.ranking)
                 OneLine(
-                  '${r['place']}. ${r['name']} · ${r['validReps']} rep'
-                  '${r['forfeit'] == true ? ' (uscito)' : ''}',
+                  '${r['place']}. ${r['name']} · ${tr('{n} rep', {'n': r['validReps']})}'
+                  '${r['forfeit'] == true ? tr(' (uscito)') : ''}',
                   align: Alignment.center,
                 ),
               const SizedBox(height: 4),
-              const Text(
-                'Allenamento di gilda: le rep valgono per il tuo personaggio.',
-                style: TextStyle(color: Palette.ash, fontSize: 12),
+              Text(
+                tr('Allenamento di gilda: le rep valgono per il tuo personaggio.'),
+                style: const TextStyle(color: Palette.ash, fontSize: 12),
               ),
             ],
           ),
@@ -410,9 +414,9 @@ class AvatarPainter extends CustomPainter {
     final p = pose;
     if (p == null) {
       final tp = TextPainter(
-        text: const TextSpan(
-          text: 'In attesa…',
-          style: TextStyle(color: Palette.ash),
+        text: TextSpan(
+          text: tr('In attesa…'),
+          style: const TextStyle(color: Palette.ash),
         ),
         textDirection: TextDirection.ltr,
       )..layout();

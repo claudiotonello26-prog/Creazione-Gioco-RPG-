@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/character.dart';
@@ -30,7 +31,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
     // Copia: il painter confronta il look vecchio col nuovo per ridisegnare.
     final preview = Character(name: s.character.name, look: Appearance.fromJson(_look.toJson()));
     return Scaffold(
-      appBar: const OathBar(title: Text('IL TUO CAVALIERE')),
+      appBar: OathBar(title: Text(tr('IL TUO CAVALIERE'))),
       body: Column(
         children: [
           SizedBox(
@@ -47,16 +48,16 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               children: [
                 _Row(
-                  label: 'Corpo',
+                  label: tr('Corpo'),
                   child: OathChoice<bool>(
-                    options: const [(false, 'Uomo'), (true, 'Donna')],
+                    options: [(false, tr('Uomo')), (true, tr('Donna'))],
                     selected: _look.female,
                     height: 38,
                     onChanged: (v) => _set(() => _look.female = v),
                   ),
                 ),
                 _Row(
-                  label: 'Viso',
+                  label: tr('Viso'),
                   child: OathChoice<int>(
                     options: [for (var i = 0; i < Appearance.faces; i++) (i, '${i + 1}')],
                     selected: _look.face,
@@ -65,26 +66,26 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                   ),
                 ),
                 _Swatches(
-                  label: 'Pelle',
+                  label: tr('Pelle'),
                   colors: Appearance.skinTones,
                   selected: _look.skin,
                   onPick: (i) => _set(() => _look.skin = i),
                 ),
                 _Swatches(
-                  label: 'Capelli',
+                  label: tr('Capelli'),
                   colors: Appearance.hairColors,
                   selected: _look.hair,
                   onPick: (i) => _set(() => _look.hair = i),
                 ),
                 _Swatches(
-                  label: 'Occhi',
+                  label: tr('Occhi'),
                   colors: Appearance.eyeColors,
                   selected: _look.eyes,
                   onPick: (i) => _set(() => _look.eyes = i),
                 ),
                 if (!_look.female) ...[
                   _Row(
-                    label: 'Barba',
+                    label: tr('Barba'),
                     child: Switch(
                       value: _look.beard,
                       onChanged: (v) => _set(() => _look.beard = v),
@@ -92,20 +93,20 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                   ),
                   if (_look.beard)
                     _Swatches(
-                      label: 'Colore',
+                      label: tr('Colore'),
                       colors: Appearance.hairColors,
                       selected: _look.beardColor,
                       onPick: (i) => _set(() => _look.beardColor = i),
                     ),
                 ],
                 _Swatches(
-                  label: 'Maglia',
+                  label: tr('Maglia'),
                   colors: Appearance.clothColors,
                   selected: _look.shirt,
                   onPick: (i) => _set(() => _look.shirt = i),
                 ),
                 _Swatches(
-                  label: 'Pantaloni',
+                  label: tr('Pantaloni'),
                   colors: Appearance.clothColors,
                   selected: _look.pants,
                   onPick: (i) => _set(() => _look.pants = i),
@@ -116,7 +117,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                     s.setLook(_look);
                     widget.onDone();
                   },
-                  child: const Text('AVANTI'),
+                  child: Text(tr('AVANTI')),
                 ),
               ],
             ),
@@ -198,7 +199,7 @@ void openCharacterCreation(BuildContext context) {
   Navigator.of(context).push(MaterialPageRoute(
     builder: (ctx) => CharacterCreationScreen(onDone: () {
       Navigator.of(ctx).pop();
-      toast(ctx, 'Aspetto aggiornato.');
+      toast(ctx, tr('Aspetto aggiornato.'));
     }),
   ));
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/items.dart';
@@ -47,13 +48,13 @@ class HomeTab extends StatelessWidget {
                     children: [
                       _GearButton(
                         icon: Icons.shield,
-                        label: 'ARMERIA',
+                        label: tr('ARMERIA'),
                         onTap: () => openEquipment(context),
                       ),
                       Expanded(child: Center(child: KnightView(character: c, height: 270))),
                       _GearButton(
                         icon: Icons.backpack,
-                        label: 'INVENTARIO',
+                        label: tr('INVENTARIO'),
                         onTap: () => openInventory(context),
                       ),
                     ],
@@ -62,7 +63,7 @@ class HomeTab extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(c.name.toUpperCase(), style: titleStyle(size: 22, spacing: 4)),
                 Text(
-                  'Livello ${c.level} · ${c.weapon.displayName}'
+                  '${tr('Livello {level}', {'level': c.level})} · ${c.weapon.displayName}'
                   '${c.offhand != null ? ' · ${c.offhand!.name}' : ''}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Palette.ash),
@@ -72,22 +73,22 @@ class HomeTab extends StatelessWidget {
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    _Stat('Vita', '${c.maxHp}', Icons.favorite, Palette.blood),
-                    _Stat('Attacco', '${s.attackValue}', Icons.gavel, Palette.goldBright),
+                    _Stat(tr('Vita'), '${c.maxHp}', Icons.favorite, Palette.blood),
+                    _Stat(tr('Attacco'), '${s.attackValue}', Icons.gavel, Palette.goldBright),
                     _Stat(
-                      'Difesa',
+                      tr('Difesa'),
                       '${(s.defenseValue * 100).round()}%',
                       Icons.shield_outlined,
                       Palette.frost,
                     ),
-                    _Stat('Rune', '${c.runes}', Icons.diamond_outlined, Palette.gold),
+                    _Stat(tr('Rune'), '${c.runes}', Icons.diamond_outlined, Palette.gold),
                   ],
                 ),
               ],
             ),
           ),
         ),
-        const SectionTitle('Abilità'),
+        SectionTitle(tr('Abilità')),
         _SkillRows(progress: s.skillProgressOf),
         const SizedBox(height: 4),
         const _AttributePanel(),
@@ -96,16 +97,16 @@ class HomeTab extends StatelessWidget {
         NoviceCard(onNavigate: onNavigate),
         if (!s.questComplete) ...[
           SectionTitle(
-            'Quest giornaliera',
+            tr('Quest giornaliera'),
             trailing: Text(
               '${(s.questProgress * 100).round()}%',
               style: const TextStyle(color: Palette.ash),
             ),
           ),
           if (s.mode == PlayMode.free && !s.questComplete)
-            const Text(
-              'Sei in modalità Libera: la quest è facoltativa ma dà la Chiave della Spedizione.',
-              style: TextStyle(color: Palette.ash),
+            Text(
+              tr('Sei in modalità Libera: la quest è facoltativa ma dà la Chiave della Spedizione.'),
+              style: const TextStyle(color: Palette.ash),
             ),
           Card(
             child: Padding(
@@ -133,7 +134,7 @@ class HomeTab extends StatelessWidget {
                           Expanded(child: Text(q.label)),
                           Text(
                             '${s.questDoneFor(q.exercise).clamp(0, q.target)}/${q.target}'
-                            '${q.info.perLeg ? ' per gamba' : ''}',
+                            '${q.info.perLeg ? tr(' per gamba') : ''}',
                             style: const TextStyle(color: Palette.ash),
                           ),
                         ],
@@ -147,22 +148,22 @@ class HomeTab extends StatelessWidget {
                         color: s.daily.stretchingDone ? Palette.goldBright : Palette.ash,
                       ),
                       const SizedBox(width: 8),
-                      const Expanded(child: Text('Stretching guidato (5 min)')),
+                      Expanded(child: Text(tr('Stretching guidato (5 min)'))),
                     ],
                   ),
                   const SizedBox(height: 12),
                   FilledButton(
                     onPressed: () => Navigator.of(context)
                         .push(MaterialPageRoute(builder: (_) => const QuestScreen())),
-                    child: Text(s.questComplete ? 'QUEST COMPLETATA' : 'CONTINUA LA QUEST'),
+                    child: Text(s.questComplete ? tr('QUEST COMPLETATA') : tr('CONTINUA LA QUEST')),
                   ),
                   if (s.questComplete)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
                       child: Text(
-                        'Hai guadagnato una Chiave della Spedizione. Vai su Allenati.',
+                        tr('Hai guadagnato una Chiave della Spedizione. Vai su Allenati.'),
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Palette.goldBright),
+                        style: const TextStyle(color: Palette.goldBright),
                       ),
                     ),
                 ],
@@ -171,28 +172,28 @@ class HomeTab extends StatelessWidget {
           ),
         ] else ...[
           SectionTitle(
-            'Quest completata',
-            trailing: Text('Streak ${s.streak}', style: const TextStyle(color: Palette.ember)),
+            tr('Quest completata'),
+            trailing: Text(tr('Streak {n}', {'n': s.streak}), style: const TextStyle(color: Palette.ember)),
           ),
           _QuestCalendar(today: DateTime.now(), active: s.activeDays, quests: s.questDays),
           const SizedBox(height: 6),
-          const Text(
-            'Hai guadagnato una Chiave della Spedizione. Torna domani per la prossima quest.',
-            style: TextStyle(color: Palette.ash, fontSize: 13),
+          Text(
+            tr('Hai guadagnato una Chiave della Spedizione. Torna domani per la prossima quest.'),
+            style: const TextStyle(color: Palette.ash, fontSize: 13),
           ),
         ],
         if (s.retestDue) ...[
           const SizedBox(height: 12),
           ActionTile(
             icon: Icons.emoji_events_outlined,
-            title: 'Torneo della Prova',
-            subtitle: 'Sono passate 4 settimane: rifai il test e guarda quanto sei migliorato.',
+            title: tr('Torneo della Prova'),
+            subtitle: tr('Sono passate 4 settimane: rifai il test e guarda quanto sei migliorato.'),
             color: Palette.goldBright,
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => const FitnessTestScreen(isRetest: true))),
           ),
         ],
-        const SectionTitle('Il tuo andamento'),
+        SectionTitle(tr('Il tuo andamento')),
         const ProgressCard(),
       ],
     );
@@ -317,16 +318,18 @@ class _AttributePanelState extends State<_AttributePanel> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionTitle(
-          'Attributi',
+          tr('Attributi'),
           trailing: allocating
               ? Text(
-                  '$left ${left == 1 ? 'punto' : 'punti'} da spendere',
+                  left == 1
+                      ? tr('{n} punto da spendere', {'n': left})
+                      : tr('{n} punti da spendere', {'n': left}),
                   style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold),
                 )
               : TextButton(
                   onPressed: () => Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => const AttributesScreen())),
-                  child: const Text('Perk e record'),
+                  child: Text(tr('Perk e record')),
                 ),
         ),
         GridView.count(
@@ -361,7 +364,7 @@ class _AttributePanelState extends State<_AttributePanel> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: _spent > 0 ? () => setState(_pending.clear) : null,
-                  child: const FittedBox(child: Text('ANNULLA')),
+                  child: FittedBox(child: Text(tr('ANNULLA'))),
                 ),
               ),
               const SizedBox(width: 8),
@@ -369,7 +372,7 @@ class _AttributePanelState extends State<_AttributePanel> {
                 flex: 2,
                 child: FilledButton(
                   onPressed: _spent > 0 ? () => _confirm(s) : null,
-                  child: const Text('CONFERMA'),
+                  child: Text(tr('CONFERMA')),
                 ),
               ),
             ],
@@ -525,7 +528,9 @@ class _QuestCalendar extends StatelessWidget {
     final day0 = DateTime(today.year, today.month, today.day);
     // Si parte dal lunedì di 3 settimane fa.
     final start = day0.subtract(Duration(days: day0.weekday - 1 + 21));
-    const names = ['L', 'M', 'M', 'G', 'V', 'S', 'D'];
+    final names = appLang == Lang.it
+        ? const ['L', 'M', 'M', 'G', 'V', 'S', 'D']
+        : const ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -553,13 +558,13 @@ class _QuestCalendar extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 6),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.circle, size: 10, color: Palette.goldBright),
-                Text(' quest fatta    ', style: TextStyle(color: Palette.ash, fontSize: 12)),
-                Icon(Icons.circle_outlined, size: 10, color: Palette.gold),
-                Text(' app aperta', style: TextStyle(color: Palette.ash, fontSize: 12)),
+                const Icon(Icons.circle, size: 10, color: Palette.goldBright),
+                Text(tr(' quest fatta    '), style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                const Icon(Icons.circle_outlined, size: 10, color: Palette.gold),
+                Text(tr(' app aperta'), style: const TextStyle(color: Palette.ash, fontSize: 12)),
               ],
             ),
           ],
@@ -612,8 +617,8 @@ class _OathTile extends StatelessWidget {
     final parts = buildMaterials[b]!;
     return ActionTile(
       icon: Icons.local_fire_department_outlined,
-      title: 'Giuramento: ${b.label}${state.oath == null ? ' (auto)' : ''}',
-      subtitle: 'Ogni spedizione ti dà ${itemName(parts[0])} e ${itemName(parts[1])}',
+      title: tr('Giuramento: {build}', {'build': b.label}) + (state.oath == null ? tr(' (auto)') : ''),
+      subtitle: tr('Ogni spedizione ti dà {a} e {b}', {'a': itemName(parts[0]), 'b': itemName(parts[1])}),
       trailing: ItemIcon(parts[0], size: 30),
       onTap: () => showModalBottomSheet<void>(
         context: context,
@@ -623,11 +628,11 @@ class _OathTile extends StatelessWidget {
             shrinkWrap: true,
             padding: const EdgeInsets.all(16),
             children: [
-              const SectionTitle('Giuramento'),
+              SectionTitle(tr('Giuramento')),
               ActionTile(
                 icon: Icons.auto_awesome,
-                title: 'Automatico',
-                subtitle: 'Segue il tuo attributo di build più alto',
+                title: tr('Automatico'),
+                subtitle: tr('Segue il tuo attributo di build più alto'),
                 color: state.oath == null ? Palette.goldBright : Palette.gold,
                 onTap: () {
                   state.setOath(null);

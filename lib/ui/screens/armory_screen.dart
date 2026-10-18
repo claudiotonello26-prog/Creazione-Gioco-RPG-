@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/sound.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
@@ -24,8 +25,9 @@ enum GearSlot {
   neck('Amuleto'),
   cape('Mantello');
 
-  const GearSlot(this.label);
-  final String label;
+  const GearSlot(this._label);
+  final String _label;
+  String get label => tr(_label);
 
   ArmorSlot? get armor => switch (this) {
         helm => ArmorSlot.helm,
@@ -67,7 +69,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
           onTap: () => _select(g),
         );
     return Scaffold(
-      appBar: const OathBar(title: Text('ARMERIA')),
+      appBar: OathBar(title: Text(tr('ARMERIA'))),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
         children: [
@@ -82,7 +84,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                       align: Alignment.center,
                       style: titleStyle(size: 18, color: Palette.goldBright),
                     ),
-                    Text('Livello ${c.level}', style: const TextStyle(color: Palette.ash)),
+                    Text(tr('Livello {level}', {'level': c.level}), style: const TextStyle(color: Palette.ash)),
                   ],
                 ),
               ),
@@ -126,14 +128,14 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _Total('Attacco', '${s.attackValue}', Palette.goldBright)),
+              Expanded(child: _Total(tr('Attacco'), '${s.attackValue}', Palette.goldBright)),
               Expanded(
-                child: _Total('Difesa', '${(s.defenseValue * 100).round()}%', Palette.frost),
+                child: _Total(tr('Difesa'), '${(s.defenseValue * 100).round()}%', Palette.frost),
               ),
-              Expanded(child: _Total('Vita', '${c.maxHp}', Palette.blood)),
+              Expanded(child: _Total(tr('Vita'), '${c.maxHp}', Palette.blood)),
             ],
           ),
-          const SectionTitle('Effetti'),
+          SectionTitle(tr('Effetti')),
           for (final e in _effects(c)) _EffectLine(e),
           SectionTitle(_slot.label),
           _Choices(slot: _slot),
@@ -148,11 +150,12 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
     final aura = w.aura;
     final build = c.armorAttributeBonus;
     return [
-      '${w.displayName}: potere ${w.attackRating(c).round()}',
-      if (aura != null) 'Affinità ${aura.label}: cresce con ${aura.attributeLabel}',
+      tr('{weapon}: potere {power}', {'weapon': w.displayName, 'power': w.attackRating(c).round()}),
+      if (aura != null)
+        tr('Affinità {aura}: cresce con {attr}', {'aura': aura.label, 'attr': aura.attributeLabel}),
       for (final a in w.amulets.where((a) => !a.isAffinity)) '${a.name}: ${a.description}',
       if (c.offhand != null) '${c.offhand!.name}: ${c.offhand!.effect}',
-      if (build > 0) 'Armatura di build: +${(build * 100).round()}% di danno',
+      if (build > 0) tr('Armatura di build: +{pct}% di danno', {'pct': (build * 100).round()}),
       if (c.cape != null && c.cape!.reduction > 0) '${c.cape!.name}: ${c.cape!.effect}',
       if (amuletDefs[c.neck] != null)
         '${amuletDefs[c.neck]!.name}: ${amuletDefs[c.neck]!.description}',
@@ -341,8 +344,8 @@ class _Choices extends StatelessWidget {
             ),
             name: w.displayName,
             detail: wield
-                ? 'Potere ${w.attackRating(c).round()}'
-                : 'Serve ${w.def.usesMagic ? 'Magia' : 'Attacco'} ${w.def.wieldLevel}',
+                ? tr('Potere {power}', {'power': w.attackRating(c).round()})
+                : tr('Serve {skill} {level}', {'skill': w.def.usesMagic ? tr('Magia') : tr('Attacco'), 'level': w.def.wieldLevel}),
             worn: identical(w, c.weapon),
             onTap: identical(w, c.weapon) || !wield ? null : () => s.equip(w),
           ));
@@ -350,14 +353,14 @@ class _Choices extends StatelessWidget {
         extra = Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SectionTitle('Amuleti dell\'arma'),
+            SectionTitle(tr('Amuleti dell\'arma')),
             WeaponSockets(weapon: c.weapon),
           ],
         );
       case GearSlot.offhand:
         if (!c.weapon.def.oneHanded && c.offhands.isNotEmpty) {
           extra = Text(
-            '${c.weapon.def.name} si impugna a due mani: la mano sinistra resta libera.',
+            tr('{weapon} si impugna a due mani: la mano sinistra resta libera.', {'weapon': c.weapon.def.name}),
             textAlign: TextAlign.center,
             style: const TextStyle(color: Palette.ash),
           );
@@ -372,7 +375,7 @@ class _Choices extends StatelessWidget {
             onTap: () => s.holdOffhand(c.offhandId == id ? null : id),
           ));
         }
-        empty = 'Niente per la mano sinistra: lo scudo di legno si fa in Carpenteria.';
+        empty = tr('Niente per la mano sinistra: lo scudo di legno si fa in Carpenteria.');
       case GearSlot.neck:
         final ids = {
           ?c.neck,
@@ -389,11 +392,11 @@ class _Choices extends StatelessWidget {
             onTap: () => s.wearNeck(c.neck == id ? null : id),
           ));
         }
-        empty = 'Nessun amuleto nella borsa: la Fattucchiera vende i passivi.';
+        empty = tr('Nessun amuleto nella borsa: la Fattucchiera vende i passivi.');
         extra = OutlinedButton.icon(
           onPressed: () => openMarket(context, tab: 1),
           icon: const Icon(Icons.storefront),
-          label: const Text('Vai dalla Fattucchiera'),
+          label: Text(tr('Vai dalla Fattucchiera')),
         );
       case GearSlot.cape:
         for (final id in c.capes) {
@@ -409,7 +412,7 @@ class _Choices extends StatelessWidget {
         extra = OutlinedButton.icon(
           onPressed: () => openMarket(context),
           icon: const Icon(Icons.storefront),
-          label: const Text('Altri mantelli dal Mercante'),
+          label: Text(tr('Altri mantelli dal Mercante')),
         );
       default:
         final armor = slot.armor!;
@@ -420,13 +423,13 @@ class _Choices extends StatelessWidget {
             icon: gearIcon(slot, c, id: id),
             name: a.name,
             detail: wear
-                ? 'Assorbe il ${(a.reduction * armor.weight * 100).toStringAsFixed(1)}%'
-                : 'Serve Difesa ${a.wearLevel}',
+                ? tr('Assorbe il {pct}%', {'pct': (a.reduction * armor.weight * 100).toStringAsFixed(1)})
+                : tr('Serve Difesa {level}', {'level': a.wearLevel}),
             worn: c.worn[armor] == id,
             onTap: !wear ? null : () => s.wearPiece(armor, c.worn[armor] == id ? null : id),
           ));
         }
-        empty = 'Nessuna armatura: la prima si forgia all\'Incudine.';
+        empty = tr('Nessuna armatura: la prima si forgia all\'Incudine.');
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
