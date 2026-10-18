@@ -2212,7 +2212,7 @@
     "file": "assets/art/bosses/star_eye_idle.png",
     "type": "cutout",
     "prompt": "Boss: enormous floating eye creature inside a broken brass orrery, rotating metal rings around it, a pupil like a star, dangling cables and small telescopes, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2221,7 +2221,7 @@
     "file": "assets/art/enemies/star_shard_idle.png",
     "type": "cutout",
     "prompt": "Enemy: humanoid figure made of jagged dark star-iron crystals with azure cracks, small crystal fragments hovering around it, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2230,7 +2230,7 @@
     "file": "assets/art/enemies/void_stalker_idle.png",
     "type": "cutout",
     "prompt": "Enemy: lean four-legged void beast whose body shows a starry night sky inside its silhouette, long jaws, azure eyes, smoky edges, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2239,7 +2239,7 @@
     "file": "assets/art/bosses/star_devourer_idle.png",
     "type": "cutout",
     "prompt": "Boss: colossal cosmic serpent-like devourer coiling out of a well, a gaping mouth swallowing falling stars, a body of star-iron plates and void, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2248,7 +2248,7 @@
     "file": "assets/art/enemies/restless_spirit_idle.png",
     "type": "cutout",
     "prompt": "Enemy: small hunched restless ghost wrapped in a faded shroud, a long sad pale face, floating above the ground, wisps of mist, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
