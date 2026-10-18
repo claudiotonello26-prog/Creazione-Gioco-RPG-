@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/sound.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
@@ -53,7 +54,7 @@ class _Socket extends StatelessWidget {
           child: Column(
             children: [
               OneLine(
-                slot == 0 ? 'AFFINITÀ' : 'PASSIVO',
+                slot == 0 ? tr('AFFINITÀ') : tr('PASSIVO'),
                 align: Alignment.center,
                 style: titleStyle(size: 10, spacing: 1.2, color: color),
               ),
@@ -63,7 +64,7 @@ class _Socket extends StatelessWidget {
                   : ItemIcon('amulet_${a.id}', size: 34),
               const SizedBox(height: 6),
               OneLine(
-                a?.name ?? 'Vuoto',
+                a?.name ?? tr('Vuoto'),
                 align: Alignment.center,
                 style: TextStyle(
                   fontSize: 12,
@@ -91,14 +92,14 @@ class _Socket extends StatelessWidget {
           shrinkWrap: true,
           padding: const EdgeInsets.all(16),
           children: [
-            SectionTitle(slot == 0 ? 'Amuleto d\'affinità' : 'Amuleto passivo'),
+            SectionTitle(slot == 0 ? tr('Amuleto d\'affinità') : tr('Amuleto passivo')),
             if (options.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(8),
+              Padding(
+                padding: const EdgeInsets.all(8),
                 child: Text(
-                  'Nessuno nella borsa. Li trovi dalla Fattucchiera.',
+                  tr('Nessuno nella borsa. Li trovi dalla Fattucchiera.'),
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Palette.ash),
+                  style: const TextStyle(color: Palette.ash),
                 ),
               ),
             for (final a in options)
@@ -122,7 +123,7 @@ class _Socket extends StatelessWidget {
                   Navigator.pop(ctx);
                 },
                 icon: const Icon(Icons.eject),
-                label: const Text('TOGLI E RIMETTI NELLA BORSA'),
+                label: Text(tr('TOGLI E RIMETTI NELLA BORSA')),
               ),
           ],
         ),

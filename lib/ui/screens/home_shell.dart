@@ -76,11 +76,11 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(points == 1
-                ? 'Livello su! +1 punto attributo.'
-                : 'Livello su! +$points punti attributo.'),
+                ? tr('Livello su! +1 punto attributo.')
+                : tr('Livello su! +{points} punti attributo.', {'points': points})),
             backgroundColor: Palette.stoneLight,
             behavior: SnackBarBehavior.floating,
-            action: SnackBarAction(label: 'VAI', onPressed: () => goTo(0)),
+            action: SnackBarAction(label: tr('VAI'), onPressed: () => goTo(0)),
           ),
         );
       });
@@ -216,7 +216,7 @@ class _TrainingSection extends StatelessWidget {
               Sound.music(i == 0 ? Music.training : Music.arena);
               if (i == 1) maybeShowHint(context, 'arena');
             },
-            tabs: const [Tab(text: 'Allenamento'), Tab(text: 'Arena')],
+            tabs: [Tab(text: tr('Allenamento')), Tab(text: tr('Arena'))],
           ),
         ),
         body: TabBarView(

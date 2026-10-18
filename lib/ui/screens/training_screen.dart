@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../core/i18n.dart';
 import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
@@ -189,13 +190,13 @@ class _TrainingScreenState extends State<TrainingScreen> {
                       right: 0,
                       child: Center(
                         child: _countdown > 0
-                            ? RepCounterBadge(text: '$_countdown', caption: 'Preparati')
+                            ? RepCounterBadge(text: '$_countdown', caption: tr('Preparati'))
                             : ListenableBuilder(
                                 listenable: _input,
                                 builder: (_, _) => RepCounterBadge(
                                   text: _input.isHold ? '${_input.held.inSeconds}s' : counterText,
                                   caption: [
-                                    if (perLeg) _leg == 0 ? 'gamba destra' : 'gamba sinistra',
+                                    if (perLeg) _leg == 0 ? tr('gamba destra') : tr('gamba sinistra'),
                                     if (remaining != null) '$remaining s',
                                   ].join(' · '),
                                 ),
@@ -219,9 +220,11 @@ class _TrainingScreenState extends State<TrainingScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: Text(
-                'Perfette ${_reps.where((r) => r == RepQuality.perfect).length} · '
-                'Buone ${_reps.where((r) => r == RepQuality.good).length} · '
-                'Scarse ${_reps.where((r) => r == RepQuality.poor).length}',
+                tr('Perfette {p} · Buone {g} · Scarse {s}', {
+                  'p': _reps.where((r) => r == RepQuality.perfect).length,
+                  'g': _reps.where((r) => r == RepQuality.good).length,
+                  's': _reps.where((r) => r == RepQuality.poor).length,
+                }),
                 style: const TextStyle(color: Palette.ash),
               ),
             ),
@@ -232,8 +235,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: perLeg && _leg == 0
-                    ? FilledButton(onPressed: _switchLeg, child: const Text('CAMBIA GAMBA'))
-                    : FilledButton(onPressed: _finish, child: const Text('TERMINA SERIE')),
+                    ? FilledButton(onPressed: _switchLeg, child: Text(tr('CAMBIA GAMBA')))
+                    : FilledButton(onPressed: _finish, child: Text(tr('TERMINA SERIE'))),
               ),
             ),
           ),
@@ -257,9 +260,9 @@ class _SwitchLegOverlay extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.swap_horiz, color: Palette.goldBright, size: 90),
-            Text('CAMBIA GAMBA', style: titleStyle(size: 34, spacing: 3)),
+            Text(tr('CAMBIA GAMBA'), style: titleStyle(size: 34, spacing: 3)),
             const SizedBox(height: 8),
-            Text('Ora la sinistra · $seconds', style: titleStyle(size: 20, color: Palette.holy)),
+            Text(tr('Ora la sinistra · {s}', {'s': seconds}), style: titleStyle(size: 20, color: Palette.holy)),
           ],
         ),
       ),

@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../core/i18n.dart';
+
 /// Indirizzo del server di gioco (Nakama).
 class ServerConfig {
   const ServerConfig({
@@ -100,7 +102,7 @@ class NakamaClient {
       return authenticateDevice(deviceId);
     }
     if (res.statusCode != 200) {
-      throw NakamaException('Accesso al server non riuscito (${res.statusCode})');
+      throw NakamaException(tr('Accesso al server non riuscito ({code})', {'code': res.statusCode}));
     }
     return NakamaSession((jsonDecode(res.body) as Map<String, dynamic>)['token'] as String);
   }
@@ -114,7 +116,7 @@ class NakamaClient {
         )
         .timeout(const Duration(seconds: 10));
     if (res.statusCode != 200) {
-      var message = 'RPC $id fallita (${res.statusCode})';
+      var message = tr('RPC {id} fallita ({code})', {'id': id, 'code': res.statusCode});
       try {
         message = (jsonDecode(res.body) as Map<String, dynamic>)['message'] as String? ?? message;
       } catch (_) {}
@@ -140,7 +142,7 @@ class NakamaClient {
       await _http.send(req).timeout(const Duration(seconds: 10)),
     );
     if (res.statusCode != 200) {
-      var message = 'Errore del server (${res.statusCode})';
+      var message = tr('Errore del server ({code})', {'code': res.statusCode});
       try {
         message = (jsonDecode(res.body) as Map<String, dynamic>)['message'] as String? ?? message;
       } catch (_) {}
@@ -197,7 +199,7 @@ class NakamaSocket {
       final c = _pending.remove(cid)!;
       if (msg['error'] != null) {
         c.completeError(NakamaException(
-            (msg['error'] as Map<String, dynamic>)['message'] as String? ?? 'Errore del server'));
+            (msg['error'] as Map<String, dynamic>)['message'] as String? ?? tr('Errore del server')));
       } else {
         c.complete(msg);
       }
@@ -221,7 +223,7 @@ class NakamaSocket {
       ));
     } else if (msg['error'] != null) {
       _errors.add(NakamaException(
-          (msg['error'] as Map<String, dynamic>)['message'] as String? ?? 'Errore del server'));
+          (msg['error'] as Map<String, dynamic>)['message'] as String? ?? tr('Errore del server')));
     }
   }
 
@@ -232,7 +234,7 @@ class NakamaSocket {
     _channel.sink.add(jsonEncode({'cid': cid, ...body}));
     return c.future.timeout(const Duration(seconds: 10), onTimeout: () {
       _pending.remove(cid);
-      throw NakamaException('Il server non risponde');
+      throw NakamaException(tr('Il server non risponde'));
     });
   }
 
@@ -274,7 +276,7 @@ class NakamaSocket {
     await _sub.cancel();
     await _channel.sink.close();
     for (final c in _pending.values) {
-      if (!c.isCompleted) c.completeError(NakamaException('Connessione chiusa'));
+      if (!c.isCompleted) c.completeError(NakamaException(tr('Connessione chiusa')));
     }
     _pending.clear();
     await _matchmaker.close();

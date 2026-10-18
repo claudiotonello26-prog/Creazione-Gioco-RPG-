@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/i18n.dart';
 import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
@@ -318,7 +319,7 @@ class _CombatScreenState extends State<CombatScreen> {
     final e = _engine;
     final label = widget.move?.name ?? widget.exerciseLabel ?? exercises[widget.exercise]!.name;
     final title = widget.endless
-        ? 'CACCIA · ONDATA ${_wave + 1}'
+        ? tr('CACCIA · ONDATA {n}', {'n': _wave + 1})
         : widget.respawn
             ? '${widget.enemy.name.toUpperCase()} · $_kills'
             : widget.enemy.name.toUpperCase();
@@ -340,9 +341,9 @@ class _CombatScreenState extends State<CombatScreen> {
                       StatBar(
                         value: e.enemyHp / e.enemyMaxHp,
                         color: Palette.blood,
-                        label: '${widget.enemy.name} · livello ${widget.enemy.level}'
+                        label: '${tr('{name} · livello {n}', {'name': widget.enemy.name, 'n': widget.enemy.level})}'
                             '${widget.enemy.isBoss ? ' · BOSS' : ''}'
-                            '${_wave > 0 ? ' · +${(_wave * CombatEngine.waveHpStep * 100).round()}% vita' : ''}',
+                            '${_wave > 0 ? tr(' · +{p}% vita', {'p': (_wave * CombatEngine.waveHpStep * 100).round()}) : ''}',
                         height: 12,
                       ),
                       const SizedBox(height: 4),
@@ -364,15 +365,15 @@ class _CombatScreenState extends State<CombatScreen> {
                         _CountdownOverlay(
                           seconds: _countdown,
                           title: _kills == 0
-                              ? 'PREPARATI'
+                              ? tr('PREPARATI')
                               : widget.endless
-                                  ? 'ONDATA ${_wave + 1}'
-                                  : 'RINASCE',
+                                  ? tr('ONDATA {n}', {'n': _wave + 1})
+                                  : tr('RINASCE'),
                           subtitle: _kills == 0
-                              ? 'Mettiti in posizione davanti alla fotocamera'
+                              ? tr('Mettiti in posizione davanti alla fotocamera')
                               : widget.endless
-                                  ? 'Arriva un nemico più forte'
-                                  : 'Si rialza: continua o ritirati col bottino',
+                                  ? tr('Arriva un nemico più forte')
+                                  : tr('Si rialza: continua o ritirati col bottino'),
                         ),
                     ],
                   ),
@@ -385,7 +386,7 @@ class _CombatScreenState extends State<CombatScreen> {
                         child: StatBar(
                           value: e.heroHp / e.heroMaxHp,
                           color: Palette.moss,
-                          label: 'Vita ${e.heroHp.round()}/${e.heroMaxHp.round()}',
+                          label: tr('Vita {hp}/{max}', {'hp': e.heroHp.round(), 'max': e.heroMaxHp.round()}),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -402,9 +403,13 @@ class _CombatScreenState extends State<CombatScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
-                    '$label · rep ${e.reps} (previste ~${e.enemyMaxHp.round()}) · '
-                    'postura ${e.stance.label}'
-                    '${e.penetration < 1 ? ' · i colpi rimbalzano: build troppo debole' : ''}',
+                    '${tr('{label} · rep {reps} (previste ~{max}) · postura {stance}', {
+                      'label': label,
+                      'reps': e.reps,
+                      'max': e.enemyMaxHp.round(),
+                      'stance': e.stance.label,
+                    })}'
+                    '${e.penetration < 1 ? tr(' · i colpi rimbalzano: build troppo debole') : ''}',
                     style: const TextStyle(color: Palette.ash, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
@@ -425,8 +430,8 @@ class _CombatScreenState extends State<CombatScreen> {
                   icon: const Icon(Icons.directions_run, color: Palette.ash),
                   label: Text(
                     widget.looping && _kills > 0
-                        ? 'Ritirati col bottino'
-                        : 'Fuggi (tieni gli XP delle rep fatte)',
+                        ? tr('Ritirati col bottino')
+                        : tr('Fuggi (tieni gli XP delle rep fatte)'),
                     style: const TextStyle(color: Palette.ash),
                   ),
                 ),
@@ -573,11 +578,11 @@ class _ResultDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final victory = status == CombatStatus.victory;
     final title = endless
-        ? 'CACCIA FINITA'
+        ? tr('CACCIA FINITA')
         : switch (status) {
-            CombatStatus.victory => 'NEMICO ABBATTUTO',
-            CombatStatus.defeated => 'SEI CADUTO',
-            _ => 'SEI FUGGITO',
+            CombatStatus.victory => tr('NEMICO ABBATTUTO'),
+            CombatStatus.defeated => tr('SEI CADUTO'),
+            _ => tr('SEI FUGGITO'),
           };
     return AlertDialog(
       backgroundColor: Palette.stone,
@@ -593,37 +598,38 @@ class _ResultDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (endless) Text('Nemici abbattuti: $wavesCleared'),
-          Text('$reps rep · +$xp XP'),
-          if (runes > 0) Text('+$runes rune'),
+          if (endless) Text(tr('Nemici abbattuti: {n}', {'n': wavesCleared})),
+          Text(tr('{reps} rep · +{xp} XP', {'reps': reps, 'xp': xp})),
+          if (runes > 0) Text(tr('+{n} rune', {'n': runes})),
           for (final m in materials.entries) Text('+${m.value} ${materialNames[m.key] ?? m.key}'),
           for (final w in rareWeapons)
             Text(
-              'ARMA RARA: ${weaponDefs[w]!.name}',
+              tr('ARMA RARA: {name}', {'name': weaponDefs[w]!.name}),
               style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold),
             ),
           if (fatigue < 1)
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Text(
-                'Gruppo muscolare affaticato: bottino al ${(fatigue * 100).round()}%. '
-                'Cambia gruppo per tornare al pieno, gli XP restano interi.',
+                tr('Gruppo muscolare affaticato: bottino al {p}%. '
+                    'Cambia gruppo per tornare al pieno, gli XP restano interi.',
+                    {'p': (fatigue * 100).round()}),
                 style: const TextStyle(color: Palette.ember),
               ),
             ),
           if (status == CombatStatus.defeated)
-            const Padding(
-              padding: EdgeInsets.only(top: 8),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
-                'Tieni il ritmo: se rallenti il nemico si rimette in forze. '
-                'Più Vigore e un\'arma potenziata ti fanno resistere di più.',
-                style: TextStyle(color: Palette.ash),
+                tr('Tieni il ritmo: se rallenti il nemico si rimette in forze. '
+                    'Più Vigore e un\'arma potenziata ti fanno resistere di più.'),
+                style: const TextStyle(color: Palette.ash),
               ),
             ),
         ],
       ),
       actions: [
-        FilledButton(onPressed: () => Navigator.of(context).pop(), child: const Text('CONTINUA')),
+        FilledButton(onPressed: () => Navigator.of(context).pop(), child: Text(tr('CONTINUA'))),
       ],
     );
   }

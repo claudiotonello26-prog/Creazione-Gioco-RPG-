@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/oath_bar.dart';
+import '../../core/i18n.dart';
 
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,7 @@ class AttributesScreen extends StatelessWidget {
     final c = s.character;
     final trained = s.trainedGroups.values.expand((g) => g).toSet();
     return Scaffold(
-      appBar: OathBar(title: const Text('PERK E RECORD')),
+      appBar: OathBar(title: Text(tr('PERK E RECORD'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -33,7 +34,7 @@ class AttributesScreen extends StatelessWidget {
               subtitle: Text(_effect(a, c), style: const TextStyle(color: Palette.ash)),
             ),
           if (c.unlockedPerkChoices.isNotEmpty) ...[
-            const SectionTitle('Perk'),
+            SectionTitle(tr('Perk')),
             for (final choice in c.unlockedPerkChoices)
               Card(
                 child: Padding(
@@ -58,13 +59,13 @@ class AttributesScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            const Text(
-              'La scelta è definitiva: si cambia solo con un oggetto di Rinascita.',
-              style: TextStyle(color: Palette.ash, fontSize: 12),
+            Text(
+              tr('La scelta è definitiva: si cambia solo con un oggetto di Rinascita.'),
+              style: const TextStyle(color: Palette.ash, fontSize: 12),
             ),
           ],
-          const SectionTitle('Il tuo corpo'),
-          const Text('Gruppi allenati negli ultimi 7 giorni', style: TextStyle(color: Palette.ash)),
+          SectionTitle(tr('Il tuo corpo')),
+          Text(tr('Gruppi allenati negli ultimi 7 giorni'), style: const TextStyle(color: Palette.ash)),
           const SizedBox(height: 6),
           Wrap(
             spacing: 8,
@@ -79,20 +80,20 @@ class AttributesScreen extends StatelessWidget {
             ],
           ),
           if (trained.isNotEmpty && trained.length < 4)
-            const Padding(
-              padding: EdgeInsets.only(top: 8),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
-                'Squilibrio: alcuni gruppi sono trascurati. Il Bonus Varietà li premia.',
-                style: TextStyle(color: Palette.ember),
+                tr('Squilibrio: alcuni gruppi sono trascurati. Il Bonus Varietà li premia.'),
+                style: const TextStyle(color: Palette.ember),
               ),
             ),
-          const SectionTitle('Record reali'),
+          SectionTitle(tr('Record reali')),
           for (final id in [...baseExercises, ExerciseId.plank])
             ListTile(
               dense: true,
               title: OneLine(exercises[id]!.name),
               subtitle: Text(
-                'Divisione ${s.divisionOf(id).label}',
+                tr('Divisione {division}', {'division': s.divisionOf(id).label}),
                 style: const TextStyle(color: Palette.ash),
               ),
               trailing: Text(
@@ -105,8 +106,8 @@ class AttributesScreen extends StatelessWidget {
           const SizedBox(height: 8),
           ActionTile(
             icon: Icons.settings_outlined,
-            title: 'Impostazioni',
-            subtitle: 'Fotocamera, modalità, server dell\'Arena, nuovo test',
+            title: tr('Impostazioni'),
+            subtitle: tr('Fotocamera, modalità, server dell\'Arena, nuovo test'),
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
           ),
@@ -125,8 +126,8 @@ class AttributesScreen extends StatelessWidget {
       };
 
   static String _effect(Attribute a, Character c) => switch (a) {
-        Attribute.vigor => 'Vita ${c.maxHp} · resisti di più ai colpi',
-        Attribute.endurance => 'Il Rampage regge ${c.rampageGrace.toStringAsFixed(1)} s di pausa',
+        Attribute.vigor => tr('Vita {hp} · resisti di più ai colpi', {'hp': c.maxHp}),
+        Attribute.endurance => tr('Il Rampage regge {s} s di pausa', {'s': c.rampageGrace.toStringAsFixed(1)}),
         _ => a.description,
       };
 }

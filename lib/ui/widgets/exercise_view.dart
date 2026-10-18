@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../domain/combat.dart';
 import '../../domain/exercise.dart';
@@ -16,9 +17,9 @@ RepInput createRepInput(bool useCamera, ExerciseId exercise) =>
 
 String hintText(FormHint h) => switch (h) {
       FormHint.none => '',
-      FormHint.notVisible => 'Mettiti tutto nell\'inquadratura',
-      FormHint.goDeeper => 'Scendi di più: le mezze rep non contano',
-      FormHint.extendFully => 'Distenditi del tutto',
+      FormHint.notVisible => tr('Mettiti tutto nell\'inquadratura'),
+      FormHint.goDeeper => tr('Scendi di più: le mezze rep non contano'),
+      FormHint.extendFully => tr('Distenditi del tutto'),
     };
 
 /// Anteprima della fotocamera con lo scheletro sopra, oppure i pulsanti per
@@ -50,7 +51,7 @@ class ExerciseView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Text(
-                '${i.error}\n\nPuoi passare all\'inserimento manuale dal Profilo.',
+                '${i.error}\n\n${tr('Puoi passare all\'inserimento manuale dal Profilo.')}',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -191,21 +192,21 @@ class _ManualPad extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            'Inserimento manuale',
-            style: TextStyle(color: Palette.ash, letterSpacing: 2),
+          Text(
+            tr('Inserimento manuale'),
+            style: const TextStyle(color: Palette.ash, letterSpacing: 2),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Rep non verificate: non valgono per le classifiche.',
-            style: TextStyle(color: Palette.ash, fontSize: 12),
+          Text(
+            tr('Rep non verificate: non valgono per le classifiche.'),
+            style: const TextStyle(color: Palette.ash, fontSize: 12),
           ),
           const SizedBox(height: 20),
           if (input.isHold)
             FilledButton.icon(
               onPressed: input.toggleHold,
               icon: Icon(input.holding ? Icons.pause : Icons.play_arrow),
-              label: Text(input.holding ? 'Mi fermo' : 'Tengo la posizione'),
+              label: Text(input.holding ? tr('Mi fermo') : tr('Tengo la posizione')),
             )
           else
             Wrap(
@@ -223,7 +224,7 @@ class _ManualPad extends StatelessWidget {
                       },
                     ),
                     onPressed: () => input.tapRep(q),
-                    child: Text('Rep ${q.label.toLowerCase()}'),
+                    child: Text(tr('Rep {q}', {'q': q.label.toLowerCase()})),
                   ),
               ],
             ),

@@ -12,10 +12,11 @@ enum Attribute {
   faith('Faith', 'Danno sacro, cure e benedizioni'),
   intelligence('Intelligence', 'Magie ed effetti di stato');
 
-  const Attribute(this.key, this.description);
+  const Attribute(this.key, this._description);
   final String key;
   String get label => tr(key);
-  final String description;
+  final String _description;
+  String get description => tr(_description);
 }
 
 class Character {
@@ -250,10 +251,12 @@ Map<ArmorSlot, String> _readWorn(Map<String, dynamic> j) {
 }
 
 class Perk {
-  const Perk(this.id, this.name, this.description);
+  const Perk(this.id, this._name, this._description);
   final String id;
-  final String name;
-  final String description;
+  final String _name;
+  final String _description;
+  String get name => tr(_name);
+  String get description => tr(_description);
 }
 
 class PerkChoice {

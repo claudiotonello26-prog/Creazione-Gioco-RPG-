@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../widgets/oath_bar.dart';
+import '../../core/i18n.dart';
 
 import 'package:provider/provider.dart';
 
@@ -33,49 +34,49 @@ class ArenaTab extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                const Text(
-                  'ARENA PURA',
-                  style: TextStyle(letterSpacing: 4, color: Palette.goldBright, fontSize: 20),
+                Text(
+                  tr('ARENA PURA'),
+                  style: const TextStyle(letterSpacing: 4, color: Palette.goldBright, fontSize: 20),
                 ),
                 const SizedBox(height: 12),
-                Text('${s.seasonTitle} · ${s.arenaPoints} punti stagione'),
+                Text(tr('{title} · {points} punti stagione', {'title': s.seasonTitle, 'points': s.arenaPoints})),
                 Text(
-                  'Vittorie $wins · Sconfitte $losses',
+                  tr('Vittorie {wins} · Sconfitte {losses}', {'wins': wins, 'losses': losses}),
                   style: const TextStyle(color: Palette.ash),
                 ),
               ],
             ),
           ),
         ),
-        const SectionTitle('Duello live online'),
+        SectionTitle(tr('Duello live online')),
         if (s.serverAddress.isEmpty || !s.useCamera)
           Text(
             s.serverAddress.isEmpty
-                ? 'Imposta il server dell\'Arena nel Profilo per sfidare persone vere.'
-                : 'Il live richiede la fotocamera: le rep devono essere verificate.',
+                ? tr('Imposta il server dell\'Arena nel Profilo per sfidare persone vere.')
+                : tr('Il live richiede la fotocamera: le rep devono essere verificate.'),
             style: const TextStyle(color: Palette.ash),
           )
         else
           for (final c in arenaChallenges.values)
             ActionTile(
               icon: Icons.public,
-              title: '${exercises[c.exercise]!.name} · live',
-              subtitle: 'Contro una persona vera',
+              title: tr('{exercise} · live', {'exercise': exercises[c.exercise]!.name}),
+              subtitle: tr('Contro una persona vera'),
               color: Palette.goldBright,
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => ArenaLiveScreen(challenge: c))),
             ),
-        const SectionTitle('Duello contro ombre'),
+        SectionTitle(tr('Duello contro ombre')),
         for (final c in arenaChallenges.values)
           ActionTile(
             icon: Icons.sports_kabaddi,
             title: exercises[c.exercise]!.name,
-            subtitle: 'Divisione: ${s.divisionOf(c.exercise).label}',
+            subtitle: tr('Divisione: {division}', {'division': s.divisionOf(c.exercise).label}),
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => ArenaDuelScreen(challenge: c))),
           ),
         if (s.arenaHistory.isNotEmpty) ...[
-          const SectionTitle('Ultimi duelli'),
+          SectionTitle(tr('Ultimi duelli')),
           for (final r in s.arenaHistory.take(10))
             ListTile(
               dense: true,
@@ -83,7 +84,7 @@ class ArenaTab extends StatelessWidget {
                 r.won > 0 ? Icons.emoji_events : (r.won < 0 ? Icons.close : Icons.drag_handle),
                 color: r.won > 0 ? Palette.goldBright : Palette.ash,
               ),
-              title: OneLine('${exercises[r.exercise]!.name} contro ${r.opponent}'),
+              title: OneLine(tr('{exercise} contro {opponent}', {'exercise': exercises[r.exercise]!.name, 'opponent': tr(r.opponent)})),
               trailing: Text(r.day, style: const TextStyle(color: Palette.ash)),
             ),
         ],
@@ -181,13 +182,17 @@ class _ArenaDuelScreenState extends State<ArenaDuelScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: Palette.stone,
         title: Text(
-          cmp > 0 ? 'VITTORIA' : (cmp < 0 ? 'SCONFITTA' : 'PAREGGIO'),
+          cmp > 0 ? tr('VITTORIA') : (cmp < 0 ? tr('SCONFITTA') : tr('PAREGGIO')),
           textAlign: TextAlign.center,
           style: TextStyle(color: cmp > 0 ? Palette.goldBright : Palette.ash, letterSpacing: 4),
         ),
         content: Text(
-          'Tu: ${_describe(mine)}\n${_opponent.name}: ${_describe(theirs)}\n\n'
-          'Punti stagione ${rankDelta(cmp) >= 0 ? '+' : ''}${rankDelta(cmp)}',
+          tr('Tu: {mine}\n{opponent}: {theirs}\n\nPunti stagione {delta}', {
+            'mine': _describe(mine),
+            'opponent': _opponent.displayName,
+            'theirs': _describe(theirs),
+            'delta': '${rankDelta(cmp) >= 0 ? '+' : ''}${rankDelta(cmp)}',
+          }),
         ),
         actions: [
           FilledButton(
@@ -195,7 +200,7 @@ class _ArenaDuelScreenState extends State<ArenaDuelScreen> {
               Navigator.of(ctx).pop();
               Navigator.of(context).pop();
             },
-            child: const Text('CONTINUA'),
+            child: Text(tr('CONTINUA')),
           ),
         ],
       ),
@@ -205,8 +210,8 @@ class _ArenaDuelScreenState extends State<ArenaDuelScreen> {
   String _describe(ArenaResult r) => switch (c.goal) {
         ChallengeGoal.fastestReps => r.completed
             ? '${r.elapsedSeconds.toStringAsFixed(1)} s'
-            : '${r.validReps}/${c.targetReps} rep (non completata)',
-        ChallengeGoal.mostRepsInTime => '${r.validReps} rep',
+            : tr('{done}/{target} rep (non completata)', {'done': r.validReps, 'target': c.targetReps}),
+        ChallengeGoal.mostRepsInTime => tr('{n} rep', {'n': r.validReps}),
         ChallengeGoal.longestHold => '${r.elapsedSeconds.toStringAsFixed(0)} s',
       };
 
@@ -252,21 +257,21 @@ class _ArenaDuelScreenState extends State<ArenaDuelScreen> {
                     value: _myProgress,
                     color: Palette.goldBright,
                     label: c.goal == ChallengeGoal.longestHold
-                        ? 'Tu · ${_input.held.inSeconds}s'
-                        : 'Tu · $_myReps rep',
+                        ? tr('Tu · {s}s', {'s': _input.held.inSeconds})
+                        : tr('Tu · {n} rep', {'n': _myReps}),
                     height: 14,
                   ),
                   const SizedBox(height: 8),
                   StatBar(
                     value: _opponentProgress,
                     color: Palette.blood,
-                    label: '${_opponent.name} (${_opponent.division.label})'
-                        '${c.goal == ChallengeGoal.longestHold ? '' : ' · ${c.goal == ChallengeGoal.fastestReps ? oppReps.clamp(0, c.targetReps) : oppReps} rep'}',
+                    label: '${_opponent.displayName} (${_opponent.division.label})'
+                        '${c.goal == ChallengeGoal.longestHold ? '' : ' · ${tr('{n} rep', {'n': c.goal == ChallengeGoal.fastestReps ? oppReps.clamp(0, c.targetReps) : oppReps})}'}',
                     height: 14,
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    _countdown > 0 ? 'Inizia tra $_countdown' : '${_watch.elapsed.inSeconds}s',
+                    _countdown > 0 ? tr('Inizia tra {n}', {'n': _countdown}) : '${_watch.elapsed.inSeconds}s',
                     style: const TextStyle(fontSize: 22, color: Palette.goldBright),
                   ),
                 ],
@@ -281,7 +286,7 @@ class _ArenaDuelScreenState extends State<ArenaDuelScreen> {
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: _countdown > 0 || _over ? null : _end,
-                    child: const Text('Mi fermo qui'),
+                    child: Text(tr('Mi fermo qui')),
                   ),
                 ),
               ),

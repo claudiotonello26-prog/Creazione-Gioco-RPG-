@@ -1,6 +1,10 @@
+// I nomi restano in italiano nel campo privato e si traducono nel getter.
+// ignore_for_file: prefer_initializing_formals
+
 import 'dart:math';
 import 'dart:ui' show Color;
 
+import '../core/i18n.dart';
 import 'character.dart';
 
 /// Gradi di scaling stile souls.
@@ -23,8 +27,9 @@ enum WeaponStyle {
   ranged('Distanza'),
   magic('Magia');
 
-  const WeaponStyle(this.label);
-  final String label;
+  const WeaponStyle(this._label);
+  final String _label;
+  String get label => tr(_label);
 }
 
 enum DamageType { physical, holy, magic }
@@ -32,7 +37,7 @@ enum DamageType { physical, holy, magic }
 class WeaponDef {
   const WeaponDef({
     required this.id,
-    required this.name,
+    required String name,
     required this.style,
     required this.baseDamage,
     required this.scaling,
@@ -41,10 +46,14 @@ class WeaponDef {
     this.heavy = false,
     this.recipe = const {},
     this.craftLevel = 1,
-  });
+  }) : _name = name;
 
   final String id;
-  final String name;
+  final String _name;
+
+  /// Nome tradotto nella lingua corrente; [nameIt] è quello italiano.
+  String get name => tr(_name);
+  String get nameIt => _name;
   final WeaponStyle style;
   final int baseDamage;
   final Map<Attribute, ScalingGrade> scaling;
@@ -94,9 +103,11 @@ enum Station {
   anvil('Incudine', 'Batti spade, martelli e armature'),
   enchant('Incantamento', 'Le pietre speciali potenziano l\'arma e ne risvegliano l\'aura');
 
-  const Station(this.label, this.description);
-  final String label;
-  final String description;
+  const Station(this._label, this._description);
+  final String _label;
+  final String _description;
+  String get label => tr(_label);
+  String get description => tr(_description);
 
   /// Colore della postazione: legno arancio, fuoco rosso, acciaio blu,
   /// incanto viola.
@@ -116,9 +127,11 @@ enum Affinity {
   arcane('Arcano', 'Intelligenza', Color(0xFF3D7BFF), Color(0xFF7FF4FF)),
   holy('Luce divina', 'Fede', Color(0xFFE9C34A), Color(0xFFFFF4C2));
 
-  const Affinity(this.label, this.attributeLabel, this.color, this.glow);
-  final String label;
-  final String attributeLabel;
+  const Affinity(this._label, this._attributeLabel, this.color, this.glow);
+  final String _label;
+  final String _attributeLabel;
+  String get label => tr(_label);
+  String get attributeLabel => tr(_attributeLabel);
   final Color color;
   final Color glow;
 
@@ -238,8 +251,9 @@ enum ArmorSlot {
   legs('Gambali', 0.20),
   boots('Stivali', 0.10);
 
-  const ArmorSlot(this.label, this.weight);
-  final String label;
+  const ArmorSlot(this._label, this.weight);
+  final String _label;
+  String get label => tr(_label);
   final double weight;
 }
 
@@ -247,15 +261,17 @@ enum ArmorSlot {
 class ArmorDef {
   const ArmorDef({
     required this.id,
-    required this.name,
+    required String name,
     required this.reduction,
     required this.recipe,
     required this.look,
     this.craftLevel = 1,
     this.attribute,
-  });
+  }) : _name = name;
   final String id;
-  final String name;
+  final String _name;
+  String get name => tr(_name);
+  String get nameIt => _name;
 
   /// Materiale di build: +5% di danno ogni 10 punti di questo attributo, in
   /// proporzione al pezzo indossato.
@@ -402,13 +418,15 @@ const Map<String, ArmorDef> armorDefs = {
 class CapeDef {
   const CapeDef({
     required this.id,
-    required this.name,
+    required String name,
     required this.color,
     this.reduction = 0,
     this.price = 0,
-  });
+  }) : _name = name;
   final String id;
-  final String name;
+  final String _name;
+  String get name => tr(_name);
+  String get nameIt => _name;
   final int color;
 
   /// Quota di danno in più assorbita.
@@ -416,7 +434,9 @@ class CapeDef {
   final int price;
 
   String get effect =>
-      reduction > 0 ? 'Assorbe un altro ${(reduction * 100).round()}% dei colpi' : 'Solo stile';
+      reduction > 0
+          ? tr('Assorbe un altro {pct}% dei colpi', {'pct': (reduction * 100).round()})
+          : tr('Solo stile');
 }
 
 const Map<String, CapeDef> capeDefs = {
@@ -448,15 +468,17 @@ const Map<String, CapeDef> capeDefs = {
 class OffhandDef {
   const OffhandDef({
     required this.id,
-    required this.name,
+    required String name,
     required this.recipe,
     required this.station,
     this.reduction = 0,
     this.damageBonus = 0,
     this.craftLevel = 1,
-  });
+  }) : _name = name;
   final String id;
-  final String name;
+  final String _name;
+  String get name => tr(_name);
+  String get nameIt => _name;
   final Map<String, int> recipe;
   final Station station;
   final int craftLevel;
@@ -470,8 +492,8 @@ class OffhandDef {
   bool get isShield => reduction > 0;
 
   String get effect => isShield
-      ? 'Assorbe un altro ${(reduction * 100).round()}% dei colpi'
-      : '+${(damageBonus * 100).round()}% di danno con due lame';
+      ? tr('Assorbe un altro {pct}% dei colpi', {'pct': (reduction * 100).round()})
+      : tr('+{pct}% di danno con due lame', {'pct': (damageBonus * 100).round()});
 }
 
 const Map<String, OffhandDef> offhandDefs = {
@@ -831,10 +853,16 @@ String? stoneFor(WeaponDef def, int level) {
 int stoneCostFor(WeaponDef def, int level) => def.rare || level == 10 ? 1 : ((level - 1) % 3) + 1;
 
 class Amulet {
-  const Amulet(this.id, this.name, this.description, this.apply);
+  const Amulet(this.id, String name, String description, this.apply)
+      : _name = name,
+        _description = description;
   final String id;
-  final String name;
-  final String description;
+  final String _name;
+  final String _description;
+  String get name => tr(_name);
+  String get nameIt => _name;
+  String get description => tr(_description);
+  String get descriptionIt => _description;
   final AmuletEffect apply;
 
   /// Gli amuleti d'affinità vanno nella prima incastonatura, gli altri nelle
@@ -965,7 +993,23 @@ String itemName(String id) =>
     amuletDefs[id.replaceFirst('amulet_', '')]?.name ??
     id;
 
-const Map<String, String> materialNames = {
+/// I nomi dei materiali nella lingua corrente (per l'italiano, la tabella
+/// [materialNamesIt] così com'è).
+Map<String, String> get materialNames {
+  if (appLang == Lang.it) return materialNamesIt;
+  final cached = _materialNamesCache;
+  if (cached != null && cached.$1 == appLang) return cached.$2;
+  final out = Map<String, String>.unmodifiable({
+    for (final e in materialNamesIt.entries) e.key: tr(e.value),
+  });
+  _materialNamesCache = (appLang, out);
+  return out;
+}
+
+(Lang, Map<String, String>)? _materialNamesCache;
+
+/// I nomi italiani dei materiali, come scritti nel codice.
+const Map<String, String> materialNamesIt = {
   'iron_ore': 'Minerale di ferro',
   'ash_wood': 'Legno di frassino cenere',
   'beast_essence': 'Essenza di bestia',

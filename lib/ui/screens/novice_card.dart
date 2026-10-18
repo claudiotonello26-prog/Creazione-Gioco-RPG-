@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/enemies.dart';
@@ -29,14 +30,19 @@ class NoviceCard extends StatelessWidget {
     await showTrainer(context, [
       TrainerLine(
         TrainerPose.cheering,
-        'Missione "${done.title}" compiuta! '
-        '${[if (done.runes > 0) '+${done.runes} rune', for (final e in done.loot.entries) '+${e.value} ${materialNames[e.key]}'].join(', ')}.',
+        tr('Missione "{title}" compiuta! {loot}.', {
+          'title': done.title,
+          'loot': [
+            if (done.runes > 0) tr('+{n} rune', {'n': done.runes}),
+            for (final e in done.loot.entries) '+${e.value} ${materialNames[e.key]}',
+          ].join(', '),
+        }),
       ),
       if (next != null)
         TrainerLine(TrainerPose.pointing, next.trainer)
       else
-        const TrainerLine(TrainerPose.crossed,
-            'Il Cammino del Novizio è finito. Non sei più un novizio. Sei... appena accettabile. Continua così.'),
+        TrainerLine(TrainerPose.crossed,
+            tr('Il Cammino del Novizio è finito. Non sei più un novizio. Sei... appena accettabile. Continua così.')),
     ]);
   }
 
@@ -70,7 +76,7 @@ class NoviceCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('CAMMINO DEL NOVIZIO · ${state.noviceStep + 1}/${noviceQuests.length}',
+                    Text(tr('CAMMINO DEL NOVIZIO · {n}/{total}', {'n': state.noviceStep + 1, 'total': noviceQuests.length}),
                         style: titleStyle(size: 11, color: Palette.gold, spacing: 1.5)),
                     const SizedBox(height: 2),
                     Text(q.title, style: titleStyle(size: 17, color: Palette.holy, spacing: 0.5)),
@@ -83,11 +89,11 @@ class NoviceCard extends StatelessWidget {
                       child: ready
                           ? FilledButton(
                               onPressed: () => _claim(context, state),
-                              child: const Text('RISCUOTI'))
+                              child: Text(tr('RISCUOTI')))
                           : OutlinedButton.icon(
                               onPressed: () => _go(context, state, q),
                               icon: const Icon(Icons.arrow_forward, size: 18),
-                              label: const Text('VAI'),
+                              label: Text(tr('VAI')),
                             ),
                     ),
                   ],

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 
+import '../core/i18n.dart';
 import '../domain/combat.dart';
 import '../domain/exercise.dart';
 import 'pose_frame.dart';
@@ -76,7 +77,7 @@ class CameraRepInput extends RepInput {
   Future<void> start() async {
     try {
       final cameras = await availableCameras();
-      if (cameras.isEmpty) throw CameraException('none', 'Nessuna fotocamera');
+      if (cameras.isEmpty) throw CameraException('none', tr('Nessuna fotocamera'));
       _camera = cameras.firstWhere(
         (c) => c.lensDirection == CameraLensDirection.front,
         orElse: () => cameras.first,
@@ -94,7 +95,7 @@ class CameraRepInput extends RepInput {
       await c.startImageStream(_onImage);
       notifyListeners();
     } catch (e) {
-      _error = 'Fotocamera non disponibile: $e';
+      _error = tr('Fotocamera non disponibile: {e}', {'e': e});
       notifyListeners();
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../core/i18n.dart';
 import 'combat.dart';
 import 'exercise.dart';
 
@@ -10,8 +11,9 @@ enum Division {
   knight('Cavaliere'),
   champion('Campione');
 
-  const Division(this.label);
-  final String label;
+  const Division(this._label);
+  final String _label;
+  String get label => tr(_label);
 }
 
 enum ChallengeGoal {
@@ -39,10 +41,12 @@ class ArenaChallenge {
   final int seconds;
 
   String get description => switch (goal) {
-        ChallengeGoal.fastestReps =>
-          '$targetReps rep valide${exercises[exercise]!.perLeg ? ' per gamba' : ''}: vince il tempo più basso',
-        ChallengeGoal.mostRepsInTime => '$seconds secondi: vince chi fa più rep valide',
-        ChallengeGoal.longestHold => 'Vince chi resiste di più',
+        ChallengeGoal.fastestReps => exercises[exercise]!.perLeg
+            ? tr('{n} rep valide per gamba: vince il tempo più basso', {'n': targetReps})
+            : tr('{n} rep valide: vince il tempo più basso', {'n': targetReps}),
+        ChallengeGoal.mostRepsInTime =>
+          tr('{s} secondi: vince chi fa più rep valide', {'s': seconds}),
+        ChallengeGoal.longestHold => tr('Vince chi resiste di più'),
       };
 }
 
@@ -132,7 +136,12 @@ class ArenaOpponent {
     required this.holdSeconds,
   });
 
+  /// Il nome com'è scritto qui (italiano): finisce nello storico dell'Arena,
+  /// che lo traduce quando lo mostra.
   final String name;
+
+  /// Il nome tradotto, da mostrare.
+  String get displayName => tr(name);
   final Division division;
   final double secondsPerRep;
   final double formScore;

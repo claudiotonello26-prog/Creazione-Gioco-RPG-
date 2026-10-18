@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../core/i18n.dart';
 import 'character.dart';
 import 'enemies.dart';
 import 'items.dart';
@@ -11,9 +12,10 @@ enum RepQuality {
   good(0.85, 'Buona'),
   poor(0.6, 'Scarsa');
 
-  const RepQuality(this.multiplier, this.label);
+  const RepQuality(this.multiplier, this._label);
   final double multiplier;
-  final String label;
+  final String _label;
+  String get label => tr(_label);
 }
 
 enum Stance {
@@ -21,8 +23,9 @@ enum Stance {
   balanced('Bilanciata', 1.0, 1.0),
   defensive('Difensiva', 0.9, 0.75);
 
-  const Stance(this.label, this.penetrationMult, this.damageTakenMult);
-  final String label;
+  const Stance(this._label, this.penetrationMult, this.damageTakenMult);
+  final String _label;
+  String get label => tr(_label);
   final double penetrationMult;
   final double damageTakenMult;
 }

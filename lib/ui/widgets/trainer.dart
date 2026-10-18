@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import 'knight_view.dart';
@@ -185,11 +186,11 @@ class _TrainerOverlayState extends State<_TrainerOverlay> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(trainerName.toUpperCase(),
+                        Text(tr(trainerName).toUpperCase(),
                             style:
                                 titleStyle(size: 13, spacing: 3, color: const Color(0xFF3A2A10))),
                         const SizedBox(height: 6),
-                        Text(line.text,
+                        Text(tr(line.text),
                             style: const TextStyle(
                                 fontSize: 17,
                                 color: Color(0xFF14100A),
@@ -199,7 +200,7 @@ class _TrainerOverlayState extends State<_TrainerOverlay> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            last ? 'HO CAPITO' : 'AVANTI  ${_i + 1}/${widget.lines.length}',
+                            last ? tr('HO CAPITO') : tr('AVANTI  {i}/{n}', {'i': _i + 1, 'n': widget.lines.length}),
                             style: titleStyle(size: 12, color: const Color(0xFF3A2A10)),
                           ),
                         ),

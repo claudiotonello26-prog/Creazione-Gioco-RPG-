@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/oath_bar.dart';
+import '../../core/i18n.dart';
 
 import 'package:provider/provider.dart';
 
@@ -52,15 +53,15 @@ class ForgeTab extends StatelessWidget {
         const SizedBox(height: 12),
         ActionTile(
           icon: Icons.shield,
-          title: 'Equipaggiamento',
-          subtitle: 'Arma, armatura pezzo per pezzo, mano sinistra, amuleti',
+          title: tr('Equipaggiamento'),
+          subtitle: tr('Arma, armatura pezzo per pezzo, mano sinistra, amuleti'),
           color: Palette.goldBright,
           onTap: () => openEquipment(context),
         ),
         ActionTile(
           icon: Icons.storefront,
-          title: 'Mercato',
-          subtitle: 'Vendi quello che avanza, compra materiali, amuleti dalla Fattucchiera',
+          title: tr('Mercato'),
+          subtitle: tr('Vendi quello che avanza, compra materiali, amuleti dalla Fattucchiera'),
           onTap: () => openMarket(context),
         ),
       ],
@@ -108,7 +109,7 @@ class _StationButton extends StatelessWidget {
                 ),
               ),
               Text(
-                level == null ? 'Potenzia l\'arma' : 'Livello $level',
+                level == null ? tr('Potenzia l\'arma') : tr('Livello {level}', {'level': level}),
                 style: const TextStyle(color: Palette.ash, fontSize: 13),
               ),
             ],
@@ -161,9 +162,9 @@ class StationScreen extends StatelessWidget {
       StatBar(
         value: xpIn / xpNeed,
         color: Palette.gold,
-        label: 'Livello $lvl · $xpIn / $xpNeed XP',
+        label: tr('Livello {level} · {xp} / {need} XP', {'level': lvl, 'xp': xpIn, 'need': xpNeed}),
       ),
-      if (mats.isNotEmpty) const SectionTitle('Lavorazioni'),
+      if (mats.isNotEmpty) SectionTitle(tr('Lavorazioni')),
       for (final r in mats)
         _RecipeTile(
           title: materialNames[r.output] ?? r.output,
@@ -180,7 +181,7 @@ class StationScreen extends StatelessWidget {
           sound: stationSound(station),
           itemId: r.output,
         ),
-      if (weapons.isNotEmpty) const SectionTitle('Armi'),
+      if (weapons.isNotEmpty) SectionTitle(tr('Armi')),
       for (final d in weapons)
         _RecipeTile(
           title: d.name,
@@ -190,7 +191,7 @@ class StationScreen extends StatelessWidget {
           canMake: s.canCraft(d),
           onMake: () {
             s.craftWeapon(d);
-            toast(context, '${d.name} è pronta: impugnala dall\'Armeria.');
+            toast(context, tr('{weapon} è pronta: impugnala dall\'Armeria.', {'weapon': d.name}));
           },
           icon: Icons.gavel,
           stationLabel: station.label,
@@ -198,10 +199,15 @@ class StationScreen extends StatelessWidget {
           sound: stationSound(station),
           itemId: d.id,
           note:
-              '${d.style.label} · aura di ${d.affinity.label.toLowerCase()}'
-              '${d.wieldLevel > 1 ? ' · si impugna con ${d.usesMagic ? 'Magia' : 'Attacco'} ${d.wieldLevel}' : ''}',
+              tr('{style} · aura di {aura}', {'style': d.style.label, 'aura': d.affinity.label.toLowerCase()}) +
+              (d.wieldLevel > 1
+                  ? tr(' · si impugna con {skill} {level}', {
+                      'skill': d.usesMagic ? tr('Magia') : tr('Attacco'),
+                      'level': d.wieldLevel,
+                    })
+                  : ''),
         ),
-      if (armors.isNotEmpty) const SectionTitle('Armature'),
+      if (armors.isNotEmpty) SectionTitle(tr('Armature')),
       for (final a in armors)
         _RecipeTile(
           title: a.name,
@@ -212,7 +218,7 @@ class StationScreen extends StatelessWidget {
           done: s.character.armors.contains(a.id),
           onMake: () {
             s.craftArmor(a);
-            toast(context, '${a.name} indossata.');
+            toast(context, tr('{armor} indossata.', {'armor': a.name}));
           },
           icon: Icons.shield_outlined,
           stationLabel: station.label,
@@ -220,10 +226,10 @@ class StationScreen extends StatelessWidget {
           sound: stationSound(station),
           itemId: a.id,
           note:
-              'Assorbe il ${(a.reduction * 100).round()}% dei colpi'
-              '${a.wearLevel > 1 ? ' · si indossa con Difesa ${a.wearLevel}' : ''}',
+              tr('Assorbe il {pct}% dei colpi', {'pct': (a.reduction * 100).round()}) +
+              (a.wearLevel > 1 ? tr(' · si indossa con Difesa {level}', {'level': a.wearLevel}) : ''),
         ),
-      if (offhands.isNotEmpty) const SectionTitle('Mano sinistra'),
+      if (offhands.isNotEmpty) SectionTitle(tr('Mano sinistra')),
       for (final o in offhands)
         _RecipeTile(
           title: o.name,
@@ -234,7 +240,7 @@ class StationScreen extends StatelessWidget {
           done: s.character.offhands.contains(o.id),
           onMake: () {
             s.craftOffhand(o);
-            toast(context, '${o.name} in mano (con un\'arma a una mano).');
+            toast(context, tr('{item} in mano (con un\'arma a una mano).', {'item': o.name}));
           },
           icon: o.isShield ? Icons.shield_moon_outlined : Icons.gavel,
           stationLabel: station.label,
@@ -278,8 +284,8 @@ class StationScreen extends StatelessWidget {
       _UpgradePreview(level: w.upgrade, max: w.def.maxUpgrade),
       const SizedBox(height: 12),
       Text(
-        'Potere d\'attacco ${w.attackRating(c).round()}'
-        '${stone != null ? ' → ${next.attackRating(c).round()}' : ''}',
+        tr('Potere d\'attacco {power}', {'power': w.attackRating(c).round()}) +
+            (stone != null ? ' → ${next.attackRating(c).round()}' : ''),
         textAlign: TextAlign.center,
       ),
       const SizedBox(height: 12),
@@ -299,16 +305,16 @@ class StationScreen extends StatelessWidget {
             );
             if (!ok || !context.mounted) return;
             s.upgradeWeapon(w);
-            toast(context, '${w.displayName}: l\'acciaio canta.');
+            toast(context, tr('{weapon}: l\'acciaio canta.', {'weapon': w.displayName}));
           },
         )
       else
-        const Text(
-          'Potenziamento massimo raggiunto',
+        Text(
+          tr('Potenziamento massimo raggiunto'),
           textAlign: TextAlign.center,
-          style: TextStyle(color: Palette.goldBright),
+          style: const TextStyle(color: Palette.goldBright),
         ),
-      const SectionTitle('Amuleti'),
+      SectionTitle(tr('Amuleti')),
       WeaponSockets(weapon: w),
     ];
   }
@@ -356,8 +362,8 @@ class _RecipeTile extends StatelessWidget {
     return ActionTile(
       icon: unlocked ? icon : Icons.lock_outline,
       color: unlocked ? color : Palette.iron,
-      title: '$title${have != null && have! > 0 ? '  ·  hai $have' : ''}',
-      subtitle: unlocked ? [?note, needs].join('\n') : 'Si sblocca a $stationLabel livello $level',
+      title: '$title${have != null && have! > 0 ? tr('  ·  hai {n}', {'n': have}) : ''}',
+      subtitle: unlocked ? [?note, needs].join('\n') : tr('Si sblocca a {station} livello {level}', {'station': stationLabel, 'level': level}),
       enabled: unlocked,
       trailing: done
           ? const Icon(Icons.check, color: Palette.goldBright)
@@ -377,7 +383,7 @@ class _RecipeTile extends StatelessWidget {
                       }
                     }
                   : null,
-              child: const Text('CREA'),
+              child: Text(tr('CREA')),
             ),
     );
   }
@@ -444,7 +450,7 @@ class _StoneButton extends StatelessWidget {
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: ok ? onTap : () => toast(context, 'Ti servono $cost× ${itemName(stone)}.'),
+          onTap: ok ? onTap : () => toast(context, tr('Ti servono {cost}× {item}.', {'cost': cost, 'item': itemName(stone)})),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             child: Row(
@@ -458,7 +464,7 @@ class _StoneButton extends StatelessWidget {
                       OneLine(itemName(stone), style: titleStyle(size: 14, spacing: 1)),
                       const SizedBox(height: 4),
                       Text(
-                        '$cost× · ne hai $have',
+                        tr('{cost}× · ne hai {n}', {'cost': cost, 'n': have}),
                         style: TextStyle(color: ok ? Palette.holy : Palette.ash),
                       ),
                     ],

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../domain/exercise.dart';
 import '../widgets/exercise_demo.dart';
@@ -89,12 +90,12 @@ class _RestScreenState extends State<RestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const OathBar(title: Text('RECUPERO')),
+      appBar: OathBar(title: Text(tr('RECUPERO'))),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Text('PROSSIMO · ${widget.index}/${widget.total}',
+            Text(tr('PROSSIMO · {i}/{n}', {'i': widget.index, 'n': widget.total}),
                 style: titleStyle(size: 14, color: Palette.ash)),
             const SizedBox(height: 6),
             Text(widget.name.toUpperCase(),
@@ -117,8 +118,8 @@ class _RestScreenState extends State<RestScreen> {
                       Expanded(
                         child: Text(
                           onFloor(widget.exercise)
-                              ? 'Sposta il telefono: a terra, di lato, a 2 metri.'
-                              : 'Sposta il telefono: in piedi davanti a te, a 2–3 metri.',
+                              ? tr('Sposta il telefono: a terra, di lato, a 2 metri.')
+                              : tr('Sposta il telefono: in piedi davanti a te, a 2–3 metri.'),
                           style: const TextStyle(fontSize: 16, color: Palette.holy),
                         ),
                       ),
@@ -135,16 +136,16 @@ class _RestScreenState extends State<RestScreen> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => setState(() => _paused = !_paused),
-                    child: Text(_paused ? 'RIPRENDI' : 'PAUSA'),
+                    child: Text(_paused ? tr('RIPRENDI') : tr('PAUSA')),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: FilledButton(onPressed: () => _go(true), child: const Text('VIA')),
+                  child: FilledButton(onPressed: () => _go(true), child: Text(tr('VIA'))),
                 ),
               ],
             ),
-            TextButton(onPressed: () => _go(false), child: const Text('Mi fermo qui')),
+            TextButton(onPressed: () => _go(false), child: Text(tr('Mi fermo qui'))),
           ],
         ),
       ),

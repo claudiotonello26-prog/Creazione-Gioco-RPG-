@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n.dart';
 import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
@@ -56,13 +57,15 @@ class TrainTab extends StatelessWidget {
         if (onNavigate != null) NoviceCard(onNavigate: onNavigate!),
         ActionTile(
           icon: Icons.assignment_outlined,
-          title: 'Quest giornaliera',
-          subtitle: '${(s.questProgress * 100).round()}% completata · dà una chiave che raddoppia '
-              'il bottino di una spedizione (hai ${s.expeditionKeys} chiavi)',
+          title: tr('Quest giornaliera'),
+          subtitle: tr(
+              '{p}% completata · dà una chiave che raddoppia '
+              'il bottino di una spedizione (hai {n} chiavi)',
+              {'p': (s.questProgress * 100).round(), 'n': s.expeditionKeys}),
           onTap: () =>
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QuestScreen())),
         ),
-        const SectionTitle('Spedizioni'),
+        SectionTitle(tr('Spedizioni')),
         for (final g in worldGroups)
           _GroupCard(
             group: g,
@@ -71,20 +74,23 @@ class TrainTab extends StatelessWidget {
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
           ),
-        const SectionTitle('Caccia libera'),
+        SectionTitle(tr('Caccia libera')),
         for (final a in baseAnimals)
           _FreeFightTile(enemy: a, playerLevel: s.character.level, icon: Icons.pets),
         ActionTile(
           icon: Icons.menu_book,
-          title: 'Tutti i nemici (${bestiary.length})',
-          subtitle: 'Animali, mostri e boss, dal livello 1 in su',
+          title: tr('Tutti i nemici ({n})', {'n': bestiary.length}),
+          subtitle: tr('Animali, mostri e boss, dal livello 1 in su'),
           color: Palette.goldBright,
           onTap: () =>
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BestiaryScreen())),
         ),
         const SizedBox(height: 6),
         Text(
-          'Piano per ${s.daysPerWeek} giorni: ${plan.map((d) => d.map((g) => g.label).join(' + ')).join(' · ')}',
+          tr('Piano per {n} giorni: {plan}', {
+            'n': s.daysPerWeek,
+            'plan': plan.map((d) => d.map((g) => g.label).join(' + ')).join(' · '),
+          }),
           style: const TextStyle(color: Palette.ash, fontSize: 12),
         ),
       ],
@@ -149,7 +155,7 @@ class _GroupCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      groupMaterials[group]!,
+                      tr(groupMaterials[group]!),
                       style: const TextStyle(color: Palette.ash, fontSize: 13),
                     ),
                     const SizedBox(height: 4),
@@ -160,7 +166,7 @@ class _GroupCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          trainedThisWeek ? 'Fatto questa settimana' : 'Bonus Varietà',
+                          trainedThisWeek ? tr('Fatto questa settimana') : tr('Bonus Varietà'),
                           style: TextStyle(
                             color: trainedThisWeek ? Palette.ash : Palette.ember,
                             fontSize: 11,
@@ -193,7 +199,7 @@ class GroupScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const SectionTitle('Spedizioni'),
+          SectionTitle(tr('Spedizioni')),
           for (final e in list)
             _ExpeditionCard(
               expedition: e,
@@ -204,16 +210,17 @@ class GroupScreen extends StatelessWidget {
                   .push(MaterialPageRoute(builder: (_) => ExpeditionMapScreen(expedition: e))),
             ),
           if (group != MuscleGroup.stretching) ...[
-            const SectionTitle('Combattimenti liberi'),
+            SectionTitle(tr('Combattimenti liberi')),
             for (final m in {for (final e in list) ...e.monsters})
               _FreeFightTile(enemy: m, playerLevel: s.character.level),
             for (final e in list)
               _FreeFightTile(enemy: e.boss, playerLevel: s.character.level, icon: Icons.castle),
-            const SectionTitle('Caccia infinita'),
+            SectionTitle(tr('Caccia infinita')),
             ActionTile(
               icon: Icons.all_inclusive,
-              title: 'Caccia: ${list.first.monster.name}',
-              subtitle: 'Nemici sempre più forti${s.bestHuntWave > 0 ? ' · record ${s.bestHuntWave}' : ''}',
+              title: tr('Caccia: {name}', {'name': list.first.monster.name}),
+              subtitle: '${tr('Nemici sempre più forti')}'
+                  '${s.bestHuntWave > 0 ? tr(' · record {n}', {'n': s.bestHuntWave}) : ''}',
               color: Palette.ember,
               onTap: () => startFreeFight(context, list.first.monster, endless: true),
             ),
@@ -256,7 +263,7 @@ class _BestiaryScreenState extends State<BestiaryScreen> {
           ),
         );
     return Scaffold(
-      appBar: OathBar(title: const Text('CACCIA')),
+      appBar: OathBar(title: Text(tr('CACCIA'))),
       body: Column(
         children: [
           SingleChildScrollView(
@@ -264,8 +271,8 @@ class _BestiaryScreenState extends State<BestiaryScreen> {
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
             child: Row(
               children: [
-                chip('Tutti', null),
-                chip('Animali', 'animals'),
+                chip(tr('Tutti'), null),
+                chip(tr('Animali'), 'animals'),
                 for (final g in worldGroups.where((g) => g != MuscleGroup.stretching))
                   chip(g.label, g),
               ],
@@ -311,7 +318,7 @@ class _FreeFightTile extends StatelessWidget {
             : Icon(icon ?? Icons.repeat, color: under ? Palette.blood : Palette.goldBright),
         title: OneLine(enemy.name),
         subtitle: Text(
-          '${enemy.moves.map((m) => m.name).join(' o ')} · '
+          '${enemy.moves.map((m) => m.name).join(tr(' o '))} · '
           '${enemy.loot.keys.map((k) => materialNames[k] ?? k).join(', ')}',
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -374,7 +381,7 @@ class _ExpeditionCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text('Boss: ${e.boss.name}',
+                Text(tr('Boss: {name}', {'name': e.boss.name}),
                     style: const TextStyle(color: Palette.ember, fontSize: 14)),
                 const SizedBox(height: 8),
                 Wrap(
@@ -454,8 +461,8 @@ class _FightSetupState extends State<_FightSetup> {
         children: [
           SectionTitle(
             widget.enemy.moves.length > 1
-                ? '${widget.enemy.name}: scegli l\'esercizio'
-                : '${widget.enemy.name} si batte con',
+                ? tr('{name}: scegli l\'esercizio', {'name': widget.enemy.name})
+                : tr('{name} si batte con', {'name': widget.enemy.name}),
           ),
           OathChoice<Move>(
             options: [for (final m in widget.enemy.moves) (m, m.name)],
@@ -463,7 +470,7 @@ class _FightSetupState extends State<_FightSetup> {
             columns: widget.enemy.moves.length.clamp(1, 2),
             onChanged: (m) => setState(() => _move = m),
           ),
-          const SectionTitle('Postura'),
+          SectionTitle(tr('Postura')),
           OathChoice<Stance>(
             options: [for (final st in Stance.values) (st, st.label)],
             selected: _stance,
@@ -474,17 +481,17 @@ class _FightSetupState extends State<_FightSetup> {
           Text(
               switch (_stance) {
                 Stance.aggressive =>
-                  'Più danni dati e subiti · sale l\'Attacco',
+                  tr('Più danni dati e subiti · sale l\'Attacco'),
                 Stance.balanced =>
-                  'Metà Attacco, metà Difesa',
+                  tr('Metà Attacco, metà Difesa'),
                 Stance.defensive =>
-                  '-25% danni subiti · sale la Difesa',
+                  tr('-25% danni subiti · sale la Difesa'),
               },
               style: const TextStyle(color: Palette.ash)),
           const SizedBox(height: 16),
           FilledButton(
             onPressed: () => Navigator.of(context).pop((_move, _stance)),
-            child: const Text('COMBATTI'),
+            child: Text(tr('COMBATTI')),
           ),
         ],
       ),

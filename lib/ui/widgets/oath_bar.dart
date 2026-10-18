@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../screens/guide_screen.dart';
 import '../screens/settings_screen.dart';
@@ -61,7 +62,7 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
                           child: canPop
                               ? BarButton(
                                   icon: Icons.arrow_back,
-                                  tooltip: 'Indietro',
+                                  tooltip: tr('Indietro'),
                                   onTap: () => Navigator.of(context).maybePop(),
                                 )
                               : null,
@@ -81,7 +82,7 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
                                 children: [
                                   BarButton(
                                     icon: Icons.menu_book_outlined,
-                                    tooltip: 'Guida',
+                                    tooltip: tr('Guida'),
                                     onTap: () => Navigator.of(context).push(
                                       MaterialPageRoute(builder: (_) => const GuideScreen()),
                                     ),
@@ -89,7 +90,7 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
                                   const SizedBox(width: 8),
                                   BarButton(
                                     icon: Icons.settings_outlined,
-                                    tooltip: 'Impostazioni',
+                                    tooltip: tr('Impostazioni'),
                                     onTap: () => Navigator.of(context).push(
                                       MaterialPageRoute(builder: (_) => const SettingsScreen()),
                                     ),

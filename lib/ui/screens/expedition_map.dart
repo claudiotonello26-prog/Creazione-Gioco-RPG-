@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../core/i18n.dart';
 import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
@@ -80,7 +81,7 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
     if (won) {
       if (!_stretching) s.expeditionKill(enemy);
       s.completeExpeditionStep(_e.id, i);
-      toast(context, i == 3 ? 'Il boss ti aspetta in cima.' : 'Tappa superata.');
+      toast(context, i == 3 ? tr('Il boss ti aspetta in cima.') : tr('Tappa superata.'));
     }
   }
 
@@ -91,20 +92,23 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
         builder: (_) => TrainingScreen(
           exercise: ExerciseId.stretch,
           title: move.name,
-          subtitle: '${enemy.name} · tienila $_holdSeconds secondi',
+          subtitle: tr('{name} · tienila {s} secondi', {'name': enemy.name, 's': _holdSeconds}),
           timeLimit: Duration(seconds: _holdSeconds + 15),
         ),
       ),
     );
     if (!mounted) return false;
     if (r == null || r.held.inSeconds < _holdSeconds) {
-      toast(context, 'Lo spirito si agita ancora. Riprova la posa.');
+      toast(context, tr('Lo spirito si agita ancora. Riprova la posa.'));
       return false;
     }
     final loot = s.holdVictory(enemy, seconds: r.held.inSeconds, lootMultiplier: _keyUsed ? 2 : 1);
     toast(
       context,
-      '${enemy.name} si calma · ${loot.materials.entries.map((e) => '+${e.value} ${itemName(e.key)}').join(', ')}',
+      tr('{name} si calma · {loot}', {
+        'name': enemy.name,
+        'loot': loot.materials.entries.map((e) => '+${e.value} ${itemName(e.key)}').join(', '),
+      }),
     );
     return true;
   }
@@ -131,7 +135,7 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
         );
         if (!mounted) return;
         if (go != true) {
-          toast(context, '${_e.boss.name} resta in piedi. Riprova quando vuoi.');
+          toast(context, tr('{name} resta in piedi. Riprova quando vuoi.', {'name': _e.boss.name}));
           return;
         }
       }
@@ -140,15 +144,18 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
           builder: (_) => TrainingScreen(
             exercise: m.trackAs,
             title: m.name,
-            subtitle: '${_e.boss.name} · esercizio ${i + 1}/${moves.length} · '
-                '${m.hold ? 'tieni la posa' : 'a sfinimento'} 30 secondi',
+            subtitle: m.hold
+                ? tr('{name} · esercizio {i}/{n} · tieni la posa 30 secondi',
+                    {'name': _e.boss.name, 'i': i + 1, 'n': moves.length})
+                : tr('{name} · esercizio {i}/{n} · a sfinimento 30 secondi',
+                    {'name': _e.boss.name, 'i': i + 1, 'n': moves.length}),
             timeLimit: const Duration(seconds: 30),
           ),
         ),
       );
       if (!mounted) return;
       if (r == null) {
-        toast(context, '${_e.boss.name} resta in piedi. Riprova quando vuoi.');
+        toast(context, tr('{name} resta in piedi. Riprova quando vuoi.', {'name': _e.boss.name}));
         return;
       }
       if (r.reps.isNotEmpty) {
@@ -156,7 +163,7 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
           m.trackAs,
           r.reps,
           countsForQuest: false,
-          name: m.name,
+          name: m.nameIt,
           difficulty: s.usualDifficulty(m.trackAs) * m.difficulty,
           pathGroup: _e.group,
         );
@@ -166,7 +173,10 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
     if (!mounted) return;
     toast(
       context,
-      '${_e.boss.name} è caduto! ${loot.entries.map((e) => '+${e.value} ${itemName(e.key)}').join(', ')}',
+      tr('{name} è caduto! {loot}', {
+        'name': _e.boss.name,
+        'loot': loot.entries.map((e) => '+${e.value} ${itemName(e.key)}').join(', '),
+      }),
     );
   }
 
@@ -184,16 +194,16 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
 
   String _corvino(int progress, bool underLevel) {
     if (underLevel && progress == 0) {
-      return 'Livello ${_e.level}? Tu sei sotto. Coraggioso. O sciocco. Vediamo.';
+      return tr('Livello {n}? Tu sei sotto. Coraggioso. O sciocco. Vediamo.', {'n': _e.level});
     }
     return switch (progress) {
-      0 => 'Prima tappa. Fammi vedere.',
-      1 => 'Non male. La prossima morde di più.',
-      2 => 'Da qui in su sono Veterani. Respira.',
-      3 => 'Ultima tappa prima del boss. Niente scuse.',
-      GameState.mapBoss => 'Eccolo. Quattro esercizi, trenta secondi l\'uno. Fino in fondo.',
-      GameState.mapChest => 'Il forziere è tuo. Aprilo, che ho fretta.',
-      _ => 'Mappa finita per oggi. Domani si ricomincia.',
+      0 => tr('Prima tappa. Fammi vedere.'),
+      1 => tr('Non male. La prossima morde di più.'),
+      2 => tr('Da qui in su sono Veterani. Respira.'),
+      3 => tr('Ultima tappa prima del boss. Niente scuse.'),
+      GameState.mapBoss => tr('Eccolo. Quattro esercizi, trenta secondi l\'uno. Fino in fondo.'),
+      GameState.mapChest => tr('Il forziere è tuo. Aprilo, che ho fretta.'),
+      _ => tr('Mappa finita per oggi. Domani si ricomincia.'),
     };
   }
 
@@ -322,7 +332,7 @@ class _MapOptions extends StatelessWidget {
           children: [
             Expanded(
               child: OathToggle(
-                label: stretching ? 'Profondo ×2' : 'Zavorrato ×2',
+                label: stretching ? tr('Profondo ×2') : tr('Zavorrato ×2'),
                 icon: Icons.fitness_center,
                 selected: weighted,
                 height: 38,
@@ -333,7 +343,7 @@ class _MapOptions extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: OathToggle(
-                  label: useKey ? 'Chiave ×2' : 'Chiave ($keys)',
+                  label: useKey ? tr('Chiave ×2') : tr('Chiave ({n})', {'n': keys}),
                   icon: Icons.vpn_key,
                   selected: useKey,
                   height: 38,
@@ -353,7 +363,7 @@ class _MapOptions extends StatelessWidget {
               border: Border.all(color: Palette.blood),
             ),
             child: Text(
-              'Livello consigliato $underLevel: senza armi e armature migliori rischi di cadere.',
+              tr('Livello consigliato {n}: senza armi e armature migliori rischi di cadere.', {'n': underLevel}),
               style: const TextStyle(color: Palette.blood, fontSize: 12),
             ),
           ),
@@ -421,7 +431,9 @@ class _StepNode extends StatelessWidget {
           ),
           const SizedBox(height: 3),
           _Label(
-            title: step.veteran ? '${enemyDefs[step.monsterId]!.name} · Veterano' : monster.name,
+            title: step.veteran
+                ? tr('{name} · Veterano', {'name': enemyDefs[step.monsterId]!.name})
+                : monster.name,
             subtitle:
                 '${step.move.name}${holdSeconds != null ? ' · $holdSeconds s' : ''} · LV ${step.level}',
             dim: state == _NodeState.locked,
@@ -487,8 +499,8 @@ class _BossNode extends StatelessWidget {
           _Label(
             title: chest ? expedition.chest.name : boss.name,
             subtitle: chest
-                ? (progress == GameState.mapDone ? 'Aperto' : 'Tocca per aprire')
-                : 'Boss · circuito 4×30 s',
+                ? (progress == GameState.mapDone ? tr('Aperto') : tr('Tocca per aprire'))
+                : tr('Boss · circuito 4×30 s'),
             dim: !open && !chest,
             bold: open,
             red: !chest,
@@ -702,7 +714,7 @@ class _ChestDialogState extends State<_ChestDialog> with SingleTickerProviderSta
                     : null,
               ),
               child: Text(
-                id == 'runes' ? '+$n rune' : '${rare ? 'RARO · ' : '+$n '}${itemName(id)}',
+                id == 'runes' ? tr('+{n} rune', {'n': n}) : '${rare ? tr('RARO · ') : '+$n '}${itemName(id)}',
                 style: TextStyle(
                   color: rare ? Palette.goldBright : Palette.holy,
                   fontWeight: rare ? FontWeight.bold : FontWeight.normal,
@@ -714,7 +726,7 @@ class _ChestDialogState extends State<_ChestDialog> with SingleTickerProviderSta
       actions: [
         FilledButton(
           onPressed: _shown >= widget.items.length ? () => Navigator.pop(context) : null,
-          child: const Text('PRENDI TUTTO'),
+          child: Text(tr('PRENDI TUTTO')),
         ),
       ],
     );

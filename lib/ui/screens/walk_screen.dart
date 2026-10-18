@@ -85,13 +85,13 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
     final r = resourceById(s.gatherTarget);
     final (units, levels) = s.claimSteps(steps);
     if (units == 0) {
-      toast(context, 'Ancora qualche passo: servono ${r.stepsPerUnit} passi per ${r.name}.');
+      toast(context, tr('Ancora qualche passo: servono {n} passi per {res}.', {'n': r.stepsPerUnit, 'res': r.name}));
       return;
     }
     toast(
       context,
       '+$units ${r.name}'
-      '${levels > 0 ? ' · ${r.skill.label} sale al livello ${s.skillLevel(r.skill)}!' : ''}',
+      '${levels > 0 ? tr(' · {skill} sale al livello {lvl}!', {'skill': r.skill.label, 'lvl': s.skillLevel(r.skill)}) : ''}',
     );
   }
 
@@ -119,12 +119,12 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
             ),
             const SizedBox(height: 12),
             OneLine(
-              'Stai raccogliendo: ${target.name}',
+              tr('Stai raccogliendo: {res}', {'res': target.name}),
               align: Alignment.center,
               style: titleStyle(size: 15),
             ),
             Text(
-              '${target.where} · ${target.stepsPerUnit} passi per unità',
+              tr('{where} · {n} passi per unità', {'where': target.where, 'n': target.stepsPerUnit}),
               textAlign: TextAlign.center,
               style: const TextStyle(color: Palette.ash),
             ),
@@ -138,14 +138,16 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
                 onPressed: fresh + s.stepBank > 0 ? () => _claim(s) : null,
                 icon: const Icon(Icons.inventory_2_outlined),
                 label: Text(
-                  ready > 0 ? 'RACCOGLI $ready × ${target.name.toUpperCase()}' : 'CAMMINA ANCORA',
+                  ready > 0
+                      ? tr('RACCOGLI {n} × {res}', {'n': ready, 'res': target.name.toUpperCase()})
+                      : tr('CAMMINA ANCORA'),
                 ),
               ),
             for (final skill in [Skill.woodcutting, Skill.mining]) ...[
               SectionTitle(
                 '${skill == Skill.woodcutting ? tr('Trees') : tr('Ores')} · ${skill.label}',
                 trailing: Text(
-                  'Livello ${s.skillLevel(skill)}',
+                  tr('Livello {n}', {'n': s.skillLevel(skill)}),
                   style: const TextStyle(color: Palette.goldBright),
                 ),
               ),
@@ -181,12 +183,12 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
       color: selected ? Palette.goldBright : (unlocked ? Palette.gold : Palette.iron),
       title: r.name,
       subtitle: !levelOk
-          ? 'Si sblocca a ${r.skill.label} livello ${r.level}'
+          ? tr('Si sblocca a {skill} livello {n}', {'skill': r.skill.label, 'n': r.level})
           : !unlocked
-              ? 'Serve: ${materialNames[r.tool]} (si crea in Forgia)'
-              : '${r.where} · $steps passi'
-                  '${bonus > 0 ? ' (attrezzo +${(bonus * 100).round()}%)' : ''}'
-                  ' · hai ${s.character.materials[r.id] ?? 0}',
+              ? tr('Serve: {tool} (si crea in Forgia)', {'tool': materialNames[r.tool]})
+              : '${tr('{where} · {n} passi', {'where': r.where, 'n': steps})}'
+                  '${bonus > 0 ? tr(' (attrezzo +{p}%)', {'p': (bonus * 100).round()}) : ''}'
+                  '${tr(' · hai {n}', {'n': s.character.materials[r.id] ?? 0})}',
       enabled: unlocked,
       onTap: unlocked
           ? () {
@@ -212,18 +214,18 @@ class _ConnectCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final android = !Platform.isIOS;
     final (text, button) = switch (access) {
-      StepAccess.unsupported => ('I passi si leggono solo sul telefono.', null),
+      StepAccess.unsupported => (tr('I passi si leggono solo sul telefono.'), null),
       StepAccess.needsHealthConnect => (
-          'Serve Health Connect di Google: raccoglie i passi di Samsung Health, '
-              'Google Fit e smartwatch.',
-          'INSTALLA HEALTH CONNECT',
+          tr('Serve Health Connect di Google: raccoglie i passi di Samsung Health, '
+              'Google Fit e smartwatch.'),
+          tr('INSTALLA HEALTH CONNECT'),
         ),
       _ => (
           android
-              ? 'Concedi a Gym Oath di leggere i passi. Su Samsung: apri Samsung Health › '
-                  'Impostazioni › Health Connect e attiva la condivisione dei passi.'
-              : 'Concedi a Gym Oath di leggere i passi da Salute.',
-          'COLLEGA I PASSI',
+              ? tr('Concedi a Gym Oath di leggere i passi. Su Samsung: apri Samsung Health › '
+                  'Impostazioni › Health Connect e attiva la condivisione dei passi.')
+              : tr('Concedi a Gym Oath di leggere i passi da Salute.'),
+          tr('COLLEGA I PASSI'),
         ),
     };
     return Card(
@@ -269,7 +271,7 @@ class _StepRing extends StatelessWidget {
             children: [
               const Icon(Icons.directions_walk, color: Palette.gold, size: 28),
               Text(known ? '$steps' : '—', style: titleStyle(size: 34, color: Palette.holy)),
-              const Text('da consumare', style: TextStyle(color: Palette.ash)),
+              Text(tr('da consumare'), style: const TextStyle(color: Palette.ash)),
             ],
           ),
         ),
@@ -355,7 +357,7 @@ class _GatherScreenState extends State<GatherScreen> {
     final before = s.skillLevel(_r.skill);
     final (units, _) = s.claimSteps(steps);
     if (units == 0) {
-      toast(context, 'La barra si carica: servono ${_r.stepsPerUnit} passi per ${_r.name}.');
+      toast(context, tr('La barra si carica: servono {n} passi per {res}.', {'n': _r.stepsPerUnit, 'res': _r.name}));
       return;
     }
     final after = s.skillLevel(_r.skill);
@@ -388,23 +390,23 @@ class _GatherScreenState extends State<GatherScreen> {
               const SizedBox(height: 8),
               OneLine(_r.name, align: Alignment.center, style: titleStyle(size: 20)),
               Text(
-                '${_r.where} · hai ${s.character.materials[_r.id] ?? 0}',
+                tr('{where} · hai {n}', {'where': _r.where, 'n': s.character.materials[_r.id] ?? 0}),
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Palette.ash),
               ),
-              const SectionTitle('Carica'),
+              SectionTitle(tr('Carica')),
               StatBar(
                 value: charge,
                 color: Palette.goldBright,
                 height: 16,
-                label: '${available % per} / $per passi',
+                label: tr('{a} / {b} passi', {'a': available % per, 'b': per}),
               ),
               const SizedBox(height: 6),
               Text(
                 _steps == null
-                    ? 'Collega i passi nella Raccolta per spenderli qui.'
-                    : 'Passi da spendere: $available · ogni $per passi un\'unità'
-                        '${ready > 0 ? ' · pronte $ready' : ''}',
+                    ? tr('Collega i passi nella Raccolta per spenderli qui.')
+                    : '${tr('Passi da spendere: {a} · ogni {per} passi un\'unità', {'a': available, 'per': per})}'
+                        '${ready > 0 ? tr(' · pronte {n}', {'n': ready}) : ''}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Palette.ash),
               ),
@@ -412,11 +414,11 @@ class _GatherScreenState extends State<GatherScreen> {
               FilledButton.icon(
                 onPressed: available > 0 && _steps != null ? () => _spend(s) : null,
                 icon: const Icon(Icons.directions_walk),
-                label: Text(ready > 0 ? 'CONSUMA I PASSI · $ready' : 'CONSUMA I PASSI'),
+                label: Text(ready > 0 ? tr('CONSUMA I PASSI · {n}', {'n': ready}) : tr('CONSUMA I PASSI')),
               ),
               SectionTitle(
                 _r.skill.label,
-                trailing: Text('Livello $lvl', style: const TextStyle(color: Palette.goldBright)),
+                trailing: Text(tr('Livello {n}', {'n': lvl}), style: const TextStyle(color: Palette.goldBright)),
               ),
               StatBar(
                 value: xpIn / xpNeed,
@@ -426,7 +428,7 @@ class _GatherScreenState extends State<GatherScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                '+${_r.xp} XP per ogni ${_r.name.toLowerCase()}',
+                tr('+{xp} XP per ogni {res}', {'xp': _r.xp, 'res': _r.name.toLowerCase()}),
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Palette.ash, fontSize: 13),
               ),
@@ -501,7 +503,7 @@ class _GatherPopup extends StatelessWidget {
                     ],
                   ),
                   child: OneLine(
-                    '${skill.label.toUpperCase()} · LIVELLO $level',
+                    tr('{skill} · LIVELLO {n}', {'skill': skill.label.toUpperCase(), 'n': level}),
                     align: Alignment.center,
                     style: titleStyle(size: 18, color: Palette.goldBright),
                   ),

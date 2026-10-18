@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../core/i18n.dart';
 import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
@@ -43,7 +44,7 @@ Future<void> runQuestItem(BuildContext context, QuestItem q) async {
         exercise: q.exercise,
         title: q.label,
         target: remaining,
-        subtitle: 'Puoi dividere la quest in più serie durante la giornata: conta il totale.',
+        subtitle: tr('Puoi dividere la quest in più serie durante la giornata: conta il totale.'),
       ),
     ),
   );
@@ -59,20 +60,20 @@ class QuestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     return Scaffold(
-      appBar: OathBar(title: const Text('QUEST GIORNALIERA')),
+      appBar: OathBar(title: Text(tr('QUEST GIORNALIERA'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           StatBar(value: s.questProgress, color: Palette.gold, height: 12),
-          const SectionTitle('Esercizi'),
+          SectionTitle(tr('Esercizi')),
           for (final q in s.quest) _QuestRow(item: q),
-          const SectionTitle('Chiusura obbligatoria'),
+          SectionTitle(tr('Chiusura obbligatoria')),
           ActionTile(
             icon: Icons.self_improvement,
-            title: 'Stretching guidato',
+            title: tr('Stretching guidato'),
             subtitle: s.daily.stretchingDone
-                ? 'Fatto: +1 Punto Disciplina'
-                : '5 posizioni da 40 secondi · dà Punti Disciplina',
+                ? tr('Fatto: +1 Punto Disciplina')
+                : tr('5 posizioni da 40 secondi · dà Punti Disciplina'),
             trailing: s.daily.stretchingDone
                 ? const Icon(Icons.check_circle, color: Palette.goldBright)
                 : null,
@@ -81,7 +82,7 @@ class QuestScreen extends StatelessWidget {
                 : () => Navigator.of(context)
                     .push(MaterialPageRoute(builder: (_) => const StretchingScreen())),
           ),
-          SectionTitle(s.questComplete ? 'Bottino ottenuto' : 'Bottino'),
+          SectionTitle(s.questComplete ? tr('Bottino ottenuto') : tr('Bottino')),
           _QuestLoot(loot: s.questComplete ? s.daily.questLoot : null),
         ],
       ),
@@ -117,14 +118,14 @@ class _QuestLoot extends StatelessWidget {
           spacing: 6,
           runSpacing: 10,
           children: [
-            cell(const Icon(Icons.diamond_outlined, color: Palette.goldBright), '100 rune'),
+            cell(const Icon(Icons.diamond_outlined, color: Palette.goldBright), tr('100 rune')),
             cell(const Icon(Icons.auto_awesome, color: Palette.goldBright), '150 XP'),
-            cell(const Icon(Icons.vpn_key_outlined, color: Palette.goldBright), 'Chiave'),
+            cell(const Icon(Icons.vpn_key_outlined, color: Palette.goldBright), tr('Chiave')),
             if (loot != null)
               for (final e in loot!.entries)
                 cell(ItemIcon(e.key, size: 36), '${e.value}× ${itemName(e.key)}')
             else
-              cell(const Icon(Icons.inventory_2_outlined, color: Palette.gold), 'Forziere di materiali'),
+              cell(const Icon(Icons.inventory_2_outlined, color: Palette.gold), tr('Forziere di materiali')),
           ],
         ),
       ),
@@ -149,20 +150,20 @@ class _QuestRow extends StatelessWidget {
           complete ? Icons.check_circle : Icons.sports_martial_arts,
           color: complete ? Palette.goldBright : Palette.gold,
         ),
-        title: OneLine(substitute ?? item.label),
+        title: OneLine(substitute != null ? tr(substitute) : item.label),
         subtitle: Text(
-          '${done.clamp(0, item.target)}/${item.target}${item.info.perLeg ? ' per gamba' : ''}'
-          '${foe != null && !complete ? ' · contro ${foe.name}' : ''}'
-          '${RoutineRules.shouldSuggestHarderVariant(item) ? ' · pronto per la versione successiva!' : ''}',
+          '${done.clamp(0, item.target)}/${item.target}${item.info.perLeg ? tr(' per gamba') : ''}'
+          '${foe != null && !complete ? tr(' · contro {foe}', {'foe': foe.name}) : ''}'
+          '${RoutineRules.shouldSuggestHarderVariant(item) ? tr(' · pronto per la versione successiva!') : ''}',
           style: const TextStyle(color: Palette.ash),
         ),
         trailing: PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert),
           onSelected: (v) => _menu(context, v),
           itemBuilder: (_) => [
-            const PopupMenuItem(value: 'pain', child: Text('Ho dolore / un blocco')),
+            PopupMenuItem(value: 'pain', child: Text(tr('Ho dolore / un blocco'))),
             if (RoutineRules.shouldSuggestHarderVariant(item))
-              const PopupMenuItem(value: 'promote', child: Text('Passa alla versione più dura')),
+              PopupMenuItem(value: 'promote', child: Text(tr('Passa alla versione più dura'))),
           ],
         ),
         onTap: complete ? null : () => runQuestItem(context, item),
@@ -174,7 +175,7 @@ class _QuestRow extends StatelessWidget {
     final s = context.read<GameState>();
     if (v == 'promote') {
       s.promoteVariant(item.exercise);
-      toast(context, 'Nuova versione sbloccata. I numeri ripartono più bassi.');
+      toast(context, tr('Nuova versione sbloccata. I numeri ripartono più bassi.'));
       return;
     }
     final alt = lowImpactAlternatives[item.exercise]!;
@@ -182,19 +183,19 @@ class _QuestRow extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Palette.stone,
-        title: const Text('Sostituire l\'esercizio?'),
+        title: Text(tr('Sostituire l\'esercizio?')),
         content: Text(
-          'Lo sostituiamo con "$alt", a basso impatto sullo stesso gruppo. '
-          'Se il dolore continua, senti un medico o un fisioterapista.',
+          tr('Lo sostituiamo con "{alt}", a basso impatto sullo stesso gruppo. '
+              'Se il dolore continua, senti un medico o un fisioterapista.', {'alt': tr(alt)}),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annulla')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(tr('Annulla'))),
           FilledButton(
             onPressed: () {
               s.substitute(item.exercise, alt);
               Navigator.pop(ctx);
             },
-            child: const Text('Sostituisci'),
+            child: Text(tr('Sostituisci')),
           ),
         ],
       ),
@@ -245,7 +246,7 @@ class _StretchingScreenState extends State<StretchingScreen> {
     if (_index + 1 >= _poses.length) {
       _timer?.cancel();
       context.read<GameState>().completeStretching();
-      toast(context, 'Stretching completato: +1 Punto Disciplina');
+      toast(context, tr('Stretching completato: +1 Punto Disciplina'));
       Navigator.of(context).pop();
       return;
     }
@@ -265,7 +266,7 @@ class _StretchingScreenState extends State<StretchingScreen> {
   Widget build(BuildContext context) {
     final (name, how) = _poses[_index];
     return Scaffold(
-      appBar: OathBar(title: const Text('STRETCHING')),
+      appBar: OathBar(title: Text(tr('STRETCHING'))),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -274,17 +275,17 @@ class _StretchingScreenState extends State<StretchingScreen> {
             StatBar(
               value: (_index + (_seconds - _left) / _seconds) / _poses.length,
               color: Palette.gold,
-              label: 'Posizione ${_index + 1} di ${_poses.length}',
+              label: tr('Posizione {i} di {n}', {'i': _index + 1, 'n': _poses.length}),
             ),
             const Spacer(),
             Text(
-              name,
+              tr(name),
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 24, color: Palette.goldBright),
             ),
             const SizedBox(height: 8),
             Text(
-              how,
+              tr(how),
               textAlign: TextAlign.center,
               style: const TextStyle(color: Palette.ash),
             ),
@@ -295,7 +296,7 @@ class _StretchingScreenState extends State<StretchingScreen> {
               style: const TextStyle(fontSize: 72, color: Palette.holy),
             ),
             const Spacer(),
-            FilledButton(onPressed: _toggle, child: Text(_running ? 'PAUSA' : 'VIA')),
+            FilledButton(onPressed: _toggle, child: Text(_running ? tr('PAUSA') : tr('VIA'))),
           ],
         ),
       ),

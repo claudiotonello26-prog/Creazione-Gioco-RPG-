@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/oath_bar.dart';
+import '../../core/i18n.dart';
 
 import 'package:provider/provider.dart';
 
@@ -37,9 +38,11 @@ class InventoryScreen extends StatelessWidget {
       length: 3,
       initialIndex: initialTab,
       child: Scaffold(
-        appBar: const OathBar(
-          title: Text('INVENTARIO'),
-          bottom: TabBar(tabs: [Tab(text: 'Oggetti'), Tab(text: 'Armi'), Tab(text: 'Armature')]),
+        appBar: OathBar(
+          title: Text(tr('INVENTARIO')),
+          bottom: TabBar(
+            tabs: [Tab(text: tr('Oggetti')), Tab(text: tr('Armi')), Tab(text: tr('Armature'))],
+          ),
         ),
         body: const TabBarView(children: [_Items(), _Weapons(), _Armors()]),
       ),
@@ -70,35 +73,35 @@ class _Items extends StatelessWidget {
           children: [
             const Icon(Icons.diamond_outlined, color: Palette.gold),
             const SizedBox(width: 8),
-            Text('${c.runes} rune', style: titleStyle(size: 20)),
+            Text(tr('{runes} rune', {'runes': c.runes}), style: titleStyle(size: 20)),
             const Spacer(),
             FilledButton.icon(
               onPressed: () => openMarket(context),
               icon: const Icon(Icons.storefront),
-              label: const Text('MERCATO'),
+              label: Text(tr('MERCATO')),
             ),
           ],
         ),
         if (owned.isEmpty)
-          const Padding(
-            padding: EdgeInsets.only(top: 24),
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
             child: Text(
-              'Vuoto. Sconfiggi mostri e cammina per raccogliere materiali.',
-              style: TextStyle(color: Palette.ash),
+              tr('Vuoto. Sconfiggi mostri e cammina per raccogliere materiali.'),
+              style: const TextStyle(color: Palette.ash),
             ),
           ),
         if (tools.isNotEmpty) ...[
-          const SectionTitle('Attrezzi'),
+          SectionTitle(tr('Attrezzi')),
           for (final t in tools)
             ActionTile(
               icon: Icons.handyman,
               title: materialNames[t.key] ?? t.key,
-              subtitle: '+${((toolYield[t.key] ?? 0) * 100).round()}% di raccolta camminando',
+              subtitle: tr('+{pct}% di raccolta camminando', {'pct': ((toolYield[t.key] ?? 0) * 100).round()}),
             ),
         ],
-        if (stones.isNotEmpty) ...[const SectionTitle('Pietre e reliquie'), _grid(stones)],
-        if (amulets.isNotEmpty) ...[const SectionTitle('Amuleti nella borsa'), _grid(amulets)],
-        if (mats.isNotEmpty) ...[const SectionTitle('Materiali'), _grid(mats)],
+        if (stones.isNotEmpty) ...[SectionTitle(tr('Pietre e reliquie')), _grid(stones)],
+        if (amulets.isNotEmpty) ...[SectionTitle(tr('Amuleti nella borsa')), _grid(amulets)],
+        if (mats.isNotEmpty) ...[SectionTitle(tr('Materiali')), _grid(mats)],
       ],
     );
   }
@@ -114,17 +117,17 @@ class _Weapons extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const SectionTitle('Armi'),
+        SectionTitle(tr('Armi')),
         for (final w in [c.weapon, ...c.weapons])
           ActionTile(
             icon: identical(w, c.weapon) ? Icons.check_circle : Icons.gavel,
             color: identical(w, c.weapon) ? Palette.goldBright : Palette.gold,
             title: w.displayName,
-            subtitle: '${w.def.style.label} · potere ${w.attackRating(c).round()}'
-                '${identical(w, c.weapon) ? ' · impugnata' : ''}',
+            subtitle: tr('{style} · potere {power}', {'style': w.def.style.label, 'power': w.attackRating(c).round()}) +
+                (identical(w, c.weapon) ? tr(' · impugnata') : ''),
           ),
         if (c.offhands.isNotEmpty) ...[
-          const SectionTitle('Mano sinistra'),
+          SectionTitle(tr('Mano sinistra')),
           for (final id in c.offhands)
             ActionTile(
               icon: c.offhandId == id ? Icons.check_circle : Icons.shield_moon_outlined,
@@ -137,7 +140,7 @@ class _Weapons extends StatelessWidget {
         OutlinedButton.icon(
           onPressed: () => openEquipment(context),
           icon: const Icon(Icons.shield),
-          label: const Text('Cambia in Armeria'),
+          label: Text(tr('Cambia in Armeria')),
         ),
       ],
     );
@@ -154,12 +157,12 @@ class _Armors extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const SectionTitle('Armature'),
+        SectionTitle(tr('Armature')),
         if (c.armors.isEmpty)
-          const Text(
-            'Nessuna armatura: la prima si forgia all\'Incudine.',
+          Text(
+            tr('Nessuna armatura: la prima si forgia all\'Incudine.'),
             textAlign: TextAlign.center,
-            style: TextStyle(color: Palette.ash),
+            style: const TextStyle(color: Palette.ash),
           ),
         for (final id in c.armors)
           ActionTile(
@@ -170,19 +173,19 @@ class _Armors extends StatelessWidget {
                 if (c.worn[slot] == id) slot.label,
             ].join(', ').addosso,
           ),
-        const SectionTitle('Mantelli'),
+        SectionTitle(tr('Mantelli')),
         for (final id in c.capes)
           ActionTile(
             icon: Icons.dry_cleaning,
             color: Color(capeDefs[id]!.color).withValues(alpha: 1),
             title: capeDefs[id]!.name,
-            subtitle: c.capeId == id ? 'Addosso' : capeDefs[id]!.effect,
+            subtitle: c.capeId == id ? tr('Addosso') : capeDefs[id]!.effect,
           ),
         const SizedBox(height: 12),
         OutlinedButton.icon(
           onPressed: () => openEquipment(context),
           icon: const Icon(Icons.shield),
-          label: const Text('Cambia in Armeria'),
+          label: Text(tr('Cambia in Armeria')),
         ),
       ],
     );
@@ -249,16 +252,16 @@ class MarketScreen extends StatelessWidget {
       child: Scaffold(
         appBar: OathBar(
           accent: Sections.market,
-          title: const Text('MERCATO'),
+          title: Text(tr('MERCATO')),
           actions: [
             Center(
-              child: Text('$runes rune  ', style: const TextStyle(color: Palette.goldBright)),
+              child: Text('${tr('{runes} rune', {'runes': runes})}  ', style: const TextStyle(color: Palette.goldBright)),
             ),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Mercante'),
-              Tab(text: 'Fattucchiera'),
+              Tab(text: tr('Mercante')),
+              Tab(text: tr('Fattucchiera')),
             ],
           ),
         ),
@@ -279,24 +282,24 @@ class _Merchant extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const SectionTitle('Vendi'),
+        SectionTitle(tr('Vendi')),
         if (toSell.isEmpty && c.weapons.isEmpty)
-          const Text('Niente da vendere.', style: TextStyle(color: Palette.ash)),
+          Text(tr('Niente da vendere.'), style: const TextStyle(color: Palette.ash)),
         for (final e in toSell)
           ActionTile(
             icon: Icons.sell_outlined,
             title: materialNames[e.key] ?? e.key,
-            subtitle: 'Hai ${e.value} · ${sellPrice(e.key)} rune l\'uno'
-                '${e.value > 1 ? ', tutti ${sellPrice(e.key) * e.value}' : ''}',
+            subtitle: tr('Hai {n} · {price} rune l\'uno', {'n': e.value, 'price': sellPrice(e.key)}) +
+                (e.value > 1 ? tr(', tutti {total}', {'total': sellPrice(e.key) * e.value}) : ''),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _SmallButton('VENDI 1', () {
+                _SmallButton(tr('VENDI 1'), () {
                   s.sellMaterial(e.key);
                   Sound.play(Sfx.sell);
                 }),
                 if (e.value > 1)
-                  _SmallButton('TUTTI', () {
+                  _SmallButton(tr('TUTTI'), () {
                     s.sellMaterial(e.key, e.value);
                     Sound.play(Sfx.sell);
                   }),
@@ -307,40 +310,40 @@ class _Merchant extends StatelessWidget {
           ActionTile(
             icon: Icons.gavel,
             title: w.displayName,
-            subtitle: 'Arma nella rastrelliera',
+            subtitle: tr('Arma nella rastrelliera'),
             trailing: TextButton(
               onPressed: () {
                 s.sellWeapon(w);
                 Sound.play(Sfx.sell);
               },
-              child: Text('${weaponValue(w)} rune'),
+              child: Text(tr('{runes} rune', {'runes': weaponValue(w)})),
             ),
           ),
-        const SectionTitle('Compra'),
+        SectionTitle(tr('Compra')),
         for (final id in merchantStock)
           ActionTile(
             icon: Icons.shopping_bag_outlined,
             title: materialNames[id] ?? id,
-            subtitle: 'Hai ${c.materials[id] ?? 0}',
+            subtitle: tr('Hai {n}', {'n': c.materials[id] ?? 0}),
             trailing: TextButton(
               onPressed: () {
                 if (s.buyMaterial(id)) {
                   Sound.play(Sfx.buy);
                 } else {
                   Sound.play(Sfx.locked);
-                  toast(context, 'Rune insufficienti');
+                  toast(context, tr('Rune insufficienti'));
                 }
               },
-              child: Text('${buyPrice(id)} rune'),
+              child: Text(tr('{runes} rune', {'runes': buyPrice(id)})),
             ),
           ),
-        const SectionTitle('Mantelli'),
+        SectionTitle(tr('Mantelli')),
         for (final cape in capeDefs.values.where((x) => x.price > 0))
           ActionTile(
             icon: Icons.dry_cleaning,
             color: Color(cape.color).withValues(alpha: 1),
             title: cape.name,
-            subtitle: c.capes.contains(cape.id) ? 'Già tuo' : cape.effect,
+            subtitle: c.capes.contains(cape.id) ? tr('Già tuo') : cape.effect,
             trailing: c.capes.contains(cape.id)
                 ? null
                 : TextButton(
@@ -349,10 +352,10 @@ class _Merchant extends StatelessWidget {
                         Sound.play(Sfx.buy);
                       } else {
                         Sound.play(Sfx.locked);
-                        toast(context, 'Rune insufficienti');
+                        toast(context, tr('Rune insufficienti'));
                       }
                     },
-                    child: Text('${cape.price} rune'),
+                    child: Text(tr('{runes} rune', {'runes': cape.price})),
                   ),
           ),
       ],
@@ -389,7 +392,7 @@ class _Witch extends StatelessWidget {
       children: [
         SectionTitle(w.displayName),
         WeaponSockets(weapon: w),
-        const SectionTitle('Affinità'),
+        SectionTitle(tr('Affinità')),
         for (final e in amuletRecipes.entries)
           ActionTile(
             icon: Icons.brightness_7,
@@ -411,26 +414,26 @@ class _Witch extends StatelessWidget {
                       if (ok && context.mounted) s.craftAmulet(e.key);
                     }
                   : null,
-              child: const Text('CREA'),
+              child: Text(tr('CREA')),
             ),
           ),
-        const SectionTitle('Passivi'),
+        SectionTitle(tr('Passivi')),
         for (final a in amuletDefs.values.where((a) => !a.isAffinity && amuletPrices[a.id] != null))
           ActionTile(
             icon: Icons.brightness_7_outlined,
             title: a.name,
-            subtitle: '${a.description}'
-                '${s.amuletCount(a.id) > 0 ? ' · ne hai ${s.amuletCount(a.id)}' : ''}',
+            subtitle: a.description +
+                (s.amuletCount(a.id) > 0 ? tr(' · ne hai {n}', {'n': s.amuletCount(a.id)}) : ''),
             trailing: TextButton(
               onPressed: () {
                 if (s.buyAmulet(a.id, amuletPrices[a.id]!)) {
                   Sound.play(Sfx.buy);
                 } else {
                   Sound.play(Sfx.locked);
-                  toast(context, 'Rune insufficienti');
+                  toast(context, tr('Rune insufficienti'));
                 }
               },
-              child: Text('${amuletPrices[a.id]} rune'),
+              child: Text(tr('{runes} rune', {'runes': amuletPrices[a.id]})),
             ),
           ),
       ],
@@ -439,5 +442,5 @@ class _Witch extends StatelessWidget {
 }
 
 extension on String {
-  String get addosso => isEmpty ? 'Nella borsa' : 'Addosso: $this';
+  String get addosso => isEmpty ? tr('Nella borsa') : tr('Addosso: {slots}', {'slots': this});
 }

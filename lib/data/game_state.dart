@@ -25,8 +25,9 @@ enum PlayMode {
   /// Test iniziale, quest del giorno e progressione.
   path('Percorso');
 
-  const PlayMode(this.label);
-  final String label;
+  const PlayMode(this._label);
+  final String _label;
+  String get label => tr(_label);
 }
 
 String _dayKey(DateTime d) =>
@@ -141,6 +142,8 @@ class GameState extends ChangeNotifier {
   bool healthAccepted = false;
   bool onboarded = false;
   PlayMode mode = PlayMode.path;
+  /// Valore salvato, confrontato con le risposte del questionario: resta in
+  /// italiano e si traduce solo quando lo si mostra.
   String goal = 'Restare in forma';
   int daysPerWeek = 3;
   String limitations = '';
@@ -148,7 +151,8 @@ class GameState extends ChangeNotifier {
   /// false = inserimento manuale delle rep (emulatori, accessibilità).
   bool useCamera = true;
 
-  /// Lingua dei nomi di abilità, attributi e schede.
+  /// Lingua scelta nelle impostazioni (Automatica = quella del telefono).
+  LangPref langPref = LangPref.auto;
   Lang get lang => appLang;
 
   /// Server dell'Arena live (Nakama), es. "arena.iron-oath.it" o "192.168.1.10:7350".
@@ -249,6 +253,7 @@ class GameState extends ChangeNotifier {
   Future<void> load() async {
     _prefs = await SharedPreferences.getInstance();
     final raw = _prefs!.getString(_storageKey);
+    appLang = resolveLang(langPref);
     if (raw != null) {
       try {
         _fromJson(jsonDecode(raw) as Map<String, dynamic>);
@@ -293,7 +298,7 @@ class GameState extends ChangeNotifier {
       }
     }
     if (mode != LiveMode.group) {
-      final tag = mode == LiveMode.arena ? 'live' : 'amico';
+      final tag = mode == LiveMode.arena ? 'live' : tr('amico');
       arenaHistory.insert(0, ArenaRecord(id, '$opponent ($tag)', outcome.sign, today));
       if (arenaHistory.length > 30) arenaHistory.removeLast();
     }
@@ -317,7 +322,7 @@ class GameState extends ChangeNotifier {
         'days': daysPerWeek,
         'limits': limitations,
         'camera': useCamera,
-        'lang': appLang.name,
+        'langPref': langPref.name,
         'server': serverAddress,
         'device': deviceId,
         'test': {for (final e in test.entries) e.key.name: e.value.toJson()},
@@ -366,7 +371,10 @@ class GameState extends ChangeNotifier {
     daysPerWeek = j['days'] as int;
     limitations = j['limits'] as String;
     useCamera = j['camera'] as bool? ?? true;
-    appLang = Lang.values.asNameMap()[j['lang']] ?? Lang.it;
+    // Il vecchio campo 'lang' non era una scelta del giocatore: chi non ha
+    // ancora scelto segue il telefono.
+    langPref = LangPref.values.asNameMap()[j['langPref']] ?? LangPref.auto;
+    appLang = resolveLang(langPref);
     serverAddress = j['server'] as String? ?? '';
     deviceId = j['device'] as String? ?? '';
     test = {
@@ -519,8 +527,9 @@ class GameState extends ChangeNotifier {
     _changed();
   }
 
-  void setLang(Lang value) {
-    appLang = value;
+  void setLangPref(LangPref value) {
+    langPref = value;
+    appLang = resolveLang(value);
     _changed();
   }
 
@@ -535,7 +544,7 @@ class GameState extends ChangeNotifier {
   }
 
   void setCharacterName(String name) {
-    character.name = name.trim().isEmpty ? 'Senza Nome' : name.trim();
+    character.name = name.trim().isEmpty ? tr('Senza Nome') : name.trim();
     _changed();
   }
 
@@ -571,7 +580,7 @@ class GameState extends ChangeNotifier {
   /// Nome e difficoltà della versione che il giocatore fa di solito.
   (String, double) _usualVariant(ExerciseId id) {
     final lvl = test[id]?.variantLevel ?? 0;
-    return (exercises[id]!.variant(lvl).name, variantDifficulty(lvl));
+    return (exercises[id]!.variant(lvl).nameIt, variantDifficulty(lvl));
   }
 
   /// Registra una serie nello storico. [difficulty] rispetto alla versione
@@ -587,7 +596,7 @@ class GameState extends ChangeNotifier {
     final day = history.putIfAbsent(today, () => {});
     day
         .putIfAbsent(
-          name,
+          _historyName(name),
           () => ExerciseDay(
             trackAs: trackAs,
             region: BodyRegion.of(trackAs, group: group),
@@ -598,6 +607,16 @@ class GameState extends ChangeNotifier {
       final keys = history.keys.toList()..sort();
       history.remove(keys.first);
     }
+  }
+
+  /// Lo storico usa i nomi italiani degli esercizi, in qualunque lingua: un
+  /// nome arrivato già tradotto torna alla sua chiave italiana.
+  static String _historyName(String name) {
+    if (appLang == Lang.it || enStrings[name] == name) return name;
+    for (final e in enStrings.entries) {
+      if (e.value == name) return e.key;
+    }
+    return name;
   }
 
   bool get retestDue =>
@@ -1397,9 +1416,9 @@ class GameState extends ChangeNotifier {
   }
 
   String get seasonTitle {
-    if (arenaPoints >= 1600) return 'Campione della Stagione';
-    if (arenaPoints >= 1300) return 'Cavaliere d\'Arena';
-    if (arenaPoints >= 1100) return 'Scudiero d\'Arena';
-    return 'Recluta d\'Arena';
+    if (arenaPoints >= 1600) return tr('Campione della Stagione');
+    if (arenaPoints >= 1300) return tr('Cavaliere d\'Arena');
+    if (arenaPoints >= 1100) return tr('Scudiero d\'Arena');
+    return tr('Recluta d\'Arena');
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n.dart';
 import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../domain/exercise.dart';
@@ -45,7 +46,7 @@ enum DemoMove {
 /// Il movimento da mostrare per un esercizio, dal nome che vede il
 /// giocatore; se non lo riconosce, dall'esercizio base.
 DemoMove demoFor(String name, ExerciseId trackAs) {
-  final n = name.toLowerCase();
+  final n = _italianName(name).toLowerCase();
   const byWord = [
     ('affondi saltati', DemoMove.lunge),
     ('skater', DemoMove.jumpingJack),
@@ -101,6 +102,16 @@ DemoMove demoFor(String name, ExerciseId trackAs) {
     ExerciseId.plank => DemoMove.plank,
     ExerciseId.stretch => DemoMove.forwardFold,
   };
+}
+
+/// Il nome italiano di un esercizio già tradotto: le parole chiave qui sopra
+/// sono in italiano.
+String _italianName(String name) {
+  if (appLang == Lang.it) return name;
+  for (final e in enStrings.entries) {
+    if (e.value == name) return e.key;
+  }
+  return name;
 }
 
 /// Riquadro con la dimostrazione che va in loop.

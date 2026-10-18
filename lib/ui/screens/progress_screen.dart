@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n.dart';
 import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
@@ -61,9 +62,9 @@ class _ProgressCardState extends State<ProgressCard> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Rep in questo periodo: ${current.reps}'
-              '${previous != null ? ' (prima ${previous.reps})' : ''}. '
-              '100 è la tua forza al primo test: le versioni più dure contano di più.',
+              '${tr('Rep in questo periodo: {n}', {'n': current.reps})}'
+              '${previous != null ? tr(' (prima {n})', {'n': previous.reps}) : ''}. '
+              '${tr('100 è la tua forza al primo test: le versioni più dure contano di più.')}',
               style: const TextStyle(color: Palette.ash, fontSize: 13),
             ),
             if (widget.showDetails)
@@ -73,7 +74,7 @@ class _ProgressCardState extends State<ProgressCard> {
                   onPressed: () => Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => const ProgressScreen())),
                   icon: const Icon(Icons.list_alt, size: 18),
-                  label: const Text('Ogni esercizio e i record'),
+                  label: Text(tr('Ogni esercizio e i record')),
                 ),
               ),
           ],
@@ -113,7 +114,9 @@ class _RegionStat extends StatelessWidget {
           style: titleStyle(size: 22).copyWith(color: color),
         ),
         Text(
-          delta == null ? 'da allenare' : '${delta >= 0 ? '+' : ''}${delta.round()}% dall\'inizio',
+          delta == null
+              ? tr('da allenare')
+              : tr('{d}% dall\'inizio', {'d': '${delta >= 0 ? '+' : ''}${delta.round()}'}),
           style: TextStyle(
             color: delta == null ? Palette.ash : (delta >= 0 ? Palette.moss : Palette.blood),
             fontSize: 12,
@@ -240,17 +243,17 @@ class _ProgressScreenState extends State<ProgressScreen> {
     };
     final list = exerciseSummaries(s.history, from);
     return Scaffold(
-      appBar: OathBar(title: const Text('IL TUO ANDAMENTO')),
+      appBar: OathBar(title: Text(tr('IL TUO ANDAMENTO'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           const ProgressCard(showDetails: false),
-          const SectionTitle('Esercizi'),
+          SectionTitle(tr('Esercizi')),
           OathChoice<ProgressSpan>(
-            options: const [
-              (ProgressSpan.day, 'Oggi'),
-              (ProgressSpan.week, 'Settimana'),
-              (ProgressSpan.month, 'Mese'),
+            options: [
+              (ProgressSpan.day, tr('Oggi')),
+              (ProgressSpan.week, tr('Settimana')),
+              (ProgressSpan.month, tr('Mese')),
             ],
             selected: _span,
             height: 36,
@@ -258,9 +261,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
           ),
           const SizedBox(height: 8),
           if (list.isEmpty)
-            const Text(
-              'Ancora nessuna serie registrata: allenati e qui vedrai tutto.',
-              style: TextStyle(color: Palette.ash),
+            Text(
+              tr('Ancora nessuna serie registrata: allenati e qui vedrai tutto.'),
+              style: const TextStyle(color: Palette.ash),
             ),
           for (final e in list) _ExerciseRow(e),
         ],
@@ -285,21 +288,26 @@ class _ExerciseRow extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(e.name, style: titleStyle(size: 16))),
+                Expanded(child: Text(tr(e.name), style: titleStyle(size: 16))),
                 if (e.record > 0 && e.lastBest >= e.record && e.lastDay == e.recordDay)
                   const InfoChip(Icons.emoji_events, 'RECORD', color: Palette.goldBright),
               ],
             ),
             const SizedBox(height: 4),
             Text(
-              'Nel periodo: ${e.repsInPeriod}$unit in ${e.daysInPeriod} giorni · '
-              'Record: ${e.record}$unit in una serie',
+              tr('Nel periodo: {reps} in {days} giorni · Record: {record} in una serie', {
+                'reps': '${e.repsInPeriod}$unit',
+                'days': e.daysInPeriod,
+                'record': '${e.record}$unit',
+              }),
               style: const TextStyle(color: Palette.ash, fontSize: 13),
             ),
             Text(
-              'Ultima volta: ${e.lastBest}$unit'
-              '${vsUsual == null ? '' : ' · di solito ${e.usualBest.toStringAsFixed(0)}$unit '
-                  '(${vsUsual >= 0 ? '+' : ''}${vsUsual.round()})'}',
+              '${tr('Ultima volta: {n}', {'n': '${e.lastBest}$unit'})}'
+              '${vsUsual == null ? '' : tr(' · di solito {n} ({d})', {
+                  'n': '${e.usualBest.toStringAsFixed(0)}$unit',
+                  'd': '${vsUsual >= 0 ? '+' : ''}${vsUsual.round()}',
+                })}',
               style: TextStyle(
                 color:
                     vsUsual == null ? Palette.ash : (vsUsual >= 0 ? Palette.moss : Palette.blood),

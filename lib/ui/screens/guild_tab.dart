@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/exercise.dart';
@@ -80,18 +81,17 @@ class _NoServer extends StatelessWidget {
       children: [
         const _Intro(),
         const SizedBox(height: 16),
-        const Text(
-          'La gilda vive sul server online: impostalo nelle Impostazioni per fondarne una o '
-          'entrare in quella dei tuoi amici.',
+        Text(
+          tr('La gilda vive sul server online: impostalo nelle Impostazioni per fondarne una o entrare in quella dei tuoi amici.'),
           textAlign: TextAlign.center,
-          style: TextStyle(color: Palette.ash),
+          style: const TextStyle(color: Palette.ash),
         ),
         const SizedBox(height: 16),
         Center(
           child: FilledButton(
             onPressed: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
-            child: const Text('IMPOSTAZIONI'),
+            child: Text(tr('IMPOSTAZIONI')),
           ),
         ),
       ],
@@ -104,16 +104,15 @@ class _Intro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    return Card(
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Icon(Icons.shield_outlined, color: Sections.guild, size: 40),
-            SizedBox(height: 8),
+            const Icon(Icons.shield_outlined, color: Sections.guild, size: 40),
+            const SizedBox(height: 8),
             Text(
-              'Una gilda è il tuo gruppo: vi allenate insieme in diretta e vi sfidate tra amici. '
-              'Le sfide in gilda non toccano i punti dell\'Arena.',
+              tr('Una gilda è il tuo gruppo: vi allenate insieme in diretta e vi sfidate tra amici. Le sfide in gilda non toccano i punti dell\'Arena.'),
               textAlign: TextAlign.center,
             ),
           ],
@@ -158,21 +157,21 @@ class _NoGuildState extends State<_NoGuild> {
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: Text(
-              'Hai chiesto di entrare in ${g.guild!.name}: aspetta che un capo ti accetti.',
+              tr('Hai chiesto di entrare in {guild}: aspetta che un capo ti accetti.', {'guild': g.guild!.name}),
               textAlign: TextAlign.center,
               style: const TextStyle(color: Palette.goldBright),
             ),
           ),
-        const SectionTitle('Fonda una gilda'),
+        SectionTitle(tr('Fonda una gilda')),
         TextField(
           controller: _name,
           maxLength: 24,
-          decoration: const InputDecoration(labelText: 'Nome della gilda'),
+          decoration: InputDecoration(labelText: tr('Nome della gilda')),
         ),
         TextField(
           controller: _motto,
           maxLength: 60,
-          decoration: const InputDecoration(labelText: 'Motto (facoltativo)'),
+          decoration: InputDecoration(labelText: tr('Motto (facoltativo)')),
         ),
         const SizedBox(height: 8),
         FilledButton(
@@ -181,27 +180,27 @@ class _NoGuildState extends State<_NoGuild> {
               : () {
                   final name = _name.text.trim();
                   if (name.length < 3) {
-                    _snack(context, 'Il nome deve avere almeno 3 lettere.');
+                    _snack(context, tr('Il nome deve avere almeno 3 lettere.'));
                     return;
                   }
                   _guard(context, g.createGuild(name, _motto.text.trim()));
                 },
-          child: const Text('FONDA'),
+          child: Text(tr('FONDA')),
         ),
-        const SectionTitle('Cerca una gilda'),
+        SectionTitle(tr('Cerca una gilda')),
         Row(
           children: [
             Expanded(
               child: TextField(
                 controller: _search,
-                decoration: const InputDecoration(labelText: 'Nome'),
+                decoration: InputDecoration(labelText: tr('Nome')),
                 onSubmitted: (v) => _guard(context, g.search(v.trim())),
               ),
             ),
             const SizedBox(width: 12),
             FilledButton(
               onPressed: () => _guard(context, g.search(_search.text.trim())),
-              child: const Text('CERCA'),
+              child: Text(tr('CERCA')),
             ),
           ],
         ),
@@ -211,11 +210,11 @@ class _NoGuildState extends State<_NoGuild> {
             icon: Icons.shield_outlined,
             color: Sections.guild,
             title: found.name,
-            subtitle: '${found.count} membri'
-                '${found.description.isEmpty ? '' : ' · ${found.description}'}',
+            subtitle: tr('{n} membri', {'n': found.count}) +
+                (found.description.isEmpty ? '' : ' · ${found.description}'),
             trailing: FilledButton(
               onPressed: () => _guard(context, g.join(found.id)),
-              child: const Text('ENTRA'),
+              child: Text(tr('ENTRA')),
             ),
           ),
         _Friends(service: g),
@@ -262,7 +261,7 @@ class _MyGuild extends StatelessWidget {
                   ),
                 const SizedBox(height: 4),
                 Text(
-                  '${g.members.where((m) => m.state <= 2).length} membri',
+                  tr('{n} membri', {'n': g.members.where((m) => m.state <= 2).length}),
                   style: const TextStyle(color: Palette.ash),
                 ),
               ],
@@ -271,7 +270,7 @@ class _MyGuild extends StatelessWidget {
         ),
         if (g.error != null) _Error(g.error!),
         if (g.challenges.isNotEmpty) ...[
-          const SectionTitle('Sfide ricevute'),
+          SectionTitle(tr('Sfide ricevute')),
           for (final c in g.challenges)
             ActionTile(
               icon: Icons.sports_kabaddi,
@@ -282,7 +281,7 @@ class _MyGuild extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    tooltip: 'Rifiuta',
+                    tooltip: tr('Rifiuta'),
                     icon: const Icon(Icons.close, color: Palette.ash),
                     onPressed: () => _guard(context, g.dismiss(c)),
                   ),
@@ -291,42 +290,42 @@ class _MyGuild extends StatelessWidget {
                       g.dismiss(c);
                       _live(context, g, c.exercise, c.matchId, LiveMode.friendly);
                     },
-                    child: const Text('ACCETTA'),
+                    child: Text(tr('ACCETTA')),
                   ),
                 ],
               ),
             ),
         ],
-        const SectionTitle('Allenamenti in corso'),
+        SectionTitle(tr('Allenamenti in corso')),
         if (rooms.isEmpty)
-          const Text(
-            'Nessuno si sta allenando adesso. Aprine uno: chi è in gilda lo vede qui e si unisce.',
+          Text(
+            tr('Nessuno si sta allenando adesso. Aprine uno: chi è in gilda lo vede qui e si unisce.'),
             textAlign: TextAlign.center,
-            style: TextStyle(color: Palette.ash),
+            style: const TextStyle(color: Palette.ash),
           ),
         for (final r in rooms)
           ActionTile(
             icon: Icons.groups,
             color: Sections.guild,
             title: '${r.hostName} · ${exercises[r.exercise]!.name}',
-            subtitle: '${r.size} su 4 nella sala',
+            subtitle: tr('{n} su 4 nella sala', {'n': r.size}),
             trailing: FilledButton(
               onPressed: () => _live(context, g, r.exercise, r.matchId, LiveMode.group),
-              child: const Text('UNISCITI'),
+              child: Text(tr('UNISCITI')),
             ),
           ),
         const SizedBox(height: 8),
         FilledButton.icon(
           icon: const Icon(Icons.add),
           onPressed: () async {
-            final c = await _pickChallenge(context, 'Allenati con la gilda');
+            final c = await _pickChallenge(context, tr('Allenati con la gilda'));
             if (c == null || !context.mounted) return;
             final id = await _guard(context, g.openSession(c.exercise));
             if (id != null && context.mounted) _live(context, g, c.exercise, id, LiveMode.group);
           },
-          label: const Text('APRI UN ALLENAMENTO'),
+          label: Text(tr('APRI UN ALLENAMENTO')),
         ),
-        const SectionTitle('Membri'),
+        SectionTitle(tr('Membri')),
         for (final m in g.members) _MemberTile(service: g, member: m),
         _Invite(service: g),
         _Friends(service: g),
@@ -338,22 +337,22 @@ class _MyGuild extends StatelessWidget {
                 context: context,
                 builder: (ctx) => AlertDialog(
                   backgroundColor: Palette.stone,
-                  title: Text('Lasciare ${guild.name}?'),
+                  title: Text(tr('Lasciare {guild}?', {'guild': guild.name})),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx, false),
-                      child: const Text('Resto'),
+                      child: Text(tr('Resto')),
                     ),
                     FilledButton(
                       onPressed: () => Navigator.pop(ctx, true),
-                      child: const Text('Lascio'),
+                      child: Text(tr('Lascio')),
                     ),
                   ],
                 ),
               );
               if (ok == true && context.mounted) _guard(context, g.leave());
             },
-            child: const Text('Lascia la gilda', style: TextStyle(color: Palette.ash)),
+            child: Text(tr('Lascia la gilda'), style: const TextStyle(color: Palette.ash)),
           ),
         ),
       ],
@@ -371,34 +370,34 @@ class _MemberTile extends StatelessWidget {
     final m = member;
     final me = m.id == service.myId;
     final role = switch (m.state) {
-      0 => 'Fondatore',
-      1 => 'Ufficiale',
-      2 => 'Membro',
-      _ => 'Chiede di entrare',
+      0 => tr('Fondatore'),
+      1 => tr('Ufficiale'),
+      2 => tr('Membro'),
+      _ => tr('Chiede di entrare'),
     };
     Widget? trailing;
     if (m.state == 3 && service.isLeader) {
       trailing = FilledButton(
         onPressed: () => _guard(context, service.acceptMember(m.id)),
-        child: const Text('ACCETTA'),
+        child: Text(tr('ACCETTA')),
       );
     } else if (!me && m.state <= 2) {
       trailing = FilledButton(
         onPressed: () async {
-          final c = await _pickChallenge(context, 'Sfida ${m.name}');
+          final c = await _pickChallenge(context, tr('Sfida {name}', {'name': m.name}));
           if (c == null || !context.mounted) return;
           final id = await _guard(context, service.openSession(c.exercise, opponent: m.id));
           if (id != null && context.mounted) {
             _live(context, service, c.exercise, id, LiveMode.friendly);
           }
         },
-        child: const Text('SFIDA'),
+        child: Text(tr('SFIDA')),
       );
     }
     return ActionTile(
       icon: m.online ? Icons.circle : Icons.circle_outlined,
       color: m.online ? Palette.moss : Palette.ash,
-      title: me ? '${m.name} (tu)' : m.name,
+      title: me ? tr('{name} (tu)', {'name': m.name}) : m.name,
       subtitle: m.online ? '$role · online' : role,
       trailing: trailing,
     );
@@ -428,13 +427,13 @@ class _InviteState extends State<_Invite> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionTitle('Invita'),
+        SectionTitle(tr('Invita')),
         Row(
           children: [
             Expanded(
               child: TextField(
                 controller: _name,
-                decoration: const InputDecoration(labelText: 'Nome del giocatore'),
+                decoration: InputDecoration(labelText: tr('Nome del giocatore')),
               ),
             ),
             const SizedBox(width: 12),
@@ -448,16 +447,16 @@ class _InviteState extends State<_Invite> {
                   _snack(context, text);
                 }
               },
-              child: const Text('INVITA'),
+              child: Text(tr('INVITA')),
             ),
           ],
         ),
         if (!widget.service.isLeader)
-          const Padding(
-            padding: EdgeInsets.only(top: 6),
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
             child: Text(
-              'Solo fondatore e ufficiali fanno entrare: tu mandi la richiesta d\'amicizia.',
-              style: TextStyle(color: Palette.ash, fontSize: 13),
+              tr('Solo fondatore e ufficiali fanno entrare: tu mandi la richiesta d\'amicizia.'),
+              style: const TextStyle(color: Palette.ash, fontSize: 13),
             ),
           ),
       ],
@@ -479,25 +478,25 @@ class _Friends extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionTitle('Amici'),
+        SectionTitle(tr('Amici')),
         for (final f in list)
           ActionTile(
             icon: Icons.person_outline,
             title: f.name,
             subtitle: switch (f.state) {
-              1 => 'Richiesta inviata',
-              2 => 'Ti ha chiesto l\'amicizia',
-              _ => g.guild == null ? 'Amico' : 'Non è nella gilda',
+              1 => tr('Richiesta inviata'),
+              2 => tr('Ti ha chiesto l\'amicizia'),
+              _ => g.guild == null ? tr('Amico') : tr('Non è nella gilda'),
             },
             trailing: f.state == 2
                 ? FilledButton(
                     onPressed: () => _guard(context, g.acceptFriend(f.id)),
-                    child: const Text('ACCETTA'),
+                    child: Text(tr('ACCETTA')),
                   )
                 : f.state == 0 && g.guild != null && g.isLeader && !g.pending
                     ? FilledButton(
                         onPressed: () => _guard(context, g.addToGuild(f.id)),
-                        child: const Text('IN GILDA'),
+                        child: Text(tr('IN GILDA')),
                       )
                     : null,
           ),
@@ -565,7 +564,10 @@ Future<void> _live(
   LiveMode mode,
 ) async {
   if (!context.read<GameState>().useCamera) {
-    _snack(context, 'Le sfide dal vivo richiedono la fotocamera: le rep devono essere verificate.');
+    _snack(
+      context,
+      tr('Le sfide dal vivo richiedono la fotocamera: le rep devono essere verificate.'),
+    );
     return;
   }
   await Navigator.of(context).push(
