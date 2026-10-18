@@ -2077,7 +2077,7 @@
     "file": "assets/art/bosses/golden_priest_idle.png",
     "type": "cutout",
     "prompt": "Boss: tall emaciated high priest fused with a golden reliquary on his back, a tall golden mitre, a golden staff topped by a sun disc, gold dripping from him like wax, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2086,7 +2086,7 @@
     "file": "assets/art/enemies/penitent_idle.png",
     "type": "cutout",
     "prompt": "Enemy: hooded penitent flagellant with a scarred bare back, a heavy iron cage around his head, a whip with small golden hooks, chains around his waist, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2095,7 +2095,7 @@
     "file": "assets/art/enemies/censer_bearer_idle.png",
     "type": "cutout",
     "prompt": "Enemy: massive hunched monk carrying a giant golden censer on a chain, thick holy smoke pouring out, face hidden under a tall pointed hood, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2104,7 +2104,7 @@
     "file": "assets/art/bosses/chained_maiden_idle.png",
     "type": "cutout",
     "prompt": "Boss: tall sorrowful armored maiden in worn white-gold plate, bound by heavy golden chains to a broken altar slab on her back, face covered by a veil, a long holy blade, tears of molten gold, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2113,7 +2113,7 @@
     "file": "assets/art/enemies/black_inquisitor_idle.png",
     "type": "cutout",
     "prompt": "Enemy: inquisitor in black and gold robes, a tall pointed black hat, an iron mask, a branding iron in one hand and a heavy book chained to his wrist, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
