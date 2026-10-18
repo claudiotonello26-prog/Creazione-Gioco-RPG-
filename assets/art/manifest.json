@@ -2122,7 +2122,7 @@
     "file": "assets/art/enemies/cathedral_gargoyle_idle.png",
     "type": "cutout",
     "prompt": "Enemy: black stone gargoyle with gold-veined cracks, bat-like stone wings, crouched on a broken fragment of cathedral column, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2131,7 +2131,7 @@
     "file": "assets/art/bosses/eternal_martyr_idle.png",
     "type": "cutout",
     "prompt": "Boss: gigantic martyr saint pierced by many gold-tipped spears, ornate black-and-gold armor, an obsidian halo, rising from one knee, a colossal halberd, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2140,7 +2140,7 @@
     "file": "assets/art/enemies/spectral_archer_idle.png",
     "type": "cutout",
     "prompt": "Enemy: translucent pale-blue ghostly archer in a tattered hood, a silver bow, faint mist trailing below the knees, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2149,7 +2149,7 @@
     "file": "assets/art/enemies/lunar_wisp_idle.png",
     "type": "cutout",
     "prompt": "Enemy: small floating will-o-the-wisp spirit: a pale silver-blue flame with a tiny skull-like face inside, trailing two ragged moth wings, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2158,7 +2158,7 @@
     "file": "assets/art/bosses/moon_moth_idle.png",
     "type": "cutout",
     "prompt": "Boss: giant moth with huge silver-white wings patterned like the phases of the moon, a furry pale body, glowing pale blue eyes, silver dust falling from the wings, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
