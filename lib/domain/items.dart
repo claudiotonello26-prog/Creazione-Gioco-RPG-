@@ -545,7 +545,10 @@ const Map<String, WeaponDef> weaponDefs = {
     },
     damageType: DamageType.holy,
     recipe: {'iron_ingot': 4, 'reinforced_grip': 1, 'beast_essence': 2},
-    craftLevel: 3,
+    // Livello 1: è l'unica cosa ripetibile che fa salire l'Incudine all'inizio
+    // (il Giaco si forgia una volta sola). Prima era al 3 e l'Incudine non
+    // saliva mai: lo ha trovato il simulatore di bilanciamento.
+    craftLevel: 1,
   ),
   'cathedral_hammer': WeaponDef(
     id: 'cathedral_hammer',
@@ -811,6 +814,9 @@ class WeaponInstance {
 
   int get nextStoneCost => nextStone == null ? 0 : stoneCostFor(def, upgrade + 1);
 
+  /// Rune per il prossimo potenziamento (0 al massimo).
+  int get nextRuneCost => nextStone == null ? 0 : upgradeRuneCostFor(def, upgrade + 1);
+
   /// Tre incastonature: [0] l'amuleto d'affinità (colore, aura e scaling),
   /// [1] e [2] amuleti passivi.
   final List<String?> sockets;
@@ -851,6 +857,13 @@ String? stoneFor(WeaponDef def, int level) {
 /// Quante pietre: 1, 2, 3 dentro ogni gradino; una sola per Astrale,
 /// Tenebre ed Epica.
 int stoneCostFor(WeaponDef def, int level) => def.rare || level == 10 ? 1 : ((level - 1) % 3) + 1;
+
+/// Rune per arrivare al livello [level]: crescono col livello e con l'arma
+/// (il +10 della Lama del Pellegrino costa circa 3.700 rune, un'arma di livello 20
+/// il quadruplo); le armi speciali costano il quintuplo. Il simulatore ha
+/// visto le rune accumularsi senza uso: questo è il loro sbocco principale.
+int upgradeRuneCostFor(WeaponDef def, int level) =>
+    ((def.rare ? 400 : 80) * pow(level, 1.6) * (1 + def.craftLevel / 6)).round();
 
 class Amulet {
   const Amulet(this.id, String name, String description, this.apply)

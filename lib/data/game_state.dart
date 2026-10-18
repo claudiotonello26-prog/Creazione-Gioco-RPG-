@@ -1016,6 +1016,9 @@ class GameState extends ChangeNotifier {
 
   static const int mapBoss = 4, mapChest = 5, mapDone = 6;
 
+  /// Quota delle rune del forziere quando la mappa è già stata aperta.
+  static const double chestRepeatRunes = 0.25;
+
   int expeditionProgress(String id) {
     _rollDay();
     return daily.expeditionStep[id] ?? 0;
@@ -1056,7 +1059,10 @@ class GameState extends ChangeNotifier {
     if ((daily.expeditionStep[e.id] ?? 0) != mapChest) return const [];
     final r = random ?? Random();
     final out = <(String, int, bool)>[];
-    final runes = e.chest.runes * multiplier;
+    // Le rune piene solo la prima volta: rifare la stessa mappa ogni giorno
+    // rendeva più dei combattimenti (tre quarti delle rune, dal simulatore).
+    final repeat = stat('chest:${e.id}') > 0;
+    final runes = (e.chest.runes * multiplier * (repeat ? chestRepeatRunes : 1)).round();
     character.runes += runes;
     out.add(('runes', runes, false));
     for (final g in _forBuild(e.chest.guaranteed).entries) {
@@ -1069,6 +1075,7 @@ class GameState extends ChangeNotifier {
     }
     daily.expeditionStep[e.id] = mapDone;
     _count('chests');
+    _count('chest:${e.id}');
     _changed();
     return out;
   }
@@ -1290,7 +1297,10 @@ class GameState extends ChangeNotifier {
   bool upgradeWeapon(WeaponInstance w) {
     final stone = w.nextStone;
     if (stone == null) return false;
+    final runes = w.nextRuneCost;
+    if (character.runes < runes) return false;
     if (!character.spendMaterial(stone, w.nextStoneCost)) return false;
+    character.runes -= runes;
     w.upgrade++;
     _count('upgrades');
     _changed();

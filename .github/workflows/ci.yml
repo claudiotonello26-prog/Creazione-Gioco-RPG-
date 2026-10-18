@@ -24,6 +24,16 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
+      # Il simulatore di bilanciamento gira dentro flutter test: il suo
+      # rapporto finisce nel riepilogo della CI e come artefatto.
+      - if: always()
+        run: test -f build/balance/report.md && cat build/balance/report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bilanciamento
+          path: build/balance/report.md
+          if-no-files-found: ignore
 
   server:
     runs-on: ubuntu-latest
@@ -118,7 +128,7 @@ jobs:
     needs: android-smoke
     # Il ramo della grafica del personaggio e quello della gilda non pubblicano: l'APK di prova esce
     # dal ramo delle traduzioni, che lo contiene già, così resta in inglese.
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository) && github.head_ref != 'claude/project-thread-u1igq7' && github.head_ref != 'claude/gilda-amici-vpyet8'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository) && github.head_ref != 'claude/project-thread-u1igq7' && github.head_ref != 'claude/gilda-amici-vpyet8' && github.head_ref != 'claude/simulatore-bilanciamento-2bod7o'
     runs-on: ubuntu-latest
     permissions:
       contents: write
