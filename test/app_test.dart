@@ -36,6 +36,12 @@ void main() {
       await tester.tap(find.widgetWithText(NavigationDestination, label));
       await tester.pumpAndSettle();
     }
+    // Armeria e Inventario stanno sotto la scheda del personaggio.
+    await tester.scrollUntilVisible(
+      find.text('ARMERIA'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('ARMERIA'), findsOneWidget);
   });
 

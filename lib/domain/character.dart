@@ -39,17 +39,17 @@ class Character {
     Set<String>? capes,
     this.neck,
     Appearance? look,
-  })  : look = look ?? Appearance(),
-        capes = capes ?? {'pilgrim_cape'},
-        attributes = attributes ?? {for (final a in Attribute.values) a: baseAttribute},
-        weapon = weapon ?? WeaponInstance(weaponId: 'pilgrim_blade'),
-        amulets = amulets ?? [],
-        materials = materials ?? {},
-        weapons = weapons ?? [],
-        perks = perks ?? {},
-        worn = worn ?? {},
-        armors = armors ?? {},
-        offhands = offhands ?? {};
+  }) : look = look ?? Appearance(),
+       capes = capes ?? {'pilgrim_cape'},
+       attributes = attributes ?? {for (final a in Attribute.values) a: baseAttribute},
+       weapon = weapon ?? WeaponInstance(weaponId: 'pilgrim_blade'),
+       amulets = amulets ?? [],
+       materials = materials ?? {},
+       weapons = weapons ?? [],
+       perks = perks ?? {},
+       worn = worn ?? {},
+       armors = armors ?? {},
+       offhands = offhands ?? {};
 
   static const int baseAttribute = 10;
 
@@ -93,9 +93,9 @@ class Character {
 
   /// Tutti gli amuleti che contano: quelli dell'arma e quello al collo.
   Iterable<Amulet> get wornAmulets => [
-        ...weapon.amulets,
-        if (amuletDefs[neck] != null) amuletDefs[neck]!,
-      ];
+    ...weapon.amulets,
+    if (amuletDefs[neck] != null) amuletDefs[neck]!,
+  ];
 
   /// La mano sinistra conta solo con un'arma a una mano.
   OffhandDef? get offhand => weapon.def.oneHanded ? offhandDefs[offhandId] : null;
@@ -176,56 +176,56 @@ class Character {
 
   /// Ogni 10 punti oltre il 10 in un attributo si sblocca una scelta di perk.
   List<PerkChoice> get unlockedPerkChoices => [
-        for (final c in perkChoices)
-          if (c.isUnlocked(this)) c,
-      ];
+    for (final c in perkChoices)
+      if (c.isUnlocked(this)) c,
+  ];
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'xp': xp,
-        'discipline': disciplinePoints,
-        'attributes': {for (final e in attributes.entries) e.key.name: e.value},
-        'runes': runes,
-        'weapon': weapon.toJson(),
-        'weapons': [for (final w in weapons) w.toJson()],
-        'amulets': amulets,
-        'materials': materials,
-        'perks': perks.toList(),
-        'worn': {for (final e in worn.entries) e.key.name: e.value},
-        'armors': armors.toList(),
-        'offhand': offhandId,
-        'offhands': offhands.toList(),
-        'cape': capeId,
-        'capes': capes.toList(),
-        'neck': neck,
-        'look': look.toJson(),
-      };
+    'name': name,
+    'xp': xp,
+    'discipline': disciplinePoints,
+    'attributes': {for (final e in attributes.entries) e.key.name: e.value},
+    'runes': runes,
+    'weapon': weapon.toJson(),
+    'weapons': [for (final w in weapons) w.toJson()],
+    'amulets': amulets,
+    'materials': materials,
+    'perks': perks.toList(),
+    'worn': {for (final e in worn.entries) e.key.name: e.value},
+    'armors': armors.toList(),
+    'offhand': offhandId,
+    'offhands': offhands.toList(),
+    'cape': capeId,
+    'capes': capes.toList(),
+    'neck': neck,
+    'look': look.toJson(),
+  };
 
   factory Character.fromJson(Map<String, dynamic> j) => Character(
-        name: j['name'] as String,
-        xp: j['xp'] as int,
-        disciplinePoints: j['discipline'] as int,
-        attributes: {
-          for (final a in Attribute.values)
-            a: (j['attributes'] as Map)[a.name] as int? ?? baseAttribute,
-        },
-        runes: j['runes'] as int,
-        weapon: WeaponInstance.fromJson(j['weapon'] as Map<String, dynamic>),
-        weapons: [
-          for (final w in j['weapons'] as List) WeaponInstance.fromJson(w as Map<String, dynamic>),
-        ],
-        amulets: List<String>.from(j['amulets'] as List),
-        materials: Map<String, int>.from(j['materials'] as Map),
-        perks: Set<String>.from(j['perks'] as List),
-        worn: _readWorn(j),
-        armors: Set<String>.from(j['armors'] as List? ?? const []),
-        offhandId: j['offhand'] as String?,
-        offhands: Set<String>.from(j['offhands'] as List? ?? const []),
-        capeId: j.containsKey('capes') ? j['cape'] as String? : 'pilgrim_cape',
-        capes: j['capes'] == null ? null : Set<String>.from(j['capes'] as List),
-        neck: j['neck'] as String?,
-        look: j['look'] == null ? null : Appearance.fromJson(j['look'] as Map<String, dynamic>),
-      );
+    name: j['name'] as String,
+    xp: j['xp'] as int,
+    disciplinePoints: j['discipline'] as int,
+    attributes: {
+      for (final a in Attribute.values)
+        a: (j['attributes'] as Map)[a.name] as int? ?? baseAttribute,
+    },
+    runes: j['runes'] as int,
+    weapon: WeaponInstance.fromJson(j['weapon'] as Map<String, dynamic>),
+    weapons: [
+      for (final w in j['weapons'] as List) WeaponInstance.fromJson(w as Map<String, dynamic>),
+    ],
+    amulets: List<String>.from(j['amulets'] as List),
+    materials: Map<String, int>.from(j['materials'] as Map),
+    perks: Set<String>.from(j['perks'] as List),
+    worn: _readWorn(j),
+    armors: Set<String>.from(j['armors'] as List? ?? const []),
+    offhandId: j['offhand'] as String?,
+    offhands: Set<String>.from(j['offhands'] as List? ?? const []),
+    capeId: j.containsKey('capes') ? j['cape'] as String? : 'pilgrim_cape',
+    capes: j['capes'] == null ? null : Set<String>.from(j['capes'] as List),
+    neck: j['neck'] as String?,
+    look: j['look'] == null ? null : Appearance.fromJson(j['look'] as Map<String, dynamic>),
+  );
 }
 
 /// Prima dei pezzi separati c'era un'armatura intera: la si indossa tutta.
@@ -269,41 +269,53 @@ class PerkChoice {
 }
 
 const perkChoices = [
-  PerkChoice({
-    Attribute.strength: 20
-  }, [
-    Perk('colossus_blow', 'Colpo del Colosso', 'Ogni 5ª rep perfetta di fila è un colpo caricato'),
-    Perk('iron_skin', 'Pelle di Ferro', '−10% danno fisico subito'),
-  ]),
-  PerkChoice({
-    Attribute.faith: 20
-  }, [
-    Perk('blessing', 'Benedizione', 'Ogni rep perfetta cura il 2% dei punti vita'),
-    Perk('judgement', 'Giudizio', '+15% danno sacro contro nemici sotto metà vita'),
-  ]),
-  PerkChoice({
-    Attribute.strength: 30,
-    Attribute.faith: 30
-  }, [
-    Perk('crusader', 'Crociato', 'Gli attacchi pesanti aggiungono un\'esplosione di luce sacra'),
-  ]),
+  PerkChoice(
+    {Attribute.strength: 20},
+    [
+      Perk(
+        'colossus_blow',
+        'Colpo del Colosso',
+        'Ogni 5ª rep perfetta di fila è un colpo caricato',
+      ),
+      Perk('iron_skin', 'Pelle di Ferro', '−10% danno fisico subito'),
+    ],
+  ),
+  PerkChoice(
+    {Attribute.faith: 20},
+    [
+      Perk('blessing', 'Benedizione', 'Ogni rep perfetta cura il 2% dei punti vita'),
+      Perk('judgement', 'Giudizio', '+15% danno sacro contro nemici sotto metà vita'),
+    ],
+  ),
+  PerkChoice(
+    {Attribute.strength: 30, Attribute.faith: 30},
+    [Perk('crusader', 'Crociato', 'Gli attacchi pesanti aggiungono un\'esplosione di luce sacra')],
+  ),
 ];
 
-/// Aspetto del personaggio. Gli indici puntano alle tavolozze qui sotto.
+/// Aspetto del personaggio. Gli indici puntano alle tavolozze qui sotto;
+/// per capelli, occhi, maglia e pantaloni -1 vuol dire il colore originale
+/// dell'illustrazione.
 class Appearance {
   Appearance({
     this.female = false,
+    this.style = 3,
     this.face = 0,
     this.skin = 1,
-    this.hair = 0,
-    this.eyes = 0,
+    this.hair = natural,
+    this.eyes = natural,
     this.beard = true,
     this.beardColor = 0,
-    this.shirt = 0,
-    this.pants = 0,
+    this.shirt = natural,
+    this.pants = natural,
   });
 
+  static const int natural = -1;
+
   bool female;
+
+  /// Testa dell'illustrazione: viso, capelli e barba insieme (vedi [styleNames]).
+  int style;
 
   /// 0 ovale, 1 squadrato, 2 tondo, 3 affilato.
   int face;
@@ -335,30 +347,71 @@ class Appearance {
     0xFFB9A98A,
   ];
 
+  /// Le teste disegnate, nello stesso ordine dei file `head_<n>.png`.
+  static const List<String> femaleStyles = [
+    'Rasata',
+    'Rasata, sorriso',
+    'Rasata, fiera',
+    'Corti',
+    'Coda alta',
+    'Cresta intrecciata',
+    'Lunghi mossi',
+    'Treccia',
+    'Caschetto',
+  ];
+  static const List<String> maleStyles = [
+    'Rasato',
+    'Rasato, sorriso',
+    'Corti pettinati',
+    'Spettinati e barba corta',
+    'Chignon e barba',
+    'Cresta e pizzetto',
+    'Mossi con baffi',
+    'Treccine',
+    'Lunghi con baffi',
+  ];
+  List<String> get styleNames => female ? femaleStyles : maleStyles;
+  int get styleIndex => style.clamp(0, styleNames.length - 1);
+
+  /// Colori originali dell'illustrazione, per il disegno a vettori.
+  static const int naturalHair = 0xFF4A3524;
+  static const int naturalEyes = 0xFF7A7F86;
+  static const int naturalShirt = 0xFFD8CCB4;
+  static const int naturalPants = 0xFF4E3B2A;
+
+  static int _pick(List<int> palette, int i, int fallback) =>
+      i < 0 ? fallback : palette[i % palette.length];
+  int get hairColor => _pick(hairColors, hair, naturalHair);
+  int get eyeColor => _pick(eyeColors, eyes, naturalEyes);
+  int get shirtColor => _pick(clothColors, shirt, naturalShirt);
+  int get pantsColor => _pick(clothColors, pants, naturalPants);
+
   /// Barba solo per i personaggi maschili che la vogliono.
   bool get hasBeard => !female && beard;
 
   Map<String, dynamic> toJson() => {
-        'f': female,
-        'face': face,
-        'skin': skin,
-        'hair': hair,
-        'eyes': eyes,
-        'beard': beard,
-        'bc': beardColor,
-        'shirt': shirt,
-        'pants': pants,
-      };
+    'f': female,
+    'style': style,
+    'face': face,
+    'skin': skin,
+    'hair': hair,
+    'eyes': eyes,
+    'beard': beard,
+    'bc': beardColor,
+    'shirt': shirt,
+    'pants': pants,
+  };
 
   factory Appearance.fromJson(Map<String, dynamic> j) => Appearance(
-        female: j['f'] as bool? ?? false,
-        face: j['face'] as int? ?? 0,
-        skin: j['skin'] as int? ?? 1,
-        hair: j['hair'] as int? ?? 0,
-        eyes: j['eyes'] as int? ?? 0,
-        beard: j['beard'] as bool? ?? true,
-        beardColor: j['bc'] as int? ?? 0,
-        shirt: j['shirt'] as int? ?? 0,
-        pants: j['pants'] as int? ?? 0,
-      );
+    female: j['f'] as bool? ?? false,
+    style: j['style'] as int? ?? 3,
+    face: j['face'] as int? ?? 0,
+    skin: j['skin'] as int? ?? 1,
+    hair: j['hair'] as int? ?? 0,
+    eyes: j['eyes'] as int? ?? 0,
+    beard: j['beard'] as bool? ?? true,
+    beardColor: j['bc'] as int? ?? 0,
+    shirt: j['shirt'] as int? ?? 0,
+    pants: j['pants'] as int? ?? 0,
+  );
 }

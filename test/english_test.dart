@@ -40,6 +40,12 @@ void main() {
       await tester.pumpAndSettle();
       found.addAll(_italianTexts(tester));
     }
+    await tester.scrollUntilVisible(
+      find.text('ARMORY'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    found.addAll(_italianTexts(tester));
     expect(find.text('ARMORY'), findsOneWidget);
     expect(found, isEmpty, reason: found.join('\n'));
     state.setLangPref(LangPref.it);

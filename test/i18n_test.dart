@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iron_oath/core/i18n.dart';
+import 'package:iron_oath/domain/character.dart';
 
 /// Le chiavi scritte come testo fisso dentro tr(...), in tutto lib/.
 /// Due testi attaccati ('a' 'b') valgono come uno solo.
@@ -41,6 +42,14 @@ void main() {
       for (final e in keys.entries)
         if (!enStrings.containsKey(e.key) && !itStrings.containsKey(e.key))
           '${e.value}: ${e.key}',
+    ];
+    expect(missing, isEmpty, reason: missing.join('\n'));
+  });
+
+  test('le teste disegnate hanno il nome inglese', () {
+    final missing = [
+      for (final n in [...Appearance.femaleStyles, ...Appearance.maleStyles])
+        if (!enStrings.containsKey(n)) n,
     ];
     expect(missing, isEmpty, reason: missing.join('\n'));
   });
