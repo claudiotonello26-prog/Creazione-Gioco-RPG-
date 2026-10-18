@@ -17,7 +17,19 @@ class Palette {
   static const moss = Color(0xFF6E8B4E);
   static const ash = Color(0xFFB3A99B);
   static const frost = Color(0xFF7FA7C9);
+
+  /// Fondo neutro dietro i mostri: pietra grigia chiara al centro, più
+  /// scura ai bordi. I mostri scuri e quelli chiari si staccano entrambi.
+  static const neutralLight = Color(0xFFA39D91);
+  static const neutralDark = Color(0xFF5C574F);
 }
+
+/// Il fondo neutro dei ritratti dei nemici.
+const neutralBackdrop = RadialGradient(
+  center: Alignment(0, -0.1),
+  radius: 0.85,
+  colors: [Palette.neutralLight, Palette.neutralDark],
+);
 
 /// Ogni sezione ha il suo colore, così si capisce subito dove si è: lo usano
 /// la barra in alto, l'alone dello sfondo e i pulsanti principali.
@@ -361,9 +373,9 @@ ThemeData buildTheme() {
       labelTextStyle: WidgetStateProperty.resolveWith(
         (s) => TextStyle(
           fontFamily: kTitleFont,
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: FontWeight.w700,
-          letterSpacing: 0.8,
+          letterSpacing: 0.6,
           color: s.contains(WidgetState.selected) ? Palette.goldBright : Palette.ash,
         ),
       ),
@@ -375,14 +387,17 @@ ThemeData buildTheme() {
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        backgroundColor: Palette.gold,
+        backgroundColor: Palette.goldBright,
         foregroundColor: Palette.night,
+        disabledBackgroundColor: Palette.iron,
+        disabledForegroundColor: Palette.ash,
+        minimumSize: const Size(64, 54),
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 15),
         shape: const BeveledRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
         textStyle: const TextStyle(
           fontFamily: kTitleFont,
           fontWeight: FontWeight.w700,
-          fontSize: 15,
+          fontSize: 16,
           letterSpacing: 1.5,
         ),
       ),
@@ -390,12 +405,16 @@ ThemeData buildTheme() {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: Palette.goldBright,
-        side: const BorderSide(color: Palette.gold),
+        // Un velo d'oro dentro e il bordo spesso: si capisce che si tocca.
+        backgroundColor: Palette.gold.withValues(alpha: 0.10),
+        side: const BorderSide(color: Palette.goldBright, width: 1.6),
+        minimumSize: const Size(64, 50),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
         shape: const BeveledRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
         textStyle: const TextStyle(
           fontFamily: kTitleFont,
           fontWeight: FontWeight.w700,
+          fontSize: 15,
           letterSpacing: 1.2,
         ),
       ),
@@ -403,7 +422,9 @@ ThemeData buildTheme() {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: Palette.goldBright,
-        textStyle: const TextStyle(fontFamily: kTitleFont, fontWeight: FontWeight.w700),
+        minimumSize: const Size(48, 48),
+        textStyle:
+            const TextStyle(fontFamily: kTitleFont, fontWeight: FontWeight.w700, fontSize: 15),
       ),
     ),
     dialogTheme: const DialogThemeData(backgroundColor: Palette.stone, shape: GildedBorder()),

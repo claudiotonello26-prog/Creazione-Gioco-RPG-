@@ -403,13 +403,13 @@ class _CombatScreenState extends State<CombatScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
-                    '${tr('{label} · rep {reps} (previste ~{max}) · postura {stance}', {
+                    '${tr('{label} · {reps} rep su circa {max} · postura {stance}', {
                       'label': label,
                       'reps': e.reps,
                       'max': e.enemyMaxHp.round(),
                       'stance': e.stance.label,
                     })}'
-                    '${e.penetration < 1 ? tr(' · i colpi rimbalzano: build troppo debole') : ''}',
+                    '${e.penetration < 1 ? tr(' · i colpi rimbalzano: serve un\'arma migliore') : ''}',
                     style: const TextStyle(color: Palette.ash, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
@@ -431,7 +431,7 @@ class _CombatScreenState extends State<CombatScreen> {
                   label: Text(
                     widget.looping && _kills > 0
                         ? tr('Ritirati col bottino')
-                        : tr('Fuggi (tieni gli XP delle rep fatte)'),
+                        : tr('Fuggi (tieni l\'esperienza delle rep fatte)'),
                     style: const TextStyle(color: Palette.ash),
                   ),
                 ),

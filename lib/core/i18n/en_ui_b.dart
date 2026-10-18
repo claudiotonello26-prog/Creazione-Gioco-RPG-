@@ -107,8 +107,7 @@ const Map<String, String> enUiB = {
   'Stretching guidato (5 min)': 'Guided stretching (5 min)',
   'QUEST COMPLETATA': 'QUEST COMPLETE',
   'CONTINUA LA QUEST': 'CONTINUE THE QUEST',
-  'Hai guadagnato una Chiave della Spedizione. Vai su Allenati.':
-      'You earned an Expedition Key. Go to Training.',
+  'Hai guadagnato una Chiave della Spedizione: usala nel Training per raddoppiare il bottino.': 'You earned an Expedition Key: use it in Training to double the loot.',
   'Quest completata': 'Quest complete',
   'Streak {n}': 'Streak {n}',
   'Hai guadagnato una Chiave della Spedizione. Torna domani per la prossima quest.':

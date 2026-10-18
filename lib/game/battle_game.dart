@@ -166,6 +166,11 @@ class BattleGame extends FlameGame {
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
           fontFamily: 'Cinzel',
+          // Contorno scuro: i numeri si leggono anche sullo sfondo chiaro.
+          shadows: const [
+            Shadow(color: Color(0xE6000000), blurRadius: 3),
+            Shadow(color: Color(0xE6000000), offset: Offset(1.5, 1.5)),
+          ],
         ),
       ),
     );
@@ -175,23 +180,27 @@ class BattleGame extends FlameGame {
   }
 }
 
+/// Lo sfondo del duello: nebbia grigio pietra, neutra e più chiara del
+/// resto dell'app, perché eroe e mostri (spesso scuri) si stacchino bene.
+/// Rovine appena accennate e una luce dietro al nemico.
 class _Backdrop extends PositionComponent {
   @override
   void render(Canvas canvas) {
     final rect = size.toRect();
+    final w = size.x;
+    final h = size.y;
     canvas.drawRect(
       rect,
       Paint()
         ..shader = Gradient.linear(
           Offset.zero,
-          Offset(0, size.y),
-          [const Color(0xFF1C1712), Palette.night],
+          Offset(0, h * 0.86),
+          [const Color(0xFF7D786E), Palette.neutralLight, const Color(0xFF8A847A)],
+          [0, 0.55, 1],
         ),
     );
-    // Rovine della cattedrale sullo sfondo.
-    final ruin = Paint()..color = const Color(0xFF221C16);
-    final w = size.x;
-    final h = size.y;
+    // Rovine della cattedrale, lontane nella nebbia.
+    final ruin = Paint()..color = const Color(0xFF8F897F);
     for (var i = 0; i < 5; i++) {
       final x = w * (0.08 + i * 0.21);
       final ph = h * (0.25 + (i % 3) * 0.08);
@@ -205,18 +214,39 @@ class _Backdrop extends PositionComponent {
         ruin,
       );
     }
-    // Luna/sole dorato decadente.
-    canvas.drawCircle(
-      Offset(w * 0.78, h * 0.18),
-      w * 0.09,
-      Paint()
-        ..color = Palette.gold.withValues(alpha: 0.25)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 18),
-    );
+    // Luce chiara dietro ai due combattenti.
+    for (final cx in [0.25, 0.72]) {
+      final c = Offset(w * cx, h * 0.6);
+      canvas.drawCircle(
+        c,
+        h * 0.42,
+        Paint()
+          ..shader = Gradient.radial(
+            c,
+            h * 0.42,
+            [const Color(0x66D8D2C4), const Color(0x00D8D2C4)],
+          ),
+      );
+    }
+    // Terreno e ombre sotto i piedi.
     canvas.drawRect(
       Rect.fromLTWH(0, h * 0.86, w, h * 0.14),
-      Paint()..color = const Color(0xFF14100C),
+      Paint()..color = const Color(0xFF4A463F),
     );
+    canvas.drawLine(
+      Offset(0, h * 0.86),
+      Offset(w, h * 0.86),
+      Paint()
+        ..color = const Color(0xFF35322D)
+        ..strokeWidth = 2,
+    );
+    final shadow = Paint()..color = const Color(0x55000000);
+    for (final cx in [0.25, 0.72]) {
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(w * cx, h * 0.865), width: w * 0.3, height: h * 0.04),
+        shadow,
+      );
+    }
   }
 }
 

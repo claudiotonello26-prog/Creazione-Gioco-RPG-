@@ -1080,7 +1080,7 @@ class _WeaponOnly extends KnightPainter {
   }
 }
 
-/// Pose del trainer, Ser Corvino. Le illustrazioni arriveranno da
+/// Pose del trainer, il Comandante Reynard. Le illustrazioni arriveranno da
 /// Antigravity (`assets/art/trainer/trainer_<posa>.png`); fino ad allora lo
 /// disegna questo painter.
 enum TrainerPose { crossed, pointing, cheering, facepalm, thinking, goofy }

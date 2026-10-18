@@ -35,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
           SwitchListTile(
             value: s.trainerEnabled,
             onChanged: s.setTrainerEnabled,
-            title: Text(tr('Consigli di Ser Corvino')),
+            title: Text(tr('Consigli del Comandante Reynard')),
             subtitle: Text(
               tr('Riaccendendolo, rivedi tutti i consigli dall\'inizio'),
               style: const TextStyle(color: Palette.ash),
@@ -162,7 +162,7 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
-/// Effetti, musica e voce di Ser Corvino: si accendono e spengono a parte.
+/// Effetti, musica e voce del Comandante Reynard: si accendono e spengono a parte.
 class _SoundSwitches extends StatefulWidget {
   const _SoundSwitches();
 
@@ -185,7 +185,7 @@ class _SoundSwitchesState extends State<_SoundSwitches> {
       children: [
         sw(tr('Effetti sonori'), Sound.sfxOn, Sound.setSfx),
         sw(tr('Musica'), Sound.musicOn, Sound.setMusic),
-        sw(tr('Voce di Ser Corvino'), Sound.voiceOn, Sound.setVoice),
+        sw(tr('Voce del Comandante Reynard'), Sound.voiceOn, Sound.setVoice),
       ],
     );
   }

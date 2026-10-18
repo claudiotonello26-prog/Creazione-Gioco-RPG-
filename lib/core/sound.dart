@@ -160,7 +160,7 @@ class Sound {
 
   static void popMusic() => music(_stack.isEmpty ? null : _stack.removeLast());
 
-  /// Una battuta di Ser Corvino: `assets/audio/voice/<id>.ogg`.
+  /// Una battuta del Comandante Reynard: `assets/audio/voice/<id>.ogg`.
   static bool voice(String id) {
     final path = 'assets/audio/voice/$id.ogg';
     if (!voiceOn || !Art.has(path)) return false;

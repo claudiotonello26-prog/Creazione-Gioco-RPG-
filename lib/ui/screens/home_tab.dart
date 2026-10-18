@@ -161,7 +161,7 @@ class HomeTab extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
-                        tr('Hai guadagnato una Chiave della Spedizione. Vai su Allenati.'),
+                        tr('Hai guadagnato una Chiave della Spedizione: usala nel Training per raddoppiare il bottino.'),
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: Palette.goldBright),
                       ),

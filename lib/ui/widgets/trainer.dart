@@ -7,7 +7,7 @@ import '../../data/game_state.dart';
 import 'knight_view.dart';
 import '../../core/sound.dart';
 
-const String trainerName = 'Ser Corvino';
+const String trainerName = 'Comandante Reynard';
 
 class TrainerLine {
   const TrainerLine(this.pose, this.text);
@@ -19,7 +19,7 @@ class TrainerLine {
 const Map<String, List<TrainerLine>> trainerHints = {
   'home': [
     TrainerLine(TrainerPose.crossed,
-        'Dunque sei tu il nuovo giurato. Sono Ser Corvino, maestro d\'armi. Ti seguirò ovunque, che ti piaccia o no.'),
+        'Dunque sei tu il nuovo giurato. Sono il Comandante Reynard, maestro d\'armi. Ti seguirò ovunque, che ti piaccia o no.'),
     TrainerLine(TrainerPose.pointing,
         'Questa è la tua casa: il tuo cavaliere, la quest del giorno e il Cammino del Novizio. Segui le mie missioni e diventerai qualcuno.'),
     TrainerLine(TrainerPose.goofy, 'E non guardarmi così. L\'elmo è storto per scelta stilistica.'),
@@ -111,13 +111,13 @@ class _TrainerOverlay extends StatefulWidget {
 }
 
 /// Il file voce di una battuta: `<sezione>_<n>` per i consigli fissi
-/// (es. home_1), altrimenti un verso secondo la posa (corvino_pointing).
+/// (es. home_1), altrimenti un verso secondo la posa (reynard_pointing).
 String voiceIdFor(TrainerLine line) {
   for (final e in trainerHints.entries) {
     final i = e.value.indexWhere((l) => l.text == line.text);
     if (i >= 0) return '${e.key}_${i + 1}';
   }
-  return 'corvino_${line.pose.name}';
+  return 'reynard_${line.pose.name}';
 }
 
 class _TrainerOverlayState extends State<_TrainerOverlay> {
@@ -137,7 +137,7 @@ class _TrainerOverlayState extends State<_TrainerOverlay> {
 
   void _speak() {
     final line = widget.lines[_i];
-    if (!Sound.voice(voiceIdFor(line))) Sound.voice('corvino_${line.pose.name}');
+    if (!Sound.voice(voiceIdFor(line))) Sound.voice('reynard_${line.pose.name}');
   }
 
   void _next() {

@@ -42,7 +42,7 @@ const Map<MuscleGroup, (Color, Color)> _mapTints = {
 };
 
 /// La mappa di una spedizione: un sentiero con quattro tappe e il boss in
-/// cima, Ser Corvino che guarda a braccia conserte, il forziere alla fine.
+/// cima, il Comandante Reynard che guarda a braccia conserte, il forziere alla fine.
 /// Si azzera ogni giorno.
 class ExpeditionMapScreen extends StatefulWidget {
   const ExpeditionMapScreen({super.key, required this.expedition});
@@ -192,7 +192,7 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
     );
   }
 
-  String _corvino(int progress, bool underLevel) {
+  String _reynard(int progress, bool underLevel) {
     if (underLevel && progress == 0) {
       return tr('Livello {n}? Tu sei sotto. Coraggioso. O sciocco. Vediamo.', {'n': _e.level});
     }
@@ -265,7 +265,7 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
                   },
                 ),
               ),
-              // Ser Corvino in basso a sinistra, a braccia conserte.
+              // Il Comandante Reynard in basso a sinistra, a braccia conserte.
               Positioned(
                 left: 0,
                 bottom: 0,
@@ -275,7 +275,7 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
                 left: 8,
                 bottom: h * 0.26 + 4,
                 width: min(210, w * 0.5),
-                child: _Bubble(_corvino(progress, under)),
+                child: _Bubble(_reynard(progress, under)),
               ),
               Positioned(
                 top: 8,
@@ -363,7 +363,7 @@ class _MapOptions extends StatelessWidget {
               border: Border.all(color: Palette.blood),
             ),
             child: Text(
-              tr('Livello consigliato {n}: senza armi e armature migliori rischi di cadere.', {'n': underLevel}),
+              tr('Livello consigliato {n}. Sei più debole: migliora armi e armature o rischi di cadere.', {'n': underLevel}),
               style: const TextStyle(color: Palette.blood, fontSize: 12),
             ),
           ),
@@ -397,7 +397,7 @@ class _StepNode extends StatelessWidget {
       _NodeState.open => step.veteran ? Palette.blood : Palette.gold,
       _NodeState.locked => Palette.iron,
     };
-    final size = step.veteran ? 66.0 : 60.0;
+    final size = step.veteran ? 74.0 : 68.0;
     final art = enemyArtPath(monster);
     return GestureDetector(
       onTap: onTap,
@@ -409,6 +409,8 @@ class _StepNode extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: state == _NodeState.done ? Palette.gold : Palette.stone,
+              // Fondo neutro: i mostri scuri si vedono anche sulla mappa.
+              gradient: state != _NodeState.done && Art.has(art) ? neutralBackdrop : null,
               border: Border.all(
                 color: step.veteran && state != _NodeState.done ? const Color(0xFF7A1010) : ring,
                 width: open ? 3 : 2,
@@ -421,7 +423,10 @@ class _StepNode extends StatelessWidget {
               _NodeState.done => const Icon(Icons.check, color: Palette.night, size: 30),
               _ when Art.has(art) => Opacity(
                   opacity: state == _NodeState.locked ? 0.4 : 1,
-                  child: Image.asset(art, fit: BoxFit.cover),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Image.asset(art, fit: BoxFit.contain),
+                  ),
                 ),
               _NodeState.locked => const Icon(Icons.lock_outline, color: Palette.iron),
               _NodeState.open => Center(
@@ -468,6 +473,7 @@ class _BossNode extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: progress == GameState.mapDone ? Palette.gold : Palette.stone,
+              gradient: progress != GameState.mapDone && Art.has(art) ? neutralBackdrop : null,
               border: Border.all(
                 color: open ? (chest ? Palette.goldBright : Palette.blood) : Palette.iron,
                 width: open ? 3 : 2,
@@ -487,7 +493,10 @@ class _BossNode extends StatelessWidget {
                 : Art.has(art)
                     ? Opacity(
                         opacity: open ? 1 : 0.45,
-                        child: Image.asset(art, fit: BoxFit.cover),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Image.asset(art, fit: BoxFit.contain),
+                        ),
                       )
                     : Icon(
                         chest ? Icons.inventory_2 : Icons.castle,
@@ -558,7 +567,7 @@ class _Label extends StatelessWidget {
   }
 }
 
-/// La nuvoletta di Ser Corvino.
+/// La nuvoletta del Comandante Reynard.
 class _Bubble extends StatelessWidget {
   const _Bubble(this.text);
   final String text;
