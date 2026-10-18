@@ -545,7 +545,10 @@ const Map<String, WeaponDef> weaponDefs = {
     },
     damageType: DamageType.holy,
     recipe: {'iron_ingot': 4, 'reinforced_grip': 1, 'beast_essence': 2},
-    craftLevel: 3,
+    // Livello 1: è l'unica cosa ripetibile che fa salire l'Incudine all'inizio
+    // (il Giaco si forgia una volta sola). Prima era al 3 e l'Incudine non
+    // saliva mai: lo ha trovato il simulatore di bilanciamento.
+    craftLevel: 1,
   ),
   'cathedral_hammer': WeaponDef(
     id: 'cathedral_hammer',

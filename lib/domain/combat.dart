@@ -67,6 +67,7 @@ class CombatEngine {
     this.wave = 0,
     this.attackLevel = 1,
     this.defenseLevel = 1,
+    this.difficulty = 1.0,
     Random? random,
   })  : _random = random ?? Random(),
         expectedReps = max(3, (testReps * enemy.repFactor).round()) {
@@ -103,6 +104,10 @@ class CombatEngine {
   final Stance stance;
   final int wave;
   final Random _random;
+
+  /// Quanto pesa la versione scelta rispetto a quella base (Move.difficulty):
+  /// 2,5 per il pike push-up, 0,77 per i push-up inclinati.
+  final double difficulty;
 
   /// Livelli di Attacco e Difesa, allenati dalla postura.
   final int attackLevel;
@@ -278,8 +283,11 @@ class CombatEngine {
 
   /// Sforzo richiesto rispetto a chi fa 20 rep al test: chi ha nemici da
   /// poche rep prende meno a uccisione, chi ne ha di lunghi di più. Così il
-  /// bottino segue le rep fatte davvero, non il numero di nemici.
-  double get effortFactor => (enemyMaxHp / (20 * enemy.repFactor)).clamp(0.5, 5.0);
+  /// bottino segue le rep fatte davvero, non il numero di nemici. Le rep
+  /// contano per la loro [difficulty]: 8 pike push-up valgono 20 push-up, e
+  /// la versione facile non paga più di quella dura.
+  double get effortFactor =>
+      (enemyMaxHp * difficulty / (20 * enemy.repFactor)).clamp(0.5, 5.0);
 
   /// Qualità media delle rep (1 = tutte perfette, 0.6 = tutte scarse).
   double get averageQuality => reps == 0 ? 1.0 : _qualitySum / reps;

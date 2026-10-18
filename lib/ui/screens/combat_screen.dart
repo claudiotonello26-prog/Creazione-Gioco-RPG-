@@ -141,6 +141,7 @@ class _CombatScreenState extends State<CombatScreen> {
             max(3, (state.testRepsFor(widget.exercise) / (widget.move?.difficulty ?? 1)).round()),
         stance: widget.stance,
         wave: _wave,
+        difficulty: widget.move?.difficulty ?? 1,
         attackLevel: state.attackLevel,
         defenseLevel: state.defenseLevel,
       );

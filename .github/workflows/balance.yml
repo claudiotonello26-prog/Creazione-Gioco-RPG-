@@ -1,0 +1,41 @@
+name: Bilanciamento
+
+# Il simulatore di bilanciamento in versione lunga: un anno di gioco, tre
+# semi per profilo. Gira ogni notte e a mano; il rapporto resta nel
+# riepilogo e come artefatto. Non compila né pubblica APK.
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Giorni da simulare"
+        default: "365"
+      seeds:
+        description: "Partite per profilo"
+        default: "3"
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+      - run: flutter pub get
+      - run: >
+          flutter test test/balance
+          --dart-define=SIM_DAYS=${{ inputs.days || '365' }}
+          --dart-define=SIM_SEEDS=${{ inputs.seeds || '3' }}
+      - if: always()
+        run: test -f build/balance/report.md && cat build/balance/report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bilanciamento-lungo
+          path: build/balance/report.md
+          if-no-files-found: ignore

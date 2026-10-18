@@ -21,7 +21,7 @@ Rune e materiali = base del nemico × **sforzo** × **forma** × **ondata** × (
 
 | Fattore | Formula | Perché |
 |---|---|---|
-| Sforzo | vita del nemico ÷ (20 × fattore gradino), tra 0,5 e 5 | Paghi le rep reali: un test basso dà nemici corti che pagano meno a uccisione, e una vita in più in caccia paga di più. |
+| Sforzo | vita del nemico × difficoltà della versione ÷ (20 × fattore gradino), tra 0,5 e 5 | Paghi le rep reali: un test basso dà nemici corti che pagano meno a uccisione, una vita in più in caccia paga di più, e 8 pike push-up (difficoltà 2,5) pagano come 20 push-up. La versione facile non rende più di quella dura. |
 | Forma | media della qualità delle rep (perfetta 1, buona 0,85, scarsa 0,6) | Le mezze rep non contano affatto e le rep sporche pagano meno. |
 | Ondata | 1 + 10% per ondata | Premio di rischio sopra la vita in più, che è già pagata dallo sforzo. |
 | Bonus arma | potere oltre la difesa, massimo +25% | Resta un piccolo bonus, così farmare nemici deboli con un'arma enorme non conviene. |
@@ -70,24 +70,43 @@ Come su Gymscape, i passi si accumulano in una riserva e si convertono nel mater
 
 | Materiale | Mestiere | Livello | Passi per unità |
 |---|---|---|---|
-| Legno di frassino | Taglialegna | 1 | 400 |
-| Legno di quercia | Taglialegna | 5 | 700 |
-| Legno di tasso | Taglialegna | 12 | 1100 |
-| Legno d'ebano | Taglialegna | 20 | 1800 |
-| Carbone | Minatore | 1 | 300 |
-| Minerale di ferro | Minatore | 1 | 500 |
-| Argento lunare | Minatore | 8 | 900 |
-| Minerale stellare | Minatore | 16 | 1500 |
+| Legno di frassino | Taglialegna | 1 | 40 |
+| Legno di quercia | Taglialegna | 5 | 70 |
+| Legno di tasso | Taglialegna | 12 | 110 |
+| Legno d'ebano | Taglialegna | 20 | 180 |
+| Carbone | Minatore | 1 | 30 |
+| Minerale di ferro | Minatore | 1 | 50 |
+| Argento lunare | Minatore | 8 | 90 |
+| Minerale stellare | Minatore | 16 | 150 |
 
 - Il tetto è 25.000 passi al giorno; i passi già riscossi non si contano due volte.
 - Raccogliere dà XP al mestiere. XP per livello: 40 × livello^1,5, fino al livello 30.
+- La Raccolta mostra solo i passi ancora da consumare (riserva + passi nuovi). Il totale del giorno si vede nella Home.
+
+### Traguardi di passi del giorno
+
+Quattro tappe nella Home, a parte dalla quest giornaliera, per spingere a camminare (10.000 è l'obiettivo consigliato):
+
+| Passi totali oggi | Rune |
+|---|---|
+| 2.000 | 20 |
+| 4.000 | 20 |
+| 6.000 | 20 |
+| 10.000 | 40 (il doppio) |
+
+Totale massimo 100 rune al giorno, quanto un nemico debole: un premio piccolo ma costante. Si riscattano con un tocco e si azzerano a mezzanotte. Nel codice: `stepMilestones` e `stepMilestoneRunes` in `lib/domain/walking.dart`.
 
 ## 5. Mestieri e forgia
 
 - Quattro stazioni: Carpenteria (assi, impugnature, archi, bastoni), Fornace (lingotti, pietre di forgia), Incudine (spade, armature) e Incantamento.
 - Ogni ricetta ha un livello minimo del mestiere della stazione. Creare dà 8 + 3 × livello della ricetta in XP di mestiere.
 - Le armature riducono il danno subito: Gambeson 8%, Cotta di Maglia 15%, Piastre del Templare 22%, Armatura Stellare 30%.
-- Incantamento: con le pietre speciali l'arma sale di livello. Cambia colore a +3 e a +6; a +10 prende anche l'aura della sua build (Forza fuoco rosso, Destrezza vento verde, Intelligenza neon azzurro, Fede luce divina).
+- Incantamento: ogni livello ha la sua pietra, mostrata come pulsante con l'icona.
+  - Armi normali (fino a +10): Pietra di forgia I per +1..+3 (1, 2, 3 pietre), II per +4..+6, III per +7..+9, Pietra di forgia astrale (1) per il +10.
+  - Armi speciali (fino a +5, non per forza più forti ma con effetti diversi): Pietra delle Tenebre I, II, III, IV per +1..+4 e Pietra Epica dell'Eclissi per il +5, una pietra per livello. Alla Fornace: Tenebre II = 2 Tenebre I + 1 Scheggia sacra (liv. 10), III = 2 II + 3 Essenza di bestia (14), IV = 2 III + 1 Gemma tagliata (18), Epica = 2 IV + 1 Gemma perfetta (22).
+- Amuleti dell'arma: tre incastri per arma, dalla Fattucchiera (o dall'Armeria e dall'Incantamento). Si cambiano quando si vuole; quello tolto torna nella borsa.
+  - Incastro 1, affinità (uno solo): fuoco, vento, arcano o luce. Dà colore e aura alla lama e aggiunge scaling C sul suo attributo (Forza, Destrezza, Intelligenza, Fede). A +3 la lama si tinge, a +6 si accende, a +10 aura piena. Senza amuleto d'affinità la lama resta acciaio: il colore non dipende dall'attributo più alto.
+  - Incastri 2 e 3, passivi: Sigillo del Regicida +5% contro i boss (700 rune), Zanna del Lupo Grigio +10% danno dei critici (650), Sigillo del Giuramento +5% danno (500), più quelli dei forzieri (Fervente, Colosso, Cacciatore, Martire, Insonne).
 
 ## 6. Sentieri di allenamento e boss
 
@@ -110,6 +129,42 @@ Ogni serie (quest, combattimenti, sentieri, boss e test) finisce nello storico, 
 - Il grafico mostra gli ultimi 14 giorni, 12 settimane o 12 mesi. Il cardio conta nelle rep totali ma non nell'indice di forza.
 - Nel dettaglio di ogni esercizio: rep nel periodo, record in una serie, ultima serie migliore e confronto con la media delle volte precedenti.
 
+## 8. Forzieri delle spedizioni
+
+- Le mappe si azzerano ogni giorno e si possono rifare. Il forziere dà le rune piene **solo la prima volta** che lo apri; le volte dopo dà il 25% delle rune. Materiali garantiti e rari restano uguali.
+- Prima i forzieri ripetuti davano il 70-78% di tutte le rune dei giocatori simulati, più di tutti i combattimenti messi insieme.
+- Nel codice: `chestRepeatRunes` e `openChest` in `lib/data/game_state.dart`.
+
+## 9. Simulatore di bilanciamento
+
+Cinque giocatori finti giocano 90 giorni con il codice vero del gioco (GameState, CombatEngine, forgia, passi, spedizioni, caccia), a ogni `flutter test` e quindi a ogni push in CI. Ogni notte gira anche una versione lunga: 365 giorni, tre partite per profilo (workflow «Bilanciamento», lanciabile anche a mano).
+
+| Profilo | Test | Ritmo | Allenamento | Passi |
+|---|---|---|---|---|
+| Principiante | 8 rep | 2,8 s, 35% perfette | 3 giorni, 80 rep | 4.000 |
+| Medio | 20 rep | 2,2 s, 55% perfette | 3 giorni, 150 rep | 8.000 |
+| Costante | 20 rep | 2,0 s, 60% perfette | 5 giorni, 200 rep | 10.000 |
+| Atleta | 40 rep | 1,6 s, 75% perfette | 6 giorni, 350 rep | 12.000 |
+| Furbo | 20 rep | 2,0 s, 20% perfette | 5 giorni, 200 rep solo push-up | 3.000 |
+
+Ogni giocatore fa la quest, lo stretching, la spedizione del gruppo del giorno, poi caccia o farma il materiale che gli manca; dopo l'allenamento spende i punti attributo, forgia l'arma e l'armatura migliori per la sua build, potenzia l'arma e compra amuleti.
+
+Il simulatore controlla, e la CI fallisce se trova un BLOCCO:
+
+- **Muri**: una spedizione consigliata al tuo livello che non finisci entro 28 giorni; una postazione della forgia che dopo 30 giorni non arriva al livello 3.
+- **Scorciatoie**: la versione facile di un esercizio che rende più di 1,25× per unità di sforzo; il furbo che prende più del 90% per rep del giocatore medio; i forzieri oltre il 60% delle rune; guadagni sicuri comprando, forgiando e rivendendo al Mercante.
+- **Velocità**: il giocatore medio deve arrivare al livello 10 fra il giorno 4 e il 35.
+
+Il rapporto completo (progressione, fonti di XP e rune, spedizioni, mestieri, ritmo minimo per vincere ogni gradino) si legge nel riepilogo della CI e in `build/balance/report.md`.
+
+Cosa ha già trovato e corretto:
+
+1. **Incudine bloccata al livello 1**: il Giaco si forgia una volta sola e nient'altro all'Incudine si faceva sotto il livello 3, quindi armature e armi di Forza e Fede non arrivavano mai. Lo Spadone del Penitente ora è al livello 1 di Incudine: si può forgiare più volte (e rivendere al valore dei materiali) per far salire la postazione.
+2. **Forzieri ripetuti**: vedi sezione 8.
+3. **Versioni facili più convenienti**: lo sforzo ora conta la difficoltà della versione (sezione 2).
+
+Da decidere (segnalato come ATTENZIONE): le rune si accumulano. Dopo 90 giorni il giocatore medio ne ha decine di migliaia e quasi nulla su cui spenderle; servono altre cose da comprare con le rune.
+
 ## Dove sta nel codice
 
 - `lib/domain/combat.dart`:
@@ -121,4 +176,5 @@ Ogni serie (quest, combattimenti, sentieri, boss e test) finisce nello storico, 
 - `lib/domain/items.dart`: ricette, stazioni e armature.
 - `lib/data/game_state.dart`: `claimSteps`, `craftMaterial`, `bossLoot` e `logSet`.
 - `lib/domain/progress.dart`: storico, rep equivalenti e indice di forza.
+- Simulatore: `test/balance/simulator.dart` (giocatori), `test/balance/analysis.dart` (controlli e soglie, classe `Targets`), `test/balance/balance_test.dart` (avvio).
 - Test: `test/combat_test.dart`, `test/economy_test.dart` e `test/walking_test.dart`. La tabella qui sopra la stampa il test "tabella di bilanciamento".
