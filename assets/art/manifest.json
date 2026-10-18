@@ -2302,7 +2302,7 @@
     "file": "assets/art/enemies/steam_nymph_idle.png",
     "type": "cutout",
     "prompt": "Enemy: graceful nymph formed of swirling steam and pale stone, small gems on her forehead, a long veil of vapour covering her body, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2311,7 +2311,7 @@
     "file": "assets/art/enemies/bath_serpent_idle.png",
     "type": "cutout",
     "prompt": "Enemy: large pale serpent with marble-like scales and small gems embedded along its back, coiled around a broken column, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2320,7 +2320,7 @@
     "file": "assets/art/bosses/baths_queen_idle.png",
     "type": "cutout",
     "prompt": "Boss: ancient queen statue come alive, marble body with gold-filled cracks, a crown of gems, a long serpent-like lower body rising from a steaming pool, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2329,7 +2329,7 @@
     "file": "assets/art/enemies/dreamer_idle.png",
     "type": "cutout",
     "prompt": "Enemy: sleeping figure floating upright inside a cocoon of pale sheets, eyes closed, peaceful face, dark violet dream mist around, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2338,7 +2338,7 @@
     "file": "assets/art/enemies/sleepwalker_idle.png",
     "type": "cutout",
     "prompt": "Enemy: tall gaunt sleepwalker in a long grey nightgown, eyes and lips stitched closed, arms stretched forward, a candle lantern hanging from one hand, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
