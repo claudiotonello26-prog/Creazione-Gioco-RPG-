@@ -1924,7 +1924,7 @@
     "file": "assets/art/bosses/living_bellows_idle.png",
     "type": "cutout",
     "prompt": "Boss: colossal living forge-bellows creature: a body of stitched black leather and iron bands that heaves like lungs, wooden ribs, a glowing furnace mouth breathing fire, several long iron arms ending in forge tongs, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -1942,7 +1942,7 @@
     "file": "assets/art/enemies/anvil_golem_idle.png",
     "type": "cutout",
     "prompt": "Enemy: squat massive golem whose torso is a giant ancient anvil, arms built from stacked iron ingots, small head of riveted iron, faint gold runes on the anvil face, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
