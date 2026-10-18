@@ -104,7 +104,7 @@ class _CombatScreenState extends State<CombatScreen> {
     _engine = _newEngine(state);
     final c = state.character;
     final drawn = !Art.has('assets/art/knight/attack/base.png') && HeroView.canShow(c);
-    final hero = drawn ? HeroView.layersOf(c.look, c.worn) : const <(String, int?, double)>[];
+    final hero = drawn ? HeroView.layersOf(c.look, c.worn, cape: c.capeId) : const <(String, int?, double)>[];
     _game = BattleGame(
       enemy: widget.enemy,
       weaponTier: state.character.weapon.glowTier,
