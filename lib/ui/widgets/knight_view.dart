@@ -127,6 +127,9 @@ class HeroView extends StatelessWidget {
     false: (Offset(0.110, 0.523), Offset(0.836, 0.521)),
   };
 
+  /// Elmi disegnati con la testa intera: sotto non si mettono viso e capelli.
+  static const fullHelms = {'chainmail'};
+
   static Offset rightFist(bool female) => _fists[female]!.$1;
 
   static String dir(bool female) => 'assets/art/hero/${female ? 'f' : 'm'}';
@@ -159,6 +162,8 @@ class HeroView extends StatelessWidget {
     final helm = armor(ArmorSlot.helm);
     final helmId = worn[ArmorSlot.helm];
     final hidden = helm != null && Art.has('$d/head_${k}_helm_$helmId.png') ? '_helm_$helmId' : '';
+    // L'elmo col camaglio copre tutta la testa e porta il suo viso.
+    final fullHelm = helm != null && fullHelms.contains(helmId);
     return [
       ('$d/body.png', null, 1),
       // Sotto l'armatura i vestiti restano del colore originale: dalle
@@ -167,9 +172,11 @@ class HeroView extends StatelessWidget {
       if (look.pants >= 0 && armor(ArmorSlot.legs) == null) ('$d/pants.png', look.pantsColor, 1),
       for (final slot in [ArmorSlot.legs, ArmorSlot.boots, ArmorSlot.chest, ArmorSlot.gloves])
         if (armor(slot) case final a?) (a, null, 1),
-      ('$d/head_$k$hidden.png', null, 1),
-      if (look.hair >= 0) ('$d/hair_$k$hidden.png', look.hairColor, 1),
-      if (look.eyes >= 0) ('$d/eyes_$k.png', look.eyeColor, 0.8),
+      if (!fullHelm) ...[
+        ('$d/head_$k$hidden.png', null, 1),
+        if (look.hair >= 0) ('$d/hair_$k$hidden.png', look.hairColor, 1),
+        if (look.eyes >= 0) ('$d/eyes_$k.png', look.eyeColor, 0.8),
+      ],
       if (helm != null) (helm, null, 1),
     ];
   }
