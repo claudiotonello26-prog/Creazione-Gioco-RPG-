@@ -1987,7 +1987,7 @@
     "file": "assets/art/enemies/gorge_harpy_idle.png",
     "type": "cutout",
     "prompt": "Enemy: lean harpy with ragged grey-green feathered wings for arms, bird talons, a cracked bone mask, long wind-whipped hair, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -1996,7 +1996,7 @@
     "file": "assets/art/enemies/cliff_raider_idle.png",
     "type": "cutout",
     "prompt": "Enemy: agile masked raider in wind-torn leather and feathers, two curved daggers, coiled rope and climbing hooks, crouched and ready to leap, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2005,7 +2005,7 @@
     "file": "assets/art/bosses/weightless_knight_idle.png",
     "type": "cutout",
     "prompt": "Boss: slender knight in elegant tarnished silver armor with green-grey patina, floating just above the ground, long tattered scarves flowing in the wind, a thin long rapier, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2014,7 +2014,7 @@
     "file": "assets/art/enemies/wind_sentinel_idle.png",
     "type": "cutout",
     "prompt": "Enemy: tall weathered stone-and-bronze statue sentinel come alive, folded wings of steel feathers, a long spear, a cracked face with storm-grey eyes, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2023,7 +2023,7 @@
     "file": "assets/art/enemies/thunder_ram_idle.png",
     "type": "cutout",
     "prompt": "Enemy: massive mountain ram beast with huge spiralling stone horns, shaggy frost-covered fur, small sparks crackling between the horns, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
