@@ -698,7 +698,7 @@
     "references": [
       "knight_s1_idle.png"
     ],
-    "status": "pending",
+    "status": "done",
     "note": "In attesa di rigenerazione con Color Variety V2",
     "version": 2
   },
@@ -1856,14 +1856,14 @@
     "file": "assets/art/trainer/trainer_crossed.png",
     "type": "cutout",
     "prompt": "Dark souls-like knight trainer named Ser Corvino: tall, lean, very stylish black plate armor with fluted edges and subtle dark-gold filigree, armet helm with a black raven-feather crest, long tattered black cape with a high collar, charismatic and confident presence. Full body, front three-quarter view, centered. Arms crossed over his chest, weight on one leg, head slightly tilted, cool and charismatic.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "trainer_goofy",
     "file": "assets/art/trainer/trainer_goofy.png",
     "type": "cutout",
     "prompt": "The same character as the reference image. Dark souls-like knight trainer named Ser Corvino: tall, lean, very stylish black plate armor with fluted edges and subtle dark-gold filigree, armet helm with a black raven-feather crest, long tattered black cape with a high collar, charismatic and confident presence. Full body, front three-quarter view, centered. Goofy funny pose: doing an awkward flexing bodybuilder pose, one leg raised, cape tangled, clearly joking around.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "slag_goblin_idle",
@@ -1951,7 +1951,7 @@
     "file": "assets/art/bosses/fallen_smith_god_idle.png",
     "type": "cutout",
     "prompt": "Boss: fallen god of smithing, a gaunt giant divine body cracked like old porcelain with molten gold in the cracks, a broken iron halo, a colossal hammer whose head is a star-metal anvil, a tattered ceremonial leather apron with gold embroidery, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -1960,7 +1960,7 @@
     "file": "assets/art/enemies/ash_scarecrow_idle.png",
     "type": "cutout",
     "prompt": "Enemy: scarecrow made of burned ash-wood branches and torn sackcloth, a crow skull for a head with small ember eyes, a rusted sickle in one hand, crows' feathers stuck in the straw, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -1978,7 +1978,7 @@
     "file": "assets/art/enemies/bog_drowned_idle.png",
     "type": "cutout",
     "prompt": "Enemy: drowned hunter corpse rising from the bog, waterlogged leather armor, a rusty boar spear, moss and reeds hanging from his body, pale green eyes, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
