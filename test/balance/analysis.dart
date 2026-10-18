@@ -258,7 +258,7 @@ class BalanceReport {
     _md.writeln();
     if (worst > Targets.easyVariantMaxRatio) {
       _add(Severity.block, 'Sforzo', 'La versione facile paga più di quella dura',
-          'Con ${worstText} la versione più facile rende ${worst.toStringAsFixed(2)}× rune per '
+          'Con $worstText la versione più facile rende ${worst.toStringAsFixed(2)}× rune per '
               'unità di sforzo rispetto alla più dura.');
     } else {
       _add(Severity.ok, 'Sforzo', 'Versioni facili e dure pagano in proporzione',

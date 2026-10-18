@@ -242,7 +242,6 @@ class SimPlayer {
   // Contatori del giorno.
   int _reps = 0;
   double _effort = 0;
-  int _runes = 0;
   int _loot = 0;
   int _wins = 0;
   int _deaths = 0;
@@ -296,7 +295,6 @@ class SimPlayer {
     state.refreshDay();
     _reps = 0;
     _effort = 0;
-    _runes = 0;
     _loot = 0;
     _wins = 0;
     _deaths = 0;
@@ -424,7 +422,6 @@ class SimPlayer {
     _reps += qualities.length;
     _budget -= qualities.length;
     _effort += qualities.length * move.difficulty;
-    _runes += granted.runes;
     final lv = lootValueOf(granted.materials) + granted.runes;
     _loot += lootValueOf(granted.materials);
     if (victory) {
@@ -544,10 +541,8 @@ class SimPlayer {
     final bossLoot = _track('boss', () => state.expeditionBossDown(e, weighted: weighted));
     _loot += lootValueOf(bossLoot);
     final useKey = state.expeditionKeys > 0 && state.useExpeditionKey();
-    final before = c.runes;
     final chest =
         _track('forziere', () => state.openChest(e, multiplier: useKey ? 2 : 1, random: random));
-    _runes += c.runes - before;
     for (final (id, n, _) in chest) {
       if (id != 'runes') _loot += sellPrice(id) * n;
     }
