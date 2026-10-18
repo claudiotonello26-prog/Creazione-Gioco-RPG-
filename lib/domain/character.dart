@@ -297,6 +297,8 @@ class Appearance {
   Appearance({
     this.female = false,
     this.style = 3,
+    this.hairStyle = 3,
+    this.beardStyle = 3,
     this.face = 0,
     this.skin = 1,
     this.hair = natural,
@@ -311,8 +313,13 @@ class Appearance {
 
   bool female;
 
-  /// Testa dell'illustrazione: viso, capelli e barba insieme (vedi [styleNames]).
+  /// Viso dell'illustrazione (`face_<n>.png`), rasato e senza barba.
   int style;
+
+  /// Capelli e barba si scelgono a parte: il numero è quello del file
+  /// (`hair_<n>.png`, `beard_<n>.png`), -1 vuol dire rasato o senza barba.
+  int hairStyle;
+  int beardStyle;
 
   /// 0 ovale, 1 squadrato, 2 tondo, 3 affilato.
   int face;
@@ -344,31 +351,44 @@ class Appearance {
     0xFFB9A98A,
   ];
 
-  /// Le teste disegnate, nello stesso ordine dei file `head_<n>.png`.
-  static const List<String> femaleStyles = [
-    'Rasata',
-    'Rasata, sorriso',
-    'Rasata, fiera',
-    'Corti',
-    'Coda alta',
-    'Cresta intrecciata',
-    'Lunghi mossi',
-    'Treccia',
-    'Caschetto',
+  /// I visi disegnati, nello stesso ordine dei file `face_<n>.png`.
+  static const int drawnFaces = 9;
+  int get styleIndex => style.clamp(0, drawnFaces - 1);
+
+  /// Acconciature disegnate: numero del file e nome; -1 è rasato.
+  static const List<(int, String)> femaleHair = [
+    (-1, 'Rasata'),
+    (3, 'Corti'),
+    (4, 'Coda alta'),
+    (5, 'Cresta intrecciata'),
+    (6, 'Lunghi mossi'),
+    (7, 'Treccia'),
+    (8, 'Caschetto'),
   ];
-  static const List<String> maleStyles = [
-    'Rasato',
-    'Rasato, sorriso',
-    'Corti pettinati',
-    'Spettinati e barba corta',
-    'Chignon e barba',
-    'Cresta e pizzetto',
-    'Mossi con baffi',
-    'Treccine',
-    'Lunghi con baffi',
+  static const List<(int, String)> maleHair = [
+    (-1, 'Rasato'),
+    (2, 'Corti pettinati'),
+    (3, 'Spettinati'),
+    (4, 'Chignon'),
+    (5, 'Cresta'),
+    (6, 'Mossi'),
+    (7, 'Treccine'),
+    (8, 'Lunghi'),
   ];
-  List<String> get styleNames => female ? femaleStyles : maleStyles;
-  int get styleIndex => style.clamp(0, styleNames.length - 1);
+  static const List<(int, String)> beards = [
+    (-1, 'Nessuna'),
+    (3, 'Corta'),
+    (4, 'Folta'),
+    (5, 'Pizzetto e baffi'),
+    (6, 'Baffi e pizzetto'),
+    (8, 'Baffi'),
+  ];
+  List<(int, String)> get hairChoices => female ? femaleHair : maleHair;
+
+  /// File dei capelli e della barba scelti, -1 se non ci sono (o non
+  /// esistono per questo corpo, dopo un cambio da uomo a donna).
+  int get hairId => hairChoices.any((h) => h.$1 == hairStyle) ? hairStyle : -1;
+  int get beardId => !female && beards.any((b) => b.$1 == beardStyle) ? beardStyle : -1;
 
   /// Colori originali dell'illustrazione, per il disegno a vettori.
   static const int naturalHair = 0xFF4A3524;
@@ -389,6 +409,8 @@ class Appearance {
   Map<String, dynamic> toJson() => {
     'f': female,
     'style': style,
+    'hs': hairStyle,
+    'bs': beardStyle,
     'face': face,
     'skin': skin,
     'hair': hair,
@@ -399,9 +421,14 @@ class Appearance {
     'pants': pants,
   };
 
-  factory Appearance.fromJson(Map<String, dynamic> j) => Appearance(
+  factory Appearance.fromJson(Map<String, dynamic> j) {
+    final style = j['style'] as int? ?? 3;
+    return Appearance(
     female: j['f'] as bool? ?? false,
-    style: j['style'] as int? ?? 3,
+    style: style,
+    // Salvataggi di prima: la testa scelta portava già capelli e barba.
+    hairStyle: j['hs'] as int? ?? style,
+    beardStyle: j['bs'] as int? ?? style,
     face: j['face'] as int? ?? 0,
     skin: j['skin'] as int? ?? 1,
     hair: j['hair'] as int? ?? 0,
@@ -411,4 +438,5 @@ class Appearance {
     shirt: j['shirt'] as int? ?? 0,
     pants: j['pants'] as int? ?? 0,
   );
+  }
 }
