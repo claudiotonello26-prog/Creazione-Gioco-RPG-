@@ -101,5 +101,6 @@ function InitModule(
   initializer.registerRpc('arena_top', rpcArenaTop);
   initializer.registerRpc('guild_session_create', rpcGuildSessionCreate);
   initializer.registerRpc('guild_sessions', rpcGuildSessions);
+  initializer.registerRpc('player_search', rpcPlayerSearch);
   logger.info('Iron Oath: modulo Arena caricato');
 }

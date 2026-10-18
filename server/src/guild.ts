@@ -85,3 +85,39 @@ function rpcGuildSessions(
   }
   return JSON.stringify({ sessions: sessions });
 }
+
+/**
+ * Cerca cavalieri per nome (basta l'inizio, senza maiuscole). Ritorna anche
+ * il loro cavaliere pubblicato (collezione profile, chiave hero) per
+ * mostrarlo nella lista. Chi cerca non compare.
+ */
+function rpcPlayerSearch(
+  ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nkruntime.Nakama, payload: string,
+): string {
+  const userId = ctx.userId || '';
+  const req = JSON.parse(payload || '{}');
+  const name = String(req.name || '').replace(/[%_\\]/g, '').slice(0, 24);
+  const rows = nk.sqlQuery(
+    'SELECT id, username FROM users WHERE username ILIKE $1 AND id <> $2 ' +
+      "AND id <> '00000000-0000-0000-0000-000000000000' AND disable_time = '1970-01-01 00:00:00+00' " +
+      'ORDER BY update_time DESC LIMIT 20',
+    [name + '%', userId],
+  );
+  if (rows.length === 0) return JSON.stringify({ players: [] });
+  const ids: string[] = [];
+  for (let i = 0; i < rows.length; i++) ids.push(String(rows[i].id));
+  const online: { [id: string]: boolean } = {};
+  const users = nk.usersGetId(ids);
+  for (let i = 0; i < users.length; i++) online[users[i].userId] = !!users[i].online;
+  const heroes: { [id: string]: any } = {};
+  const reads: nkruntime.StorageReadRequest[] = [];
+  for (let i = 0; i < ids.length; i++) reads.push({ collection: 'profile', key: 'hero', userId: ids[i] });
+  const objects = nk.storageRead(reads);
+  for (let i = 0; i < objects.length; i++) heroes[objects[i].userId] = objects[i].value;
+  const players: any[] = [];
+  for (let i = 0; i < rows.length; i++) {
+    const id = String(rows[i].id);
+    players.push({ id: id, name: String(rows[i].username), online: !!online[id], hero: heroes[id] || null });
+  }
+  return JSON.stringify({ players: players });
+}

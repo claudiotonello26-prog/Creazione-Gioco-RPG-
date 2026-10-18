@@ -720,6 +720,41 @@ function rpcGuildSessions(ctx, logger, nk, payload) {
     }
     return JSON.stringify({ sessions: sessions });
 }
+/**
+ * Cerca cavalieri per nome (basta l'inizio, senza maiuscole). Ritorna anche
+ * il loro cavaliere pubblicato (collezione profile, chiave hero) per
+ * mostrarlo nella lista. Chi cerca non compare.
+ */
+function rpcPlayerSearch(ctx, logger, nk, payload) {
+    var userId = ctx.userId || '';
+    var req = JSON.parse(payload || '{}');
+    var name = String(req.name || '').replace(/[%_\\]/g, '').slice(0, 24);
+    var rows = nk.sqlQuery('SELECT id, username FROM users WHERE username ILIKE $1 AND id <> $2 ' +
+        "AND id <> '00000000-0000-0000-0000-000000000000' AND disable_time = '1970-01-01 00:00:00+00' " +
+        'ORDER BY update_time DESC LIMIT 20', [name + '%', userId]);
+    if (rows.length === 0)
+        return JSON.stringify({ players: [] });
+    var ids = [];
+    for (var i = 0; i < rows.length; i++)
+        ids.push(String(rows[i].id));
+    var online = {};
+    var users = nk.usersGetId(ids);
+    for (var i = 0; i < users.length; i++)
+        online[users[i].userId] = !!users[i].online;
+    var heroes = {};
+    var reads = [];
+    for (var i = 0; i < ids.length; i++)
+        reads.push({ collection: 'profile', key: 'hero', userId: ids[i] });
+    var objects = nk.storageRead(reads);
+    for (var i = 0; i < objects.length; i++)
+        heroes[objects[i].userId] = objects[i].value;
+    var players = [];
+    for (var i = 0; i < rows.length; i++) {
+        var id = String(rows[i].id);
+        players.push({ id: id, name: String(rows[i].username), online: !!online[id], hero: heroes[id] || null });
+    }
+    return JSON.stringify({ players: players });
+}
 // Modulo server di Iron Oath per Nakama: Arena Pura live, classifiche e gilde.
 var ARENA_MATCH_MODULE = 'arena_duel';
 var ARENA_SEASON_BOARD = 'arena_season';
@@ -810,5 +845,6 @@ function InitModule(ctx, logger, nk, initializer) {
     initializer.registerRpc('arena_top', rpcArenaTop);
     initializer.registerRpc('guild_session_create', rpcGuildSessionCreate);
     initializer.registerRpc('guild_sessions', rpcGuildSessions);
+    initializer.registerRpc('player_search', rpcPlayerSearch);
     logger.info('Iron Oath: modulo Arena caricato');
 }
