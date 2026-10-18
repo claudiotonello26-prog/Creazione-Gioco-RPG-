@@ -2167,7 +2167,7 @@
     "file": "assets/art/enemies/drowned_scribe_idle.png",
     "type": "cutout",
     "prompt": "Enemy: drowned scribe in soaked dark robes, black ink dripping from his fingers and mouth, a giant sharpened quill used as a weapon, wet scrolls tied to his belt, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2176,7 +2176,7 @@
     "file": "assets/art/enemies/living_tome_idle.png",
     "type": "cutout",
     "prompt": "Enemy: floating giant ancient book with teeth along the edges of its pages, tentacles of black ink, a broken padlock and chain, one large eye on the cover, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2185,7 +2185,7 @@
     "file": "assets/art/bosses/eyeless_librarian_idle.png",
     "type": "cutout",
     "prompt": "Boss: towering gaunt librarian with empty eye sockets weeping ink, many long thin arms holding books and candles, a tall wooden ladder strapped to his back, soaked robes, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2194,7 +2194,7 @@
     "file": "assets/art/enemies/mad_astrologer_idle.png",
     "type": "cutout",
     "prompt": "Enemy: wild-haired old astrologer in star-embroidered dark-blue robes, cracked spectacles, a small brass armillary sphere floating above his open hand, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2203,7 +2203,7 @@
     "file": "assets/art/enemies/brass_automaton_idle.png",
     "type": "cutout",
     "prompt": "Enemy: tall clockwork brass automaton with a telescope lens for one eye, exposed gear joints, a small blue crystal core in its chest, long thin limbs, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
