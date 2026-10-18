@@ -52,14 +52,27 @@ class SettingsScreen extends StatelessWidget {
             onTap: () => _editServer(context, s),
           ),
           ListTile(
-            title: const Text('Lingua / Language'),
+            title: Text(tr('Lingua')),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: OathChoice<Lang>(
-                options: [for (final l in Lang.values) (l, l.label)],
-                selected: s.lang,
-                height: 38,
-                onChanged: s.setLang,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  OathChoice<LangPref>(
+                    options: [for (final l in LangPref.values) (l, l.label)],
+                    selected: s.langPref,
+                    height: 38,
+                    onChanged: s.setLangPref,
+                  ),
+                  if (s.langPref == LangPref.auto)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text(
+                        tr('Segue la lingua del telefono'),
+                        style: const TextStyle(color: Palette.ash),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),

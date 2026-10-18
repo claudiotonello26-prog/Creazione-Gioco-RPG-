@@ -1,8 +1,11 @@
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'core/art.dart';
+import 'core/i18n.dart';
 import 'core/theme.dart';
 import 'data/game_state.dart';
 import 'ui/screens/home_shell.dart';
@@ -13,6 +16,8 @@ import 'core/sound.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  systemLang = () =>
+      PlatformDispatcher.instance.locale.languageCode == 'it' ? Lang.it : Lang.en;
   await Art.init();
   await Sound.init();
   final state = GameState();
@@ -33,6 +38,32 @@ class IronOathApp extends StatefulWidget {
 
 class _IronOathAppState extends State<IronOathApp> {
   late bool _intro = widget.intro;
+  late Lang _lang = appLang;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.state.addListener(_langChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.state.removeListener(_langChanged);
+    super.dispose();
+  }
+
+  /// Cambiata la lingua, si ridisegna tutto: anche i testi dentro widget che
+  /// non ascoltano lo stato.
+  void _langChanged() {
+    if (appLang == _lang || !mounted) return;
+    _lang = appLang;
+    void mark(Element e) {
+      e.markNeedsBuild();
+      e.visitChildren(mark);
+    }
+
+    (context as Element).visitChildren(mark);
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -148,7 +148,8 @@ class GameState extends ChangeNotifier {
   /// false = inserimento manuale delle rep (emulatori, accessibilità).
   bool useCamera = true;
 
-  /// Lingua dei nomi di abilità, attributi e schede.
+  /// Lingua scelta nelle impostazioni (Automatica = quella del telefono).
+  LangPref langPref = LangPref.auto;
   Lang get lang => appLang;
 
   /// Server dell'Arena live (Nakama), es. "arena.iron-oath.it" o "192.168.1.10:7350".
@@ -249,6 +250,7 @@ class GameState extends ChangeNotifier {
   Future<void> load() async {
     _prefs = await SharedPreferences.getInstance();
     final raw = _prefs!.getString(_storageKey);
+    appLang = resolveLang(langPref);
     if (raw != null) {
       try {
         _fromJson(jsonDecode(raw) as Map<String, dynamic>);
@@ -317,7 +319,7 @@ class GameState extends ChangeNotifier {
         'days': daysPerWeek,
         'limits': limitations,
         'camera': useCamera,
-        'lang': appLang.name,
+        'langPref': langPref.name,
         'server': serverAddress,
         'device': deviceId,
         'test': {for (final e in test.entries) e.key.name: e.value.toJson()},
@@ -366,7 +368,10 @@ class GameState extends ChangeNotifier {
     daysPerWeek = j['days'] as int;
     limitations = j['limits'] as String;
     useCamera = j['camera'] as bool? ?? true;
-    appLang = Lang.values.asNameMap()[j['lang']] ?? Lang.it;
+    // Il vecchio campo 'lang' non era una scelta del giocatore: chi non ha
+    // ancora scelto segue il telefono.
+    langPref = LangPref.values.asNameMap()[j['langPref']] ?? LangPref.auto;
+    appLang = resolveLang(langPref);
     serverAddress = j['server'] as String? ?? '';
     deviceId = j['device'] as String? ?? '';
     test = {
@@ -519,8 +524,9 @@ class GameState extends ChangeNotifier {
     _changed();
   }
 
-  void setLang(Lang value) {
-    appLang = value;
+  void setLangPref(LangPref value) {
+    langPref = value;
+    appLang = resolveLang(value);
     _changed();
   }
 
