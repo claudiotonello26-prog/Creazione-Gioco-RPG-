@@ -396,6 +396,16 @@ void main() {
       ..style = 4;
     st.notifyListeners();
     await _shot(t, '79_home_mantello_uomo');
+    st.character.worn
+      ..[ArmorSlot.chest] = 'chainmail'
+      ..[ArmorSlot.helm] = 'chainmail';
+    st.notifyListeners();
+    await _shot(t, '80_mantello_maglia');
+    st.character.worn
+      ..clear()
+      ..[ArmorSlot.chest] = 'gambeson';
+    st.notifyListeners();
+    await _shot(t, '81_mantello_giaco');
   });
 
   testWidgets('creazione personaggio e pausa tra esercizi', (t) async {

@@ -185,9 +185,13 @@ class HeroView extends StatelessWidget {
       // fessure si vede la tela chiara, non una macchia di colore.
       if (look.shirt >= 0 && armor(ArmorSlot.chest) == null) ('$d/shirt.png', look.shirtColor, 1),
       if (look.pants >= 0 && armor(ArmorSlot.legs) == null) ('$d/pants.png', look.pantsColor, 1),
-      for (final slot in [ArmorSlot.legs, ArmorSlot.boots, ArmorSlot.chest, ArmorSlot.gloves])
+      for (final slot in [ArmorSlot.legs, ArmorSlot.boots])
         if (armor(slot) case final a?) (a, null, 1),
+      // Sopra la maglia ma sotto la corazza: spallacci e imbottiture
+      // coprono il mantello, che spunta solo dove l'armatura non arriva.
       if (capeLayer('front') case final c?) (c, null, 1),
+      for (final slot in [ArmorSlot.chest, ArmorSlot.gloves])
+        if (armor(slot) case final a?) (a, null, 1),
       if (!fullHelm) ...[
         ('$d/head_$k$hidden.png', null, 1),
         if (look.hair >= 0) ('$d/hair_$k$hidden.png', look.hairColor, 1),
