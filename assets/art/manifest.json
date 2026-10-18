@@ -2347,7 +2347,7 @@
     "file": "assets/art/bosses/sleepless_one_idle.png",
     "type": "cutout",
     "prompt": "Boss: gigantic gaunt figure with dozens of open eyes all over its body, tattered grey robes, huge long-fingered hands, a crown of extinguished candles, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2356,7 +2356,7 @@
     "file": "assets/art/animals/ash_deer_idle.png",
     "type": "cutout",
     "prompt": "Wild animal: wild deer with ash-grey fur and short burned-looking antlers, alert stance, a few embers caught in its fur, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2365,7 +2365,7 @@
     "file": "assets/art/animals/tusk_boar_idle.png",
     "type": "cutout",
     "prompt": "Wild animal: big angry black boar with long yellowed tusks, bristly scarred hide, head lowered to charge, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2374,7 +2374,7 @@
     "file": "assets/art/animals/grave_wolf_idle.png",
     "type": "cutout",
     "prompt": "Wild animal: large lean grey wolf with pale eyes, a torn ear and scars, snarling, a broken grave chain around its neck, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2383,7 +2383,7 @@
     "file": "assets/art/animals/dusk_bear_idle.png",
     "type": "cutout",
     "prompt": "Wild animal: huge dark-brown bear rearing up on its hind legs, scarred muzzle, broken arrows stuck in its shoulder, dusk light on its fur, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   }
