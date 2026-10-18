@@ -2257,7 +2257,7 @@
     "file": "assets/art/enemies/wandering_lantern_idle.png",
     "type": "cutout",
     "prompt": "Enemy: old mossy stone garden lantern come alive, walking on short stone legs, a pale ghost flame flickering inside, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2266,7 +2266,7 @@
     "file": "assets/art/bosses/mute_gardener_idle.png",
     "type": "cutout",
     "prompt": "Boss: tall silent gardener with his mouth sewn shut, a wide straw hat, body overgrown with moss and vines, holding huge rusted pruning shears, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2275,7 +2275,7 @@
     "file": "assets/art/enemies/broken_monk_idle.png",
     "type": "cutout",
     "prompt": "Enemy: bent old monk with a twisted spine, prayer beads made of bone, a ragged ochre robe, leaning on a long wooden staff, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2284,7 +2284,7 @@
     "file": "assets/art/enemies/bell_wraith_idle.png",
     "type": "cutout",
     "prompt": "Enemy: ghost whose lower body is a cracked bronze temple bell, long pale arms, a hooded skull face, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2293,7 +2293,7 @@
     "file": "assets/art/bosses/twisted_abbot_idle.png",
     "type": "cutout",
     "prompt": "Boss: giant abbot whose limbs bend in impossible directions, ornate ochre-and-gold vestments, many strings of prayer beads, a serene and terrifying face, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
