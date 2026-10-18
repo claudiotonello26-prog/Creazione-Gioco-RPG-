@@ -137,6 +137,11 @@ class HeroView extends StatelessWidget {
     false: (Offset(0.110, 0.523), Offset(0.836, 0.521)),
   };
 
+  /// Corazze con gli spallacci: il mantello va sotto. Le piastre li hanno
+  /// tutte; il giaco e la cotta di maglia no.
+  static bool hasPauldrons(String chestId) =>
+      chestId == 'leather_armor' || armorDefs[chestId]?.look == 2;
+
   /// Elmi disegnati con la testa intera: sotto non si mettono viso e capelli.
   static const fullHelms = {'chainmail'};
 
@@ -177,6 +182,9 @@ class HeroView extends StatelessWidget {
     final hidden = helm != null && Art.has('$d/head_${k}_helm_$helmId.png') ? '_helm_$helmId' : '';
     // L'elmo col camaglio copre tutta la testa e porta il suo viso.
     final fullHelm = helm != null && fullHelms.contains(helmId);
+    final chestId = worn[ArmorSlot.chest];
+    final capeUnder = chestId != null && armor(ArmorSlot.chest) != null && hasPauldrons(chestId);
+    final capeFront = capeLayer('front');
     return [
       // Il mantello passa dietro al corpo e torna davanti sulle spalle.
       if (capeLayer('back') case final c?) (c, null, 1),
@@ -187,11 +195,12 @@ class HeroView extends StatelessWidget {
       if (look.pants >= 0 && armor(ArmorSlot.legs) == null) ('$d/pants.png', look.pantsColor, 1),
       for (final slot in [ArmorSlot.legs, ArmorSlot.boots])
         if (armor(slot) case final a?) (a, null, 1),
-      // Sopra la maglia ma sotto la corazza: spallacci e imbottiture
-      // coprono il mantello, che spunta solo dove l'armatura non arriva.
-      if (capeLayer('front') case final c?) (c, null, 1),
+      // Con gli spallacci il mantello passa sotto la corazza e resta solo
+      // lo strascico; con giaco e maglia sta sopra, col fermaglio.
+      if (capeUnder && capeFront != null) (capeFront, null, 1),
       for (final slot in [ArmorSlot.chest, ArmorSlot.gloves])
         if (armor(slot) case final a?) (a, null, 1),
+      if (!capeUnder && capeFront != null) (capeFront, null, 1),
       if (!fullHelm) ...[
         ('$d/head_$k$hidden.png', null, 1),
         if (look.hair >= 0) ('$d/hair_$k$hidden.png', look.hairColor, 1),
