@@ -119,6 +119,9 @@ class _CombatScreenState extends State<CombatScreen> {
           tint == null ? null : Color(tint).withValues(alpha: opacity),
       ],
       heroFist: drawn ? HeroView.rightFist(c.look.female) : null,
+      heroLeftFist: drawn ? HeroView.leftFist(c.look.female) : null,
+      heroSword: drawn ? HeroView.swordOf(c.weapon) : null,
+      heroShield: drawn ? HeroView.shieldOf(c.offhand?.id) : null,
       // Il colore lo dà solo l'amuleto d'affinità incastonato.
       weaponTint: state.character.weapon.glowTier == 0
           ? null

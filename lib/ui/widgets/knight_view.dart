@@ -80,7 +80,8 @@ class KnightView extends StatelessWidget {
         child: HeroView(
           look: character.look,
           height: height,
-          weapon: weapon,
+          weapon: character.armed ? weapon : null,
+          offhand: character.armed ? character.offhand?.id : null,
           worn: character.worn,
           cape: character.capeId,
         ),
@@ -117,12 +118,16 @@ class HeroView extends StatelessWidget {
     required this.look,
     required this.height,
     this.weapon,
+    this.offhand,
     this.worn = const {},
     this.cape,
   });
   final Appearance look;
   final double height;
   final WeaponInstance? weapon;
+
+  /// Id della mano sinistra (scudo), se ha un suo disegno.
+  final String? offhand;
   final Map<ArmorSlot, String> worn;
 
   /// Id del mantello indossato (strati `cape_<id>_back` e `_front`).
@@ -146,6 +151,24 @@ class HeroView extends StatelessWidget {
   static const fullHelms = {'chainmail'};
 
   static Offset rightFist(bool female) => _fists[female]!.$1;
+  static Offset leftFist(bool female) => _fists[female]!.$2;
+
+  /// Spada dipinta: punta in basso, manico a (115, 94) su 230x870 px della
+  /// tela. La usano tutte le spade a una mano finché non hanno la loro.
+  static const swordSprite = 'assets/art/hero/gear/sword_pilgrim.png';
+  static const swordSize = Size(230, 870);
+  static const swordGrip = Offset(115, 94);
+
+  /// Scudi dipinti, centrati sul pugno sinistro (px della tela).
+  static const shieldSprites = {'wooden_shield': 'assets/art/hero/gear/shield_wooden.png'};
+  static const shieldSize = Size(375, 551);
+
+  static String? swordOf(WeaponInstance? w) =>
+      w != null && shapeOf(w.def) == WeaponShape.sword && Art.has(swordSprite) ? swordSprite : null;
+  static String? shieldOf(String? id) {
+    final p = shieldSprites[id];
+    return p != null && Art.has(p) ? p : null;
+  }
 
   static String dir(bool female) => 'assets/art/hero/${female ? 'f' : 'm'}';
   static bool get available =>
@@ -223,29 +246,66 @@ class HeroView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final w = height * aspect;
-    final layers = Stack(
-      fit: StackFit.expand,
-      children: [
-        for (final (path, tint, opacity) in layersOf(look, worn, cape: cape))
-          Image.asset(
-            path,
-            fit: BoxFit.contain,
-            gaplessPlayback: true,
-            color: tint == null ? null : Color(tint).withValues(alpha: opacity),
-            colorBlendMode: tint == null ? null : BlendMode.modulate,
-          ),
-      ],
+    final k = height / 1896;
+    final (right, leftFist) = _fists[look.female]!;
+    final sword = swordOf(weapon);
+    final shield = shieldOf(offhand);
+    Widget img(String path, int? tint, double opacity) => Image.asset(
+      path,
+      fit: BoxFit.contain,
+      gaplessPlayback: true,
+      color: tint == null ? null : Color(tint).withValues(alpha: opacity),
+      colorBlendMode: tint == null ? null : BlendMode.modulate,
     );
+    final images = [
+      for (final (path, tint, opacity) in layersOf(look, worn, cape: cape))
+        (path, Positioned.fill(child: img(path, tint, opacity))),
+    ];
+    // La spada pende dal pugno destro, dietro al corpo: la mano copre il
+    // manico e la lama scende accanto alla gamba.
+    final bodyAt = images.indexWhere((l) => l.$1.endsWith('/body.png'));
+    final children = [for (final l in images) l.$2];
+    if (sword != null) {
+      children.insert(
+        bodyAt < 0 ? 0 : bodyAt,
+        Positioned(
+          left: right.dx * w - swordGrip.dx * k,
+          top: right.dy * height - 6 * k - swordGrip.dy * k,
+          width: swordSize.width * k,
+          height: swordSize.height * k,
+          child: Transform.rotate(
+            angle: 6 * pi / 180,
+            alignment: Alignment(
+              swordGrip.dx / swordSize.width * 2 - 1,
+              swordGrip.dy / swordSize.height * 2 - 1,
+            ),
+            child: Image.asset(sword, fit: BoxFit.fill, gaplessPlayback: true),
+          ),
+        ),
+      );
+    }
+    // Lo scudo sta davanti, imbracciato col pugno sinistro.
+    if (shield != null) {
+      children.add(
+        Positioned(
+          left: leftFist.dx * w - shieldSize.width / 2 * k,
+          top: leftFist.dy * height - shieldSize.height / 2 * k,
+          width: shieldSize.width * k,
+          height: shieldSize.height * k,
+          child: Image.asset(shield, fit: BoxFit.fill, gaplessPlayback: true),
+        ),
+      );
+    }
+    final layers = Stack(clipBehavior: Clip.none, children: children);
     return LayoutBuilder(
       builder: (context, box) {
         final bw = box.maxWidth.isFinite ? box.maxWidth : w;
         final left = (bw - w) / 2;
-        final (right, leftFist) = _fists[look.female]!;
         return Stack(
           clipBehavior: Clip.none,
           children: [
             Positioned(left: left, top: 0, width: w, height: height, child: layers),
-            if (weapon != null)
+            if (weapon != null && sword == null)
               Positioned.fill(
                 child: CustomPaint(
                   painter: _HeroWeapon(

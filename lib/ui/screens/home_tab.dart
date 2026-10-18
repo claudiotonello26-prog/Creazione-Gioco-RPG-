@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/i18n.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/items.dart';
@@ -48,8 +49,10 @@ class HomeTab extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(c.name.toUpperCase(), style: titleStyle(size: 22, spacing: 4)),
                 Text(
-                  'Livello ${c.level} · ${c.weapon.displayName}'
-                  '${c.offhand != null ? ' · ${c.offhand!.name}' : ''}',
+                  c.armed
+                      ? 'Livello ${c.level} · ${c.weapon.displayName}'
+                          '${c.offhand != null ? ' · ${c.offhand!.name}' : ''}'
+                      : 'Livello ${c.level} · ${tr('A mani vuote')}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Palette.ash),
                 ),

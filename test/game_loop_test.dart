@@ -69,14 +69,24 @@ void main() {
     expect(s.sellMaterial('ash_pickaxe'), isFalse, reason: 'gli attrezzi non si vendono');
   });
 
+  test('si parte a mani vuote, la prima missione dà spada e scudo', () {
+    expect(s.character.armed, isFalse);
+    expect(s.character.offhandId, isNull);
+    s.armUp();
+    expect(s.character.armed, isTrue);
+    expect(s.character.offhandId, 'wooden_shield');
+    expect(s.noviceReady, isTrue);
+  });
+
   test('non si vende l\'arma impugnata', () {
     expect(s.sellWeapon(s.character.weapon), isFalse);
   });
 
-  test('il Cammino del Novizio parte dal goblin e finisce col giuramento', () {
-    expect(noviceQuests.first.action, NoviceAction.fightGoblin);
+  test('il Cammino del Novizio parte da spada e scudo e finisce col giuramento', () {
+    expect(noviceQuests.first.action, NoviceAction.arm);
+    expect(noviceQuests[1].action, NoviceAction.fightGoblin);
     expect(noviceQuests.last.stat, 'quests');
-    expect(noviceQuests.length, 14);
+    expect(noviceQuests.length, 15);
     s.bestHuntWave = 3;
     expect(s.stat('hunt_wave'), 3);
   });

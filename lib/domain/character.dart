@@ -37,6 +37,7 @@ class Character {
     this.capeId = 'pilgrim_cape',
     Set<String>? capes,
     this.neck,
+    this.armed = false,
     Appearance? look,
   }) : look = look ?? Appearance(),
        capes = capes ?? {'pilgrim_cape'},
@@ -86,6 +87,10 @@ class Character {
   String? capeId;
   final Set<String> capes;
   CapeDef? get cape => capeDefs[capeId];
+
+  /// Il nuovo personaggio parte a mani vuote: spada e scudo arrivano con la
+  /// prima missione del Cammino del Novizio.
+  bool armed;
 
   /// Amuleto al collo: un passivo in più oltre ai due dell'arma.
   String? neck;
@@ -197,6 +202,7 @@ class Character {
     'cape': capeId,
     'capes': capes.toList(),
     'neck': neck,
+    'armed': armed,
     'look': look.toJson(),
   };
 
@@ -223,6 +229,8 @@ class Character {
     capeId: j.containsKey('capes') ? j['cape'] as String? : 'pilgrim_cape',
     capes: j['capes'] == null ? null : Set<String>.from(j['capes'] as List),
     neck: j['neck'] as String?,
+    // I salvataggi di prima avevano già la spada in mano.
+    armed: j['armed'] as bool? ?? true,
     look: j['look'] == null ? null : Appearance.fromJson(j['look'] as Map<String, dynamic>),
   );
 }
