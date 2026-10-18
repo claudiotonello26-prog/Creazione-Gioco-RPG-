@@ -1283,7 +1283,10 @@ class GameState extends ChangeNotifier {
   bool upgradeWeapon(WeaponInstance w) {
     final stone = w.nextStone;
     if (stone == null) return false;
+    final runes = w.nextRuneCost;
+    if (character.runes < runes) return false;
     if (!character.spendMaterial(stone, w.nextStoneCost)) return false;
+    character.runes -= runes;
     w.upgrade++;
     _count('upgrades');
     _changed();

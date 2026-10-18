@@ -221,6 +221,7 @@ const Map<String, String> enUiB = {
   '  ·  hai {n}': '  ·  you have {n}',
   'Si sblocca a {station} livello {level}': 'Unlocks at {station} level {level}',
   'Ti servono {cost}× {item}.': 'You need {cost}× {item}.',
+  'Ti servono {runes} rune.': 'You need {runes} runes.',
   '{cost}× · ne hai {n}': '{cost}× · you have {n}',
   // guild_tab.dart
   'La gilda vive sul server online: impostalo nelle Impostazioni per fondarne una o entrare in quella dei tuoi amici.': "The guild lives on the online server: set it in Settings to found one or join your friends'.",

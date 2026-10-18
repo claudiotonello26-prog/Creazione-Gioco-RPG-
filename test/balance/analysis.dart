@@ -224,6 +224,9 @@ class BalanceReport {
       _add(Severity.warn, 'Rune', 'Le rune si accumulano senza uso',
           'Dopo $days giorni il giocatore medio ha $left rune e ne ha spese solo $spent: '
               'servono più cose da comprare con le rune.');
+    } else {
+      _add(Severity.ok, 'Rune', 'Le rune si spendono',
+          'Dopo $days giorni il giocatore medio ne ha spese $spent e ne tiene $left.');
     }
   }
 

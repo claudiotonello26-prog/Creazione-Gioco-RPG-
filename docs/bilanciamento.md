@@ -101,7 +101,7 @@ Totale massimo 100 rune al giorno, quanto un nemico debole: un premio piccolo ma
 - Quattro stazioni: Carpenteria (assi, impugnature, archi, bastoni), Fornace (lingotti, pietre di forgia), Incudine (spade, armature) e Incantamento.
 - Ogni ricetta ha un livello minimo del mestiere della stazione. Creare dà 8 + 3 × livello della ricetta in XP di mestiere.
 - Le armature riducono il danno subito: Gambeson 8%, Cotta di Maglia 15%, Piastre del Templare 22%, Armatura Stellare 30%.
-- Incantamento: ogni livello ha la sua pietra, mostrata come pulsante con l'icona.
+- Incantamento: ogni livello ha la sua pietra, mostrata come pulsante con l'icona, e un costo in rune (sezione 9).
   - Armi normali (fino a +10): Pietra di forgia I per +1..+3 (1, 2, 3 pietre), II per +4..+6, III per +7..+9, Pietra di forgia astrale (1) per il +10.
   - Armi speciali (fino a +5, non per forza più forti ma con effetti diversi): Pietra delle Tenebre I, II, III, IV per +1..+4 e Pietra Epica dell'Eclissi per il +5, una pietra per livello. Alla Fornace: Tenebre II = 2 Tenebre I + 1 Scheggia sacra (liv. 10), III = 2 II + 3 Essenza di bestia (14), IV = 2 III + 1 Gemma tagliata (18), Epica = 2 IV + 1 Gemma perfetta (22).
 - Amuleti dell'arma: tre incastri per arma, dalla Fattucchiera (o dall'Armeria e dall'Incantamento). Si cambiano quando si vuole; quello tolto torna nella borsa.
@@ -163,7 +163,7 @@ Cosa ha già trovato e corretto:
 2. **Forzieri ripetuti**: vedi sezione 8.
 3. **Versioni facili più convenienti**: lo sforzo ora conta la difficoltà della versione (sezione 2).
 
-Da decidere (segnalato come ATTENZIONE): le rune si accumulano. Dopo 90 giorni il giocatore medio ne ha decine di migliaia e quasi nulla su cui spenderle; servono altre cose da comprare con le rune.
+4. **Rune senza uso**: dopo 90 giorni il giocatore medio aveva 115.000 rune e ne aveva spese 2.400. Ora ogni potenziamento dell'arma costa anche rune: 80 × livello^1,6 × (1 + livello di forgia dell'arma ÷ 6), il quintuplo per le armi speciali. La Lama del Pellegrino da +0 a +10 costa circa 16.000 rune in tutto (il +10 da solo 3.700), un'arma di livello 20 quasi quattro volte tanto. Il costo si vede sotto la pietra, all'Incantamento. Il simulatore controlla che si spenda almeno un quinto delle rune.
 
 ## Dove sta nel codice
 

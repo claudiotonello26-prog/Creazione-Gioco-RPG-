@@ -636,7 +636,9 @@ class SimPlayer {
       final stone = c.weapon.nextStone;
       if (stone == null) break;
       if (!_obtain(stone, c.weapon.nextStoneCost)) break;
+      final runes = c.weapon.nextRuneCost;
       if (!state.upgradeWeapon(c.weapon)) break;
+      _spentToday += runes;
     }
 
     // Amuleti passivi con le rune che avanzano.
