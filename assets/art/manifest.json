@@ -2032,7 +2032,7 @@
     "file": "assets/art/bosses/storm_king_idle.png",
     "type": "cutout",
     "prompt": "Boss: gigantic storm king, a gaunt bearded giant in ancient bronze-and-steel armor, a crown of jagged steel feathers, a cloak made of storm clouds, a great spear, lit by lightning, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2041,7 +2041,7 @@
     "file": "assets/art/enemies/bronze_skeleton_idle.png",
     "type": "cutout",
     "prompt": "Enemy: skeleton warrior with bones stained green-bronze, a dented bronze helmet, a round bronze shield and a short bronze sword, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2050,7 +2050,7 @@
     "file": "assets/art/enemies/tomb_crawler_idle.png",
     "type": "cutout",
     "prompt": "Enemy: long segmented crypt crawler, centipede-like, with a skull-shaped head, bronze funeral rings embedded in its pale carapace, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2059,7 +2059,7 @@
     "file": "assets/art/bosses/crypt_keeper_idle.png",
     "type": "cutout",
     "prompt": "Boss: towering skeletal keeper in a green-bronze funeral mask and tattered burial robes, a ring of huge bronze keys, a stone sarcophagus lid used as a shield, epic low angle, imposing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
@@ -2068,7 +2068,7 @@
     "file": "assets/art/enemies/gilded_acolyte_idle.png",
     "type": "cutout",
     "prompt": "Enemy: gaunt temple acolyte with gold leaf peeling from his skin, a smooth gold mask, cream robes stained with soot, a censer on a chain swung like a flail, menacing idle stance, facing left.",
-    "status": "pending",
+    "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
