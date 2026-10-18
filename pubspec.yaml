@@ -84,6 +84,7 @@ flutter:
     # Il personaggio a livelli (Gemini): corpo, teste, capelli, occhi, vestiti.
     - assets/art/hero/f/
     - assets/art/hero/m/
+    - assets/art/hero/gear/
     # Suoni: elenco e formato in lista-suoni.md. Un file che manca = silenzio.
     - assets/audio/sfx/
     - assets/audio/music/

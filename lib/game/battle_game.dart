@@ -11,6 +11,7 @@ import '../core/i18n.dart';
 import '../core/theme.dart';
 import '../domain/enemies.dart';
 import '../domain/items.dart';
+import '../ui/widgets/knight_view.dart' show HeroView;
 
 /// Scena del combattimento disegnata con Flame. Le figure sono silhouette
 /// vettoriali provvisorie, da sostituire con le illustrazioni 2D e le
@@ -23,6 +24,9 @@ class BattleGame extends FlameGame {
     this.heroLayers = const [],
     this.heroTints = const [],
     this.heroFist,
+    this.heroLeftFist,
+    this.heroSword,
+    this.heroShield,
     this.weaponTint,
   });
 
@@ -36,6 +40,11 @@ class BattleGame extends FlameGame {
 
   /// Pugno sulla tela del personaggio a livelli (0..1): lì va la spada.
   final Offset? heroFist;
+  final Offset? heroLeftFist;
+
+  /// Spada e scudo dipinti del personaggio a livelli (null: spada a vettori).
+  final String? heroSword;
+  final String? heroShield;
 
   /// Colore della build che tinge l'arma dal +3 in su.
   final Color? weaponTint;
@@ -57,6 +66,8 @@ class BattleGame extends FlameGame {
     final heroSprites = [
       for (final p in heroLayers) await Sprite.load(p, images: images),
     ];
+    final sword = heroSword == null ? null : await Sprite.load(heroSword!, images: images);
+    final shield = heroShield == null ? null : await Sprite.load(heroShield!, images: images);
     final enemyArt = enemyArtPath(enemy);
     final enemySprite =
         Art.has(enemyArt) ? await Sprite.load(enemyArt, images: images) : null;
@@ -67,6 +78,9 @@ class BattleGame extends FlameGame {
       weaponTint: weaponTint,
       tints: heroTints,
       fist: heroFist,
+      leftFist: heroLeftFist,
+      sword: sword,
+      shield: shield,
     )
       ..anchor = Anchor.bottomCenter
       ..size = heroSprites.isEmpty
@@ -328,8 +342,14 @@ class _Hero extends PositionComponent with _Flash {
     this.weaponTint,
     this.tints = const [],
     this.fist,
+    this.leftFist,
+    this.sword,
+    this.shield,
   });
   final int weaponTier;
+  final Offset? leftFist;
+  final Sprite? sword;
+  final Sprite? shield;
   final List<Sprite> layers;
   final int weaponLayer;
   final Color? weaponTint;
@@ -346,8 +366,36 @@ class _Hero extends PositionComponent with _Flash {
         final sp = layers.first;
         final k = min(size.x / sp.srcSize.x, size.y / sp.srcSize.y);
         final d = sp.srcSize * k;
-        final at = Offset((size.x - d.x) / 2 + f.dx * d.x, size.y - d.y + f.dy * d.y);
-        _blade(canvas, at, d.y * 0.42);
+        Offset onCanvas(Offset p) => Offset((size.x - d.x) / 2 + p.dx * d.x, size.y - d.y + p.dy * d.y);
+        final at = onCanvas(f);
+        final px = d.y / 1896;
+        if (sword case final s?) {
+          // Spada dipinta alzata verso il nemico, il manico nel pugno.
+          canvas.save();
+          canvas.translate(at.dx, at.dy);
+          canvas.rotate(-145 * pi / 180);
+          s.render(
+            canvas,
+            position: Vector2(-HeroView.swordGrip.dx * px, -HeroView.swordGrip.dy * px),
+            size: Vector2(HeroView.swordSize.width * px, HeroView.swordSize.height * px),
+            overridePaint: _flashTime > 0 && _flashColor != null
+                ? (Paint()..colorFilter = ColorFilter.mode(_flashColor!, BlendMode.srcATop))
+                : weaponTint != null
+                    ? (Paint()..colorFilter = ColorFilter.mode(weaponTint!, BlendMode.srcATop))
+                    : null,
+          );
+          canvas.restore();
+        } else {
+          _blade(canvas, at, d.y * 0.42);
+        }
+        if ((shield, leftFist) case (final s?, final lf?)) {
+          final c = onCanvas(lf);
+          s.render(
+            canvas,
+            position: Vector2(c.dx - HeroView.shieldSize.width / 2 * px, c.dy - HeroView.shieldSize.height / 2 * px),
+            size: Vector2(HeroView.shieldSize.width * px, HeroView.shieldSize.height * px),
+          );
+        }
       }
       return;
     }

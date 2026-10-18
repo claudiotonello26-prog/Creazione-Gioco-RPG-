@@ -112,6 +112,8 @@ void goToNoviceAction(
     BuildContext context, GameState state, NoviceQuest q, void Function(int tab) onNavigate) {
   void push(Widget w) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => w));
   switch (q.action) {
+    case NoviceAction.arm:
+      state.armUp();
     case NoviceAction.fightGoblin:
       startFreeFight(context, enemyDefs['hollow_goblin']!, respawn: true);
     case NoviceAction.hunt:

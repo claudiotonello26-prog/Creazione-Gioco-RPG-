@@ -446,6 +446,10 @@ class GameState extends ChangeNotifier {
     stepBank = j['bank'] as int? ?? 0;
     stats = Map<String, int>.from(j['stats'] as Map? ?? const {});
     noviceStep = j['novice'] as int? ?? 0;
+    // La missione "Armati" è arrivata dopo: chi aveva già iniziato il
+    // Cammino la salta, ha già spada e scudo.
+    final char = j['character'] as Map?;
+    if (char != null && !char.containsKey('armed') && j.containsKey('novice')) noviceStep++;
     seenHints = Set<String>.from(j['hints'] as List? ?? const []);
     trainerEnabled = j['trainer'] as bool? ?? true;
   }
@@ -902,6 +906,16 @@ class GameState extends ChangeNotifier {
     noviceStep++;
     _changed();
     return q;
+  }
+
+  /// Prima missione: il trainer consegna spada e scudo e li equipaggia.
+  void armUp() {
+    if (character.armed) return;
+    character.armed = true;
+    character.offhands.add('wooden_shield');
+    character.offhandId ??= 'wooden_shield';
+    _count('armed');
+    _changed();
   }
 
   /// Segna un consiglio del trainer come visto. Ritorna true la prima volta.

@@ -49,8 +49,10 @@ class HomeTab extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(c.name.toUpperCase(), style: titleStyle(size: 22, spacing: 4)),
                 Text(
-                  '${tr('Livello {level}', {'level': c.level})} · ${c.weapon.displayName}'
-                  '${c.offhand != null ? ' · ${c.offhand!.name}' : ''}',
+                  c.armed
+                      ? '${tr('Livello {level}', {'level': c.level})} · ${c.weapon.displayName}'
+                          '${c.offhand != null ? ' · ${c.offhand!.name}' : ''}'
+                      : '${tr('Livello {level}', {'level': c.level})} · ${tr('A mani vuote')}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Palette.ash),
                 ),
