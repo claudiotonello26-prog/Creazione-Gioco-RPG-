@@ -338,6 +338,8 @@ void main() {
     st.character.look
       ..female = false
       ..style = 4
+      ..hairStyle = 4
+      ..beardStyle = 4
       ..hair = Appearance.natural
       ..shirt = 2
       ..pants = Appearance.natural;
@@ -354,7 +356,9 @@ void main() {
     nav.pop();
     st.character.look
       ..female = true
-      ..style = 6;
+      ..style = 6
+      ..hairStyle = 6
+      ..beardStyle = 6;
     for (final slot in [ArmorSlot.helm, ArmorSlot.chest, ArmorSlot.gloves, ArmorSlot.legs]) {
       st.character.worn[slot] = 'gambeson';
     }
@@ -370,7 +374,9 @@ void main() {
       ..[ArmorSlot.helm] = 'leather_armor';
     st.character.look
       ..female = false
-      ..style = 3;
+      ..style = 3
+      ..hairStyle = 3
+      ..beardStyle = 3;
     st.notifyListeners();
     await _shot(t, '75_home_cuoio');
     for (final slot in [ArmorSlot.helm, ArmorSlot.chest, ArmorSlot.gloves, ArmorSlot.legs]) {
@@ -380,7 +386,9 @@ void main() {
     await _shot(t, '76_home_maglia');
     st.character.look
       ..female = true
-      ..style = 7;
+      ..style = 7
+      ..hairStyle = 7
+      ..beardStyle = 7;
     st.notifyListeners();
     await _shot(t, '77_home_maglia_donna');
     st.character.capeId = 'pilgrim_cape';
@@ -393,7 +401,9 @@ void main() {
     st.character.worn.clear();
     st.character.look
       ..female = false
-      ..style = 4;
+      ..style = 4
+      ..hairStyle = 4
+      ..beardStyle = 4;
     st.notifyListeners();
     await _shot(t, '79_home_mantello_uomo');
     st.character.worn
@@ -406,6 +416,26 @@ void main() {
       ..[ArmorSlot.chest] = 'gambeson';
     st.notifyListeners();
     await _shot(t, '81_mantello_giaco');
+    // Viso, capelli e barba presi da teste diverse.
+    st.character.capeId = null;
+    st.character.worn.clear();
+    st.character.look
+      ..style = 1
+      ..hairStyle = 8
+      ..beardStyle = 4;
+    st.notifyListeners();
+    await _shot(t, '82_mix_uomo');
+    st.character.worn[ArmorSlot.helm] = 'leather_armor';
+    st.notifyListeners();
+    await _shot(t, '83_mix_uomo_elmo');
+    st.character.worn.clear();
+    st.character.look
+      ..female = true
+      ..style = 2
+      ..hairStyle = 4
+      ..hair = 3;
+    st.notifyListeners();
+    await _shot(t, '84_mix_donna');
   });
 
   testWidgets('creazione personaggio e pausa tra esercizi', (t) async {

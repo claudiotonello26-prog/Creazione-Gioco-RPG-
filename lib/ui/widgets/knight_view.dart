@@ -105,10 +105,10 @@ class KnightView extends StatelessWidget {
 }
 
 /// Il personaggio disegnato (Gemini) a livelli: corpo, maglia e pantaloni
-/// colorabili, testa scelta (viso, capelli e barba), capelli e occhi
+/// colorabili, viso, capelli e barba scelti a parte, capelli e occhi
 /// colorabili. Tutti i PNG di un corpo hanno la stessa tela, già allineati.
 /// I pezzi d'armatura sono strati `armor_<id>_<posto>.png`; con l'elmo la
-/// testa usa `head_<n>_helm.png`: niente capelli, restano barba e baffi.
+/// testa perde i capelli (`hair_<n>.png`) ma tiene la barba (`beard_<n>.png`).
 /// Un pezzo che non ha ancora il suo strato semplicemente non si vede:
 /// il personaggio disegnato resta lo stesso in tutte le schermate.
 class HeroView extends StatelessWidget {
@@ -156,6 +156,12 @@ class HeroView extends StatelessWidget {
 
   static bool canShow(Character c) => available;
 
+  static (String, int?, double)? _tuft(String d, String kind, int id, Appearance look) {
+    final tinted = look.hair >= 0;
+    final p = '$d/$kind${tinted ? 'g' : ''}_$id.png';
+    return Art.has(p) ? (p, tinted ? look.hairColor : null, 1) : null;
+  }
+
   /// Strati dal basso verso l'alto: percorso, tinta (null = colori
   /// originali) e opacità. Li usano la Home e il combattimento.
   static List<(String, int?, double)> layersOf(
@@ -179,8 +185,6 @@ class HeroView extends StatelessWidget {
 
     final helm = armor(ArmorSlot.helm);
     final helmId = worn[ArmorSlot.helm];
-    // Sotto qualsiasi elmo i capelli spariscono; restano barba e baffi.
-    final hidden = helm != null && Art.has('$d/head_${k}_helm.png') ? '_helm' : '';
     // L'elmo col camaglio copre tutta la testa e porta il suo viso.
     final fullHelm = helm != null && fullHelms.contains(helmId);
     final chestId = worn[ArmorSlot.chest];
@@ -203,9 +207,12 @@ class HeroView extends StatelessWidget {
         if (armor(slot) case final a?) (a, null, 1),
       if (!capeUnder && !fullHelm && capeFront != null) (capeFront, null, 1),
       if (!fullHelm) ...[
-        ('$d/head_$k$hidden.png', null, 1),
-        if (look.hair >= 0) ('$d/hair_$k$hidden.png', look.hairColor, 1),
+        ('$d/face_$k.png', null, 1),
         if (look.eyes >= 0) ('$d/eyes_$k.png', look.eyeColor, 0.8),
+        // Barba e capelli: colori originali, o la versione grigia tinta.
+        if (look.beardId >= 0) ?_tuft(d, 'beard', look.beardId, look),
+        // Sotto qualsiasi elmo i capelli spariscono; la barba resta.
+        if (helm == null && look.hairId >= 0) ?_tuft(d, 'hair', look.hairId, look),
       ],
       if (helm != null) (helm, null, 1),
       // Il camaglio di maglia è ingombrante: il mantello gli passa sopra.
