@@ -360,6 +360,29 @@ void main() {
     }
     st.notifyListeners();
     await _shot(t, '73_home_giaco');
+    st.character.worn[ArmorSlot.boots] = 'gambeson';
+    st.notifyListeners();
+    await _shot(t, '74_home_giaco_stivali');
+    st.character.worn
+      ..clear()
+      ..[ArmorSlot.chest] = 'leather_armor'
+      ..[ArmorSlot.legs] = 'leather_armor'
+      ..[ArmorSlot.helm] = 'leather_armor';
+    st.character.look
+      ..female = false
+      ..style = 3;
+    st.notifyListeners();
+    await _shot(t, '75_home_cuoio');
+    for (final slot in [ArmorSlot.helm, ArmorSlot.chest, ArmorSlot.gloves, ArmorSlot.legs]) {
+      st.character.worn[slot] = 'chainmail';
+    }
+    st.notifyListeners();
+    await _shot(t, '76_home_maglia');
+    st.character.look
+      ..female = true
+      ..style = 7;
+    st.notifyListeners();
+    await _shot(t, '77_home_maglia_donna');
   });
 
   testWidgets('creazione personaggio e pausa tra esercizi', (t) async {

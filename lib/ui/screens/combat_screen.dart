@@ -101,14 +101,24 @@ class _CombatScreenState extends State<CombatScreen> {
     Sound.pushMusic(widget.enemy.isBoss ? Music.boss : Music.combat);
     final state = context.read<GameState>();
     _engine = _newEngine(state);
+    final c = state.character;
+    final drawn = !Art.has('assets/art/knight/attack/base.png') && HeroView.canShow(c);
+    final hero = drawn ? HeroView.layersOf(c.look, c.worn) : const <(String, int?, double)>[];
     _game = BattleGame(
       enemy: widget.enemy,
       weaponTier: state.character.weapon.glowTier,
       style: state.character.weapon.def.style,
-      heroLayers: [
-        if (Art.has('assets/art/knight/attack/base.png'))
-          ...knightLayers(state.character, KnightPose.attack),
+      heroLayers: drawn
+          ? [for (final l in hero) l.$1]
+          : [
+              if (Art.has('assets/art/knight/attack/base.png'))
+                ...knightLayers(state.character, KnightPose.attack),
+            ],
+      heroTints: [
+        for (final (_, tint, opacity) in hero)
+          tint == null ? null : Color(tint).withValues(alpha: opacity),
       ],
+      heroFist: drawn ? HeroView.rightFist(c.look.female) : null,
       // Il colore lo dà solo l'amuleto d'affinità incastonato.
       weaponTint: state.character.weapon.glowTier == 0
           ? null

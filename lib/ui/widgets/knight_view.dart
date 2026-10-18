@@ -127,6 +127,8 @@ class HeroView extends StatelessWidget {
     false: (Offset(0.110, 0.523), Offset(0.836, 0.521)),
   };
 
+  static Offset rightFist(bool female) => _fists[female]!.$1;
+
   static String dir(bool female) => 'assets/art/hero/${female ? 'f' : 'm'}';
   static bool get available =>
       Art.has('${dir(false)}/body.png') && Art.has('${dir(true)}/body.png');
@@ -142,47 +144,50 @@ class HeroView extends StatelessWidget {
       c.cape == null &&
       c.offhand == null;
 
-  @override
-  Widget build(BuildContext context) {
+  /// Strati dal basso verso l'alto: percorso, tinta (null = colori
+  /// originali) e opacità. Li usano la Home e il combattimento.
+  static List<(String, int?, double)> layersOf(Appearance look, Map<ArmorSlot, String> worn) {
     final d = dir(look.female);
     final k = look.styleIndex;
-    Widget layer(String name, {int? tint, double opacity = 1}) {
-      Widget img = Image.asset(
-        '$d/$name.png',
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-        color: tint == null ? null : Color(tint).withValues(alpha: opacity),
-        colorBlendMode: tint == null ? null : BlendMode.modulate,
-      );
-      return img;
-    }
-
     String? armor(ArmorSlot slot) {
       final id = worn[slot];
       if (id == null) return null;
       final p = armorPath(look.female, slot, id);
-      return Art.has(p) ? p.substring(d.length + 1, p.length - 4) : null;
+      return Art.has(p) ? p : null;
     }
 
     final helm = armor(ArmorSlot.helm);
     final helmId = worn[ArmorSlot.helm];
     final hidden = helm != null && Art.has('$d/head_${k}_helm_$helmId.png') ? '_helm_$helmId' : '';
+    return [
+      ('$d/body.png', null, 1),
+      // Sotto l'armatura i vestiti restano del colore originale: dalle
+      // fessure si vede la tela chiara, non una macchia di colore.
+      if (look.shirt >= 0 && armor(ArmorSlot.chest) == null) ('$d/shirt.png', look.shirtColor, 1),
+      if (look.pants >= 0 && armor(ArmorSlot.legs) == null) ('$d/pants.png', look.pantsColor, 1),
+      for (final slot in [ArmorSlot.legs, ArmorSlot.boots, ArmorSlot.chest, ArmorSlot.gloves])
+        if (armor(slot) case final a?) (a, null, 1),
+      ('$d/head_$k$hidden.png', null, 1),
+      if (look.hair >= 0) ('$d/hair_$k$hidden.png', look.hairColor, 1),
+      if (look.eyes >= 0) ('$d/eyes_$k.png', look.eyeColor, 0.8),
+      if (helm != null) (helm, null, 1),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final w = height * aspect;
     final layers = Stack(
       fit: StackFit.expand,
       children: [
-        layer('body'),
-        // Sotto l'armatura i vestiti restano del colore originale: dalle
-        // fessure si vede la tela chiara, non una macchia di colore.
-        if (look.shirt >= 0 && armor(ArmorSlot.chest) == null)
-          layer('shirt', tint: look.shirtColor),
-        if (look.pants >= 0 && armor(ArmorSlot.legs) == null) layer('pants', tint: look.pantsColor),
-        for (final slot in [ArmorSlot.legs, ArmorSlot.boots, ArmorSlot.chest, ArmorSlot.gloves])
-          if (armor(slot) case final a?) layer(a),
-        layer('head_$k$hidden'),
-        if (look.hair >= 0) layer('hair_$k$hidden', tint: look.hairColor),
-        if (look.eyes >= 0) layer('eyes_$k', tint: look.eyeColor, opacity: 0.8),
-        if (helm != null) layer(helm),
+        for (final (path, tint, opacity) in layersOf(look, worn))
+          Image.asset(
+            path,
+            fit: BoxFit.contain,
+            gaplessPlayback: true,
+            color: tint == null ? null : Color(tint).withValues(alpha: opacity),
+            colorBlendMode: tint == null ? null : BlendMode.modulate,
+          ),
       ],
     );
     return LayoutBuilder(
