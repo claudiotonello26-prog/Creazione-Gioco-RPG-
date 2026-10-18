@@ -59,7 +59,33 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                   ),
                 ),
                 if (drawn) ...[
-                  _Styles(look: _look, onPick: (i) => _set(() => _look.style = i)),
+                  _Thumbs(
+                    label: tr('Viso'),
+                    choices: [
+                      for (var i = 0; i < Appearance.drawnFaces; i++) (i, '${tr('Viso')} ${i + 1}'),
+                    ],
+                    selected: _look.styleIndex,
+                    thumb: (i) => 'thumb_$i',
+                    look: _look,
+                    onPick: (i) => _set(() => _look.style = i),
+                  ),
+                  _Thumbs(
+                    label: tr('Capelli'),
+                    choices: [for (final (id, name) in _look.hairChoices) (id, tr(name))],
+                    selected: _look.hairId,
+                    thumb: (id) => id < 0 ? 'thumb_0' : 'thumbh_$id',
+                    look: _look,
+                    onPick: (id) => _set(() => _look.hairStyle = id),
+                  ),
+                  if (!_look.female)
+                    _Thumbs(
+                      label: tr('Barba'),
+                      choices: [for (final (id, name) in Appearance.beards) (id, tr(name))],
+                      selected: _look.beardId,
+                      thumb: (id) => id < 0 ? 'thumb_0' : 'thumbb_$id',
+                      look: _look,
+                      onPick: (id) => _set(() => _look.beardStyle = id),
+                    ),
                   _Swatches(
                     label: tr('Capelli'),
                     colors: Appearance.hairColors,
@@ -152,16 +178,27 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
   }
 }
 
-/// Le teste disegnate: viso, capelli e barba, una miniatura per ciascuna.
-class _Styles extends StatelessWidget {
-  const _Styles({required this.look, required this.onPick});
+/// Una scelta disegnata (viso, capelli o barba) con una miniatura per voce.
+class _Thumbs extends StatelessWidget {
+  const _Thumbs({
+    required this.label,
+    required this.choices,
+    required this.selected,
+    required this.thumb,
+    required this.look,
+    required this.onPick,
+  });
+  final String label;
+  final List<(int, String)> choices;
+  final int selected;
+  final String Function(int id) thumb;
   final Appearance look;
   final ValueChanged<int> onPick;
 
   @override
   Widget build(BuildContext context) {
-    final names = look.styleNames;
     final dir = HeroView.dir(look.female);
+    final current = choices.where((c) => c.$1 == selected).firstOrNull ?? choices.first;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(
@@ -169,11 +206,11 @@ class _Styles extends StatelessWidget {
         children: [
           Row(
             children: [
-              OneLine(tr('ASPETTO'), style: titleStyle(size: 12, spacing: 1.2)),
+              OneLine(label.toUpperCase(), style: titleStyle(size: 12, spacing: 1.2)),
               const SizedBox(width: 10),
               Expanded(
                 child: OneLine(
-                  tr(names[look.styleIndex]),
+                  current.$2,
                   style: const TextStyle(color: Palette.ash, fontSize: 13),
                 ),
               ),
@@ -184,12 +221,13 @@ class _Styles extends StatelessWidget {
             height: 76,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: names.length,
+              itemCount: choices.length,
               separatorBuilder: (_, _) => const SizedBox(width: 8),
               itemBuilder: (context, i) {
-                final on = i == look.styleIndex;
+                final id = choices[i].$1;
+                final on = id == current.$1;
                 return GestureDetector(
-                  onTap: () => onPick(i),
+                  onTap: () => onPick(id),
                   child: Container(
                     width: 72,
                     decoration: BoxDecoration(
@@ -202,7 +240,7 @@ class _Styles extends StatelessWidget {
                     ),
                     clipBehavior: Clip.antiAlias,
                     child: Image.asset(
-                      '$dir/thumb_$i.png',
+                      '$dir/${thumb(id)}.png',
                       fit: BoxFit.cover,
                       gaplessPlayback: true,
                     ),

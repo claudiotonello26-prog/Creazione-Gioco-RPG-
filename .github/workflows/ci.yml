@@ -116,7 +116,9 @@ jobs:
   # "apk-latest" ricreata a ogni build che supera la prova sugli emulatori.
   publish-apk:
     needs: android-smoke
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    # Il ramo della grafica del personaggio non pubblica: l'APK di prova esce
+    # dal ramo delle traduzioni, che lo contiene già, così resta in inglese.
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository) && github.head_ref != 'claude/project-thread-u1igq7'
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -48,7 +48,7 @@ void main() {
 
   test('le teste disegnate hanno il nome inglese', () {
     final missing = [
-      for (final n in [...Appearance.femaleStyles, ...Appearance.maleStyles])
+      for (final (_, n) in [...Appearance.femaleHair, ...Appearance.maleHair, ...Appearance.beards])
         if (!enStrings.containsKey(n)) n,
     ];
     expect(missing, isEmpty, reason: missing.join('\n'));
