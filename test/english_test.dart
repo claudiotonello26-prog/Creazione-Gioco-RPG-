@@ -5,6 +5,7 @@ import 'package:iron_oath/data/game_state.dart';
 import 'package:iron_oath/domain/exercise.dart';
 import 'package:iron_oath/domain/routine.dart';
 import 'package:iron_oath/main.dart';
+import 'package:iron_oath/ui/screens/settings_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Parole che in un testo inglese non dovrebbero comparire.
@@ -51,5 +52,31 @@ void main() {
     state.setLangPref(LangPref.it);
     await tester.pumpAndSettle();
     expect(find.text('ARMERIA'), findsOneWidget);
+  });
+
+  testWidgets('dalle impostazioni si passa a English e la Home cambia', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final state = GameState();
+    await state.load();
+    state.acceptHealth();
+    state.completeTest({
+      for (final id in baseExercises) id: const TestResult(reps: 10, variantLevel: 0),
+    });
+    state.trainerEnabled = false;
+    await tester.pumpWidget(IronOathApp(state: state));
+    await tester.pumpAndSettle();
+    expect(find.text('Raccolta'), findsWidgets);
+    final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
+    nav.push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
+    await tester.pumpAndSettle();
+    expect(find.text('Lingua'), findsOneWidget);
+    await tester.tap(find.text('ENGLISH'));
+    await tester.pumpAndSettle();
+    expect(find.text('Language'), findsOneWidget);
+    expect(state.langPref, LangPref.en);
+    nav.pop();
+    await tester.pumpAndSettle();
+    expect(find.text('Gathering'), findsWidgets);
+    expect(find.text('Raccolta'), findsNothing);
   });
 }
