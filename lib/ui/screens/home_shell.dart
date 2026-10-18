@@ -72,7 +72,6 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     if (_lastPoints >= 0 && points > _lastPoints) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        Sound.play(Sfx.levelUp);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(points == 1

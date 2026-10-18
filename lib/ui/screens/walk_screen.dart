@@ -362,7 +362,6 @@ class _GatherScreenState extends State<GatherScreen> {
     }
     final after = s.skillLevel(_r.skill);
     Sound.play(_r.skill == Skill.mining ? Sfx.gatherOre : Sfx.gatherWood);
-    if (after > before) Sound.play(Sfx.skillUp);
     setState(() => _popup = (_r.id, units, after > before ? after : 0));
     await Future<void>.delayed(const Duration(milliseconds: 2200));
     if (mounted) setState(() => _popup = null);

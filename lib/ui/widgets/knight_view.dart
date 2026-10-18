@@ -1222,13 +1222,14 @@ class TrainerFigure extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Antigravity fa solo due pose: braccia conserte e buffa. Le altre
-    // ripiegano su quella più vicina.
-    final drawn = switch (pose) {
+    // Ogni posa ha la sua illustrazione (trainer_<posa>.png); se manca si
+    // usa la più vicina fra quelle già disegnate, poi il disegno vettoriale.
+    final nearest = switch (pose) {
       TrainerPose.goofy || TrainerPose.facepalm => 'goofy',
       _ => 'crossed',
     };
-    final art = 'assets/art/trainer/trainer_$drawn.png';
+    final exact = 'assets/art/trainer/trainer_${pose.name}.png';
+    final art = Art.has(exact) ? exact : 'assets/art/trainer/trainer_$nearest.png';
     return SizedBox(
       width: height * 0.8,
       height: height,

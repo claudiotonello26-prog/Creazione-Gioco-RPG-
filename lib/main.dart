@@ -8,6 +8,7 @@ import 'core/art.dart';
 import 'core/i18n.dart';
 import 'core/theme.dart';
 import 'data/game_state.dart';
+import 'ui/widgets/celebration.dart';
 import 'ui/screens/home_shell.dart';
 import 'ui/screens/intro_screen.dart';
 import 'ui/screens/onboarding.dart';
@@ -77,9 +78,13 @@ class _IronOathAppState extends State<IronOathApp> {
         // Niente sotto la barra di navigazione di Android (Android 15+ disegna
         // l'app a tutto schermo): tutte le pagine, i fogli e i dialoghi
         // stanno sopra.
+        // Sopra a tutto, le feste per livello, abilità e attributi.
         builder: (context, child) => _intro
             ? child!
-            : SoulsBackground(child: SafeArea(top: false, child: child!)),
+            : CelebrationLayer(
+                state: state,
+                child: SoulsBackground(child: SafeArea(top: false, child: child!)),
+              ),
         home: _intro
             ? IntroScreen(onDone: () => setState(() => _intro = false))
             : Consumer<GameState>(

@@ -77,6 +77,10 @@ flutter:
     - assets/art/items/
     - assets/art/backgrounds/
     - assets/art/nav/
+    # Emblemi delle feste: level_up.png, skill_up.png, stat_up.png.
+    - assets/art/celebrations/
+    # Il Comandante Reynard: trainer_<posa>.png (crossed, pointing, thinking, ...).
+    - assets/art/trainer/
     # Il personaggio a livelli (Gemini): corpo, teste, capelli, occhi, vestiti.
     - assets/art/hero/f/
     - assets/art/hero/m/

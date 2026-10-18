@@ -271,4 +271,10 @@ const Map<String, String> enUiC = {
   'Combatti subito': 'Fight now',
   'Scegli l\'esercizio': 'Choose the exercise',
   'Si combatte con': 'Fought with',
+  'LIVELLO {n}': 'LEVEL {n}',
+  '+1 punto attributo da spendere': '+1 attribute point to spend',
+  '+{n} punti attributo da spendere': '+{n} attribute points to spend',
+  'Guarda nella Guida cosa sblocca questo livello': 'Check the Guide to see what this level unlocks',
+  'SEI SALITO DI LIVELLO': 'LEVEL UP',
+  'MIGLIORATO': 'IMPROVED',
 };
