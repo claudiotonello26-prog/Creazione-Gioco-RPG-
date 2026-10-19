@@ -295,4 +295,25 @@ const Map<String, String> enUiC = {
   'Facile': 'Easy',
   'Impegnativo': 'Tough',
   'Difficile': 'Hard',
+  '+{xp} XP per ogni {res} · {per} passi l\'una': '+{xp} XP per {res} · {per} steps each',
+  '+{xp} XP {skill}': '+{xp} {skill} XP',
+  'Cammina: ogni passo riempie la barra. Puoi tenere il telefono in tasca.':
+      'Walk: every step fills the bar. You can keep the phone in your pocket.',
+  'Collega i passi nella Raccolta per raccogliere camminando.':
+      'Connect your steps in Gathering to gather while walking.',
+  'FERMA': 'STOP',
+  'INIZIA A MINARE': 'START MINING',
+  'INIZIA A RACCOGLIERE': 'START GATHERING',
+  'INIZIA A TAGLIARE': 'START CHOPPING',
+  'In questa uscita: {s} passi · {n} × {res}': 'This walk: {s} steps · {n} × {res}',
+  'MINA': 'MINE',
+  'Passi da spendere: {n}': 'Steps to spend: {n}',
+  'Premi e cammina: i passi nuovi vanno tutti qui e la barra si riempie mentre cammini.':
+      'Tap and walk: your new steps all go here and the bar fills as you walk.',
+  'RACCOGLI': 'GATHER',
+  'Raccogli camminando': 'Gather while walking',
+  'TAGLIA': 'CHOP',
+  'Ti servono ancora {n} passi per la prossima unità.': 'You need {n} more steps for the next one.',
+  'Usa i passi già fatti': 'Use the steps you already walked',
+  '{n} × {res} = {s} passi · +{xp} XP': '{n} × {res} = {s} steps · +{xp} XP',
 };

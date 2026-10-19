@@ -956,32 +956,49 @@ class GameState extends ChangeNotifier {
     return runes;
   }
 
-  /// I passi nuovi di oggi vanno nella raccolta scelta: ogni [Resource.stepsPerUnit]
-  /// passi un'unità, il resto aspetta il prossimo giro. Ritorna (unità, livelli
-  /// di mestiere guadagnati).
-  (int, int) claimSteps(int stepsToday) {
+  /// Quanti passi servono per un'unità di [r], con l'attrezzo migliore.
+  int stepsPerUnit(Resource r) => (r.stepsPerUnit / (1 + gatherBonus(r.skill))).round();
+
+  /// I passi nuovi di oggi finiscono nella riserva, da spendere dove si
+  /// vuole. Ritorna quanti ne sono entrati.
+  int collectSteps(int stepsToday) {
     _rollDay();
     final capped = min(stepsToday, dailyStepCap);
-    if (capped <= daily.claimedSteps) return (0, 0);
-    stepBank += capped - daily.claimedSteps;
+    if (capped <= daily.claimedSteps) return 0;
+    final fresh = capped - daily.claimedSteps;
+    stepBank += fresh;
     daily.claimedSteps = capped;
-    var r = resourceById(gatherTarget);
-    if (!canGather(r)) {
-      r = resourceById('ash_wood');
-      gatherTarget = r.id;
+    _changed();
+    return fresh;
+  }
+
+  /// Spende fino a [steps] passi della riserva su [resourceId]: solo unità
+  /// intere, il resto resta in riserva. Ritorna (unità, livelli guadagnati).
+  (int, int) spendSteps(String resourceId, int steps) {
+    var r = resourceById(resourceId);
+    if (!canGather(r)) return (0, 0);
+    gatherTarget = r.id;
+    final per = stepsPerUnit(r);
+    final units = min(steps, stepBank) ~/ per;
+    if (units <= 0) {
+      _changed();
+      return (0, 0);
     }
-    // L'attrezzo migliore fa rendere di più gli stessi passi.
-    final per = (r.stepsPerUnit / (1 + gatherBonus(r.skill))).round();
-    final units = stepBank ~/ per;
-    stepBank %= per;
-    var levels = 0;
-    if (units > 0) {
-      character.addMaterial(r.id, units);
-      _count('gather:${r.id}', units);
-      levels = _gainSkill(r.skill, units * r.xp);
-    }
+    stepBank -= units * per;
+    character.addMaterial(r.id, units);
+    _count('gather:${r.id}', units);
+    final levels = _gainSkill(r.skill, units * r.xp);
     _changed();
     return (units, levels);
+  }
+
+  /// I passi nuovi di oggi vanno tutti nella raccolta scelta: ogni
+  /// [Resource.stepsPerUnit] passi un'unità, il resto aspetta il prossimo giro.
+  /// Ritorna (unità, livelli di mestiere guadagnati).
+  (int, int) claimSteps(int stepsToday) {
+    collectSteps(stepsToday);
+    if (!canGather(resourceById(gatherTarget))) gatherTarget = 'ash_wood';
+    return spendSteps(gatherTarget, stepBank);
   }
 
   void recordHuntWave(int wave) {

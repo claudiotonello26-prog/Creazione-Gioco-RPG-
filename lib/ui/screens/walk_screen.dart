@@ -13,6 +13,7 @@ import '../../data/game_state.dart';
 import '../../domain/items.dart';
 import '../../domain/skills.dart';
 import '../../domain/walking.dart';
+import '../../health/live_steps.dart';
 import '../../health/step_source.dart';
 import '../widgets/common.dart';
 import '../widgets/trainer.dart';
@@ -315,8 +316,22 @@ class _RingPainter extends CustomPainter {
   bool shouldRepaint(_RingPainter old) => old.progress != progress;
 }
 
-/// Una risorsa: i passi di oggi si spendono qui. La barra si carica e ogni
-/// [Resource.stepsPerUnit] passi esce un'unità, che compare al centro.
+/// «MINA», «TAGLIA» o «RACCOGLI», secondo il mestiere.
+String gatherVerb(Skill k) => switch (k) {
+      Skill.mining => tr('MINA'),
+      Skill.woodcutting => tr('TAGLIA'),
+      _ => tr('RACCOGLI'),
+    };
+
+String _liveVerb(Skill k) => switch (k) {
+      Skill.mining => tr('INIZIA A MINARE'),
+      Skill.woodcutting => tr('INIZIA A TAGLIARE'),
+      _ => tr('INIZIA A RACCOGLIERE'),
+    };
+
+/// Una risorsa. Due modi di raccoglierla: spendere quanti passi vuoi tra
+/// quelli già fatti, oppure premere il pulsante e camminare: i passi nuovi
+/// riempiono la barra dal vivo e a ogni soglia esce un'unità.
 class GatherScreen extends StatefulWidget {
   const GatherScreen({super.key, required this.resource, this.stepsToday});
   final Resource resource;
@@ -329,55 +344,135 @@ class GatherScreen extends StatefulWidget {
 }
 
 class _GatherScreenState extends State<GatherScreen> {
-  int? _steps;
+  bool _known = false;
 
-  /// Cosa mostrare in sovraimpressione: (oggetto, quantità, abilità salita).
-  (String, int, int)? _popup;
+  /// Quante unità spendere dalla riserva.
+  int _units = 1;
+
+  LiveSteps? _live;
+  bool _starting = false;
+
+  /// Passi della raccolta dal vivo non ancora diventati un'unità.
+  int _charge = 0;
+  int _sessionSteps = 0;
+  int _sessionUnits = 0;
+
+  _Gain? _popup;
+  int _popupId = 0;
 
   Resource get _r => widget.resource;
 
   @override
   void initState() {
     super.initState();
-    _steps = widget.stepsToday;
-    if (_steps == null) _read();
+    final steps = widget.stepsToday;
+    if (steps != null) {
+      _known = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.read<GameState>().collectSteps(steps);
+      });
+    } else {
+      _read();
+    }
+  }
+
+  @override
+  void dispose() {
+    _live?.stop();
+    super.dispose();
   }
 
   Future<void> _read() async {
     final src = StepSource();
     if (await src.access() != StepAccess.ready) return;
     final steps = await src.stepsToday();
-    if (mounted) setState(() => _steps = steps);
+    if (!mounted || steps == null) return;
+    context.read<GameState>().collectSteps(steps);
+    setState(() => _known = true);
   }
 
-  Future<void> _spend(GameState s) async {
-    final steps = _steps;
-    if (steps == null) return;
-    s.setGatherTarget(_r.id);
-    final before = s.skillLevel(_r.skill);
-    final (units, _) = s.claimSteps(steps);
-    if (units == 0) {
-      toast(context, tr('La barra si carica: servono {n} passi per {res}.', {'n': _r.stepsPerUnit, 'res': _r.name}));
+  /// Fa l'unità, mostra in sovraimpressione oggetto, XP e livello.
+  void _gain(GameState s, int steps) {
+    final (lvlBefore, xpInBefore, xpNeedBefore) = s.skillProgressOf(_r.skill);
+    final (units, _) = s.spendSteps(_r.id, steps);
+    if (units == 0) return;
+    final (lvl, xpIn, xpNeed) = s.skillProgressOf(_r.skill);
+    Sound.play(_r.skill == Skill.mining ? Sfx.gatherOre : Sfx.gatherWood);
+    final id = ++_popupId;
+    setState(() {
+      _units = 1;
+      _popup = _Gain(
+        id: _r.id,
+        units: units,
+        xp: units * _r.xp,
+        level: lvl,
+        leveledUp: lvl > lvlBefore,
+        from: lvl > lvlBefore ? 0 : xpInBefore / xpNeedBefore,
+        to: xpIn / xpNeed,
+      );
+    });
+    Future<void>.delayed(const Duration(milliseconds: 2000), () {
+      if (mounted && _popupId == id) setState(() => _popup = null);
+    });
+  }
+
+  Future<void> _toggleLive() async {
+    if (_live != null) {
+      _live!.stop();
+      setState(() => _live = null);
       return;
     }
-    final after = s.skillLevel(_r.skill);
-    Sound.play(_r.skill == Skill.mining ? Sfx.gatherOre : Sfx.gatherWood);
-    setState(() => _popup = (_r.id, units, after > before ? after : 0));
-    await Future<void>.delayed(const Duration(milliseconds: 2200));
-    if (mounted) setState(() => _popup = null);
+    setState(() => _starting = true);
+    final s = context.read<GameState>();
+    var first = true;
+    final live = LiveSteps((today) {
+      if (!mounted) return;
+      final fresh = s.collectSteps(today);
+      // La prima lettura porta solo i passi già fatti: vanno in riserva.
+      if (first) {
+        first = false;
+        return;
+      }
+      if (fresh <= 0) return;
+      _sessionSteps += fresh;
+      _charge += fresh;
+      final per = s.stepsPerUnit(_r);
+      if (_charge >= per) {
+        final full = _charge ~/ per * per;
+        _charge -= full;
+        _sessionUnits += full ~/ per;
+        _gain(s, full);
+      } else {
+        setState(() {});
+      }
+    });
+    final ok = await live.start();
+    if (!mounted) {
+      live.stop();
+      return;
+    }
+    setState(() {
+      _starting = false;
+      if (ok) {
+        _live = live;
+        _charge = 0;
+        _sessionSteps = 0;
+        _sessionUnits = 0;
+      }
+    });
+    if (!ok) toast(context, tr('Collega i passi nella Raccolta per raccogliere camminando.'));
   }
 
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    final per = (_r.stepsPerUnit / (1 + s.gatherBonus(_r.skill))).round();
-    final fresh = _steps == null
-        ? 0
-        : (min(_steps!, dailyStepCap) - s.daily.claimedSteps).clamp(0, dailyStepCap);
-    final available = fresh + s.stepBank;
-    final charge = (available % per) / per;
-    final ready = available ~/ per;
+    final per = s.stepsPerUnit(_r);
+    final bank = s.stepBank;
+    final ready = bank ~/ per;
+    final units = min(max(_units, 1), max(1, ready));
     final (lvl, xpIn, xpNeed) = s.skillProgressOf(_r.skill);
+    final live = _live != null;
+    final verb = gatherVerb(_r.skill);
     return Scaffold(
       appBar: OathBar(title: Text(tr('Gathering').toUpperCase()), accent: Sections.gathering),
       body: Stack(
@@ -385,57 +480,143 @@ class _GatherScreenState extends State<GatherScreen> {
           ListView(
             padding: const EdgeInsets.all(20),
             children: [
-              Center(child: ItemIcon(_r.id, size: 120)),
-              const SizedBox(height: 8),
+              Center(child: ItemIcon(_r.id, size: 110)),
+              const SizedBox(height: 6),
               OneLine(_r.name, align: Alignment.center, style: titleStyle(size: 20)),
               Text(
                 tr('{where} · hai {n}', {'where': _r.where, 'n': s.character.materials[_r.id] ?? 0}),
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Palette.ash),
               ),
-              SectionTitle(tr('Carica')),
-              StatBar(
-                value: charge,
-                color: Palette.goldBright,
-                height: 16,
-                label: tr('{a} / {b} passi', {'a': available % per, 'b': per}),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                _steps == null
-                    ? tr('Collega i passi nella Raccolta per spenderli qui.')
-                    : '${tr('Passi da spendere: {a} · ogni {per} passi un\'unità', {'a': available, 'per': per})}'
-                        '${ready > 0 ? tr(' · pronte {n}', {'n': ready}) : ''}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Palette.ash),
-              ),
-              const SizedBox(height: 14),
-              FilledButton.icon(
-                onPressed: available > 0 && _steps != null ? () => _spend(s) : null,
-                icon: const Icon(Icons.directions_walk),
-                label: Text(ready > 0 ? tr('CONSUMA I PASSI · {n}', {'n': ready}) : tr('CONSUMA I PASSI')),
-              ),
               SectionTitle(
                 _r.skill.label,
-                trailing: Text(tr('Livello {n}', {'n': lvl}), style: const TextStyle(color: Palette.goldBright)),
+                trailing: Text(tr('Livello {n}', {'n': lvl}),
+                    style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold)),
               ),
-              StatBar(
-                value: xpIn / xpNeed,
-                color: Palette.gold,
-                height: 10,
-                label: '$xpIn / $xpNeed XP',
-              ),
-              const SizedBox(height: 6),
+              StatBar(value: xpIn / xpNeed, color: Palette.gold, height: 12, label: '$xpIn / $xpNeed XP'),
+              const SizedBox(height: 4),
               Text(
-                tr('+{xp} XP per ogni {res}', {'xp': _r.xp, 'res': _r.name.toLowerCase()}),
+                tr('+{xp} XP per ogni {res} · {per} passi l\'una',
+                    {'xp': _r.xp, 'res': _r.name.toLowerCase(), 'per': per}),
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Palette.ash, fontSize: 13),
+              ),
+
+              // 1. Dal vivo: premi e cammina.
+              SectionTitle(tr('Raccogli camminando')),
+              _Panel(
+                active: live,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      live
+                          ? tr('Cammina: ogni passo riempie la barra. Puoi tenere il telefono in tasca.')
+                          : tr('Premi e cammina: i passi nuovi vanno tutti qui e la barra si riempie mentre cammini.'),
+                      style: const TextStyle(color: Palette.holy, fontSize: 14),
+                    ),
+                    if (live) ...[
+                      const SizedBox(height: 12),
+                      StatBar(
+                        value: _charge / per,
+                        color: Sections.gathering,
+                        height: 22,
+                        label: tr('{a} / {b} passi', {'a': _charge, 'b': per}),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        tr('In questa uscita: {s} passi · {n} × {res}',
+                            {'s': _sessionSteps, 'n': _sessionUnits, 'res': _r.name}),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                    const SizedBox(height: 12),
+                    live
+                        ? OutlinedButton.icon(
+                            onPressed: _toggleLive,
+                            icon: const Icon(Icons.stop_circle_outlined),
+                            label: Text(tr('FERMA')),
+                          )
+                        : FilledButton.icon(
+                            style: FilledButton.styleFrom(backgroundColor: Sections.gathering),
+                            onPressed: _starting ? null : _toggleLive,
+                            icon: const Icon(Icons.directions_walk),
+                            label: Text(_liveVerb(_r.skill)),
+                          ),
+                  ],
+                ),
+              ),
+
+              // 2. Con i passi già fatti: scegli quanti.
+              SectionTitle(tr('Usa i passi già fatti')),
+              _Panel(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.directions_walk, color: Palette.gold),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            tr('Passi da spendere: {n}', {'n': bank}),
+                            style: titleStyle(size: 15, color: Palette.holy),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    if (!_known && bank == 0)
+                      Text(tr('Collega i passi nella Raccolta per spenderli qui.'),
+                          style: const TextStyle(color: Palette.ash))
+                    else if (ready == 0)
+                      Text(
+                        tr('Ti servono ancora {n} passi per la prossima unità.',
+                            {'n': per - bank % per}),
+                        style: const TextStyle(color: Palette.ash),
+                      )
+                    else ...[
+                      if (ready > 1)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Slider(
+                                value: units.toDouble(),
+                                min: 1,
+                                max: ready.toDouble(),
+                                divisions: ready - 1,
+                                label: '$units',
+                                onChanged: (v) => setState(() => _units = v.round()),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => setState(() => _units = ready),
+                              child: Text(tr('TUTTI')),
+                            ),
+                          ],
+                        ),
+                      Text(
+                        tr('{n} × {res} = {s} passi · +{xp} XP',
+                            {'n': units, 'res': _r.name, 's': units * per, 'xp': units * _r.xp}),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Palette.goldBright, fontSize: 15),
+                      ),
+                      const SizedBox(height: 10),
+                      FilledButton.icon(
+                        onPressed: () => _gain(s, units * per),
+                        icon: Icon(_r.skill == Skill.mining ? Icons.hardware : Icons.forest),
+                        label: Text('$verb $units × ${_r.name.toUpperCase()}'),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ],
           ),
           if (_popup != null)
             Positioned.fill(
-              child: _GatherPopup(popup: _popup!, skill: _r.skill),
+              child: _GatherPopup(key: ValueKey(_popupId), gain: _popup!, skill: _r.skill),
             ),
         ],
       ),
@@ -443,74 +624,124 @@ class _GatherScreenState extends State<GatherScreen> {
   }
 }
 
-/// Sovraimpressione al centro: l'oggetto raccolto e, se è salita, l'abilità.
+class _Panel extends StatelessWidget {
+  const _Panel({required this.child, this.active = false});
+  final Widget child;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Palette.stoneLight,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: active ? Sections.gathering : Palette.iron,
+            width: active ? 2 : 1,
+          ),
+        ),
+        child: child,
+      );
+}
+
+/// Cosa è appena uscito: per la sovraimpressione.
+class _Gain {
+  const _Gain({
+    required this.id,
+    required this.units,
+    required this.xp,
+    required this.level,
+    required this.leveledUp,
+    required this.from,
+    required this.to,
+  });
+  final String id;
+  final int units;
+  final int xp;
+  final int level;
+  final bool leveledUp;
+
+  /// Riempimento della barra XP prima e dopo.
+  final double from;
+  final double to;
+}
+
+/// Sovraimpressione al centro: l'oggetto raccolto, gli XP guadagnati e la
+/// barra del mestiere che sale.
 class _GatherPopup extends StatelessWidget {
-  const _GatherPopup({required this.popup, required this.skill});
-  final (String, int, int) popup;
+  const _GatherPopup({super.key, required this.gain, required this.skill});
+  final _Gain gain;
   final Skill skill;
 
   @override
   Widget build(BuildContext context) {
-    final (id, n, level) = popup;
+    final g = gain;
     return IgnorePointer(
       child: TweenAnimationBuilder<double>(
         tween: Tween(begin: 0, end: 1),
-        duration: const Duration(milliseconds: 450),
-        curve: Curves.easeOutBack,
-        builder: (_, t, child) => Opacity(
-          opacity: t.clamp(0, 1),
-          child: Transform.scale(scale: 0.6 + 0.4 * t, child: child),
-        ),
-        child: Container(
-          color: Colors.black.withValues(alpha: 0.92),
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 150,
-                height: 150,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      Palette.gold.withValues(alpha: 0.35),
-                      Palette.gold.withValues(alpha: 0),
-                    ],
-                  ),
+        duration: const Duration(milliseconds: 900),
+        builder: (_, t, _) {
+          final pop = Curves.easeOutBack.transform((t / 0.5).clamp(0.0, 1.0));
+          final fill = Curves.easeOut.transform(((t - 0.3) / 0.7).clamp(0.0, 1.0));
+          return Opacity(
+            opacity: (t / 0.25).clamp(0.0, 1.0),
+            child: Container(
+              color: Colors.black.withValues(alpha: 0.85),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 36),
+              child: Transform.scale(
+                scale: 0.6 + 0.4 * pop,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 150,
+                      height: 150,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [Palette.gold.withValues(alpha: 0.35), Palette.gold.withValues(alpha: 0)],
+                        ),
+                      ),
+                      child: ItemIcon(g.id, size: 110),
+                    ),
+                    OneLine(
+                      '+${g.units} ${itemName(g.id)}',
+                      align: Alignment.center,
+                      style: titleStyle(size: 24, color: Palette.holy),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      tr('+{xp} XP {skill}', {'xp': g.xp, 'skill': skill.label}),
+                      style: titleStyle(size: 18, color: Sections.gathering),
+                    ),
+                    const SizedBox(height: 14),
+                    Row(
+                      children: [
+                        Text(
+                          tr('Livello {n}', {'n': g.level}),
+                          style: titleStyle(
+                            size: 15,
+                            color: g.leveledUp ? Palette.goldBright : Palette.holy,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: StatBar(
+                            value: g.from + (g.to - g.from) * fill,
+                            color: Palette.goldBright,
+                            height: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                child: ItemIcon(id, size: 110),
               ),
-              const SizedBox(height: 8),
-              OneLine(
-                '+$n ${itemName(id)}',
-                align: Alignment.center,
-                style: titleStyle(size: 22, color: Palette.holy),
-              ),
-              if (level > 0) ...[
-                const SizedBox(height: 18),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Palette.night,
-                    border: Border.all(color: Palette.goldBright, width: 2),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(color: Palette.goldBright.withValues(alpha: 0.5), blurRadius: 20),
-                    ],
-                  ),
-                  child: OneLine(
-                    tr('{skill} · LIVELLO {n}', {'skill': skill.label.toUpperCase(), 'n': level}),
-                    align: Alignment.center,
-                    style: titleStyle(size: 18, color: Palette.goldBright),
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

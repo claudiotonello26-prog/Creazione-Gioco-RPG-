@@ -43,6 +43,8 @@ dependencies:
   web_socket_channel: ^3.0.3
   health: ^13.3.2
   audioplayers: ^6.8.1
+  pedometer: ^4.2.0
+  permission_handler: ^13.0.2
 
 dev_dependencies:
   flutter_test:

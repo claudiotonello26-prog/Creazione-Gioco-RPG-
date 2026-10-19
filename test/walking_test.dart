@@ -23,6 +23,22 @@ void main() {
     expect(s.claimSteps(1040).$1, 1);
   });
 
+  test('i passi si mettono da parte e si spendono quanti se ne vuole', () {
+    expect(s.collectSteps(1000), 1000);
+    expect(s.collectSteps(1000), 0, reason: 'gli stessi passi non contano due volte');
+    expect(s.stepBank, 1000);
+    // 3 ciocchi da 40 passi: restano 880 passi in riserva.
+    expect(s.spendSteps('ash_wood', 120).$1, 3);
+    expect(s.stepBank, 880);
+    // Solo unità intere: 50 passi fanno un ciocco, gli altri 10 restano.
+    expect(s.spendSteps('ash_wood', 50).$1, 1);
+    expect(s.stepBank, 840);
+    // Non si spende più di quel che si ha.
+    expect(s.spendSteps('ash_wood', 99999).$1, 21);
+    expect(s.stepBank, 0);
+    expect(s.character.materials['ash_wood'], 25);
+  });
+
   test('il tetto giornaliero vale anche a rate', () {
     s.setGatherTarget('coal');
     s.claimSteps(dailyStepCap);
