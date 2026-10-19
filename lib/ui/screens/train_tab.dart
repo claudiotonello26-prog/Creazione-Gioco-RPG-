@@ -80,7 +80,7 @@ class TrainTab extends StatelessWidget {
         ActionTile(
           icon: Icons.menu_book,
           title: tr('Tutti i nemici ({n})', {'n': bestiary.length}),
-          subtitle: tr('Animali, mostri e boss, dal più debole al più forte'),
+          subtitle: tr('Filtra per esercizio, difficoltà e zona'),
           color: Palette.goldBright,
           onTap: () =>
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BestiaryScreen())),
@@ -120,14 +120,13 @@ class _QuickFights extends StatelessWidget {
       children: [
         SectionTitle(tr('Combatti subito')),
         SizedBox(
-          height: 222,
+          height: 228,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: foes.length,
             separatorBuilder: (_, _) => const SizedBox(width: 10),
             itemBuilder: (context, i) {
               final e = foes[i];
-              final under = playerLevel < e.level;
               return SizedBox(
                 width: 150,
                 child: Material(
@@ -142,14 +141,8 @@ class _QuickFights extends StatelessWidget {
                         OneLine(e.name,
                             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                             align: Alignment.center),
-                        Text(
-                          tr('Liv. {n}', {'n': e.level}),
-                          style: TextStyle(
-                            color: under ? Palette.ember : Palette.goldBright,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
+                        const SizedBox(height: 2),
+                        LevelBadge(e, playerLevel),
                       ],
                     ),
                   ),
@@ -309,8 +302,10 @@ class BestiaryScreen extends StatefulWidget {
 class _BestiaryScreenState extends State<BestiaryScreen> {
   /// null = tutti; 'animals' = solo animali; altrimenti un gruppo.
   Object? _filter;
+  ExerciseId? _exercise;
+  Difficulty? _difficulty;
 
-  bool _keep(EnemyDef e) => switch (_filter) {
+  bool _keepGroup(EnemyDef e) => switch (_filter) {
         null => true,
         'animals' => e.isAnimal,
         final MuscleGroup g => !e.isAnimal && e.group == g,
@@ -320,43 +315,82 @@ class _BestiaryScreenState extends State<BestiaryScreen> {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    final list = bestiary.where(_keep).toList();
-    Widget chip(String label, Object? value) => Padding(
+    final level = s.character.level;
+    final list = bestiary
+        .where((e) =>
+            _keepGroup(e) &&
+            (_exercise == null || e.exercises.contains(_exercise)) &&
+            (_difficulty == null || Difficulty.of(e, level) == _difficulty))
+        .toList();
+    // Gli esercizi che compaiono nei nemici, nell'ordine dell'elenco esercizi.
+    final used = {for (final e in bestiary) ...e.exercises};
+    final exerciseIds = [for (final id in ExerciseId.values) if (used.contains(id)) id];
+    Widget chip<T>(String label, T? value, T? current, void Function(T?) set, {Color? color}) =>
+        Padding(
           padding: const EdgeInsets.only(right: 6),
           child: ChoiceChip(
-            label: Text(label),
-            selected: _filter == value,
-            onSelected: (_) => setState(() => _filter = value),
+            label: Text(label, style: color == null ? null : TextStyle(color: color)),
+            selected: current == value,
+            onSelected: (_) => setState(() => set(value)),
+          ),
+        );
+    Widget bar(String title, List<Widget> chips) => Padding(
+          padding: const EdgeInsets.fromLTRB(12, 6, 0, 0),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 84,
+                child: Text(title,
+                    style: const TextStyle(color: Palette.ash, fontSize: 13)),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Row(children: chips),
+                ),
+              ),
+            ],
           ),
         );
     return Scaffold(
       appBar: OathBar(title: Text(tr('CACCIA'))),
       body: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-            child: Row(
-              children: [
-                chip(tr('Tutti'), null),
-                chip(tr('Animali'), 'animals'),
-                for (final g in worldGroups.where((g) => g != MuscleGroup.stretching))
-                  chip(g.label, g),
-              ],
-            ),
-          ),
+          bar(tr('Esercizio'), [
+            chip<ExerciseId>(tr('Tutti'), null, _exercise, (v) => _exercise = v),
+            for (final id in exerciseIds)
+              chip<ExerciseId>(exercises[id]!.name, id, _exercise, (v) => _exercise = v),
+          ]),
+          bar(tr('Difficoltà'), [
+            chip<Difficulty>(tr('Tutte'), null, _difficulty, (v) => _difficulty = v),
+            for (final d in Difficulty.values)
+              chip<Difficulty>(d.label, d, _difficulty, (v) => _difficulty = v, color: d.color),
+          ]),
+          bar(tr('Zona'), [
+            chip<Object>(tr('Tutte'), null, _filter, (v) => _filter = v),
+            chip<Object>(tr('Animali'), 'animals', _filter, (v) => _filter = v),
+            for (final g in worldGroups.where((g) => g != MuscleGroup.stretching))
+              chip<Object>(g.label, g, _filter, (v) => _filter = v),
+          ]),
+          const SizedBox(height: 4),
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-              children: [
-                for (final e in list)
-                  _FreeFightTile(
-                    enemy: e,
-                    playerLevel: s.character.level,
-                    icon: e.isAnimal ? Icons.pets : (e.isBoss ? Icons.castle : null),
+            child: list.isEmpty
+                ? Center(
+                    child: Text(tr('Nessun nemico con questi filtri'),
+                        style: const TextStyle(color: Palette.ash)),
+                  )
+                : ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                    children: [
+                      for (final e in list)
+                        _FreeFightTile(
+                          enemy: e,
+                          playerLevel: level,
+                          icon: e.isAnimal ? Icons.pets : (e.isBoss ? Icons.castle : null),
+                        ),
+                    ],
                   ),
-              ],
-            ),
           ),
         ],
       ),
@@ -365,7 +399,8 @@ class _BestiaryScreenState extends State<BestiaryScreen> {
 }
 
 /// Un nemico da combattere in libero, che rinasce finché non ti fermi:
-/// ritratto grande su fondo neutro, cosa serve per batterlo e un pulsante.
+/// ritratto grande su fondo neutro, l'esercizio per batterlo, il livello
+/// colorato per difficoltà e cosa lascia.
 class _FreeFightTile extends StatelessWidget {
   const _FreeFightTile({required this.enemy, required this.playerLevel, this.icon});
   final EnemyDef enemy;
@@ -374,8 +409,6 @@ class _FreeFightTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final under = playerLevel < enemy.level;
-    final levelColor = under ? Palette.ember : Palette.goldBright;
     void fight() => startFreeFight(context, enemy, respawn: true);
     return Card(
       child: InkWell(
@@ -390,50 +423,49 @@ class _FreeFightTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    OneLine(enemy.name, style: titleStyle(size: 16, spacing: 1)),
+                    const SizedBox(height: 4),
+                    LevelBadge(enemy, playerLevel),
+                    const SizedBox(height: 6),
                     Row(
                       children: [
-                        Expanded(
-                          child: OneLine(enemy.name, style: titleStyle(size: 16, spacing: 1)),
-                        ),
+                        const Icon(Icons.fitness_center, size: 18, color: Palette.goldBright),
                         const SizedBox(width: 6),
-                        Text(
-                          tr('Liv. {n}', {'n': enemy.level}),
-                          style: TextStyle(
-                            color: levelColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                        Expanded(
+                          child: Text(
+                            enemy.moves.map((m) => m.name).join(tr(' o ')),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Palette.holy,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      tr('Si batte con: {moves}',
-                          {'moves': enemy.moves.map((m) => m.name).join(tr(' o '))}),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Palette.holy, fontSize: 14),
-                    ),
-                    Text(
-                      tr('Lascia: {loot}', {
-                        'loot': enemy.loot.keys.map((k) => materialNames[k] ?? k).join(', '),
-                      }),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Palette.ash, fontSize: 13),
-                    ),
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        if (under)
-                          Expanded(
-                            child: Text(
-                              tr('Più forte di te'),
-                              style: const TextStyle(color: Palette.ember, fontSize: 13),
-                            ),
-                          )
-                        else
-                          const Spacer(),
+                        Expanded(
+                          child: Wrap(
+                            spacing: 2,
+                            runSpacing: 2,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              for (final k in enemy.loot.keys)
+                                Tooltip(message: itemName(k), child: ItemIcon(k, size: 26)),
+                              if (enemy.rareDrop != null)
+                                Tooltip(
+                                  message:
+                                      tr('Raro: {name}', {'name': itemName(enemy.rareDrop!)}),
+                                  child: const Icon(Icons.star, color: _rareColor, size: 20),
+                                ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 6),
                         SizedBox(
                           height: 40,
                           child: FilledButton(
@@ -460,6 +492,102 @@ class _FreeFightTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+const _commonColor = Palette.holy;
+const _uncommonColor = Color(0xFF6FB7E8);
+const _rareColor = Color(0xFFC58BEA);
+
+/// Le ricompense di un nemico divise per rarità, con l'icona di ogni cosa:
+/// si capisce subito chi attaccare per avere quello che manca.
+class _EnemyRewards extends StatelessWidget {
+  const _EnemyRewards(this.enemy);
+  final EnemyDef enemy;
+
+  String _pct(double p) {
+    final v = p * 100;
+    return '${v < 10 && v != v.roundToDouble() ? v.toStringAsFixed(1) : v.round()}%';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final special = enemy.rareDrop;
+    final uncommon = CombatEngine.uncommonDrops;
+    final rare = [for (final r in CombatEngine.rareDrops) if (r != special) r];
+    Widget item(String id, String note, Color color, {bool highlight = false}) => SizedBox(
+          width: 76,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.12),
+                  border: Border.all(
+                    color: color.withValues(alpha: highlight ? 1 : 0.5),
+                    width: highlight ? 2 : 1,
+                  ),
+                ),
+                child: weaponDefs.containsKey(id)
+                    ? Icon(Icons.hardware, color: color, size: 34)
+                    : ItemIcon(id, size: 34),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                itemName(id),
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12, color: Palette.holy, height: 1.15),
+              ),
+              Text(note,
+                  style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold)),
+            ],
+          ),
+        );
+    Widget row(String title, Color color, String hint, List<Widget> items) => Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(width: 10, height: 10, color: color),
+                  const SizedBox(width: 6),
+                  Text(title,
+                      style: TextStyle(
+                          color: color, fontWeight: FontWeight.bold, fontSize: 14)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(hint,
+                        style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Wrap(spacing: 6, runSpacing: 8, children: items),
+            ],
+          ),
+        );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (enemy.loot.isNotEmpty)
+          row(tr('Comuni'), _commonColor, tr('a ogni vittoria'), [
+            for (final e in enemy.loot.entries) item(e.key, 'x${e.value}', _commonColor),
+          ]),
+        row(tr('Non comuni'), _uncommonColor,
+            tr('uno a caso, {p}', {'p': _pct(CombatEngine.uncommonBase)}), [
+          for (final id in uncommon) item(id, '', _uncommonColor),
+        ]),
+        row(tr('Rari'), _rareColor, tr('più spesso in caccia infinita'), [
+          if (special != null)
+            item(special, _pct(enemy.rareDropChance), _rareColor, highlight: true),
+          for (final id in rare) item(id, _pct(CombatEngine.rareBase), _rareColor),
+        ]),
+      ],
     );
   }
 }
@@ -583,7 +711,7 @@ class _FightSetupState extends State<_FightSetup> {
   @override
   Widget build(BuildContext context) {
     final e = widget.enemy;
-    final under = context.read<GameState>().character.level < e.level;
+    final level = context.read<GameState>().character.level;
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
@@ -594,17 +722,8 @@ class _FightSetupState extends State<_FightSetup> {
           Center(child: EnemyPortrait(e, size: 190)),
           const SizedBox(height: 8),
           Center(child: OneLine(e.name, style: titleStyle(size: 20), align: Alignment.center)),
-          Center(
-            child: Text(
-              under
-                  ? tr('Livello {n} · più forte di te', {'n': e.level})
-                  : tr('Livello {n}', {'n': e.level}),
-              style: TextStyle(
-                color: under ? Palette.ember : Palette.ash,
-                fontSize: 15,
-              ),
-            ),
-          ),
+          const SizedBox(height: 4),
+          Center(child: LevelBadge(e, level, big: true)),
           SectionTitle(
             e.moves.length > 1 ? tr('Scegli l\'esercizio') : tr('Si combatte con'),
           ),
@@ -632,7 +751,9 @@ class _FightSetupState extends State<_FightSetup> {
                   tr('Subisci il 25% di danni in meno. Allena la Difesa.'),
               },
               style: const TextStyle(color: Palette.ash)),
-          const SizedBox(height: 16),
+          SectionTitle(tr('Ricompense')),
+          _EnemyRewards(e),
+          const SizedBox(height: 8),
           FilledButton(
             onPressed: () => Navigator.of(context).pop((_move, _stance)),
             child: Text(tr('COMBATTI')),

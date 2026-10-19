@@ -188,6 +188,59 @@ class ActionTile extends StatelessWidget {
   }
 }
 
+/// Quanto è duro un nemico per te: verde si batte facile, arancio è una
+/// sfida, rosso è quasi impossibile. Un boss conta due livelli in più.
+enum Difficulty {
+  easy(Color(0xFF7FC25A)),
+  medium(Color(0xFFE5962B)),
+  hard(Color(0xFFE0483C));
+
+  const Difficulty(this.color);
+  final Color color;
+
+  static Difficulty of(EnemyDef e, int playerLevel) {
+    final gap = e.level + (e.isBoss ? 2 : 0) - playerLevel;
+    if (gap <= 0) return easy;
+    if (gap <= 2) return medium;
+    return hard;
+  }
+
+  String get label => switch (this) {
+        easy => tr('Facile'),
+        medium => tr('Impegnativo'),
+        hard => tr('Difficile'),
+      };
+}
+
+/// «Liv. 3 · Facile» in una pastiglia del colore della difficoltà.
+class LevelBadge extends StatelessWidget {
+  const LevelBadge(this.enemy, this.playerLevel, {super.key, this.big = false});
+  final EnemyDef enemy;
+  final int playerLevel;
+  final bool big;
+
+  @override
+  Widget build(BuildContext context) {
+    final d = Difficulty.of(enemy, playerLevel);
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: big ? 12 : 8, vertical: big ? 5 : 3),
+      decoration: BoxDecoration(
+        color: d.color.withValues(alpha: 0.18),
+        border: Border.all(color: d.color, width: 1.4),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        '${tr('Liv. {n}', {'n': enemy.level})} · ${d.label}',
+        style: TextStyle(
+          color: d.color,
+          fontWeight: FontWeight.bold,
+          fontSize: big ? 15 : 13,
+        ),
+      ),
+    );
+  }
+}
+
 /// Il ritratto di un nemico su fondo neutro grigio pietra, così anche i
 /// mostri scuri si vedono bene. Senza immagine mostra un simbolo.
 class EnemyPortrait extends StatelessWidget {
