@@ -5,9 +5,9 @@ import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../game/battle_game.dart' show enemyArtPath;
-import '../../core/art.dart';
 import '../../data/game_state.dart';
 import '../../domain/character.dart';
 import '../../domain/combat.dart';
@@ -59,12 +59,12 @@ class TrainTab extends StatelessWidget {
           icon: Icons.assignment_outlined,
           title: tr('Quest giornaliera'),
           subtitle: tr(
-              '{p}% completata · dà una chiave che raddoppia '
-              'il bottino di una spedizione (hai {n} chiavi)',
+              '{p}% fatta · premio: una chiave che raddoppia il bottino (ne hai {n})',
               {'p': (s.questProgress * 100).round(), 'n': s.expeditionKeys}),
           onTap: () =>
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QuestScreen())),
         ),
+        _QuickFights(playerLevel: s.character.level),
         SectionTitle(tr('Spedizioni')),
         for (final g in worldGroups)
           _GroupCard(
@@ -74,24 +74,82 @@ class TrainTab extends StatelessWidget {
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
           ),
-        SectionTitle(tr('Caccia libera')),
+        SectionTitle(tr('Caccia libera: tocca un nemico per combattere')),
         for (final a in baseAnimals)
           _FreeFightTile(enemy: a, playerLevel: s.character.level, icon: Icons.pets),
         ActionTile(
           icon: Icons.menu_book,
           title: tr('Tutti i nemici ({n})', {'n': bestiary.length}),
-          subtitle: tr('Animali, mostri e boss, dal livello 1 in su'),
+          subtitle: tr('Filtra per esercizio, difficoltà e zona'),
           color: Palette.goldBright,
           onTap: () =>
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BestiaryScreen())),
         ),
         const SizedBox(height: 6),
         Text(
-          tr('Piano per {n} giorni: {plan}', {
+          tr('Il tuo piano ({n} giorni a settimana): {plan}', {
             'n': s.daysPerWeek,
             'plan': plan.map((d) => d.map((g) => g.label).join(' + ')).join(' · '),
           }),
           style: const TextStyle(color: Palette.ash, fontSize: 12),
+        ),
+      ],
+    );
+  }
+}
+
+/// In cima al Training: i nemici adatti al tuo livello, in grande e a
+/// colori su fondo neutro. Un tocco e si combatte.
+class _QuickFights extends StatelessWidget {
+  const _QuickFights({required this.playerLevel});
+  final int playerLevel;
+
+  @override
+  Widget build(BuildContext context) {
+    // Prima chi ha già l'illustrazione, poi dal più vicino al tuo livello.
+    final list = bestiary.where((e) => !e.isBoss && e.level <= playerLevel + 2).toList()
+      ..sort((a, b) {
+        final art = (Art.has(enemyArtPath(b)) ? 1 : 0) - (Art.has(enemyArtPath(a)) ? 1 : 0);
+        if (art != 0) return art;
+        return (a.level - playerLevel).abs().compareTo((b.level - playerLevel).abs());
+      });
+    final foes = list.take(8).toList();
+    if (foes.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SectionTitle(tr('Combatti subito')),
+        SizedBox(
+          height: 228,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: foes.length,
+            separatorBuilder: (_, _) => const SizedBox(width: 10),
+            itemBuilder: (context, i) {
+              final e = foes[i];
+              return SizedBox(
+                width: 150,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(21),
+                    onTap: () => startFreeFight(context, e, respawn: true),
+                    child: Column(
+                      children: [
+                        EnemyPortrait(e, size: 150),
+                        const SizedBox(height: 6),
+                        OneLine(e.name,
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                            align: Alignment.center),
+                        const SizedBox(height: 2),
+                        LevelBadge(e, playerLevel),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ],
     );
@@ -177,6 +235,8 @@ class _GroupCard extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(width: 4),
+              const Icon(Icons.chevron_right, color: Palette.goldBright, size: 30),
             ],
           ),
         ),
@@ -210,7 +270,7 @@ class GroupScreen extends StatelessWidget {
                   .push(MaterialPageRoute(builder: (_) => ExpeditionMapScreen(expedition: e))),
             ),
           if (group != MuscleGroup.stretching) ...[
-            SectionTitle(tr('Combattimenti liberi')),
+            SectionTitle(tr('Combattimenti liberi: tocca un nemico')),
             for (final m in {for (final e in list) ...e.monsters})
               _FreeFightTile(enemy: m, playerLevel: s.character.level),
             for (final e in list)
@@ -242,8 +302,10 @@ class BestiaryScreen extends StatefulWidget {
 class _BestiaryScreenState extends State<BestiaryScreen> {
   /// null = tutti; 'animals' = solo animali; altrimenti un gruppo.
   Object? _filter;
+  ExerciseId? _exercise;
+  Difficulty? _difficulty;
 
-  bool _keep(EnemyDef e) => switch (_filter) {
+  bool _keepGroup(EnemyDef e) => switch (_filter) {
         null => true,
         'animals' => e.isAnimal,
         final MuscleGroup g => !e.isAnimal && e.group == g,
@@ -253,43 +315,82 @@ class _BestiaryScreenState extends State<BestiaryScreen> {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    final list = bestiary.where(_keep).toList();
-    Widget chip(String label, Object? value) => Padding(
+    final level = s.character.level;
+    final list = bestiary
+        .where((e) =>
+            _keepGroup(e) &&
+            (_exercise == null || e.exercises.contains(_exercise)) &&
+            (_difficulty == null || Difficulty.of(e, level) == _difficulty))
+        .toList();
+    // Gli esercizi che compaiono nei nemici, nell'ordine dell'elenco esercizi.
+    final used = {for (final e in bestiary) ...e.exercises};
+    final exerciseIds = [for (final id in ExerciseId.values) if (used.contains(id)) id];
+    Widget chip<T>(String label, T? value, T? current, void Function(T?) set, {Color? color}) =>
+        Padding(
           padding: const EdgeInsets.only(right: 6),
           child: ChoiceChip(
-            label: Text(label),
-            selected: _filter == value,
-            onSelected: (_) => setState(() => _filter = value),
+            label: Text(label, style: color == null ? null : TextStyle(color: color)),
+            selected: current == value,
+            onSelected: (_) => setState(() => set(value)),
+          ),
+        );
+    Widget bar(String title, List<Widget> chips) => Padding(
+          padding: const EdgeInsets.fromLTRB(12, 6, 0, 0),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 84,
+                child: Text(title,
+                    style: const TextStyle(color: Palette.ash, fontSize: 13)),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Row(children: chips),
+                ),
+              ),
+            ],
           ),
         );
     return Scaffold(
       appBar: OathBar(title: Text(tr('CACCIA'))),
       body: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-            child: Row(
-              children: [
-                chip(tr('Tutti'), null),
-                chip(tr('Animali'), 'animals'),
-                for (final g in worldGroups.where((g) => g != MuscleGroup.stretching))
-                  chip(g.label, g),
-              ],
-            ),
-          ),
+          bar(tr('Esercizio'), [
+            chip<ExerciseId>(tr('Tutti'), null, _exercise, (v) => _exercise = v),
+            for (final id in exerciseIds)
+              chip<ExerciseId>(exercises[id]!.name, id, _exercise, (v) => _exercise = v),
+          ]),
+          bar(tr('Difficoltà'), [
+            chip<Difficulty>(tr('Tutte'), null, _difficulty, (v) => _difficulty = v),
+            for (final d in Difficulty.values)
+              chip<Difficulty>(d.label, d, _difficulty, (v) => _difficulty = v, color: d.color),
+          ]),
+          bar(tr('Zona'), [
+            chip<Object>(tr('Tutte'), null, _filter, (v) => _filter = v),
+            chip<Object>(tr('Animali'), 'animals', _filter, (v) => _filter = v),
+            for (final g in worldGroups.where((g) => g != MuscleGroup.stretching))
+              chip<Object>(g.label, g, _filter, (v) => _filter = v),
+          ]),
+          const SizedBox(height: 4),
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-              children: [
-                for (final e in list)
-                  _FreeFightTile(
-                    enemy: e,
-                    playerLevel: s.character.level,
-                    icon: e.isAnimal ? Icons.pets : (e.isBoss ? Icons.castle : null),
+            child: list.isEmpty
+                ? Center(
+                    child: Text(tr('Nessun nemico con questi filtri'),
+                        style: const TextStyle(color: Palette.ash)),
+                  )
+                : ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                    children: [
+                      for (final e in list)
+                        _FreeFightTile(
+                          enemy: e,
+                          playerLevel: level,
+                          icon: e.isAnimal ? Icons.pets : (e.isBoss ? Icons.castle : null),
+                        ),
+                    ],
                   ),
-              ],
-            ),
           ),
         ],
       ),
@@ -297,7 +398,9 @@ class _BestiaryScreenState extends State<BestiaryScreen> {
   }
 }
 
-/// Un nemico da combattere in libero, che rinasce finché non ti fermi.
+/// Un nemico da combattere in libero, che rinasce finché non ti fermi:
+/// ritratto grande su fondo neutro, l'esercizio per batterlo, il livello
+/// colorato per difficoltà e cosa lascia.
 class _FreeFightTile extends StatelessWidget {
   const _FreeFightTile({required this.enemy, required this.playerLevel, this.icon});
   final EnemyDef enemy;
@@ -306,33 +409,185 @@ class _FreeFightTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final under = playerLevel < enemy.level;
+    void fight() => startFreeFight(context, enemy, respawn: true);
     return Card(
-      child: ListTile(
-        leading: Art.has(enemyArtPath(enemy))
-            ? SizedBox(
-                width: 44,
-                height: 44,
-                child: Image.asset(enemyArtPath(enemy), fit: BoxFit.contain),
-              )
-            : Icon(icon ?? Icons.repeat, color: under ? Palette.blood : Palette.goldBright),
-        title: OneLine(enemy.name),
-        subtitle: Text(
-          '${enemy.moves.map((m) => m.name).join(tr(' o '))} · '
-          '${enemy.loot.keys.map((k) => materialNames[k] ?? k).join(', ')}',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(color: Palette.ash, fontSize: 13),
-        ),
-        trailing: Text(
-          'LV ${enemy.level}',
-          style: TextStyle(
-            color: under ? Palette.blood : Palette.goldBright,
-            fontWeight: FontWeight.bold,
+      child: InkWell(
+        onTap: fight,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              EnemyPortrait(enemy, size: 104, fallback: icon),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    OneLine(enemy.name, style: titleStyle(size: 16, spacing: 1)),
+                    const SizedBox(height: 4),
+                    LevelBadge(enemy, playerLevel),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(Icons.fitness_center, size: 18, color: Palette.goldBright),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            enemy.moves.map((m) => m.name).join(tr(' o ')),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Palette.holy,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Wrap(
+                            spacing: 2,
+                            runSpacing: 2,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              for (final k in enemy.loot.keys)
+                                Tooltip(message: itemName(k), child: ItemIcon(k, size: 26)),
+                              if (enemy.rareDrop != null)
+                                Tooltip(
+                                  message:
+                                      tr('Raro: {name}', {'name': itemName(enemy.rareDrop!)}),
+                                  child: const Icon(Icons.star, color: _rareColor, size: 20),
+                                ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        SizedBox(
+                          height: 40,
+                          child: FilledButton(
+                            style: FilledButton.styleFrom(
+                              minimumSize: const Size(0, 40),
+                              padding: const EdgeInsets.symmetric(horizontal: 14),
+                              textStyle: const TextStyle(
+                                fontFamily: kTitleFont,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                            onPressed: fight,
+                            child: Text(tr('COMBATTI')),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        onTap: () => startFreeFight(context, enemy, respawn: true),
       ),
+    );
+  }
+}
+
+const _commonColor = Palette.holy;
+const _uncommonColor = Color(0xFF6FB7E8);
+const _rareColor = Color(0xFFC58BEA);
+
+/// Le ricompense di un nemico divise per rarità, con l'icona di ogni cosa:
+/// si capisce subito chi attaccare per avere quello che manca.
+class _EnemyRewards extends StatelessWidget {
+  const _EnemyRewards(this.enemy);
+  final EnemyDef enemy;
+
+  String _pct(double p) {
+    final v = p * 100;
+    return '${v < 10 && v != v.roundToDouble() ? v.toStringAsFixed(1) : v.round()}%';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final special = enemy.rareDrop;
+    final uncommon = CombatEngine.uncommonDrops;
+    final rare = [for (final r in CombatEngine.rareDrops) if (r != special) r];
+    Widget item(String id, String note, Color color, {bool highlight = false}) => SizedBox(
+          width: 76,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.12),
+                  border: Border.all(
+                    color: color.withValues(alpha: highlight ? 1 : 0.5),
+                    width: highlight ? 2 : 1,
+                  ),
+                ),
+                child: weaponDefs.containsKey(id)
+                    ? Icon(Icons.hardware, color: color, size: 34)
+                    : ItemIcon(id, size: 34),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                itemName(id),
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12, color: Palette.holy, height: 1.15),
+              ),
+              Text(note,
+                  style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold)),
+            ],
+          ),
+        );
+    Widget row(String title, Color color, String hint, List<Widget> items) => Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(width: 10, height: 10, color: color),
+                  const SizedBox(width: 6),
+                  Text(title,
+                      style: TextStyle(
+                          color: color, fontWeight: FontWeight.bold, fontSize: 14)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(hint,
+                        style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Wrap(spacing: 6, runSpacing: 8, children: items),
+            ],
+          ),
+        );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (enemy.loot.isNotEmpty)
+          row(tr('Comuni'), _commonColor, tr('a ogni vittoria'), [
+            for (final e in enemy.loot.entries) item(e.key, 'x${e.value}', _commonColor),
+          ]),
+        row(tr('Non comuni'), _uncommonColor,
+            tr('uno a caso, {p}', {'p': _pct(CombatEngine.uncommonBase)}), [
+          for (final id in uncommon) item(id, '', _uncommonColor),
+        ]),
+        row(tr('Rari'), _rareColor, tr('più spesso in caccia infinita'), [
+          if (special != null)
+            item(special, _pct(enemy.rareDropChance), _rareColor, highlight: true),
+          for (final id in rare) item(id, _pct(CombatEngine.rareBase), _rareColor),
+        ]),
+      ],
     );
   }
 }
@@ -419,6 +674,8 @@ Future<bool> startFreeFight(
   final choice = await showModalBottomSheet<(Move, Stance)>(
     context: context,
     backgroundColor: Palette.stone,
+    isScrollControlled: true,
+    showDragHandle: true,
     builder: (_) => _FightSetup(enemy: enemy, move: move),
   );
   if (choice == null || !context.mounted) return false;
@@ -453,16 +710,22 @@ class _FightSetupState extends State<_FightSetup> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
+    final e = widget.enemy;
+    final level = context.read<GameState>().character.level;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Il mostro in grande, su fondo neutro: si vede bene anche se è scuro.
+          Center(child: EnemyPortrait(e, size: 190)),
+          const SizedBox(height: 8),
+          Center(child: OneLine(e.name, style: titleStyle(size: 20), align: Alignment.center)),
+          const SizedBox(height: 4),
+          Center(child: LevelBadge(e, level, big: true)),
           SectionTitle(
-            widget.enemy.moves.length > 1
-                ? tr('{name}: scegli l\'esercizio', {'name': widget.enemy.name})
-                : tr('{name} si batte con', {'name': widget.enemy.name}),
+            e.moves.length > 1 ? tr('Scegli l\'esercizio') : tr('Si combatte con'),
           ),
           OathChoice<Move>(
             options: [for (final m in widget.enemy.moves) (m, m.name)],
@@ -481,14 +744,16 @@ class _FightSetupState extends State<_FightSetup> {
           Text(
               switch (_stance) {
                 Stance.aggressive =>
-                  tr('Più danni dati e subiti · sale l\'Attacco'),
+                  tr('Colpisci più forte ma subisci di più. Allena l\'Attacco.'),
                 Stance.balanced =>
-                  tr('Metà Attacco, metà Difesa'),
+                  tr('Né troppo né poco. Allena Attacco e Difesa insieme.'),
                 Stance.defensive =>
-                  tr('-25% danni subiti · sale la Difesa'),
+                  tr('Subisci il 25% di danni in meno. Allena la Difesa.'),
               },
               style: const TextStyle(color: Palette.ash)),
-          const SizedBox(height: 16),
+          SectionTitle(tr('Ricompense')),
+          _EnemyRewards(e),
+          const SizedBox(height: 8),
           FilledButton(
             onPressed: () => Navigator.of(context).pop((_move, _stance)),
             child: Text(tr('COMBATTI')),

@@ -294,6 +294,8 @@ class StationScreen extends StatelessWidget {
           stone: stone,
           cost: w.nextStoneCost,
           have: c.materials[stone] ?? 0,
+          runes: w.nextRuneCost,
+          haveRunes: c.runes,
           level: w.upgrade + 1,
           onTap: () async {
             final ok = await craftCountdown(
@@ -427,18 +429,25 @@ class _StoneButton extends StatelessWidget {
     required this.stone,
     required this.cost,
     required this.have,
+    required this.runes,
+    required this.haveRunes,
     required this.level,
     required this.onTap,
   });
   final String stone;
   final int cost;
   final int have;
+
+  /// Rune del potenziamento e rune del giocatore.
+  final int runes;
+  final int haveRunes;
   final int level;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final ok = have >= cost;
+    final enoughRunes = haveRunes >= runes;
+    final ok = have >= cost && enoughRunes;
     final accent = Station.enchant.accent;
     return Opacity(
       opacity: ok ? 1 : 0.55,
@@ -450,7 +459,13 @@ class _StoneButton extends StatelessWidget {
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: ok ? onTap : () => toast(context, tr('Ti servono {cost}× {item}.', {'cost': cost, 'item': itemName(stone)})),
+          onTap: ok
+              ? onTap
+              : () => toast(
+                  context,
+                  have < cost
+                      ? tr('Ti servono {cost}× {item}.', {'cost': cost, 'item': itemName(stone)})
+                      : tr('Ti servono {runes} rune.', {'runes': runes})),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             child: Row(
@@ -465,7 +480,11 @@ class _StoneButton extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         tr('{cost}× · ne hai {n}', {'cost': cost, 'n': have}),
-                        style: TextStyle(color: ok ? Palette.holy : Palette.ash),
+                        style: TextStyle(color: have >= cost ? Palette.holy : Palette.ash),
+                      ),
+                      Text(
+                        tr('{runes} rune', {'runes': runes}),
+                        style: TextStyle(color: enoughRunes ? Palette.holy : Palette.ash),
                       ),
                     ],
                   ),

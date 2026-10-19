@@ -20,6 +20,10 @@ const Map<String, String> enDomain = {
   'Posa di stretching': 'Stretching pose',
 
   // Cammino del Novizio.
+  'Armati': 'Arm Yourself',
+  'Prendi spada e scudo ed equipaggiali': 'Take the sword and shield and equip them',
+  'A mani nude non vai da nessuna parte. Tieni: la Lama del Pellegrino e uno Scudo di Quercia. Non sono un granché, ma sono tuoi.':
+      "Bare-handed you won't get far. Here: the Pilgrim's Blade and an Oak Shield. Not much to look at, but they're yours.",
   'Primo sangue': 'First Blood',
   'Batti il Goblin Svuotato a colpi di squat': 'Defeat the Hollow Goblin with squats',
   'Ogni mostro si batte col suo esercizio: il goblin con gli squat. Ogni rep fatta bene è un colpo di spada. Fammi vedere.':

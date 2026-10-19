@@ -4,7 +4,9 @@ import '../../core/i18n.dart';
 import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../core/sound.dart';
+import '../../domain/enemies.dart';
 import '../../domain/items.dart';
+import '../../game/battle_game.dart' show enemyArtPath;
 
 /// Titolo di sezione al centro, fra due fili d'oro simmetrici; l'eventuale
 /// dettaglio ([trailing]) va sotto, sempre al centro.
@@ -171,14 +173,116 @@ class ActionTile extends StatelessWidget {
       opacity: enabled ? 1 : 0.45,
       child: Card(
         child: ListTile(
-          leading: Icon(icon, color: color),
+          minVerticalPadding: 10,
+          leading: Icon(icon, color: color, size: 30),
           title: OneLine(title, align: Alignment.centerLeft),
           subtitle: subtitle == null
               ? null
-              : Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 13)),
-          trailing: trailing ?? (onTap != null ? const Icon(Icons.chevron_right) : null),
+              : Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 14)),
+          trailing: trailing ??
+              (onTap != null ? Icon(Icons.chevron_right, color: color, size: 30) : null),
           onTap: enabled ? onTap : null,
         ),
+      ),
+    );
+  }
+}
+
+/// Quanto è duro un nemico per te: verde si batte facile, arancio è una
+/// sfida, rosso è quasi impossibile. Un boss conta due livelli in più.
+enum Difficulty {
+  easy(Color(0xFF7FC25A)),
+  medium(Color(0xFFE5962B)),
+  hard(Color(0xFFE0483C));
+
+  const Difficulty(this.color);
+  final Color color;
+
+  static Difficulty of(EnemyDef e, int playerLevel) {
+    final gap = e.level + (e.isBoss ? 2 : 0) - playerLevel;
+    if (gap <= 0) return easy;
+    if (gap <= 2) return medium;
+    return hard;
+  }
+
+  String get label => switch (this) {
+        easy => tr('Facile'),
+        medium => tr('Impegnativo'),
+        hard => tr('Difficile'),
+      };
+}
+
+/// «Liv. 3 · Facile» in una pastiglia del colore della difficoltà.
+class LevelBadge extends StatelessWidget {
+  const LevelBadge(this.enemy, this.playerLevel, {super.key, this.big = false});
+  final EnemyDef enemy;
+  final int playerLevel;
+  final bool big;
+
+  @override
+  Widget build(BuildContext context) {
+    final d = Difficulty.of(enemy, playerLevel);
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: big ? 12 : 8, vertical: big ? 5 : 3),
+      decoration: BoxDecoration(
+        color: d.color.withValues(alpha: 0.18),
+        border: Border.all(color: d.color, width: 1.4),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        '${tr('Liv. {n}', {'n': enemy.level})} · ${d.label}',
+        style: TextStyle(
+          color: d.color,
+          fontWeight: FontWeight.bold,
+          fontSize: big ? 15 : 13,
+        ),
+      ),
+    );
+  }
+}
+
+/// Il ritratto di un nemico su fondo neutro grigio pietra, così anche i
+/// mostri scuri si vedono bene. Senza immagine mostra un simbolo.
+class EnemyPortrait extends StatelessWidget {
+  const EnemyPortrait(
+    this.enemy, {
+    super.key,
+    this.size = 96,
+    this.border,
+    this.dim = false,
+    this.fallback,
+  });
+  final EnemyDef enemy;
+  final double size;
+  final Color? border;
+  final bool dim;
+  final IconData? fallback;
+
+  @override
+  Widget build(BuildContext context) {
+    final art = enemyArtPath(enemy);
+    final ring = border ?? (enemy.isBoss ? Palette.blood : Palette.gold);
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: neutralBackdrop,
+        borderRadius: BorderRadius.circular(size * 0.14),
+        border: Border.all(color: ring, width: size >= 120 ? 2.5 : 2),
+        boxShadow: const [BoxShadow(color: Color(0x99000000), blurRadius: 8, offset: Offset(0, 3))],
+      ),
+      clipBehavior: Clip.antiAlias,
+      padding: EdgeInsets.all(size * 0.05),
+      child: Opacity(
+        opacity: dim ? 0.45 : 1,
+        child: Art.has(art)
+            ? Image.asset(art, fit: BoxFit.contain)
+            : Icon(
+                fallback ??
+                    (enemy.isAnimal ? Icons.pets : (enemy.isBoss ? Icons.castle : Icons.shield)),
+                size: size * 0.5,
+                color: Palette.night.withValues(alpha: 0.7),
+              ),
       ),
     );
   }
@@ -422,7 +526,7 @@ class OathChoice<T> extends StatelessWidget {
     required this.onChanged,
     this.columns,
     this.color = Palette.gold,
-    this.height = 44,
+    this.height = 48,
   });
 
   final List<(T, String)> options;
@@ -476,7 +580,7 @@ class OathToggle extends StatelessWidget {
     required this.onTap,
     this.icon,
     this.color = Palette.gold,
-    this.height = 44,
+    this.height = 48,
   });
 
   final String label;
@@ -520,7 +624,7 @@ class OathToggle extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: kTitleFont,
                       fontWeight: FontWeight.w700,
-                      fontSize: 13,
+                      fontSize: 14,
                       letterSpacing: 1,
                       color: fg,
                     ),

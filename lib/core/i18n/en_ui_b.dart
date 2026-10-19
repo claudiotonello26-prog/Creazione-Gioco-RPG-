@@ -107,8 +107,7 @@ const Map<String, String> enUiB = {
   'Stretching guidato (5 min)': 'Guided stretching (5 min)',
   'QUEST COMPLETATA': 'QUEST COMPLETE',
   'CONTINUA LA QUEST': 'CONTINUE THE QUEST',
-  'Hai guadagnato una Chiave della Spedizione. Vai su Allenati.':
-      'You earned an Expedition Key. Go to Training.',
+  'Hai guadagnato una Chiave della Spedizione: usala nel Training per raddoppiare il bottino.': 'You earned an Expedition Key: use it in Training to double the loot.',
   'Quest completata': 'Quest complete',
   'Streak {n}': 'Streak {n}',
   'Hai guadagnato una Chiave della Spedizione. Torna domani per la prossima quest.':
@@ -222,6 +221,7 @@ const Map<String, String> enUiB = {
   '  ·  hai {n}': '  ·  you have {n}',
   'Si sblocca a {station} livello {level}': 'Unlocks at {station} level {level}',
   'Ti servono {cost}× {item}.': 'You need {cost}× {item}.',
+  'Ti servono {runes} rune.': 'You need {runes} runes.',
   '{cost}× · ne hai {n}': '{cost}× · you have {n}',
   // guild_tab.dart
   'La gilda vive sul server online: impostalo nelle Impostazioni per fondarne una o entrare in quella dei tuoi amici.': "The guild lives on the online server: set it in Settings to found one or join your friends'.",

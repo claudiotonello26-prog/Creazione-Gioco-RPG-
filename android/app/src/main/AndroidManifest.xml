@@ -3,6 +3,7 @@
     <uses-feature android:name="android.hardware.camera.front" android:required="false" />
     <!-- Passi da Health Connect (Samsung Health, Google Fit...) per la Camminata. -->
     <uses-permission android:name="android.permission.health.READ_STEPS" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <application
         android:label="Gym Oath"
         android:name="${applicationName}"

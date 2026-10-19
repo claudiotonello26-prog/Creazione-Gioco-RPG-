@@ -120,6 +120,9 @@ class _CombatScreenState extends State<CombatScreen> {
           tint == null ? null : Color(tint).withValues(alpha: opacity),
       ],
       heroFist: drawn ? HeroView.rightFist(c.look.female) : null,
+      heroLeftFist: drawn ? HeroView.leftFist(c.look.female) : null,
+      heroSword: drawn ? HeroView.swordOf(c.weapon) : null,
+      heroShield: drawn ? HeroView.shieldOf(c.offhand?.id) : null,
       // Il colore lo dà solo l'amuleto d'affinità incastonato.
       weaponTint: state.character.weapon.glowTier == 0
           ? null
@@ -141,6 +144,7 @@ class _CombatScreenState extends State<CombatScreen> {
             max(3, (state.testRepsFor(widget.exercise) / (widget.move?.difficulty ?? 1)).round()),
         stance: widget.stance,
         wave: _wave,
+        difficulty: widget.move?.difficulty ?? 1,
         attackLevel: state.attackLevel,
         defenseLevel: state.defenseLevel,
       );
@@ -403,13 +407,13 @@ class _CombatScreenState extends State<CombatScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
-                    '${tr('{label} · rep {reps} (previste ~{max}) · postura {stance}', {
+                    '${tr('{label} · {reps} rep su circa {max} · postura {stance}', {
                       'label': label,
                       'reps': e.reps,
                       'max': e.enemyMaxHp.round(),
                       'stance': e.stance.label,
                     })}'
-                    '${e.penetration < 1 ? tr(' · i colpi rimbalzano: build troppo debole') : ''}',
+                    '${e.penetration < 1 ? tr(' · i colpi rimbalzano: serve un\'arma migliore') : ''}',
                     style: const TextStyle(color: Palette.ash, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
@@ -431,7 +435,7 @@ class _CombatScreenState extends State<CombatScreen> {
                   label: Text(
                     widget.looping && _kills > 0
                         ? tr('Ritirati col bottino')
-                        : tr('Fuggi (tieni gli XP delle rep fatte)'),
+                        : tr('Fuggi (tieni l\'esperienza delle rep fatte)'),
                     style: const TextStyle(color: Palette.ash),
                   ),
                 ),

@@ -15,7 +15,7 @@ import 'forge_tab.dart';
 import 'quest_screen.dart';
 import 'train_tab.dart';
 
-/// Il Cammino del Novizio: una missione alla volta. Toccandola Ser Corvino
+/// Il Cammino del Novizio: una missione alla volta. Toccandola il Comandante Reynard
 /// spiega cosa fare e poi porta dritto dove si fa.
 class NoviceCard extends StatelessWidget {
   const NoviceCard({super.key, required this.onNavigate});
@@ -112,6 +112,8 @@ void goToNoviceAction(
     BuildContext context, GameState state, NoviceQuest q, void Function(int tab) onNavigate) {
   void push(Widget w) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => w));
   switch (q.action) {
+    case NoviceAction.arm:
+      state.armUp();
     case NoviceAction.fightGoblin:
       startFreeFight(context, enemyDefs['hollow_goblin']!, respawn: true);
     case NoviceAction.hunt:

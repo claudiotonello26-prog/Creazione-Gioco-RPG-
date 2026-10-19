@@ -32,6 +32,11 @@ services:
         --runtime.js_entrypoint index.js
         --socket.server_key ${NAKAMA_SERVER_KEY:-defaultkey}
         --session.token_expiry_sec 604800
+        --session.encryption_key ${NAKAMA_SESSION_KEY:-defaultencryptionkey}
+        --session.refresh_encryption_key ${NAKAMA_REFRESH_KEY:-defaultrefreshencryptionkey}
+        --runtime.http_key ${NAKAMA_HTTP_KEY:-defaulthttpkey}
+        --console.username admin
+        --console.password ${NAKAMA_CONSOLE_PASSWORD:-password}
         --logger.level INFO
     volumes:
       - ./build:/nakama/data/modules

@@ -338,7 +338,7 @@ const Map<String, String> enUiA = {
   'IMPOSTAZIONI': 'SETTINGS',
   'Conta le rep con la fotocamera': 'Count reps with the camera',
   'Spento: inserimento manuale, rep non verificate': 'Off: manual entry, unverified reps',
-  'Consigli di Ser Corvino': 'Ser Corvin\'s tips',
+  'Consigli del Comandante Reynard': 'Commander Reynard\'s tips',
   'Riaccendendolo, rivedi tutti i consigli dall\'inizio':
       'Turning it back on shows all the tips again from the start',
   'Server dell\'Arena live': 'Live Arena server',
@@ -356,7 +356,7 @@ const Map<String, String> enUiA = {
   'Ricomincia': 'Start over',
   'Effetti sonori': 'Sound effects',
   'Musica': 'Music',
-  'Voce di Ser Corvino': 'Ser Corvin\'s voice',
+  'Voce del Comandante Reynard': 'Commander Reynard\'s voice',
   // ---- Creazione del personaggio: teste disegnate.
   'ASPETTO': 'LOOK',
   'Rasata': 'Shaved',

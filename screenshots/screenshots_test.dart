@@ -359,6 +359,8 @@ void main() {
       ..style = 6
       ..hairStyle = 6
       ..beardStyle = 6;
+    // Da qui in poi ha già fatto la prima missione: spada in mano.
+    st.character.armed = true;
     for (final slot in [ArmorSlot.helm, ArmorSlot.chest, ArmorSlot.gloves, ArmorSlot.legs]) {
       st.character.worn[slot] = 'gambeson';
     }
@@ -436,6 +438,13 @@ void main() {
       ..hair = 3;
     st.notifyListeners();
     await _shot(t, '84_mix_donna');
+    st.character.offhandId = 'wooden_shield';
+    st.notifyListeners();
+    await _shot(t, '85_spada_scudo');
+    st.character.look.female = false;
+    st.character.worn[ArmorSlot.chest] = 'chainmail';
+    st.notifyListeners();
+    await _shot(t, '86_spada_scudo_uomo');
   });
 
   testWidgets('creazione personaggio e pausa tra esercizi', (t) async {

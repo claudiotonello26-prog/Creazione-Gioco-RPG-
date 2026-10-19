@@ -43,6 +43,8 @@ dependencies:
   web_socket_channel: ^3.0.3
   health: ^13.3.2
   audioplayers: ^6.8.1
+  pedometer: ^4.2.0
+  permission_handler: ^12.0.1
 
 dev_dependencies:
   flutter_test:
@@ -77,9 +79,14 @@ flutter:
     - assets/art/items/
     - assets/art/backgrounds/
     - assets/art/nav/
+    # Emblemi delle feste: level_up.png, skill_up.png, stat_up.png.
+    - assets/art/celebrations/
+    # Il Comandante Reynard: trainer_<posa>.png (crossed, pointing, thinking, ...).
+    - assets/art/trainer/
     # Il personaggio a livelli (Gemini): corpo, teste, capelli, occhi, vestiti.
     - assets/art/hero/f/
     - assets/art/hero/m/
+    - assets/art/hero/gear/
     # Suoni: elenco e formato in lista-suoni.md. Un file che manca = silenzio.
     - assets/audio/sfx/
     - assets/audio/music/

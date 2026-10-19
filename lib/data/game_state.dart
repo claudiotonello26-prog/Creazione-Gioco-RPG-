@@ -161,6 +161,9 @@ class GameState extends ChangeNotifier {
   /// Identificativo anonimo del telefono per l'account online.
   String deviceId = '';
 
+  /// Gilda e amici di prova finché il server non c'è (LocalGuildService).
+  Map<String, dynamic> socialLocal = {};
+
   Map<ExerciseId, TestResult> test = {};
   DateTime? testDate;
   Map<ExerciseId, int> records = {};
@@ -275,6 +278,9 @@ class GameState extends ChangeNotifier {
     return List.generate(16, (_) => r.nextInt(256).toRadixString(16).padLeft(2, '0')).join();
   }
 
+  /// Salva la gilda di prova dopo che LocalGuildService l'ha cambiata.
+  void saveSocial() => _save();
+
   void setServerAddress(String value) {
     serverAddress = value.trim();
     _changed();
@@ -325,6 +331,7 @@ class GameState extends ChangeNotifier {
         'langPref': langPref.name,
         'server': serverAddress,
         'device': deviceId,
+        'social': socialLocal,
         'test': {for (final e in test.entries) e.key.name: e.value.toJson()},
         'testDate': testDate?.toIso8601String(),
         'records': {for (final e in records.entries) e.key.name: e.value},
@@ -377,6 +384,7 @@ class GameState extends ChangeNotifier {
     appLang = resolveLang(langPref);
     serverAddress = j['server'] as String? ?? '';
     deviceId = j['device'] as String? ?? '';
+    socialLocal = j['social'] is Map ? Map<String, dynamic>.from(j['social'] as Map) : {};
     test = {
       for (final e in (j['test'] as Map).entries)
         ExerciseId.values.byName(e.key as String): TestResult.fromJson(
@@ -438,6 +446,10 @@ class GameState extends ChangeNotifier {
     stepBank = j['bank'] as int? ?? 0;
     stats = Map<String, int>.from(j['stats'] as Map? ?? const {});
     noviceStep = j['novice'] as int? ?? 0;
+    // La missione "Armati" è arrivata dopo: chi aveva già iniziato il
+    // Cammino la salta, ha già spada e scudo.
+    final char = j['character'] as Map?;
+    if (char != null && !char.containsKey('armed') && j.containsKey('novice')) noviceStep++;
     seenHints = Set<String>.from(j['hints'] as List? ?? const []);
     trainerEnabled = j['trainer'] as bool? ?? true;
   }
@@ -896,6 +908,16 @@ class GameState extends ChangeNotifier {
     return q;
   }
 
+  /// Prima missione: il trainer consegna spada e scudo e li equipaggia.
+  void armUp() {
+    if (character.armed) return;
+    character.armed = true;
+    character.offhands.add('wooden_shield');
+    character.offhandId ??= 'wooden_shield';
+    _count('armed');
+    _changed();
+  }
+
   /// Segna un consiglio del trainer come visto. Ritorna true la prima volta.
   bool markHint(String id) {
     if (!seenHints.add(id)) return false;
@@ -934,32 +956,49 @@ class GameState extends ChangeNotifier {
     return runes;
   }
 
-  /// I passi nuovi di oggi vanno nella raccolta scelta: ogni [Resource.stepsPerUnit]
-  /// passi un'unità, il resto aspetta il prossimo giro. Ritorna (unità, livelli
-  /// di mestiere guadagnati).
-  (int, int) claimSteps(int stepsToday) {
+  /// Quanti passi servono per un'unità di [r], con l'attrezzo migliore.
+  int stepsPerUnit(Resource r) => (r.stepsPerUnit / (1 + gatherBonus(r.skill))).round();
+
+  /// I passi nuovi di oggi finiscono nella riserva, da spendere dove si
+  /// vuole. Ritorna quanti ne sono entrati.
+  int collectSteps(int stepsToday) {
     _rollDay();
     final capped = min(stepsToday, dailyStepCap);
-    if (capped <= daily.claimedSteps) return (0, 0);
-    stepBank += capped - daily.claimedSteps;
+    if (capped <= daily.claimedSteps) return 0;
+    final fresh = capped - daily.claimedSteps;
+    stepBank += fresh;
     daily.claimedSteps = capped;
-    var r = resourceById(gatherTarget);
-    if (!canGather(r)) {
-      r = resourceById('ash_wood');
-      gatherTarget = r.id;
+    _changed();
+    return fresh;
+  }
+
+  /// Spende fino a [steps] passi della riserva su [resourceId]: solo unità
+  /// intere, il resto resta in riserva. Ritorna (unità, livelli guadagnati).
+  (int, int) spendSteps(String resourceId, int steps) {
+    var r = resourceById(resourceId);
+    if (!canGather(r)) return (0, 0);
+    gatherTarget = r.id;
+    final per = stepsPerUnit(r);
+    final units = min(steps, stepBank) ~/ per;
+    if (units <= 0) {
+      _changed();
+      return (0, 0);
     }
-    // L'attrezzo migliore fa rendere di più gli stessi passi.
-    final per = (r.stepsPerUnit / (1 + gatherBonus(r.skill))).round();
-    final units = stepBank ~/ per;
-    stepBank %= per;
-    var levels = 0;
-    if (units > 0) {
-      character.addMaterial(r.id, units);
-      _count('gather:${r.id}', units);
-      levels = _gainSkill(r.skill, units * r.xp);
-    }
+    stepBank -= units * per;
+    character.addMaterial(r.id, units);
+    _count('gather:${r.id}', units);
+    final levels = _gainSkill(r.skill, units * r.xp);
     _changed();
     return (units, levels);
+  }
+
+  /// I passi nuovi di oggi vanno tutti nella raccolta scelta: ogni
+  /// [Resource.stepsPerUnit] passi un'unità, il resto aspetta il prossimo giro.
+  /// Ritorna (unità, livelli di mestiere guadagnati).
+  (int, int) claimSteps(int stepsToday) {
+    collectSteps(stepsToday);
+    if (!canGather(resourceById(gatherTarget))) gatherTarget = 'ash_wood';
+    return spendSteps(gatherTarget, stepBank);
   }
 
   void recordHuntWave(int wave) {
@@ -993,6 +1032,9 @@ class GameState extends ChangeNotifier {
   // --------------------------------------------------------------- mappe
 
   static const int mapBoss = 4, mapChest = 5, mapDone = 6;
+
+  /// Quota delle rune del forziere quando la mappa è già stata aperta.
+  static const double chestRepeatRunes = 0.25;
 
   int expeditionProgress(String id) {
     _rollDay();
@@ -1034,7 +1076,10 @@ class GameState extends ChangeNotifier {
     if ((daily.expeditionStep[e.id] ?? 0) != mapChest) return const [];
     final r = random ?? Random();
     final out = <(String, int, bool)>[];
-    final runes = e.chest.runes * multiplier;
+    // Le rune piene solo la prima volta: rifare la stessa mappa ogni giorno
+    // rendeva più dei combattimenti (tre quarti delle rune, dal simulatore).
+    final repeat = stat('chest:${e.id}') > 0;
+    final runes = (e.chest.runes * multiplier * (repeat ? chestRepeatRunes : 1)).round();
     character.runes += runes;
     out.add(('runes', runes, false));
     for (final g in _forBuild(e.chest.guaranteed).entries) {
@@ -1047,6 +1092,7 @@ class GameState extends ChangeNotifier {
     }
     daily.expeditionStep[e.id] = mapDone;
     _count('chests');
+    _count('chest:${e.id}');
     _changed();
     return out;
   }
@@ -1268,7 +1314,10 @@ class GameState extends ChangeNotifier {
   bool upgradeWeapon(WeaponInstance w) {
     final stone = w.nextStone;
     if (stone == null) return false;
+    final runes = w.nextRuneCost;
+    if (character.runes < runes) return false;
     if (!character.spendMaterial(stone, w.nextStoneCost)) return false;
+    character.runes -= runes;
     w.upgrade++;
     _count('upgrades');
     _changed();

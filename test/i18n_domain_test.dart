@@ -78,7 +78,8 @@ void main() {
     expect(lunge.name, 'Lunges');
     expect(lunge.nameIt, 'Affondi');
     expect(lunge.variant(1).nameIt, 'Affondi con appoggio');
-    expect(noviceQuests.first.title, 'First Blood');
+    expect(noviceQuests.first.title, 'Arm Yourself');
+    expect(noviceQuests[1].title, 'First Blood');
     expect(MuscleGroup.legs.label, 'Legs');
     expect(
       arenaChallenges[ExerciseId.lunge]!.description,

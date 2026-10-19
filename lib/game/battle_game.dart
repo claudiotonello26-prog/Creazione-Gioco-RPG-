@@ -11,6 +11,7 @@ import '../core/i18n.dart';
 import '../core/theme.dart';
 import '../domain/enemies.dart';
 import '../domain/items.dart';
+import '../ui/widgets/knight_view.dart' show HeroView;
 
 /// Scena del combattimento disegnata con Flame. Le figure sono silhouette
 /// vettoriali provvisorie, da sostituire con le illustrazioni 2D e le
@@ -23,6 +24,9 @@ class BattleGame extends FlameGame {
     this.heroLayers = const [],
     this.heroTints = const [],
     this.heroFist,
+    this.heroLeftFist,
+    this.heroSword,
+    this.heroShield,
     this.weaponTint,
   });
 
@@ -36,6 +40,11 @@ class BattleGame extends FlameGame {
 
   /// Pugno sulla tela del personaggio a livelli (0..1): lì va la spada.
   final Offset? heroFist;
+  final Offset? heroLeftFist;
+
+  /// Spada e scudo dipinti del personaggio a livelli (null: spada a vettori).
+  final String? heroSword;
+  final String? heroShield;
 
   /// Colore della build che tinge l'arma dal +3 in su.
   final Color? weaponTint;
@@ -57,6 +66,8 @@ class BattleGame extends FlameGame {
     final heroSprites = [
       for (final p in heroLayers) await Sprite.load(p, images: images),
     ];
+    final sword = heroSword == null ? null : await Sprite.load(heroSword!, images: images);
+    final shield = heroShield == null ? null : await Sprite.load(heroShield!, images: images);
     final enemyArt = enemyArtPath(enemy);
     final enemySprite =
         Art.has(enemyArt) ? await Sprite.load(enemyArt, images: images) : null;
@@ -67,6 +78,9 @@ class BattleGame extends FlameGame {
       weaponTint: weaponTint,
       tints: heroTints,
       fist: heroFist,
+      leftFist: heroLeftFist,
+      sword: sword,
+      shield: shield,
     )
       ..anchor = Anchor.bottomCenter
       ..size = heroSprites.isEmpty
@@ -166,6 +180,11 @@ class BattleGame extends FlameGame {
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
           fontFamily: 'Cinzel',
+          // Contorno scuro: i numeri si leggono anche sullo sfondo chiaro.
+          shadows: const [
+            Shadow(color: Color(0xE6000000), blurRadius: 3),
+            Shadow(color: Color(0xE6000000), offset: Offset(1.5, 1.5)),
+          ],
         ),
       ),
     );
@@ -175,23 +194,27 @@ class BattleGame extends FlameGame {
   }
 }
 
+/// Lo sfondo del duello: nebbia grigio pietra, neutra e più chiara del
+/// resto dell'app, perché eroe e mostri (spesso scuri) si stacchino bene.
+/// Rovine appena accennate e una luce dietro al nemico.
 class _Backdrop extends PositionComponent {
   @override
   void render(Canvas canvas) {
     final rect = size.toRect();
+    final w = size.x;
+    final h = size.y;
     canvas.drawRect(
       rect,
       Paint()
         ..shader = Gradient.linear(
           Offset.zero,
-          Offset(0, size.y),
-          [const Color(0xFF1C1712), Palette.night],
+          Offset(0, h * 0.86),
+          [const Color(0xFF7D786E), Palette.neutralLight, const Color(0xFF8A847A)],
+          [0, 0.55, 1],
         ),
     );
-    // Rovine della cattedrale sullo sfondo.
-    final ruin = Paint()..color = const Color(0xFF221C16);
-    final w = size.x;
-    final h = size.y;
+    // Rovine della cattedrale, lontane nella nebbia.
+    final ruin = Paint()..color = const Color(0xFF8F897F);
     for (var i = 0; i < 5; i++) {
       final x = w * (0.08 + i * 0.21);
       final ph = h * (0.25 + (i % 3) * 0.08);
@@ -205,18 +228,39 @@ class _Backdrop extends PositionComponent {
         ruin,
       );
     }
-    // Luna/sole dorato decadente.
-    canvas.drawCircle(
-      Offset(w * 0.78, h * 0.18),
-      w * 0.09,
-      Paint()
-        ..color = Palette.gold.withValues(alpha: 0.25)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 18),
-    );
+    // Luce chiara dietro ai due combattenti.
+    for (final cx in [0.25, 0.72]) {
+      final c = Offset(w * cx, h * 0.6);
+      canvas.drawCircle(
+        c,
+        h * 0.42,
+        Paint()
+          ..shader = Gradient.radial(
+            c,
+            h * 0.42,
+            [const Color(0x66D8D2C4), const Color(0x00D8D2C4)],
+          ),
+      );
+    }
+    // Terreno e ombre sotto i piedi.
     canvas.drawRect(
       Rect.fromLTWH(0, h * 0.86, w, h * 0.14),
-      Paint()..color = const Color(0xFF14100C),
+      Paint()..color = const Color(0xFF4A463F),
     );
+    canvas.drawLine(
+      Offset(0, h * 0.86),
+      Offset(w, h * 0.86),
+      Paint()
+        ..color = const Color(0xFF35322D)
+        ..strokeWidth = 2,
+    );
+    final shadow = Paint()..color = const Color(0x55000000);
+    for (final cx in [0.25, 0.72]) {
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(w * cx, h * 0.865), width: w * 0.3, height: h * 0.04),
+        shadow,
+      );
+    }
   }
 }
 
@@ -298,8 +342,14 @@ class _Hero extends PositionComponent with _Flash {
     this.weaponTint,
     this.tints = const [],
     this.fist,
+    this.leftFist,
+    this.sword,
+    this.shield,
   });
   final int weaponTier;
+  final Offset? leftFist;
+  final Sprite? sword;
+  final Sprite? shield;
   final List<Sprite> layers;
   final int weaponLayer;
   final Color? weaponTint;
@@ -316,8 +366,36 @@ class _Hero extends PositionComponent with _Flash {
         final sp = layers.first;
         final k = min(size.x / sp.srcSize.x, size.y / sp.srcSize.y);
         final d = sp.srcSize * k;
-        final at = Offset((size.x - d.x) / 2 + f.dx * d.x, size.y - d.y + f.dy * d.y);
-        _blade(canvas, at, d.y * 0.42);
+        Offset onCanvas(Offset p) => Offset((size.x - d.x) / 2 + p.dx * d.x, size.y - d.y + p.dy * d.y);
+        final at = onCanvas(f);
+        final px = d.y / 1896;
+        if (sword case final s?) {
+          // Spada dipinta alzata verso il nemico, il manico nel pugno.
+          canvas.save();
+          canvas.translate(at.dx, at.dy);
+          canvas.rotate(-145 * pi / 180);
+          s.render(
+            canvas,
+            position: Vector2(-HeroView.swordGrip.dx * px, -HeroView.swordGrip.dy * px),
+            size: Vector2(HeroView.swordSize.width * px, HeroView.swordSize.height * px),
+            overridePaint: _flashTime > 0 && _flashColor != null
+                ? (Paint()..colorFilter = ColorFilter.mode(_flashColor!, BlendMode.srcATop))
+                : weaponTint != null
+                    ? (Paint()..colorFilter = ColorFilter.mode(weaponTint!, BlendMode.srcATop))
+                    : null,
+          );
+          canvas.restore();
+        } else {
+          _blade(canvas, at, d.y * 0.42);
+        }
+        if ((shield, leftFist) case (final s?, final lf?)) {
+          final c = onCanvas(lf);
+          s.render(
+            canvas,
+            position: Vector2(c.dx - HeroView.shieldSize.width / 2 * px, c.dy - HeroView.shieldSize.height / 2 * px),
+            size: Vector2(HeroView.shieldSize.width * px, HeroView.shieldSize.height * px),
+          );
+        }
       }
       return;
     }

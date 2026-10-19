@@ -45,7 +45,7 @@ void main() {
     expect(find.text('ARMERIA'), findsOneWidget);
   });
 
-  testWidgets('Ser Corvino si presenta alla prima apertura', (tester) async {
+  testWidgets('Il Comandante Reynard si presenta alla prima apertura', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final state = GameState();
     await state.load();
@@ -55,12 +55,12 @@ void main() {
     });
     await tester.pumpWidget(IronOathApp(state: state));
     await tester.pumpAndSettle();
-    expect(find.text('SER CORVINO'), findsOneWidget);
+    expect(find.text('COMANDANTE REYNARD'), findsOneWidget);
     for (var i = 0; i < 3; i++) {
-      await tester.tap(find.text('SER CORVINO'));
+      await tester.tap(find.text('COMANDANTE REYNARD'));
       await tester.pumpAndSettle();
     }
-    expect(find.text('SER CORVINO'), findsNothing);
+    expect(find.text('COMANDANTE REYNARD'), findsNothing);
     expect(state.seenHints, contains('home'));
   });
 }

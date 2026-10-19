@@ -12,6 +12,7 @@ library;
 import 'i18n/en_data_enemies.dart';
 import 'i18n/en_data_items.dart';
 import 'i18n/en_domain.dart';
+import 'i18n/en_social.dart';
 import 'i18n/en_ui_a.dart';
 import 'i18n/en_ui_b.dart';
 import 'i18n/en_ui_c.dart';
@@ -95,6 +96,7 @@ final Map<String, String> enStrings = {
   ...enUiA,
   ...enUiB,
   ...enUiC,
+  ...enSocial,
 };
 
 /// Le chiavi inglesi che hanno la traduzione italiana.
