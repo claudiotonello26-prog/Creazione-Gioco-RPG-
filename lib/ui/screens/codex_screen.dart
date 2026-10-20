@@ -87,17 +87,35 @@ class _CodexScreenState extends State<CodexScreen> {
   CodexKind? _kind;
   bool _ownedOnly = false;
 
+  /// Di base solo ciò che hai o puoi ottenere adesso: il resto si svela
+  /// salendo di livello (o cercandolo per nome).
+  bool _later = false;
+
   @override
   Widget build(BuildContext context) {
-    final c = context.watch<GameState>().character;
+    final s = context.watch<GameState>();
+    final c = s.character;
     final q = _query.trim().toLowerCase();
-    final list = [
-      for (final e in codexEntries)
-        if ((_kind == null || e.kind == _kind) &&
-            (q.isEmpty || e.name.toLowerCase().contains(q)) &&
-            (!_ownedOnly || codexOwned(c, e) > 0))
-          e,
-    ];
+    bool now(CodexEntry e) =>
+        codexOwned(c, e) > 0 ||
+        codexReachable(
+          codexSources(e.id, s.build),
+          level: c.level,
+          skillLevel: s.skillLevel,
+          stationLevel: s.stationLevel,
+        );
+    var hidden = 0;
+    final list = <CodexEntry>[];
+    for (final e in codexEntries) {
+      if (_kind != null && e.kind != _kind) continue;
+      if (q.isNotEmpty && !e.name.toLowerCase().contains(q)) continue;
+      if (_ownedOnly && codexOwned(c, e) == 0) continue;
+      if (!_later && q.isEmpty && !now(e)) {
+        hidden++;
+        continue;
+      }
+      list.add(e);
+    }
     return Scaffold(
       appBar: OathBar(title: Text(tr('CODICE DEL GIURAMENTO')), accent: Sections.forge),
       body: Column(
@@ -123,6 +141,11 @@ class _CodexScreenState extends State<CodexScreen> {
                 for (final k in CodexKind.values)
                   _chip(k.label, _kind == k, () => setState(() => _kind = _kind == k ? null : k)),
                 _chip(
+                  tr('Anche più avanti'),
+                  _later,
+                  () => setState(() => _later = !_later),
+                ),
+                _chip(
                   tr('Solo i miei'),
                   _ownedOnly,
                   () => setState(() => _ownedOnly = !_ownedOnly),
@@ -140,8 +163,18 @@ class _CodexScreenState extends State<CodexScreen> {
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                    itemCount: list.length,
+                    itemCount: list.length + (hidden > 0 ? 1 : 0),
                     itemBuilder: (context, i) {
+                      if (i == list.length) {
+                        return TextButton.icon(
+                          onPressed: () => setState(() => _later = true),
+                          icon: const Icon(Icons.lock_clock, color: Palette.ash),
+                          label: Text(
+                            tr('Altri {n} si svelano salendo di livello', {'n': hidden}),
+                            style: const TextStyle(color: Palette.ash),
+                          ),
+                        );
+                      }
                       final e = list[i];
                       final owned = codexOwned(c, e);
                       return Card(

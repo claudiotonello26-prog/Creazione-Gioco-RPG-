@@ -33,10 +33,7 @@ class ContractsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            tr(
-              'Firma un contratto sigillato: solo dopo scopri quali spedizioni finire. '
-              'Portale a termine fino al boss e torna qui a riscuotere il forziere.',
-            ),
+            tr('Firma, finisci le spedizioni, riscuoti il forziere.'),
             style: const TextStyle(color: Palette.ash),
           ),
           const SizedBox(height: 6),
@@ -132,9 +129,8 @@ class _ActiveContract extends StatelessWidget {
               )
             else
               Text(
-                tr(
-                  'Porta a termine ogni spedizione fino al boss: vale anche se l\'hai già finita altre volte.',
-                ),
+                tr('Batti il boss di ogni spedizione.'),
+                textAlign: TextAlign.center,
                 style: const TextStyle(color: Palette.ash, fontSize: 13),
               ),
             TextButton(onPressed: () => _cancel(context), child: Text(tr('Strappa il contratto'))),
@@ -262,26 +258,22 @@ class _ContractorCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Expanded(child: OneLine(c.name, style: titleStyle(size: 16))),
+                  IconButton(
+                    tooltip: c.blurb,
+                    icon: const Icon(Icons.help_outline, color: Palette.ash, size: 20),
+                    onPressed: () => ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(c.blurb))),
+                  ),
                 ],
               ),
-              const SizedBox(height: 4),
-              Text(
-                c.blurb,
-                style: const TextStyle(color: Palette.ash, fontStyle: FontStyle.italic),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                c.expeditions == 1
-                    ? tr('Chiede 1 spedizione · {chest} · {runes} rune', {
-                        'chest': c.chestName,
-                        'runes': c.runes,
-                      })
-                    : tr('Chiede {n} spedizioni · {chest} · {runes} rune', {
-                        'n': c.expeditions,
-                        'chest': c.chestName,
-                        'runes': c.runes,
-                      }),
-                style: const TextStyle(color: Palette.holy, fontWeight: FontWeight.w600),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  StatChip(Icons.map_outlined, '× ${c.expeditions}'),
+                  StatChip(Icons.diamond_outlined, '${c.runes}', color: Palette.goldBright),
+                  StatChip(Icons.inventory_2, c.chestName),
+                ],
               ),
               const SizedBox(height: 8),
               Wrap(

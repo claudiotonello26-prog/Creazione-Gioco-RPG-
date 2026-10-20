@@ -59,4 +59,6 @@ const Map<String, String> enCodex = {
   'Sale combattendo con i bastoni, in postura aggressiva o bilanciata.':
       'Rises by fighting with staves, in an aggressive or balanced stance.',
   'Sale battendo i nemici delle spedizioni.': 'Rises by defeating expedition enemies.',
+  'Anche più avanti': 'Later ones too',
+  'Altri {n} si svelano salendo di livello': '{n} more unlock as you level up',
 };

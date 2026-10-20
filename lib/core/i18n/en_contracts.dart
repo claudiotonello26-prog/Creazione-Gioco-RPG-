@@ -53,4 +53,6 @@ const Map<String, String> enContracts = {
       'Sign a contract: expeditions to finish for a chest',
   'Contratto finito: torna a riscuotere!': 'Contract done: come back to claim it!',
   'Contratto di {who}: {done} / {n} spedizioni': '{who}\'s contract: {done} / {n} expeditions',
+  'Firma, finisci le spedizioni, riscuoti il forziere.': 'Sign, finish the expeditions, claim the chest.',
+  'Batti il boss di ogni spedizione.': 'Beat the boss of every expedition.',
 };

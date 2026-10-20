@@ -163,7 +163,9 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
                 },
               ),
               const SizedBox(height: 6),
-              for (final r in resources.where((r) => r.skill == skill)) _resourceTile(s, r),
+              for (final r in unlockedPlusNext(resources.where((r) => r.skill == skill).toList(),
+                  (r) => r.level, s.skillLevel(skill)))
+                _resourceTile(s, r),
             ],
           ],
         ),

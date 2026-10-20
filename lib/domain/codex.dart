@@ -32,9 +32,23 @@ enum CodexKind {
 enum SourceKind { enemy, chest, anyFight, walk, craft, shop }
 
 class CodexSource {
-  const CodexSource(this.kind, this.text, {this.chance, this.enemy});
+  const CodexSource(
+    this.kind,
+    this.text, {
+    this.chance,
+    this.enemy,
+    this.level = 0,
+    this.skill,
+    this.station,
+  });
   final SourceKind kind;
   final String text;
+
+  /// Livello che serve per arrivarci: del cavaliere, oppure di [skill] o
+  /// della postazione [station] se ci sono.
+  final int level;
+  final Skill? skill;
+  final Station? station;
 
   /// Probabilità per vittoria o per forziere; null = sempre.
   final double? chance;
@@ -154,6 +168,7 @@ List<CodexSource> codexSources(String id, Attribute build) {
           SourceKind.enemy,
           tr('{enemy} · {region}', {'enemy': e.name, 'region': e.region}),
           enemy: e,
+          level: e.level,
         ),
       );
     }
@@ -165,6 +180,7 @@ List<CodexSource> codexSources(String id, Attribute build) {
           tr('{enemy} · {region}', {'enemy': e.name, 'region': e.region}),
           chance: e.rareDropChance,
           enemy: e,
+          level: e.level,
         ),
       );
     }
@@ -193,6 +209,7 @@ List<CodexSource> codexSources(String id, Attribute build) {
         CodexSource(
           SourceKind.chest,
           tr('{chest} · {map}', {'chest': x.chest.name, 'map': x.name}),
+          level: x.level,
         ),
       );
     }
@@ -203,6 +220,7 @@ List<CodexSource> codexSources(String id, Attribute build) {
             SourceKind.chest,
             tr('{chest} · {map}', {'chest': x.chest.name, 'map': x.name}),
             chance: p,
+            level: x.level,
           ),
         );
       }
@@ -210,10 +228,13 @@ List<CodexSource> codexSources(String id, Attribute build) {
   }
   for (final c in contractors) {
     final text = tr('{chest} · {map}', {'chest': c.chestName, 'map': c.name});
-    if (c.guaranteed.keys.any(same)) out.add(CodexSource(SourceKind.chest, text));
+    if (c.guaranteed.keys.any(same)) {
+      out.add(CodexSource(SourceKind.chest, text, level: c.minSkill, skill: Skill.expeditions));
+    }
     for (final (raw, p) in c.rares) {
       if (raw == buildRareWeapon ? rareWeaponFor(build) == id : same(raw)) {
-        out.add(CodexSource(SourceKind.chest, text, chance: p));
+        out.add(CodexSource(SourceKind.chest, text,
+            chance: p, level: c.minSkill, skill: Skill.expeditions));
       }
     }
   }
@@ -227,6 +248,8 @@ List<CodexSource> codexSources(String id, Attribute build) {
             'skill': r.skill.label,
             'lvl': r.level,
           }),
+          level: r.level,
+          skill: r.skill,
         ),
       );
     }
@@ -237,6 +260,8 @@ List<CodexSource> codexSources(String id, Attribute build) {
         CodexSource(
           SourceKind.craft,
           tr('{station} livello {lvl}', {'station': r.station.label, 'lvl': r.level}),
+          level: r.level,
+          station: r.station,
         ),
       );
     }
@@ -247,6 +272,8 @@ List<CodexSource> codexSources(String id, Attribute build) {
       CodexSource(
         SourceKind.craft,
         tr('{station} livello {lvl}', {'station': weapon.station.label, 'lvl': weapon.craftLevel}),
+        level: weapon.craftLevel,
+        station: weapon.station,
       ),
     );
   }
@@ -256,6 +283,8 @@ List<CodexSource> codexSources(String id, Attribute build) {
       CodexSource(
         SourceKind.craft,
         tr('{station} livello {lvl}', {'station': Station.anvil.label, 'lvl': armor.craftLevel}),
+        level: armor.craftLevel,
+        station: Station.anvil,
       ),
     );
   }
@@ -265,6 +294,8 @@ List<CodexSource> codexSources(String id, Attribute build) {
       CodexSource(
         SourceKind.craft,
         tr('{station} livello {lvl}', {'station': off.station.label, 'lvl': off.craftLevel}),
+        level: off.craftLevel,
+        station: off.station,
       ),
     );
   }
@@ -309,6 +340,23 @@ List<CodexSource> codexSources(String id, Attribute build) {
   out.sort((a, b) => key(a).compareTo(key(b)));
   return out;
 }
+
+/// Si può ottenere adesso: almeno una fonte è alla portata. I nemici
+/// contano fino a due livelli sopra il cavaliere.
+bool codexReachable(
+  List<CodexSource> sources, {
+  required int level,
+  required int Function(Skill) skillLevel,
+  required int Function(Station) stationLevel,
+}) =>
+    sources.any((s) {
+      // I drop casuali da qualunque nemico non contano: si svelano quando
+      // escono davvero, o quando arrivi al livello delle altre fonti.
+      if (s.kind == SourceKind.anyFight) return false;
+      if (s.skill != null) return skillLevel(s.skill!) >= s.level;
+      if (s.station != null) return stationLevel(s.station!) >= s.level;
+      return level + (s.kind == SourceKind.enemy ? 2 : 0) >= s.level;
+    });
 
 /// A cosa serve [id]: ricette che lo usano, potenziamenti, vendita.
 List<CodexUse> codexUses(String id) {

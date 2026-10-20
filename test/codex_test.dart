@@ -34,4 +34,16 @@ void main() {
     ];
     expect(orphans, isEmpty, reason: orphans.join(', '));
   });
+
+  test('a livello 1 il Codice svela il ferro ma non la pietra astrale', () {
+    bool now(String id) => codexReachable(
+      codexSources(id, Attribute.strength),
+      level: 1,
+      skillLevel: (_) => 1,
+      stationLevel: (_) => 1,
+    );
+    expect(now('iron_ore'), isTrue);
+    expect(now('ancient_stone'), isFalse);
+    expect(now('star_ore'), isFalse);
+  });
 }
