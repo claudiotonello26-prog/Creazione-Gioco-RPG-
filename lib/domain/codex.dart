@@ -5,6 +5,7 @@
 import '../core/i18n.dart';
 import 'character.dart';
 import 'combat.dart';
+import 'contracts.dart';
 import 'enemies.dart';
 import 'hunting.dart';
 import 'items.dart';
@@ -204,6 +205,15 @@ List<CodexSource> codexSources(String id, Attribute build) {
             chance: p,
           ),
         );
+      }
+    }
+  }
+  for (final c in contractors) {
+    final text = tr('{chest} · {map}', {'chest': c.chestName, 'map': c.name});
+    if (c.guaranteed.keys.any(same)) out.add(CodexSource(SourceKind.chest, text));
+    for (final (raw, p) in c.rares) {
+      if (raw == buildRareWeapon ? rareWeaponFor(build) == id : same(raw)) {
+        out.add(CodexSource(SourceKind.chest, text, chance: p));
       }
     }
   }

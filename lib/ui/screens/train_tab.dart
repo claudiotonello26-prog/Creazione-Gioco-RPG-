@@ -19,6 +19,7 @@ import '../../domain/routine.dart';
 import '../widgets/common.dart';
 import '../widgets/trainer.dart';
 import 'codex_screen.dart';
+import 'contracts_screen.dart';
 import 'combat_screen.dart';
 import 'novice_card.dart';
 import 'expedition_map.dart';
@@ -67,6 +68,21 @@ class TrainTab extends StatelessWidget {
         ),
         _QuickFights(playerLevel: s.character.level),
         SectionTitle(tr('Spedizioni')),
+        ActionTile(
+          icon: Icons.history_edu,
+          title: tr('Bacheca delle Taglie'),
+          subtitle: s.contract == null
+              ? tr('Firma un contratto: spedizioni da finire per un forziere')
+              : s.contract!.complete
+                  ? tr('Contratto finito: torna a riscuotere!')
+                  : tr('Contratto di {who}: {done} / {n} spedizioni', {
+                      'who': s.contract!.contractor.name,
+                      'done': s.contract!.targets.where(s.contract!.done.contains).length,
+                      'n': s.contract!.targets.length,
+                    }),
+          color: s.contract?.complete == true ? Palette.goldBright : Palette.gold,
+          onTap: () => openContracts(context),
+        ),
         for (final g in worldGroups)
           _GroupCard(
             group: g,

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/i18n.dart';
 import '../domain/character.dart';
 import '../domain/combat.dart';
+import '../domain/contracts.dart';
 import '../domain/enemies.dart';
 import '../domain/exercise.dart';
 import '../domain/items.dart';
@@ -197,6 +198,11 @@ class GameState extends ChangeNotifier {
   /// Spedizioni di cui è caduto il boss.
   Set<String> clearedExpeditions = {};
 
+  /// Contratto di Caccia firmato, se c'è, e giorno dell'ultimo annullamento
+  /// gratuito.
+  HuntContract? contract;
+  String? freeCancelDay;
+
   /// Giorni (yyyy-mm-dd) in cui hai aperto l'app e in cui hai chiuso la quest.
   Set<String> activeDays = {};
   Set<String> questDays = {};
@@ -348,6 +354,8 @@ class GameState extends ChangeNotifier {
         'lastDay': lastActiveDay,
         'keys': expeditionKeys,
         'cleared': clearedExpeditions.toList(),
+        if (contract != null) 'contract': contract!.toJson(),
+        if (freeCancelDay != null) 'freeCancel': freeCancelDay,
         'trained': {
           for (final e in trainedGroups.entries) e.key: [for (final g in e.value) g.name],
         },
@@ -420,6 +428,10 @@ class GameState extends ChangeNotifier {
     lastActiveDay = j['lastDay'] as String?;
     expeditionKeys = j['keys'] as int;
     clearedExpeditions = {...(j['cleared'] as List? ?? const []).cast<String>()};
+    contract = j['contract'] is Map
+        ? HuntContract.fromJson(Map<String, dynamic>.from(j['contract'] as Map))
+        : null;
+    freeCancelDay = j['freeCancel'] as String?;
     trainedGroups = {
       for (final e in (j['trained'] as Map).entries)
         e.key as String: {for (final g in e.value as List) MuscleGroup.parse(g as String)},
@@ -471,6 +483,8 @@ class GameState extends ChangeNotifier {
     lastActiveDay = null;
     expeditionKeys = 0;
     clearedExpeditions = {};
+    contract = null;
+    freeCancelDay = null;
     trainedGroups = {};
     arenaPoints = 1000;
     arenaHistory = [];
@@ -1062,6 +1076,8 @@ class GameState extends ChangeNotifier {
     daily.expeditionStep[e.id] = mapChest;
     daily.pathDone[e.group] = (daily.pathDone[e.group] ?? 0) + 1;
     clearExpedition(e.id);
+    final c = contract;
+    if (c != null && c.targets.contains(e.id)) c.done.add(e.id);
     _count('boss_wins');
     _markActive();
     _changed();
@@ -1093,6 +1109,64 @@ class GameState extends ChangeNotifier {
     daily.expeditionStep[e.id] = mapDone;
     _count('chests');
     _count('chest:${e.id}');
+    _changed();
+    return out;
+  }
+
+  // ------------------------------------------------------ contratti di caccia
+
+  bool canSign(Contractor c) => contract == null && skillLevel(Skill.expeditions) >= c.minSkill;
+
+  /// Firma un contratto: solo ora si scoprono le spedizioni da finire.
+  HuntContract? signContract(Contractor c, {Random? random}) {
+    if (!canSign(c)) return null;
+    contract = HuntContract(
+      contractorId: c.id,
+      targets: drawContractTargets(c, character.level, random ?? Random()),
+    );
+    _changed();
+    return contract;
+  }
+
+  /// Il primo annullamento del giorno è gratis, poi costa rune.
+  bool get freeCancelToday => freeCancelDay != today;
+
+  bool cancelContract() {
+    final c = contract;
+    if (c == null) return false;
+    if (freeCancelToday) {
+      freeCancelDay = today;
+    } else {
+      final cost = cancelCost(c.contractor);
+      if (character.runes < cost) return false;
+      character.runes -= cost;
+    }
+    contract = null;
+    _changed();
+    return true;
+  }
+
+  /// Consegna il contratto finito: rune, XP di Spedizioni e il forziere del
+  /// committente. Ritorna gli oggetti come [openChest].
+  List<(String, int, bool)> deliverContract({Random? random}) {
+    final c = contract;
+    if (c == null || !c.complete) return const [];
+    final who = c.contractor;
+    final r = random ?? Random();
+    final out = <(String, int, bool)>[];
+    character.runes += who.runes;
+    out.add(('runes', who.runes, false));
+    for (final g in _forBuild(who.guaranteed).entries) {
+      character.addMaterial(g.key, g.value);
+      out.add((g.key, g.value, false));
+    }
+    for (final (id, p) in who.rares) {
+      if (r.nextDouble() >= p) continue;
+      out.add((_grantItem(id == buildRareWeapon ? rareWeaponFor(build) : id), 1, true));
+    }
+    _gainSkill(Skill.expeditions, who.skillXp);
+    contract = null;
+    _count('contracts');
     _changed();
     return out;
   }
