@@ -9,6 +9,8 @@
 /// traduzione.
 library;
 
+import 'i18n/en_codex.dart';
+import 'i18n/en_contracts.dart';
 import 'i18n/en_data_enemies.dart';
 import 'i18n/en_data_items.dart';
 import 'i18n/en_domain.dart';
@@ -97,6 +99,8 @@ final Map<String, String> enStrings = {
   ...enUiB,
   ...enUiC,
   ...enSocial,
+  ...enCodex,
+  ...enContracts,
 };
 
 /// Le chiavi inglesi che hanno la traduzione italiana.

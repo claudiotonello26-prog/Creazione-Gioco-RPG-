@@ -188,7 +188,7 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => _ChestDialog(chest: _e.chest, items: items),
+      builder: (_) => ChestDialog(title: _e.chest.name, items: items),
     );
   }
 
@@ -665,16 +665,16 @@ class _MistPainter extends CustomPainter {
 
 /// Il forziere che si apre: gli oggetti escono uno alla volta, il raro con un
 /// lampo d'oro.
-class _ChestDialog extends StatefulWidget {
-  const _ChestDialog({required this.chest, required this.items});
-  final Chest chest;
+class ChestDialog extends StatefulWidget {
+  const ChestDialog({super.key, required this.title, required this.items});
+  final String title;
   final List<(String, int, bool)> items;
 
   @override
-  State<_ChestDialog> createState() => _ChestDialogState();
+  State<ChestDialog> createState() => _ChestDialogState();
 }
 
-class _ChestDialogState extends State<_ChestDialog> with SingleTickerProviderStateMixin {
+class _ChestDialogState extends State<ChestDialog> with SingleTickerProviderStateMixin {
   late final AnimationController _reveal = AnimationController(
     vsync: this,
     duration: Duration(milliseconds: 450 * widget.items.length),
@@ -699,7 +699,7 @@ class _ChestDialogState extends State<_ChestDialog> with SingleTickerProviderSta
           const Icon(Icons.inventory_2, color: Palette.goldBright, size: 44),
           const SizedBox(height: 6),
           OneLine(
-            widget.chest.name.toUpperCase(),
+            widget.title.toUpperCase(),
             align: Alignment.center,
             style: titleStyle(size: 17),
           ),

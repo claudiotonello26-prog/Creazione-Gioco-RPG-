@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'codex_screen.dart';
+import '../../domain/codex.dart';
+
 import '../widgets/oath_bar.dart';
 import '../../core/i18n.dart';
 
@@ -14,6 +17,12 @@ import '../widgets/weapon_sockets.dart';
 import '../widgets/knight_view.dart';
 import 'gear_screens.dart';
 import '../../core/sound.dart';
+
+IconData styleIcon(WeaponStyle s) => switch (s) {
+  WeaponStyle.melee => Icons.colorize,
+  WeaponStyle.ranged => Icons.call_made,
+  WeaponStyle.magic => Icons.auto_fix_high,
+};
 
 IconData stationIcon(Station s) => switch (s) {
   Station.carpentry => Icons.carpenter,
@@ -57,6 +66,12 @@ class ForgeTab extends StatelessWidget {
           subtitle: tr('Arma, armatura pezzo per pezzo, mano sinistra, amuleti'),
           color: Palette.goldBright,
           onTap: () => openEquipment(context),
+        ),
+        ActionTile(
+          icon: Icons.auto_stories,
+          title: tr('Codice del Giuramento'),
+          subtitle: tr('Ogni oggetto: dove si trova e a cosa serve'),
+          onTap: () => openCodex(context),
         ),
         ActionTile(
           icon: Icons.storefront,
@@ -134,9 +149,9 @@ class StationScreen extends StatelessWidget {
         art: 'station_${station.name}',
         color: station.accent,
         child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: station == Station.enchant ? _enchant(context, s) : _crafting(context, s),
-      ),
+          padding: const EdgeInsets.all(16),
+          children: station == Station.enchant ? _enchant(context, s) : _crafting(context, s),
+        ),
       ),
     );
   }
@@ -144,12 +159,20 @@ class StationScreen extends StatelessWidget {
   List<Widget> _crafting(BuildContext context, GameState s) {
     final skill = Skill.forStation(station);
     final (lvl, xpIn, xpNeed) = skillProgress(s.skillXp[skill] ?? 0);
-    final mats = materialRecipes.where((r) => r.station == station).toList();
-    final weapons =
-        weaponDefs.values.where((d) => d.recipe.isNotEmpty && d.station == station).toList()
-          ..sort((a, b) => a.craftLevel.compareTo(b.craftLevel));
-    final armors = station == Station.anvil ? armorDefs.values.toList() : <ArmorDef>[];
-    final offhands = offhandDefs.values.where((o) => o.station == station).toList();
+    // Solo quello che si può già fare, più la prossima cosa da sbloccare:
+    // il resto compare salendo di livello.
+    final mats = unlockedPlusNext(
+        materialRecipes.where((r) => r.station == station).toList(), (r) => r.level, lvl);
+    final weapons = unlockedPlusNext(
+        weaponDefs.values.where((d) => d.recipe.isNotEmpty && d.station == station).toList(),
+        (d) => d.craftLevel,
+        lvl);
+    final armors = unlockedPlusNext(
+        station == Station.anvil ? armorDefs.values.toList() : <ArmorDef>[],
+        (a) => a.craftLevel,
+        lvl);
+    final offhands = unlockedPlusNext(
+        offhandDefs.values.where((o) => o.station == station).toList(), (o) => o.craftLevel, lvl);
     return [
       Icon(stationIcon(station), color: station.accent, size: 40),
       const SizedBox(height: 6),
@@ -162,7 +185,7 @@ class StationScreen extends StatelessWidget {
       StatBar(
         value: xpIn / xpNeed,
         color: Palette.gold,
-        label: tr('Livello {level} · {xp} / {need} XP', {'level': lvl, 'xp': xpIn, 'need': xpNeed}),
+        label: '${tr('Livello {n}', {'n': lvl})} · ${xpLeftLabel(xpIn, xpNeed)}',
       ),
       if (mats.isNotEmpty) SectionTitle(tr('Lavorazioni')),
       for (final r in mats)
@@ -198,14 +221,16 @@ class StationScreen extends StatelessWidget {
           color: station.accent,
           sound: stationSound(station),
           itemId: d.id,
-          note:
-              tr('{style} · aura di {aura}', {'style': d.style.label, 'aura': d.affinity.label.toLowerCase()}) +
-              (d.wieldLevel > 1
-                  ? tr(' · si impugna con {skill} {level}', {
-                      'skill': d.usesMagic ? tr('Magia') : tr('Attacco'),
-                      'level': d.wieldLevel,
-                    })
-                  : ''),
+          stats: [
+            StatChip(styleIcon(d.style), '${d.baseDamage}'),
+            StatChip(Icons.auto_awesome, d.affinity.label, color: d.affinity.color),
+            if (d.wieldLevel > 1)
+              StatChip(
+                d.usesMagic ? Icons.auto_fix_high : Icons.colorize,
+                'Lv ${d.wieldLevel}',
+                color: Palette.ash,
+              ),
+          ],
         ),
       if (armors.isNotEmpty) SectionTitle(tr('Armature')),
       for (final a in armors)
@@ -225,9 +250,10 @@ class StationScreen extends StatelessWidget {
           color: station.accent,
           sound: stationSound(station),
           itemId: a.id,
-          note:
-              tr('Assorbe il {pct}% dei colpi', {'pct': (a.reduction * 100).round()}) +
-              (a.wearLevel > 1 ? tr(' · si indossa con Difesa {level}', {'level': a.wearLevel}) : ''),
+          stats: [
+            StatChip(Icons.shield, '-${(a.reduction * 100).round()}%'),
+            if (a.wearLevel > 1) StatChip(Icons.lock_open, 'Lv ${a.wearLevel}', color: Palette.ash),
+          ],
         ),
       if (offhands.isNotEmpty) SectionTitle(tr('Mano sinistra')),
       for (final o in offhands)
@@ -247,7 +273,11 @@ class StationScreen extends StatelessWidget {
           color: station.accent,
           sound: stationSound(station),
           itemId: o.id,
-          note: o.effect,
+          stats: [
+            o.isShield
+                ? StatChip(Icons.shield, '-${(o.reduction * 100).round()}%')
+                : StatChip(Icons.colorize, '+${(o.damageBonus * 100).round()}%'),
+          ],
         ),
     ];
   }
@@ -336,7 +366,7 @@ class _RecipeTile extends StatelessWidget {
     this.sound = Sfx.confirm,
     this.itemId,
     this.have,
-    this.note,
+    this.stats = const [],
     this.done = false,
   });
 
@@ -352,41 +382,97 @@ class _RecipeTile extends StatelessWidget {
   final Color color;
   final String? itemId;
   final int? have;
-  final String? note;
+
+  /// I numeri che contano (danno, difesa, livello per usarlo), come icone.
+  final List<Widget> stats;
   final bool done;
 
   @override
   Widget build(BuildContext context) {
     final s = context.read<GameState>();
-    final needs = inputs.entries
-        .map((e) => '${e.value}× ${materialNames[e.key]} (${s.character.materials[e.key] ?? 0})')
-        .join(' · ');
-    return ActionTile(
-      icon: unlocked ? icon : Icons.lock_outline,
-      color: unlocked ? color : Palette.iron,
-      title: '$title${have != null && have! > 0 ? tr('  ·  hai {n}', {'n': have}) : ''}',
-      subtitle: unlocked ? [?note, needs].join('\n') : tr('Si sblocca a {station} livello {level}', {'station': stationLabel, 'level': level}),
-      enabled: unlocked,
-      trailing: done
-          ? const Icon(Icons.check, color: Palette.goldBright)
-          : !unlocked
-          ? null
-          : FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: color,
-                foregroundColor: Palette.night,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                minimumSize: const Size(0, 36),
-              ),
-              onPressed: canMake
-                  ? () async {
-                      if (await craftCountdown(context, title: title, itemId: itemId, color: color, sound: sound)) {
-                        onMake();
-                      }
-                    }
-                  : null,
-              child: Text(tr('CREA')),
+    final entry = itemId == null ? null : codexEntry(itemId!);
+    final button = done
+        ? const Icon(Icons.check_circle, color: Palette.goldBright, size: 30)
+        : !unlocked
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.lock_outline, color: Palette.iron, size: 24),
+              Text('Lv $level', style: const TextStyle(color: Palette.ash, fontSize: 13)),
+            ],
+          )
+        : FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: color,
+              foregroundColor: Palette.night,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              minimumSize: const Size(0, 36),
             ),
+            onPressed: canMake
+                ? () async {
+                    if (await craftCountdown(
+                      context,
+                      title: title,
+                      itemId: itemId,
+                      color: color,
+                      sound: sound,
+                    )) {
+                      onMake();
+                    }
+                  }
+                : null,
+            child: Text(tr('CREA')),
+          );
+    return Opacity(
+      opacity: unlocked ? 1 : 0.5,
+      child: Card(
+        child: InkWell(
+          onTap: itemId == null ? null : () => openCodex(context, itemId),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                entry != null ? CodexIcon(entry, size: 44) : Icon(icon, color: color, size: 36),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Flexible(child: OneLine(title, style: const TextStyle(fontSize: 16))),
+                          if (have != null && have! > 0) ...[
+                            const SizedBox(width: 6),
+                            Text(
+                              '×$have',
+                              style: const TextStyle(
+                                color: Palette.goldBright,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      if (stats.isNotEmpty) ...[
+                        const SizedBox(height: 3),
+                        Wrap(spacing: 10, runSpacing: 2, children: stats),
+                      ],
+                      const SizedBox(height: 5),
+                      CostRow(
+                        needs: inputs,
+                        have: s.character.materials,
+                        onTapItem: (id) => openCodex(context, id),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                button,
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -416,11 +502,11 @@ class _UpgradePreview extends StatelessWidget {
 
 /// Il suono di fine lavorazione di ogni postazione.
 Sfx stationSound(Station s) => switch (s) {
-      Station.carpentry => Sfx.craftCarpentry,
-      Station.furnace => Sfx.craftFurnace,
-      Station.anvil => Sfx.craftAnvil,
-      Station.enchant => Sfx.craftEnchant,
-    };
+  Station.carpentry => Sfx.craftCarpentry,
+  Station.furnace => Sfx.craftFurnace,
+  Station.anvil => Sfx.craftAnvil,
+  Station.enchant => Sfx.craftEnchant,
+};
 
 /// Il potenziamento è la pietra stessa: si tocca la pietra per salire di
 /// un livello.
@@ -465,7 +551,8 @@ class _StoneButton extends StatelessWidget {
                   context,
                   have < cost
                       ? tr('Ti servono {cost}× {item}.', {'cost': cost, 'item': itemName(stone)})
-                      : tr('Ti servono {runes} rune.', {'runes': runes})),
+                      : tr('Ti servono {runes} rune.', {'runes': runes}),
+                ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             child: Row(

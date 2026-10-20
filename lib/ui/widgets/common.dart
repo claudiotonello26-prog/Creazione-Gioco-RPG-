@@ -119,6 +119,81 @@ class StatBar extends StatelessWidget {
   }
 }
 
+/// Le voci già sbloccate al livello [lvl] e quella che si sblocca per prima
+/// dopo, in ordine di livello.
+List<T> unlockedPlusNext<T>(List<T> items, int Function(T) level, int lvl) {
+  final sorted = [...items]..sort((a, b) => level(a).compareTo(level(b)));
+  final open = sorted.where((x) => level(x) <= lvl).toList();
+  final next = sorted.where((x) => level(x) > lvl).firstOrNull;
+  return [...open, ?next];
+}
+
+/// Un dato a colpo d'occhio: icona e numero, niente frasi.
+class StatChip extends StatelessWidget {
+  const StatChip(this.icon, this.text, {super.key, this.color = Palette.holy});
+  final IconData icon;
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: color),
+        const SizedBox(width: 3),
+        Text(text, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w700)),
+      ],
+    );
+  }
+}
+
+/// Cosa serve per creare qualcosa: icona di ogni materiale con «hai/serve»,
+/// verde se basta e rosso se manca.
+class CostRow extends StatelessWidget {
+  const CostRow({super.key, required this.needs, required this.have, this.onTapItem});
+  final Map<String, int> needs;
+  final Map<String, int> have;
+  final void Function(String id)? onTapItem;
+
+  static const ok = Color(0xFF7FC97A), missing = Color(0xFFE0605A);
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 4,
+      children: [
+        for (final e in needs.entries)
+          GestureDetector(
+            onTap: onTapItem == null ? null : () => onTapItem!(e.key),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ItemIcon(e.key, size: 26),
+                const SizedBox(width: 2),
+                Text(
+                  '${have[e.key] ?? 0}/${e.value}',
+                  style: TextStyle(
+                    color: (have[e.key] ?? 0) >= e.value ? ok : missing,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// L'etichetta di una barra di esperienza con quanto manca al prossimo
+/// livello: «120 / 300 XP · mancano 180».
+String xpLeftLabel(int xpIn, int xpNeed) => xpNeed <= 0
+    ? '$xpIn XP'
+    : tr('{xp} / {need} XP · mancano {left}', {'xp': xpIn, 'need': xpNeed, 'left': xpNeed - xpIn});
+
 class InfoChip extends StatelessWidget {
   const InfoChip(this.icon, this.text, {super.key, this.color = Palette.gold});
   final IconData icon;

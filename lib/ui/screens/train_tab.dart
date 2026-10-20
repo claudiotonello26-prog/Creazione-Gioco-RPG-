@@ -18,6 +18,8 @@ import '../../domain/items.dart';
 import '../../domain/routine.dart';
 import '../widgets/common.dart';
 import '../widgets/trainer.dart';
+import 'codex_screen.dart';
+import 'contracts_screen.dart';
 import 'combat_screen.dart';
 import 'novice_card.dart';
 import 'expedition_map.dart';
@@ -66,6 +68,21 @@ class TrainTab extends StatelessWidget {
         ),
         _QuickFights(playerLevel: s.character.level),
         SectionTitle(tr('Spedizioni')),
+        ActionTile(
+          icon: Icons.history_edu,
+          title: tr('Bacheca delle Taglie'),
+          subtitle: s.contract == null
+              ? tr('Firma un contratto: spedizioni da finire per un forziere')
+              : s.contract!.complete
+                  ? tr('Contratto finito: torna a riscuotere!')
+                  : tr('Contratto di {who}: {done} / {n} spedizioni', {
+                      'who': s.contract!.contractor.name,
+                      'done': s.contract!.targets.where(s.contract!.done.contains).length,
+                      'n': s.contract!.targets.length,
+                    }),
+          color: s.contract?.complete == true ? Palette.goldBright : Palette.gold,
+          onTap: () => openContracts(context),
+        ),
         for (final g in worldGroups)
           _GroupCard(
             group: g,
@@ -409,6 +426,7 @@ class _FreeFightTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final oath = context.watch<GameState>().build;
     void fight() => startFreeFight(context, enemy, respawn: true);
     return Card(
       child: InkWell(
@@ -454,8 +472,10 @@ class _FreeFightTile extends StatelessWidget {
                             runSpacing: 2,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
-                              for (final k in enemy.loot.keys)
-                                Tooltip(message: itemName(k), child: ItemIcon(k, size: 26)),
+                              for (final k in {for (final k in enemy.loot.keys) forBuild(k, oath)})
+                                CodexTap(k,
+                                    child: Tooltip(
+                                        message: itemName(k), child: ItemIcon(k, size: 26))),
                               if (enemy.rareDrop != null)
                                 Tooltip(
                                   message:
@@ -513,10 +533,18 @@ class _EnemyRewards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final special = enemy.rareDrop;
+    final oath = context.watch<GameState>().build;
+    final raw = enemy.rareDrop;
+    final special = raw == null
+        ? null
+        : amuletDefs.containsKey(raw)
+            ? 'amulet_$raw'
+            : forBuild(raw, oath);
     final uncommon = CombatEngine.uncommonDrops;
     final rare = [for (final r in CombatEngine.rareDrops) if (r != special) r];
-    Widget item(String id, String note, Color color, {bool highlight = false}) => SizedBox(
+    Widget item(String id, String note, Color color, {bool highlight = false}) => CodexTap(
+        id,
+        child: SizedBox(
           width: 76,
           child: Column(
             children: [
@@ -546,7 +574,8 @@ class _EnemyRewards extends StatelessWidget {
                   style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold)),
             ],
           ),
-        );
+        ),
+      );
     Widget row(String title, Color color, String hint, List<Widget> items) => Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: Column(
@@ -576,7 +605,8 @@ class _EnemyRewards extends StatelessWidget {
       children: [
         if (enemy.loot.isNotEmpty)
           row(tr('Comuni'), _commonColor, tr('a ogni vittoria'), [
-            for (final e in enemy.loot.entries) item(e.key, 'x${e.value}', _commonColor),
+            for (final e in lootForBuild(enemy.loot, oath).entries)
+              item(e.key, 'x${e.value}', _commonColor),
           ]),
         row(tr('Non comuni'), _uncommonColor,
             tr('uno a caso, {p}', {'p': _pct(CombatEngine.uncommonBase)}), [
@@ -644,7 +674,8 @@ class _ExpeditionCard extends StatelessWidget {
                   runSpacing: 6,
                   children: [
                     for (final d in {for (final d in e.drops) forBuild(d, oath)})
-                      Tooltip(message: itemName(d), child: ItemIcon(d, size: 30)),
+                      CodexTap(d,
+                          child: Tooltip(message: itemName(d), child: ItemIcon(d, size: 30))),
                   ],
                 ),
               ],
