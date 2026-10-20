@@ -1,0 +1,471 @@
+{
+  "hollow_goblin_idle": {
+    "id": "hollow_goblin_idle",
+    "file": "assets/art/enemies/hollow_goblin_idle.png",
+    "status": "kept",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "carrion_hound_idle": {
+    "id": "carrion_hound_idle",
+    "file": "assets/art/enemies/carrion_hound_idle.png",
+    "status": "redone",
+    "pink_pixels": 4,
+    "size": 1024
+  },
+  "fallen_knight_idle": {
+    "id": "fallen_knight_idle",
+    "file": "assets/art/enemies/fallen_knight_idle.png",
+    "status": "kept",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "ash_wyrm_idle": {
+    "id": "ash_wyrm_idle",
+    "file": "assets/art/enemies/ash_wyrm_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "keep_sentinel_idle": {
+    "id": "keep_sentinel_idle",
+    "file": "assets/art/enemies/keep_sentinel_idle.png",
+    "status": "kept",
+    "pink_pixels": 3,
+    "size": 1024
+  },
+  "wall_archer_idle": {
+    "id": "wall_archer_idle",
+    "file": "assets/art/enemies/wall_archer_idle.png",
+    "status": "kept",
+    "pink_pixels": 1,
+    "size": 1024
+  },
+  "keep_brute_idle": {
+    "id": "keep_brute_idle",
+    "file": "assets/art/enemies/keep_brute_idle.png",
+    "status": "kept",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "lord_of_the_keep_idle": {
+    "id": "lord_of_the_keep_idle",
+    "file": "assets/art/bosses/lord_of_the_keep_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "marsh_matron_idle": {
+    "id": "marsh_matron_idle",
+    "file": "assets/art/bosses/marsh_matron_idle.png",
+    "status": "kept",
+    "pink_pixels": 1,
+    "size": 1536
+  },
+  "slag_goblin_idle": {
+    "id": "slag_goblin_idle",
+    "file": "assets/art/enemies/slag_goblin_idle.png",
+    "status": "kept",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "hollow_apprentice_idle": {
+    "id": "hollow_apprentice_idle",
+    "file": "assets/art/enemies/hollow_apprentice_idle.png",
+    "status": "kept",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "hollow_smith_idle": {
+    "id": "hollow_smith_idle",
+    "file": "assets/art/bosses/hollow_smith_idle.png",
+    "status": "kept",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "iron_castellan_idle": {
+    "id": "iron_castellan_idle",
+    "file": "assets/art/bosses/iron_castellan_idle.png",
+    "status": "kept",
+    "pink_pixels": 1,
+    "size": 1536
+  },
+  "ember_giant_idle": {
+    "id": "ember_giant_idle",
+    "file": "assets/art/bosses/ember_giant_idle.png",
+    "status": "kept",
+    "pink_pixels": 2,
+    "size": 1536
+  },
+  "chained_stoker_idle": {
+    "id": "chained_stoker_idle",
+    "file": "assets/art/enemies/chained_stoker_idle.png",
+    "status": "kept",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "living_bellows_idle": {
+    "id": "living_bellows_idle",
+    "file": "assets/art/bosses/living_bellows_idle.png",
+    "status": "kept",
+    "pink_pixels": 3,
+    "size": 1536
+  },
+  "forge_servant_idle": {
+    "id": "forge_servant_idle",
+    "file": "assets/art/enemies/forge_servant_idle.png",
+    "status": "kept",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "anvil_golem_idle": {
+    "id": "anvil_golem_idle",
+    "file": "assets/art/enemies/anvil_golem_idle.png",
+    "status": "kept",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "fallen_smith_god_idle": {
+    "id": "fallen_smith_god_idle",
+    "file": "assets/art/bosses/fallen_smith_god_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "ash_scarecrow_idle": {
+    "id": "ash_scarecrow_idle",
+    "file": "assets/art/enemies/ash_scarecrow_idle.png",
+    "status": "redone",
+    "pink_pixels": 9,
+    "size": 1024
+  },
+  "hollow_stag_idle": {
+    "id": "hollow_stag_idle",
+    "file": "assets/art/bosses/hollow_stag_idle.png",
+    "status": "kept",
+    "pink_pixels": 3,
+    "size": 1536
+  },
+  "bog_drowned_idle": {
+    "id": "bog_drowned_idle",
+    "file": "assets/art/enemies/bog_drowned_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "gorge_harpy_idle": {
+    "id": "gorge_harpy_idle",
+    "file": "assets/art/enemies/gorge_harpy_idle.png",
+    "status": "redone",
+    "pink_pixels": 21,
+    "size": 1024
+  },
+  "cliff_raider_idle": {
+    "id": "cliff_raider_idle",
+    "file": "assets/art/enemies/cliff_raider_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "weightless_knight_idle": {
+    "id": "weightless_knight_idle",
+    "file": "assets/art/bosses/weightless_knight_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "wind_sentinel_idle": {
+    "id": "wind_sentinel_idle",
+    "file": "assets/art/enemies/wind_sentinel_idle.png",
+    "status": "redone",
+    "pink_pixels": 4,
+    "size": 1024
+  },
+  "thunder_ram_idle": {
+    "id": "thunder_ram_idle",
+    "file": "assets/art/enemies/thunder_ram_idle.png",
+    "status": "redone",
+    "pink_pixels": 2,
+    "size": 1024
+  },
+  "storm_king_idle": {
+    "id": "storm_king_idle",
+    "file": "assets/art/bosses/storm_king_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "bronze_skeleton_idle": {
+    "id": "bronze_skeleton_idle",
+    "file": "assets/art/enemies/bronze_skeleton_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "tomb_crawler_idle": {
+    "id": "tomb_crawler_idle",
+    "file": "assets/art/enemies/tomb_crawler_idle.png",
+    "status": "redone",
+    "pink_pixels": 541,
+    "size": 1024
+  },
+  "crypt_keeper_idle": {
+    "id": "crypt_keeper_idle",
+    "file": "assets/art/bosses/crypt_keeper_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "gilded_acolyte_idle": {
+    "id": "gilded_acolyte_idle",
+    "file": "assets/art/enemies/gilded_acolyte_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "golden_priest_idle": {
+    "id": "golden_priest_idle",
+    "file": "assets/art/bosses/golden_priest_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "penitent_idle": {
+    "id": "penitent_idle",
+    "file": "assets/art/enemies/penitent_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "censer_bearer_idle": {
+    "id": "censer_bearer_idle",
+    "file": "assets/art/enemies/censer_bearer_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "chained_maiden_idle": {
+    "id": "chained_maiden_idle",
+    "file": "assets/art/bosses/chained_maiden_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "black_inquisitor_idle": {
+    "id": "black_inquisitor_idle",
+    "file": "assets/art/enemies/black_inquisitor_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "cathedral_gargoyle_idle": {
+    "id": "cathedral_gargoyle_idle",
+    "file": "assets/art/enemies/cathedral_gargoyle_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "eternal_martyr_idle": {
+    "id": "eternal_martyr_idle",
+    "file": "assets/art/bosses/eternal_martyr_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "spectral_archer_idle": {
+    "id": "spectral_archer_idle",
+    "file": "assets/art/enemies/spectral_archer_idle.png",
+    "status": "redone",
+    "pink_pixels": 13,
+    "size": 1024
+  },
+  "lunar_wisp_idle": {
+    "id": "lunar_wisp_idle",
+    "file": "assets/art/enemies/lunar_wisp_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "moon_moth_idle": {
+    "id": "moon_moth_idle",
+    "file": "assets/art/bosses/moon_moth_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "drowned_scribe_idle": {
+    "id": "drowned_scribe_idle",
+    "file": "assets/art/enemies/drowned_scribe_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "living_tome_idle": {
+    "id": "living_tome_idle",
+    "file": "assets/art/enemies/living_tome_idle.png",
+    "status": "redone",
+    "pink_pixels": 16,
+    "size": 1024
+  },
+  "eyeless_librarian_idle": {
+    "id": "eyeless_librarian_idle",
+    "file": "assets/art/bosses/eyeless_librarian_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "mad_astrologer_idle": {
+    "id": "mad_astrologer_idle",
+    "file": "assets/art/enemies/mad_astrologer_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "brass_automaton_idle": {
+    "id": "brass_automaton_idle",
+    "file": "assets/art/enemies/brass_automaton_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "star_eye_idle": {
+    "id": "star_eye_idle",
+    "file": "assets/art/bosses/star_eye_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "star_shard_idle": {
+    "id": "star_shard_idle",
+    "file": "assets/art/enemies/star_shard_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "void_stalker_idle": {
+    "id": "void_stalker_idle",
+    "file": "assets/art/enemies/void_stalker_idle.png",
+    "status": "redone",
+    "pink_pixels": 41,
+    "size": 1024
+  },
+  "star_devourer_idle": {
+    "id": "star_devourer_idle",
+    "file": "assets/art/bosses/star_devourer_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "restless_spirit_idle": {
+    "id": "restless_spirit_idle",
+    "file": "assets/art/enemies/restless_spirit_idle.png",
+    "status": "redone",
+    "pink_pixels": 18,
+    "size": 1024
+  },
+  "wandering_lantern_idle": {
+    "id": "wandering_lantern_idle",
+    "file": "assets/art/enemies/wandering_lantern_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "mute_gardener_idle": {
+    "id": "mute_gardener_idle",
+    "file": "assets/art/bosses/mute_gardener_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "broken_monk_idle": {
+    "id": "broken_monk_idle",
+    "file": "assets/art/enemies/broken_monk_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "bell_wraith_idle": {
+    "id": "bell_wraith_idle",
+    "file": "assets/art/enemies/bell_wraith_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "twisted_abbot_idle": {
+    "id": "twisted_abbot_idle",
+    "file": "assets/art/bosses/twisted_abbot_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "steam_nymph_idle": {
+    "id": "steam_nymph_idle",
+    "file": "assets/art/enemies/steam_nymph_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "bath_serpent_idle": {
+    "id": "bath_serpent_idle",
+    "file": "assets/art/enemies/bath_serpent_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "baths_queen_idle": {
+    "id": "baths_queen_idle",
+    "file": "assets/art/bosses/baths_queen_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "dreamer_idle": {
+    "id": "dreamer_idle",
+    "file": "assets/art/enemies/dreamer_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "sleepwalker_idle": {
+    "id": "sleepwalker_idle",
+    "file": "assets/art/enemies/sleepwalker_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "sleepless_one_idle": {
+    "id": "sleepless_one_idle",
+    "file": "assets/art/bosses/sleepless_one_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1536
+  },
+  "ash_deer_idle": {
+    "id": "ash_deer_idle",
+    "file": "assets/art/animals/ash_deer_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  },
+  "tusk_boar_idle": {
+    "id": "tusk_boar_idle",
+    "file": "assets/art/animals/tusk_boar_idle.png",
+    "status": "redone",
+    "pink_pixels": 1,
+    "size": 1024
+  },
+  "grave_wolf_idle": {
+    "id": "grave_wolf_idle",
+    "file": "assets/art/animals/grave_wolf_idle.png",
+    "status": "redone",
+    "pink_pixels": 3,
+    "size": 1024
+  },
+  "dusk_bear_idle": {
+    "id": "dusk_bear_idle",
+    "file": "assets/art/animals/dusk_bear_idle.png",
+    "status": "redone",
+    "pink_pixels": 0,
+    "size": 1024
+  }
+}
