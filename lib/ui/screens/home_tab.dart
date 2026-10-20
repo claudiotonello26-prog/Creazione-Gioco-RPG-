@@ -57,7 +57,7 @@ class HomeTab extends StatelessWidget {
                   style: const TextStyle(color: Palette.ash),
                 ),
                 const SizedBox(height: 10),
-                StatBar(value: xpIn / xpNeed, color: Palette.gold, label: '$xpIn / $xpNeed XP'),
+                StatBar(value: xpIn / xpNeed, color: Palette.gold, label: xpLeftLabel(xpIn, xpNeed)),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -408,7 +408,9 @@ class _SkillTile extends StatelessWidget {
     final color = skill.combat ? Palette.ember : Palette.gold;
     return Card(
       margin: EdgeInsets.zero,
-      child: Padding(
+      child: InkWell(
+        onTap: () => _showSkill(context, skill, progress),
+        child: Padding(
         padding: const EdgeInsets.all(6),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -423,8 +425,56 @@ class _SkillTile extends StatelessWidget {
           ],
         ),
       ),
+      ),
     );
   }
+}
+
+/// Come si allena un'abilità, in una riga.
+String skillHint(Skill k) => switch (k) {
+      Skill.woodcutting => tr('Sale camminando: spendi i passi nei boschi della Raccolta.'),
+      Skill.mining => tr('Sale camminando: spendi i passi nelle cave della Raccolta.'),
+      Skill.carpentry => tr('Sale creando assi, archi e bastoni in Carpenteria.'),
+      Skill.smelting => tr('Sale fondendo lingotti e pietre alla Fornace.'),
+      Skill.smithing => tr('Sale forgiando armi e armature all\'Incudine.'),
+      Skill.attack => tr('Sale combattendo con spade e archi, in postura aggressiva o bilanciata.'),
+      Skill.defense => tr('Sale combattendo in postura difensiva o bilanciata, e tenendo le pose.'),
+      Skill.magic => tr('Sale combattendo con i bastoni, in postura aggressiva o bilanciata.'),
+      Skill.expeditions => tr('Sale battendo i nemici delle spedizioni.'),
+    };
+
+void _showSkill(BuildContext context, Skill skill, (int, int, int) progress) {
+  final (lvl, xpIn, xpNeed) = progress;
+  final max = lvl >= skill.maxLevel;
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Palette.stone,
+    builder: (ctx) => Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(skillIcon(skill), color: skill.combat ? Palette.ember : Palette.gold, size: 40),
+          const SizedBox(height: 6),
+          Text(skill.label.toUpperCase(), style: titleStyle(size: 18)),
+          Text(tr('Livello {n}', {'n': lvl}), style: const TextStyle(color: Palette.goldBright)),
+          const SizedBox(height: 12),
+          if (max)
+            Text(tr('Livello massimo raggiunto'), style: const TextStyle(color: Palette.holy))
+          else
+            StatBar(
+              value: xpNeed == 0 ? 1 : xpIn / xpNeed,
+              color: Palette.gold,
+              height: 12,
+              label: xpLeftLabel(xpIn, xpNeed),
+            ),
+          const SizedBox(height: 12),
+          Text(skillHint(skill),
+              textAlign: TextAlign.center, style: const TextStyle(color: Palette.ash, fontSize: 15)),
+        ],
+      ),
+    ),
+  );
 }
 
 class _AttrTile extends StatelessWidget {

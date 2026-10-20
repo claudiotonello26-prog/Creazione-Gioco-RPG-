@@ -119,6 +119,12 @@ class StatBar extends StatelessWidget {
   }
 }
 
+/// L'etichetta di una barra di esperienza con quanto manca al prossimo
+/// livello: «120 / 300 XP · mancano 180».
+String xpLeftLabel(int xpIn, int xpNeed) => xpNeed <= 0
+    ? '$xpIn XP'
+    : tr('{xp} / {need} XP · mancano {left}', {'xp': xpIn, 'need': xpNeed, 'left': xpNeed - xpIn});
+
 class InfoChip extends StatelessWidget {
   const InfoChip(this.icon, this.text, {super.key, this.color = Palette.gold});
   final IconData icon;

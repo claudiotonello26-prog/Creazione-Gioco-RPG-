@@ -14,6 +14,7 @@ import '../widgets/common.dart';
 import '../../core/sound.dart';
 import '../widgets/weapon_sockets.dart';
 import 'armory_screen.dart';
+import 'codex_screen.dart';
 
 export 'armory_screen.dart' show EquipmentScreen, GearSlot;
 
@@ -40,6 +41,13 @@ class InventoryScreen extends StatelessWidget {
       child: Scaffold(
         appBar: OathBar(
           title: Text(tr('INVENTARIO')),
+          actions: [
+            IconButton(
+              tooltip: tr('Codice del Giuramento'),
+              icon: const Icon(Icons.auto_stories, color: Palette.goldBright),
+              onPressed: () => openCodex(context),
+            ),
+          ],
           bottom: TabBar(
             tabs: [Tab(text: tr('Oggetti')), Tab(text: tr('Armi')), Tab(text: tr('Armature'))],
           ),
@@ -97,6 +105,7 @@ class _Items extends StatelessWidget {
               icon: Icons.handyman,
               title: materialNames[t.key] ?? t.key,
               subtitle: tr('+{pct}% di raccolta camminando', {'pct': ((toolYield[t.key] ?? 0) * 100).round()}),
+              onTap: () => openCodex(context, t.key),
             ),
         ],
         if (stones.isNotEmpty) ...[SectionTitle(tr('Pietre e reliquie')), _grid(stones)],
@@ -123,6 +132,7 @@ class _Weapons extends StatelessWidget {
             icon: identical(w, c.weapon) ? Icons.check_circle : Icons.gavel,
             color: identical(w, c.weapon) ? Palette.goldBright : Palette.gold,
             title: w.displayName,
+            onTap: () => openCodex(context, w.weaponId),
             subtitle: tr('{style} · potere {power}', {'style': w.def.style.label, 'power': w.attackRating(c).round()}) +
                 (identical(w, c.weapon) ? tr(' · impugnata') : ''),
           ),
@@ -134,6 +144,7 @@ class _Weapons extends StatelessWidget {
               color: c.offhandId == id ? Palette.goldBright : Palette.gold,
               title: offhandDefs[id]!.name,
               subtitle: offhandDefs[id]!.effect,
+              onTap: () => openCodex(context, id),
             ),
         ],
         const SizedBox(height: 12),
@@ -168,6 +179,7 @@ class _Armors extends StatelessWidget {
           ActionTile(
             icon: Icons.shield_outlined,
             title: armorDefs[id]!.name,
+            onTap: () => openCodex(context, id),
             subtitle: [
               for (final slot in ArmorSlot.values)
                 if (c.worn[slot] == id) slot.label,
@@ -180,6 +192,7 @@ class _Armors extends StatelessWidget {
             color: Color(capeDefs[id]!.color).withValues(alpha: 1),
             title: capeDefs[id]!.name,
             subtitle: c.capeId == id ? tr('Addosso') : capeDefs[id]!.effect,
+            onTap: () => openCodex(context, id),
           ),
         const SizedBox(height: 12),
         OutlinedButton.icon(
@@ -204,7 +217,9 @@ Widget _grid(List<MapEntry<String, int>> items) => GridView.count(
         for (final m in items)
           Card(
             margin: EdgeInsets.zero,
-            child: Padding(
+            child: CodexTap(
+              m.key,
+              child: Padding(
               padding: const EdgeInsets.all(4),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -233,6 +248,7 @@ Widget _grid(List<MapEntry<String, int>> items) => GridView.count(
                   ),
                 ],
               ),
+            ),
             ),
           ),
       ],
@@ -310,6 +326,7 @@ class _Merchant extends StatelessWidget {
           ActionTile(
             icon: Icons.gavel,
             title: w.displayName,
+            onTap: () => openCodex(context, w.weaponId),
             subtitle: tr('Arma nella rastrelliera'),
             trailing: TextButton(
               onPressed: () {

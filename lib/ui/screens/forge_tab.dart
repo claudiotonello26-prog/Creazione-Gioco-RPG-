@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'codex_screen.dart';
+
 import '../widgets/oath_bar.dart';
 import '../../core/i18n.dart';
 
@@ -57,6 +59,12 @@ class ForgeTab extends StatelessWidget {
           subtitle: tr('Arma, armatura pezzo per pezzo, mano sinistra, amuleti'),
           color: Palette.goldBright,
           onTap: () => openEquipment(context),
+        ),
+        ActionTile(
+          icon: Icons.auto_stories,
+          title: tr('Codice del Giuramento'),
+          subtitle: tr('Ogni oggetto: dove si trova e a cosa serve'),
+          onTap: () => openCodex(context),
         ),
         ActionTile(
           icon: Icons.storefront,
@@ -162,7 +170,7 @@ class StationScreen extends StatelessWidget {
       StatBar(
         value: xpIn / xpNeed,
         color: Palette.gold,
-        label: tr('Livello {level} · {xp} / {need} XP', {'level': lvl, 'xp': xpIn, 'need': xpNeed}),
+        label: '${tr('Livello {n}', {'n': lvl})} · ${xpLeftLabel(xpIn, xpNeed)}',
       ),
       if (mats.isNotEmpty) SectionTitle(tr('Lavorazioni')),
       for (final r in mats)
@@ -367,6 +375,7 @@ class _RecipeTile extends StatelessWidget {
       title: '$title${have != null && have! > 0 ? tr('  ·  hai {n}', {'n': have}) : ''}',
       subtitle: unlocked ? [?note, needs].join('\n') : tr('Si sblocca a {station} livello {level}', {'station': stationLabel, 'level': level}),
       enabled: unlocked,
+      onTap: itemId == null ? null : () => openCodex(context, itemId),
       trailing: done
           ? const Icon(Icons.check, color: Palette.goldBright)
           : !unlocked

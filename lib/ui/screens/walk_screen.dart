@@ -158,7 +158,7 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
                   return StatBar(
                     value: xpIn / xpNeed,
                     color: Palette.gold,
-                    label: '$xpIn / $xpNeed XP',
+                    label: xpLeftLabel(xpIn, xpNeed),
                   );
                 },
               ),
@@ -493,7 +493,19 @@ class _GatherScreenState extends State<GatherScreen> {
                 trailing: Text(tr('Livello {n}', {'n': lvl}),
                     style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold)),
               ),
-              StatBar(value: xpIn / xpNeed, color: Palette.gold, height: 12, label: '$xpIn / $xpNeed XP'),
+              StatBar(value: xpIn / xpNeed, color: Palette.gold, height: 12, label: xpLeftLabel(xpIn, xpNeed)),
+              if (lvl < maxSkillLevel)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    tr('Al livello {lvl}: ancora {n} raccolte, circa {steps} passi', {
+                      'lvl': lvl + 1,
+                      'n': ((xpNeed - xpIn) / _r.xp).ceil(),
+                      'steps': ((xpNeed - xpIn) / _r.xp).ceil() * per,
+                    }),
+                    style: const TextStyle(color: Palette.ash, fontSize: 13),
+                  ),
+                ),
               const SizedBox(height: 4),
               Text(
                 tr('+{xp} XP per ogni {res} · {per} passi l\'una',

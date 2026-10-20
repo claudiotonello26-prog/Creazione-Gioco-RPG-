@@ -14,6 +14,7 @@ import '../../domain/routine.dart';
 import '../widgets/common.dart';
 import '../../domain/hunting.dart';
 import '../../domain/items.dart';
+import 'codex_screen.dart';
 import 'train_tab.dart' show startFreeFight;
 import 'training_screen.dart';
 
@@ -123,7 +124,7 @@ class _QuestLoot extends StatelessWidget {
             cell(const Icon(Icons.vpn_key_outlined, color: Palette.goldBright), tr('Chiave')),
             if (loot != null)
               for (final e in loot!.entries)
-                cell(ItemIcon(e.key, size: 36), '${e.value}× ${itemName(e.key)}')
+                CodexTap(e.key, child: cell(ItemIcon(e.key, size: 36), '${e.value}× ${itemName(e.key)}'))
             else
               cell(const Icon(Icons.inventory_2_outlined, color: Palette.gold), tr('Forziere di materiali')),
           ],
