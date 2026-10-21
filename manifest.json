@@ -467,5 +467,65 @@
     "status": "redone",
     "pink_pixels": 0,
     "size": 1024
+  },
+  "smith": {
+    "id": "smith",
+    "file": "assets/art/npc/smith.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Master Gorran the Blacksmith\nFraming: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). Three-quarter view turned to the RIGHT of the image, eyes looking right. Head positioned in the upper half of the canvas with a little space above the head, broad powerful shoulders filling the canvas width. Light source from the upper left, plus warm forge glow from below on one side. Weathered, believable person of a grim medieval world, not a hero, not a monster. Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted.\nDETAILS: Master Gorran the Blacksmith. Big bald man in his forties, thick braided red-brown beard with a few singed hairs. Black soot smudges on his forehead and rugged cheeks, thick powerful neck. Heavy leather apron over a sleeveless sweat-darkened coarse grey shirt, thick hairy muscular forearm visible at the bottom edge, a pair of heavy iron blacksmith tongs resting casually over his shoulder. Glow of the forge lighting him warm orange from below on one side. Colours strictly: steel grey, leather brown, forge orange, natural ruddy skin tones. Bold inked outlines.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  "general_store": {
+    "id": "general_store",
+    "file": "assets/art/npc/general_store.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Berta of the General Store\nFraming: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). Three-quarter view turned to the RIGHT of the image, eyes looking right. Head positioned in the upper half of the canvas with a little space above the head, shoulders broad and filling the canvas width. Light source from the upper left. Weathered, believable person of a grim medieval world, not a hero, not a monster. Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted.\nDETAILS: Berta of the General Store. Woman in her fifties, round friendly but shrewd weathered face, rosy cheeks, grey-streaked chestnut hair tied in a loose bun under a faded red headscarf. Small brass spectacles perched on her nose. Wearing a practical cream linen blouse, a coarse brown wool shawl draped around her, a leather apron strap over one shoulder, a pencil tucked behind her ear, and a small ring of brass keys hanging at the collar. Warm weathered colours strictly: faded red, cream linen, brown wool, brass, natural skin tones. Bold inked outlines.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  "hunter": {
+    "id": "hunter",
+    "file": "assets/art/npc/hunter.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Edda the Huntress\nFraming: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). Three-quarter view turned to the RIGHT of the image, eyes looking right. Head positioned in the upper half of the canvas with a little space above the head, shoulders filling the canvas width. Light source from the upper left. Weathered, believable person of a grim medieval world, not a hero, not a monster. Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted.\nDETAILS: Edda the Huntress. Lean woman in her thirties, sharp weathered hawk-like face, a thin pale scar across one cheek. Dark blonde hair braided in a practical side braid over one shoulder. Wearing a forest green-brown hooded cloak with the hood down around her neck, a rough grey wolf fur collar, a sturdy oiled leather jerkin, a thick leather quiver strap across the chest with fletched feathered arrows visible behind her shoulder, and a carved bone talisman hanging from a leather cord. Colours strictly: forest green, wolf fur grey, weathered leather brown, bone white. Bold inked outlines.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  "mage": {
+    "id": "mage",
+    "file": "assets/art/npc/mage.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Velthar the Mage\nFraming: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). Three-quarter view turned to the RIGHT of the image, eyes looking right. Head positioned in the upper half of the canvas with a little space above the head, shoulders filling the canvas width. Light source from the upper left. Weathered, believable person of a grim medieval world, mysterious but kind, NOT evil, NOT corrupted. Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted.\nDETAILS: Velthar the Mage. Old thin weathered scholar man, long flowing silver beard and mustache, deep-set clever wise eyes with a faint subtle violet glint. Wearing a tall soft pointed scholar hood of deep indigo cloth embroidered with small faded antique silver runes, high collar robes. The carved top of an ancient wooden staff with an embedded pale crystal visible beside his shoulder, and a few small glass potion vials with pale liquids hanging from a shoulder strap. Colours strictly: deep indigo cloth, subtle violet glow, antique silver, weathered aged parchment skin tones. Mysterious and wise, kind demeanor. Bold inked outlines.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
   }
 }
