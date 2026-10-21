@@ -12,7 +12,6 @@ import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/items.dart';
 import '../../domain/skills.dart';
-import '../../domain/walking.dart';
 import '../../health/live_steps.dart';
 import '../../health/step_source.dart';
 import '../widgets/common.dart';
@@ -63,6 +62,8 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
     int? steps;
     if (access == StepAccess.ready) steps = await _source.stepsToday();
     if (!mounted) return;
+    // I passi nuovi vanno subito in riserva: un solo numero da spendere.
+    if (steps != null) context.read<GameState>().collectSteps(steps);
     setState(() {
       _access = access;
       _steps = steps;
@@ -81,113 +82,196 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
     await _refresh();
   }
 
-  void _claim(GameState s) {
-    final steps = _steps;
-    if (steps == null) return;
-    final r = resourceById(s.gatherTarget);
-    final (units, levels) = s.claimSteps(steps);
-    if (units == 0) {
-      toast(context, tr('Ancora qualche passo: servono {n} passi per {res}.', {'n': r.stepsPerUnit, 'res': r.name}));
-      return;
-    }
-    toast(
-      context,
-      '+$units ${r.name}'
-      '${levels > 0 ? tr(' · {skill} sale al livello {lvl}!', {'skill': r.skill.label, 'lvl': s.skillLevel(r.skill)}) : ''}',
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    final steps = _steps ?? 0;
-    final target = resourceById(s.gatherTarget);
-    final fresh = (min(steps, dailyStepCap) - s.daily.claimedSteps).clamp(0, dailyStepCap);
-    final ready = (fresh + s.stepBank) ~/ target.stepsPerUnit;
     return Scaffold(
       appBar: OathBar(title: Text(tr('Gathering').toUpperCase()), accent: Sections.gathering),
       body: RefreshIndicator(
         onRefresh: _refresh,
-        child: FoldedListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Center(
-              child: _StepRing(
-                steps: fresh + s.stepBank,
-                goal: target.stepsPerUnit,
-                progress: ((fresh + s.stepBank) % target.stepsPerUnit) / target.stepsPerUnit,
-                known: _steps != null,
-              ),
-            ),
-            const SizedBox(height: 12),
-            OneLine(
-              tr('Stai raccogliendo: {res}', {'res': target.name}),
-              align: Alignment.center,
-              style: titleStyle(size: 15),
-            ),
-            Text(
-              tr('{where} · {n} passi per unità', {'where': target.where, 'n': target.stepsPerUnit}),
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Palette.ash),
-            ),
-            const SizedBox(height: 12),
-            if (_access == null)
-              const Center(child: CircularProgressIndicator())
-            else if (_access != StepAccess.ready)
-              _ConnectCard(access: _access!, busy: _busy, onConnect: _connect)
-            else
-              FilledButton.icon(
-                onPressed: fresh + s.stepBank > 0 ? () => _claim(s) : null,
-                icon: const Icon(Icons.inventory_2_outlined),
-                label: Text(
-                  ready > 0
-                      ? tr('RACCOGLI {n} × {res}', {'n': ready, 'res': target.name.toUpperCase()})
-                      : tr('CAMMINA ANCORA'),
+        // Tutto in una schermata: i passi in grande, poi Foresta e Miniera.
+        child: LayoutBuilder(
+          builder: (context, box) => SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+              height: max(box.maxHeight, 480),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _BigSteps(steps: s.stepBank, known: _steps != null || s.stepBank > 0),
+                    if (_access != null && _access != StepAccess.ready)
+                      _ConnectCard(access: _access!, busy: _busy, onConnect: _connect),
+                    const SizedBox(height: 12),
+                    Expanded(child: _RealmButton(skill: Skill.woodcutting, steps: _steps)),
+                    const SizedBox(height: 12),
+                    Expanded(child: _RealmButton(skill: Skill.mining, steps: _steps)),
+                  ],
                 ),
               ),
-            for (final skill in [Skill.woodcutting, Skill.mining]) ...[
-              SectionTitle(
-                '${skill == Skill.woodcutting ? tr('Trees') : tr('Ores')} · ${skill.label}',
-                trailing: Text(
-                  tr('Livello {n}', {'n': s.skillLevel(skill)}),
-                  style: const TextStyle(color: Palette.goldBright),
-                ),
-              ),
-              Builder(
-                builder: (_) {
-                  final (_, xpIn, xpNeed) = skillProgress(s.skillXp[skill] ?? 0);
-                  return StatBar(
-                    value: xpIn / xpNeed,
-                    color: Palette.gold,
-                    label: xpLeftLabel(xpIn, xpNeed),
-                  );
-                },
-              ),
-              const SizedBox(height: 6),
-              for (final r in unlockedPlusNext(resources.where((r) => r.skill == skill).toList(),
-                  (r) => r.level, s.skillLevel(skill)))
-                _resourceTile(s, r),
-            ],
-          ],
+            ),
+          ),
         ),
       ),
     );
   }
+}
 
-  /// Una risorsa come un mostro della caccia: l'immagine grande a sinistra,
-  /// a destra passi, scorta e cosa manca, a colpo d'occhio.
-  Widget _resourceTile(GameState s, Resource r) {
+/// I passi da spendere, grandi, in cima alla Raccolta.
+class _BigSteps extends StatelessWidget {
+  const _BigSteps({required this.steps, required this.known});
+  final int steps;
+  final bool known;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.directions_walk, color: Palette.goldBright, size: 44),
+              const SizedBox(width: 8),
+              Text(
+                known ? '$steps' : '—',
+                style: titleStyle(size: 52, color: Palette.holy, spacing: 1).copyWith(
+                  shadows: [Shadow(color: Palette.gold.withValues(alpha: 0.5), blurRadius: 16)],
+                ),
+              ),
+            ],
+          ),
+          Text(tr('passi da spendere').toUpperCase(),
+              style: titleStyle(size: 12, color: Palette.ash, spacing: 2.5)),
+        ],
+      );
+}
+
+/// Il piccolo contatore dei passi nella testata: si aggiorna subito.
+class StepsChip extends StatelessWidget {
+  const StepsChip({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bank = context.select<GameState, int>((s) => s.stepBank);
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      const Icon(Icons.directions_walk, color: Palette.goldBright, size: 18),
+      const SizedBox(width: 2),
+      Text('$bank', style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold)),
+    ]);
+  }
+}
+
+extension on Skill {
+  String get realm => this == Skill.mining ? tr('Miniera') : tr('Foresta');
+  Color get realmColor => this == Skill.mining ? Palette.frost : Sections.gathering;
+}
+
+/// Pulsantone della Foresta o della Miniera: la risorsa migliore che sai
+/// raccogliere, livello del mestiere e quante ce ne sono.
+class _RealmButton extends StatelessWidget {
+  const _RealmButton({required this.skill, required this.steps});
+  final Skill skill;
+  final int? steps;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final list = resources.where((r) => r.skill == skill).toList();
+    final open = list.where(s.canGather).toList();
+    final best = open.isEmpty ? list.first : open.last;
+    final (lvl, xpIn, xpNeed) = s.skillProgressOf(skill);
+    final color = skill.realmColor;
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: GildedBorder(color: color, ornate: true),
+      child: InkWell(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => GatherListScreen(skill: skill, stepsToday: steps)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              LayoutBuilder(
+                builder: (context, b) =>
+                    ResourcePortrait(best.id, size: min(b.maxHeight, 150), border: color),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(skill.realm.toUpperCase(), style: titleStyle(size: 24, color: color, spacing: 3)),
+                    const SizedBox(height: 4),
+                    Text('${skill.label} · ${tr('Liv. {n}', {'n': lvl})}',
+                        style: const TextStyle(color: Palette.holy, fontSize: 15)),
+                    const SizedBox(height: 6),
+                    StatBar(value: xpIn / xpNeed, color: color, height: 6),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 2,
+                      children: [for (final r in open.reversed.take(4)) ItemIcon(r.id, size: 26)],
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: color, size: 34),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// La lista dei legni o dei minerali, con i passi in piccolo nella testata.
+class GatherListScreen extends StatelessWidget {
+  const GatherListScreen({super.key, required this.skill, this.stepsToday});
+  final Skill skill;
+  final int? stepsToday;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final list = unlockedPlusNext(
+        resources.where((r) => r.skill == skill).toList(), (r) => r.level, s.skillLevel(skill));
+    return Scaffold(
+      appBar: OathBar(
+        title: Text(skill.realm.toUpperCase()),
+        accent: skill.realmColor,
+        actions: const [StepsChip()],
+      ),
+      body: FoldedListView(
+        padding: const EdgeInsets.all(16),
+        children: [for (final r in list) _ResourceCard(resource: r, stepsToday: stepsToday)],
+      ),
+    );
+  }
+}
+
+/// Una risorsa come un mostro della caccia: l'immagine grande a sinistra,
+/// a destra passi, scorta e cosa manca, a colpo d'occhio.
+class _ResourceCard extends StatelessWidget {
+  const _ResourceCard({required this.resource, this.stepsToday});
+  final Resource resource;
+  final int? stepsToday;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final r = resource;
     final levelOk = s.skillLevel(r.skill) >= r.level;
     final unlocked = s.canGather(r);
     final selected = s.gatherTarget == r.id;
     final bonus = s.gatherBonus(r.skill);
-    final steps = (r.stepsPerUnit / (1 + bonus)).round();
+    final steps = s.stepsPerUnit(r);
     final have = s.character.materials[r.id] ?? 0;
     final ring = selected ? Palette.goldBright : (unlocked ? Palette.gold : Palette.iron);
     void open() {
       s.setGatherTarget(r.id);
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => GatherScreen(resource: r, stepsToday: _steps)),
+        MaterialPageRoute(builder: (_) => GatherScreen(resource: r, stepsToday: stepsToday)),
       );
     }
 
@@ -300,75 +384,6 @@ class _ConnectCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class _StepRing extends StatelessWidget {
-  const _StepRing({
-    required this.steps,
-    required this.goal,
-    required this.progress,
-    required this.known,
-  });
-  final int steps;
-  final int goal;
-  final double progress;
-  final bool known;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      height: 200,
-      child: CustomPaint(
-        painter: _RingPainter(progress.clamp(0.0, 1.0)),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.directions_walk, color: Palette.gold, size: 28),
-              Text(known ? '$steps' : '—', style: titleStyle(size: 34, color: Palette.holy)),
-              Text(tr('da consumare'), style: const TextStyle(color: Palette.ash)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RingPainter extends CustomPainter {
-  _RingPainter(this.progress);
-  final double progress;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final r = rect.deflate(8);
-    canvas.drawArc(
-      r,
-      0,
-      2 * pi,
-      false,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 8
-        ..color = Palette.iron,
-    );
-    canvas.drawArc(
-      r,
-      -pi / 2,
-      2 * pi * progress,
-      false,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 8
-        ..strokeCap = StrokeCap.round
-        ..color = Palette.goldBright,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_RingPainter old) => old.progress != progress;
 }
 
 /// «MINA», «TAGLIA» o «RACCOGLI», secondo il mestiere.
@@ -518,6 +533,39 @@ class _GatherScreenState extends State<GatherScreen> {
     if (!ok) toast(context, tr('Collega i passi nella Raccolta per raccogliere camminando.'));
   }
 
+  /// «Spendili tutti»: prima chiede, con l'immagine di cosa esce.
+  Future<void> _spendAll(GameState s, int ready, int per) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr('Spendili tutti?'), textAlign: TextAlign.center),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ResourcePortrait(_r.id, size: 130),
+            const SizedBox(height: 10),
+            Text('$ready × ${_r.name}',
+                textAlign: TextAlign.center, style: titleStyle(size: 16, color: Palette.goldBright)),
+            const SizedBox(height: 6),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                StatChip(Icons.directions_walk, '-${ready * per}', color: Palette.holy),
+                const SizedBox(width: 14),
+                StatChip(Icons.auto_awesome, '+${ready * _r.xp} XP', color: Palette.goldBright),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(tr('Annulla'))),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(tr('CONFERMA'))),
+        ],
+      ),
+    );
+    if (ok == true && mounted) _gain(s, ready * per);
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
@@ -528,62 +576,105 @@ class _GatherScreenState extends State<GatherScreen> {
     final (lvl, xpIn, xpNeed) = s.skillProgressOf(_r.skill);
     final live = _live != null;
     final verb = gatherVerb(_r.skill);
+    final have = s.character.materials[_r.id] ?? 0;
     return Scaffold(
-      appBar: OathBar(title: Text(tr('Gathering').toUpperCase()), accent: Sections.gathering),
+      appBar: OathBar(
+        title: Text(_r.skill.realm.toUpperCase()),
+        accent: _r.skill.realmColor,
+        actions: const [StepsChip()],
+      ),
       body: Stack(
         children: [
+          // Una schermata sola: chi è, spendi tutto, scegli quanti, cammina.
           ListView(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             children: [
-              Center(child: ResourcePortrait(_r.id, size: 170)),
-              const SizedBox(height: 6),
-              OneLine(_r.name, align: Alignment.center, style: titleStyle(size: 20)),
-              Text(
-                tr('{where} · hai {n}', {'where': _r.where, 'n': s.character.materials[_r.id] ?? 0}),
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Palette.ash),
+              Row(
+                children: [
+                  ResourcePortrait(_r.id, size: 120),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(_r.name, style: titleStyle(size: 17, spacing: 1)),
+                        const SizedBox(height: 6),
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 4,
+                          children: [
+                            StatChip(Icons.inventory_2_outlined, '$have', color: Palette.goldBright),
+                            StatChip(Icons.directions_walk, '$per', color: Palette.holy),
+                            StatChip(Icons.auto_awesome, '+${_r.xp}', color: Palette.ash),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text('${_r.skill.label} · ${tr('Liv. {n}', {'n': lvl})}',
+                            style: const TextStyle(color: Palette.ash, fontSize: 13)),
+                        const SizedBox(height: 4),
+                        StatBar(value: xpIn / xpNeed, color: _r.skill.realmColor, height: 6),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              SectionTitle(
-                _r.skill.label,
-                trailing: Text(tr('Livello {n}', {'n': lvl}),
-                    style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold)),
-              ),
-              StatBar(value: xpIn / xpNeed, color: Palette.gold, height: 12, label: xpLeftLabel(xpIn, xpNeed)),
-              if (lvl < maxSkillLevel)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
+              const SizedBox(height: 14),
+
+              // 1. Tutti i passi in un colpo, con conferma.
+              if (!_known && bank == 0)
+                _Panel(
+                  child: Text(tr('Collega i passi nella Raccolta per spenderli qui.'),
+                      style: const TextStyle(color: Palette.ash)),
+                )
+              else if (ready == 0)
+                _Panel(
                   child: Text(
-                    tr('Al livello {lvl}: ancora {n} raccolte, circa {steps} passi', {
-                      'lvl': lvl + 1,
-                      'n': ((xpNeed - xpIn) / _r.xp).ceil(),
-                      'steps': ((xpNeed - xpIn) / _r.xp).ceil() * per,
-                    }),
-                    style: const TextStyle(color: Palette.ash, fontSize: 13),
+                    tr('Ti servono ancora {n} passi per la prossima unità.', {'n': per - bank % per}),
+                    style: const TextStyle(color: Palette.ash),
+                  ),
+                )
+              else ...[
+                SizedBox(
+                  height: 56,
+                  child: FilledButton.icon(
+                    onPressed: () => _spendAll(s, ready, per),
+                    icon: Icon(_r.skill == Skill.mining ? Icons.hardware : Icons.forest),
+                    label: Text(tr('SPENDILI TUTTI · {n}×', {'n': ready})),
                   ),
                 ),
-              const SizedBox(height: 4),
-              Text(
-                tr('+{xp} XP per ogni {res} · {per} passi l\'una',
-                    {'xp': _r.xp, 'res': _r.name.toLowerCase(), 'per': per}),
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Palette.ash, fontSize: 13),
-              ),
+                // 2. Oppure scegli quanti.
+                if (ready > 1) ...[
+                  const SizedBox(height: 12),
+                  _Panel(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Slider(
+                          value: units.toDouble(),
+                          min: 1,
+                          max: ready.toDouble(),
+                          divisions: ready - 1,
+                          label: '$units',
+                          onChanged: (v) => setState(() => _units = v.round()),
+                        ),
+                        OutlinedButton(
+                          onPressed: () => _gain(s, units * per),
+                          child: Text('$verb $units× · -${units * per}'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+              const SizedBox(height: 12),
 
-              // 1. Dal vivo: premi e cammina.
-              SectionTitle(tr('Raccogli camminando')),
+              // 3. Dal vivo: premi e cammina.
               _Panel(
                 active: live,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      live
-                          ? tr('Cammina: ogni passo riempie la barra. Puoi tenere il telefono in tasca.')
-                          : tr('Premi e cammina: i passi nuovi vanno tutti qui e la barra si riempie mentre cammini.'),
-                      style: const TextStyle(color: Palette.holy, fontSize: 14),
-                    ),
                     if (live) ...[
-                      const SizedBox(height: 12),
                       StatBar(
                         value: _charge / per,
                         color: Sections.gathering,
@@ -591,14 +682,17 @@ class _GatherScreenState extends State<GatherScreen> {
                         label: tr('{a} / {b} passi', {'a': _charge, 'b': per}),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        tr('In questa uscita: {s} passi · {n} × {res}',
-                            {'s': _sessionSteps, 'n': _sessionUnits, 'res': _r.name}),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          StatChip(Icons.directions_walk, '$_sessionSteps', color: Palette.holy),
+                          const SizedBox(width: 14),
+                          StatChip(Icons.inventory_2_outlined, '+$_sessionUnits',
+                              color: Palette.goldBright),
+                        ],
                       ),
+                      const SizedBox(height: 8),
                     ],
-                    const SizedBox(height: 12),
                     live
                         ? OutlinedButton.icon(
                             onPressed: _toggleLive,
@@ -611,71 +705,6 @@ class _GatherScreenState extends State<GatherScreen> {
                             icon: const Icon(Icons.directions_walk),
                             label: Text(_liveVerb(_r.skill)),
                           ),
-                  ],
-                ),
-              ),
-
-              // 2. Con i passi già fatti: scegli quanti.
-              SectionTitle(tr('Usa i passi già fatti')),
-              _Panel(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.directions_walk, color: Palette.gold),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            tr('Passi da spendere: {n}', {'n': bank}),
-                            style: titleStyle(size: 15, color: Palette.holy),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    if (!_known && bank == 0)
-                      Text(tr('Collega i passi nella Raccolta per spenderli qui.'),
-                          style: const TextStyle(color: Palette.ash))
-                    else if (ready == 0)
-                      Text(
-                        tr('Ti servono ancora {n} passi per la prossima unità.',
-                            {'n': per - bank % per}),
-                        style: const TextStyle(color: Palette.ash),
-                      )
-                    else ...[
-                      if (ready > 1)
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Slider(
-                                value: units.toDouble(),
-                                min: 1,
-                                max: ready.toDouble(),
-                                divisions: ready - 1,
-                                label: '$units',
-                                onChanged: (v) => setState(() => _units = v.round()),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => setState(() => _units = ready),
-                              child: Text(tr('TUTTI')),
-                            ),
-                          ],
-                        ),
-                      Text(
-                        tr('{n} × {res} = {s} passi · +{xp} XP',
-                            {'n': units, 'res': _r.name, 's': units * per, 'xp': units * _r.xp}),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Palette.goldBright, fontSize: 15),
-                      ),
-                      const SizedBox(height: 10),
-                      FilledButton.icon(
-                        onPressed: () => _gain(s, units * per),
-                        icon: Icon(_r.skill == Skill.mining ? Icons.hardware : Icons.forest),
-                        label: Text('$verb $units × ${_r.name.toUpperCase()}'),
-                      ),
-                    ],
                   ],
                 ),
               ),
