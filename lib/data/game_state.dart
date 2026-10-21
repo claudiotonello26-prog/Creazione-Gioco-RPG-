@@ -913,6 +913,17 @@ class GameState extends ChangeNotifier {
     return q != null && stat(q.stat) >= q.target;
   }
 
+  // Pallini rossi: dove c'è qualcosa da fare o da riscuotere.
+
+  /// Training: Cammino del Novizio o contratto da riscuotere.
+  bool get trainingAlert => noviceQuest != null || (contract?.complete ?? false);
+
+  /// Raccolta: passi in banca bastano per almeno un'unità.
+  bool get gatheringAlert => stepBank >= stepsPerUnit(resourceById(gatherTarget));
+
+  /// Forgia: l'equipaggiamento ha perso forza per l'usura.
+  bool get forgeAlert => gearWornOut;
+
   /// Riscuote la missione completata e passa alla prossima.
   NoviceQuest? claimNovice() {
     final q = noviceQuest;
@@ -1571,11 +1582,29 @@ class GameState extends ChangeNotifier {
     return true;
   }
 
+  /// Il livello che apre gli scaffali di una bottega: il suo mestiere o,
+  /// per l'Emporio, il livello del personaggio.
+  int shopLevel(ShopKeeper k) => k.skill == null ? character.level : skillLevel(k.skill!);
+
+  /// Qualche bottega lo vende già, al tuo livello.
+  bool inStock(String id) => ShopKeeper.values
+      .any((k) => shopStock[k]!.any((i) => i.$1 == id && i.$2 <= shopLevel(k)));
+
   bool buyMaterial(String id, [int n = 1]) {
     final cost = buyPrice(id) * n;
-    if (cost <= 0 || character.runes < cost) return false;
+    if (!inStock(id) || cost <= 0 || character.runes < cost) return false;
     character.runes -= cost;
     character.addMaterial(id, n);
+    _changed();
+    return true;
+  }
+
+  /// Compra un'arma da una bottega: va nella rastrelliera.
+  bool buyWeapon(String id) {
+    final cost = weaponBuyPrice(id);
+    if (!inStock(id) || character.runes < cost) return false;
+    character.runes -= cost;
+    character.weapons.add(WeaponInstance(weaponId: id));
     _changed();
     return true;
   }

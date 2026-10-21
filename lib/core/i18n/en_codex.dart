@@ -12,7 +12,7 @@ const Map<String, String> enCodex = {
   '{chest} · {map}': '{chest} · {map}',
   'Camminando: {where}, da {skill} {lvl}': 'Walking: {where}, from {skill} {lvl}',
   '{station} livello {lvl}': '{station} level {lvl}',
-  'Mercante · {runes} rune': 'Merchant · {runes} runes',
+  '{shop} · {runes} rune': '{shop} · {runes} runes',
   'Fattucchiera · {runes} rune': 'Witch · {runes} runes',
   'Ce l\'hai dall\'inizio': 'You start with it',
   '{qty} per {item} ({station})': '{qty} for {item} ({station})',

@@ -183,7 +183,7 @@ class _CodexScreenState extends State<CodexScreen> {
                           title: OneLine(e.name),
                           subtitle: Text(
                             e.kind.label,
-                            style: const TextStyle(color: Palette.ash, fontSize: 13),
+                            style: const TextStyle(color: Palette.ash, fontSize: 15),
                           ),
                           trailing: owned > 0
                               ? Text(

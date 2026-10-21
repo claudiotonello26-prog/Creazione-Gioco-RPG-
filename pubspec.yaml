@@ -77,6 +77,12 @@ flutter:
     - assets/art/maps/
     - assets/art/chests/
     - assets/art/items/
+    # Cosa si raccoglie (albero o filone): <id risorsa>.png.
+    - assets/art/nodes/
+    # I mercanti delle botteghe, busto rivolto a destra: <art>.png.
+    - assets/art/npc/
+    # Emblemi delle postazioni della Forgia: station_<carpentry|furnace|anvil|enchant>.png.
+    - assets/art/emblems/
     - assets/art/backgrounds/
     - assets/art/nav/
     # Emblemi delle feste: level_up.png, skill_up.png, stat_up.png.

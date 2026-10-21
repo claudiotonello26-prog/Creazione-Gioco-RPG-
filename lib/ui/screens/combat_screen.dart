@@ -424,7 +424,7 @@ class _CombatScreenState extends State<CombatScreen> {
                       'stance': e.stance.label,
                     })}'
                     '${e.penetration < 1 ? tr(' · i colpi rimbalzano: serve un\'arma migliore') : ''}',
-                    style: const TextStyle(color: Palette.ash, fontSize: 12),
+                    style: const TextStyle(color: Palette.ash, fontSize: 14),
                     textAlign: TextAlign.center,
                   ),
                 ),

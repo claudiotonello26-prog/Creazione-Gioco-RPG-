@@ -107,7 +107,7 @@ class _QuestLoot extends StatelessWidget {
               Text(text,
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  style: const TextStyle(fontSize: 12, color: Palette.ash)),
+                  style: const TextStyle(fontSize: 14, color: Palette.ash)),
             ],
           ),
         );

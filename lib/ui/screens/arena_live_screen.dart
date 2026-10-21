@@ -196,7 +196,7 @@ class _ArenaLiveScreenState extends State<ArenaLiveScreen> {
             if (s.rejected > 0)
               Text(
                 tr('{n} rep non valide per il server (movimento incompleto)', {'n': s.rejected}),
-                style: const TextStyle(color: Palette.ember, fontSize: 12),
+                style: const TextStyle(color: Palette.ember, fontSize: 14),
               ),
             if (s.phase == LivePhase.finished && s.result != null)
               _ResultCard(result: s.result!, mode: mode),
@@ -349,7 +349,7 @@ class _ResultCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               tr('Risultato verificato dal server sulle rep valide.'),
-              style: const TextStyle(color: Palette.ash, fontSize: 12),
+              style: const TextStyle(color: Palette.ash, fontSize: 14),
             ),
           ],
         ),
@@ -380,7 +380,7 @@ class _ResultCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 tr('Allenamento di gilda: le rep valgono per il tuo personaggio.'),
-                style: const TextStyle(color: Palette.ash, fontSize: 12),
+                style: const TextStyle(color: Palette.ash, fontSize: 14),
               ),
             ],
           ),

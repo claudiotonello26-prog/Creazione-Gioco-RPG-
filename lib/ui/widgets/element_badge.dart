@@ -50,7 +50,7 @@ class MatchupBadge extends StatelessWidget {
           Icon(icon, size: 14, color: color),
           Text(
             '${pct > 0 ? '+' : ''}$pct%',
-            style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700),
+            style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w700),
           ),
         ]),
       );

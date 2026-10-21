@@ -13,6 +13,7 @@ void main() {
     await state.load();
     await tester.pumpWidget(IronOathApp(state: state));
     expect(find.text('GYM OATH'), findsOneWidget);
+    await tester.ensureVisible(find.text('HO CAPITO, INIZIAMO'));
     await tester.tap(find.text('HO CAPITO, INIZIAMO'));
     await tester.pumpAndSettle();
     expect(find.text('IL TUO GIURAMENTO'), findsOneWidget);

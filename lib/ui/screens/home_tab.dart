@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +23,9 @@ import 'attributes_tab.dart';
 /// gli attributi, il Cammino del Novizio, la quest e l'andamento.
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key, required this.onNavigate});
+
+  /// Le due prove di prima schermata (si sceglie dagli screenshot).
+  static HomeLayout layout = HomeLayout.center;
   final void Function(int tab) onNavigate;
 
   @override
@@ -28,69 +33,18 @@ class HomeTab extends StatelessWidget {
     final s = context.watch<GameState>();
     final c = s.character;
     final (xpIn, xpNeed) = c.levelProgress;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-      children: [
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-            child: Column(
-              children: [
-                // Il cavaliere al centro; Armeria e Inventario sotto la scheda.
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: RadialGradient(
-                      radius: 0.7,
-                      colors: [Color(0xFF3A2C16), Color(0x00000000)],
-                    ),
-                  ),
-                  child: Center(child: KnightView(character: c, height: 300)),
-                ),
-                const SizedBox(height: 8),
-                Text(c.name.toUpperCase(), style: titleStyle(size: 22, spacing: 4)),
-                Text(
-                  c.armed
-                      ? '${tr('Livello {level}', {'level': c.level})} · ${c.weapon.displayName}'
-                          '${c.offhand != null ? ' · ${c.offhand!.name}' : ''}'
-                      : '${tr('Livello {level}', {'level': c.level})} · ${tr('A mani vuote')}',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Palette.ash),
-                ),
-                const SizedBox(height: 10),
-                StatBar(value: xpIn / xpNeed, color: Palette.gold, label: xpLeftLabel(xpIn, xpNeed)),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    _Stat(tr('Vita'), '${c.maxHp}', Icons.favorite, Palette.blood),
-                    _Stat(tr('Attacco'), '${s.attackValue}', Icons.gavel, Palette.goldBright),
-                    _Stat(
-                      tr('Difesa'),
-                      '${(s.defenseValue * 100).round()}%',
-                      Icons.shield_outlined,
-                      Palette.frost,
-                    ),
-                    _Stat(tr('Rune'), '${c.runes}', Icons.diamond_outlined, Palette.gold),
-                  ],
-                ),
-              ],
-            ),
+    // La prima schermata entra tutta: eroe, livello, numeri e abilità.
+    // Sotto, scorrendo, attributi, passi, Cammino e quest.
+    return LayoutBuilder(
+      builder: (context, box) => ListView(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
+        children: [
+          SizedBox(
+            height: max(box.maxHeight - 8, 520),
+            child: HomeTab.layout == HomeLayout.side
+                ? _HomeTopSide(state: s, xp: (xpIn, xpNeed))
+                : _HomeTopCenter(state: s, xp: (xpIn, xpNeed)),
           ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _GearButton(icon: Icons.shield, label: tr('ARMERIA'), onTap: () => openEquipment(context)),
-            const SizedBox(width: 12),
-            _GearButton(
-              icon: Icons.backpack,
-              label: tr('INVENTARIO'),
-              onTap: () => openInventory(context),
-            ),
-          ],
-        ),
-        SectionTitle(tr('Abilità')),
-        _SkillRows(progress: s.skillProgressOf),
         const SizedBox(height: 4),
         const _AttributePanel(),
         const SizedBox(height: 8),
@@ -181,7 +135,7 @@ class HomeTab extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             tr('Hai guadagnato una Chiave della Spedizione. Torna domani per la prossima quest.'),
-            style: const TextStyle(color: Palette.ash, fontSize: 13),
+            style: const TextStyle(color: Palette.ash, fontSize: 15),
           ),
         ],
         if (s.retestDue) ...[
@@ -197,7 +151,8 @@ class HomeTab extends StatelessWidget {
         ],
         SectionTitle(tr('Il tuo andamento')),
         const ProgressCard(),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -235,7 +190,7 @@ class _GearButton extends StatelessWidget {
                     style: const TextStyle(
                       color: Palette.night,
                       fontWeight: FontWeight.bold,
-                      fontSize: 13,
+                      fontSize: 15,
                       letterSpacing: 0.8,
                     ),
                   ),
@@ -245,43 +200,6 @@ class _GearButton extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// Le abilità in due righe centrate: combattimento sopra, produzione sotto.
-/// Tutte le caselle hanno la stessa larghezza, così le righe si allineano.
-class _SkillRows extends StatelessWidget {
-  const _SkillRows({required this.progress});
-  final (int, int, int) Function(Skill) progress;
-
-  @override
-  Widget build(BuildContext context) {
-    const gap = 6.0;
-    return LayoutBuilder(
-      builder: (context, box) {
-        final w = (box.maxWidth - gap * (Skill.crafts.length - 1)) / Skill.crafts.length;
-        Widget row(List<Skill> skills) => Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (final (i, k) in skills.indexed) ...[
-              if (i > 0) const SizedBox(width: gap),
-              SizedBox(
-                width: w,
-                height: 86,
-                child: _SkillTile(skill: k, progress: progress(k)),
-              ),
-            ],
-          ],
-        );
-        return Column(
-          children: [
-            row(Skill.combatSkills),
-            const SizedBox(height: gap),
-            row(Skill.crafts),
-          ],
-        );
-      },
     );
   }
 }
@@ -399,39 +317,6 @@ IconData skillIcon(Skill k) => switch (k) {
   Skill.smithing => Icons.hardware,
 };
 
-class _SkillTile extends StatelessWidget {
-  const _SkillTile({required this.skill, required this.progress});
-  final Skill skill;
-  final (int, int, int) progress;
-
-  @override
-  Widget build(BuildContext context) {
-    final (lvl, xpIn, xpNeed) = progress;
-    final color = skill.combat ? Palette.ember : Palette.gold;
-    return Card(
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: () => _showSkill(context, skill, progress),
-        child: Padding(
-        padding: const EdgeInsets.all(6),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(skillIcon(skill), color: color, size: 22),
-            Text('$lvl', style: titleStyle(size: 18, color: Palette.holy, spacing: 0)),
-            FittedBox(
-              child: Text(skill.label, style: const TextStyle(color: Palette.ash, fontSize: 11)),
-            ),
-            const SizedBox(height: 3),
-            StatBar(value: xpNeed == 0 ? 1 : xpIn / xpNeed, color: color, height: 4),
-          ],
-        ),
-      ),
-      ),
-    );
-  }
-}
-
 /// Come si allena un'abilità, in una riga.
 String skillHint(Skill k) => switch (k) {
       Skill.woodcutting => tr('Sale camminando: spendi i passi nei boschi della Raccolta.'),
@@ -523,7 +408,7 @@ class _AttrTile extends StatelessWidget {
             FittedBox(
               child: Text(
                 attribute.label,
-                style: const TextStyle(color: Palette.ash, fontSize: 12),
+                style: const TextStyle(color: Palette.ash, fontSize: 14),
               ),
             ),
             if (allocating) ...[
@@ -538,30 +423,6 @@ class _AttrTile extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _Stat extends StatelessWidget {
-  const _Stat(this.label, this.value, this.icon, this.color);
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 18),
-          Text(value, style: titleStyle(size: 17, color: Palette.holy, spacing: 0)),
-          Text(
-            label.toUpperCase(),
-            style: const TextStyle(color: Palette.ash, fontSize: 11, letterSpacing: 1),
-          ),
-        ],
       ),
     );
   }
@@ -595,7 +456,7 @@ class _QuestCalendar extends StatelessWidget {
                 for (final n in names)
                   Expanded(
                     child: Center(
-                      child: Text(n, style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                      child: Text(n, style: const TextStyle(color: Palette.ash, fontSize: 14)),
                     ),
                   ),
               ],
@@ -616,9 +477,9 @@ class _QuestCalendar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.circle, size: 10, color: Palette.goldBright),
-                Text(tr(' quest fatta    '), style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                Text(tr(' quest fatta    '), style: const TextStyle(color: Palette.ash, fontSize: 14)),
                 const Icon(Icons.circle_outlined, size: 10, color: Palette.gold),
-                Text(tr(' app aperta'), style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                Text(tr(' app aperta'), style: const TextStyle(color: Palette.ash, fontSize: 14)),
               ],
             ),
           ],
@@ -649,7 +510,7 @@ class _QuestCalendar extends StatelessWidget {
         child: Text(
           '${d.day}',
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 14,
             color: quest ? Palette.night : (future ? Palette.iron : Palette.ash),
             fontWeight: quest ? FontWeight.bold : FontWeight.normal,
           ),
@@ -705,6 +566,312 @@ class _OathTile extends StatelessWidget {
                     Navigator.pop(ctx);
                   },
                 ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+enum HomeLayout { side, center }
+
+/// Prova A: l'eroe a sinistra a tutta altezza, a destra nome, livello,
+/// numeri e i due tasti; sotto tutte le abilità.
+class _HomeTopSide extends StatelessWidget {
+  const _HomeTopSide({required this.state, required this.xp});
+  final GameState state;
+  final (int, int) xp;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = state.character;
+    return Column(
+      children: [
+        Expanded(
+          child: Card(
+            margin: EdgeInsets.zero,
+            shape: const GildedBorder(ornate: true),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 10, 12, 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 11,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: RadialGradient(
+                          radius: 0.75,
+                          colors: [Color(0xFF3A2C16), Color(0x00000000)],
+                        ),
+                      ),
+                      child: LayoutBuilder(
+                        builder: (context, b) =>
+                            Center(child: KnightView(character: c, height: b.maxHeight)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    flex: 10,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        OneLine(c.name.toUpperCase(),
+                            align: Alignment.centerLeft, style: titleStyle(size: 18, spacing: 2)),
+                        _LevelLine(state: state, xp: xp),
+                        const Spacer(),
+                        _StatGrid(state: state),
+                        const Spacer(),
+                        _GearButton(
+                            icon: Icons.shield, label: tr('ARMERIA'), onTap: () => openEquipment(context)),
+                        const SizedBox(height: 8),
+                        _GearButton(
+                          icon: Icons.backpack,
+                          label: tr('INVENTARIO'),
+                          onTap: () => openInventory(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        _SkillGrid(progress: state.skillProgressOf),
+      ],
+    );
+  }
+}
+
+/// Prova B: l'eroe al centro con i numeri ai lati, sotto nome e livello,
+/// le abilità e i due tasti.
+class _HomeTopCenter extends StatelessWidget {
+  const _HomeTopCenter({required this.state, required this.xp});
+  final GameState state;
+  final (int, int) xp;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = state.character;
+    final stats = _stats(state);
+    Widget side(List<Widget> two) => SizedBox(
+          width: 74,
+          child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: two),
+        );
+    return Column(
+      children: [
+        Expanded(
+          child: Card(
+            margin: EdgeInsets.zero,
+            shape: const GildedBorder(ornate: true),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        side([stats[0], stats[1]]),
+                        Expanded(
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              gradient: RadialGradient(
+                                radius: 0.7,
+                                colors: [Color(0xFF3A2C16), Color(0x00000000)],
+                              ),
+                            ),
+                            child: LayoutBuilder(
+                              builder: (context, b) =>
+                                  Center(child: KnightView(character: c, height: b.maxHeight)),
+                            ),
+                          ),
+                        ),
+                        side([stats[2], stats[3]]),
+                      ],
+                    ),
+                  ),
+                  OneLine(c.name.toUpperCase(),
+                      align: Alignment.center, style: titleStyle(size: 18, spacing: 3)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: _LevelLine(state: state, xp: xp, center: true),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        _SkillGrid(progress: state.skillProgressOf),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: _GearButton(
+                  icon: Icons.shield, label: tr('ARMERIA'), onTap: () => openEquipment(context)),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _GearButton(
+                icon: Icons.backpack,
+                label: tr('INVENTARIO'),
+                onTap: () => openInventory(context),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Livello, arma e barra dell'esperienza.
+class _LevelLine extends StatelessWidget {
+  const _LevelLine({required this.state, required this.xp, this.center = false});
+  final GameState state;
+  final (int, int) xp;
+  final bool center;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = state.character;
+    final (xpIn, xpNeed) = xp;
+    return Column(
+      crossAxisAlignment: center ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(tr('Liv. {n}', {'n': c.level}),
+                style: titleStyle(size: 15, color: Palette.goldBright, spacing: 1)),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                c.armed ? c.weapon.displayName : tr('A mani vuote'),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Palette.ash, fontSize: 15),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        StatBar(value: xpIn / xpNeed, color: Palette.gold, height: 6),
+        const SizedBox(height: 2),
+        Text('$xpIn / $xpNeed XP', style: const TextStyle(color: Palette.ash, fontSize: 15)),
+      ],
+    );
+  }
+}
+
+List<Widget> _stats(GameState s) => [
+      _MiniStat(Icons.favorite, '${s.character.maxHp}', Palette.blood, tr('Vita')),
+      _MiniStat(Icons.gavel, '${s.attackValue}', Palette.goldBright, tr('Attacco')),
+      _MiniStat(Icons.shield_outlined, '${(s.defenseValue * 100).round()}%', Palette.frost, tr('Difesa')),
+      _MiniStat(Icons.diamond_outlined, '${s.character.runes}', Palette.gold, tr('Rune')),
+    ];
+
+/// I quattro numeri in una griglia 2×2.
+class _StatGrid extends StatelessWidget {
+  const _StatGrid({required this.state});
+  final GameState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final st = _stats(state);
+    return Column(
+      children: [
+        Row(children: [Expanded(child: st[0]), Expanded(child: st[1])]),
+        const SizedBox(height: 10),
+        Row(children: [Expanded(child: st[2]), Expanded(child: st[3])]),
+      ],
+    );
+  }
+}
+
+/// Icona e numero; il nome sta nel suggerimento.
+class _MiniStat extends StatelessWidget {
+  const _MiniStat(this.icon, this.value, this.color, this.label);
+  final IconData icon;
+  final String value;
+  final Color color;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Tooltip(
+        message: label,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 20),
+            FittedBox(child: Text(value, style: titleStyle(size: 17, color: Palette.holy, spacing: 0))),
+            Text(label.toUpperCase(),
+                style: const TextStyle(color: Palette.ash, fontSize: 9.5, letterSpacing: 1)),
+          ],
+        ),
+      );
+}
+
+/// Tutte le abilità in due righe compatte: combattimento sopra, mestieri sotto.
+class _SkillGrid extends StatelessWidget {
+  const _SkillGrid({required this.progress});
+  final (int, int, int) Function(Skill) progress;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget row(List<Skill> skills) => Row(
+          children: [
+            for (final (i, k) in skills.indexed) ...[
+              if (i > 0) const SizedBox(width: 6),
+              Expanded(child: _SkillChip(skill: k, progress: progress(k))),
+            ],
+          ],
+        );
+    return Column(
+      children: [
+        row(Skill.combatSkills),
+        const SizedBox(height: 6),
+        row(Skill.crafts),
+      ],
+    );
+  }
+}
+
+/// Icona, livello e barra: il nome e come sale sono dietro al tocco.
+class _SkillChip extends StatelessWidget {
+  const _SkillChip({required this.skill, required this.progress});
+  final Skill skill;
+  final (int, int, int) progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final (lvl, xpIn, xpNeed) = progress;
+    final color = skill.combat ? Palette.ember : Palette.gold;
+    return Card(
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: () => _showSkill(context, skill, progress),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(4, 6, 4, 6),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(skillIcon(skill), color: color, size: 18),
+                  const SizedBox(width: 4),
+                  Text('$lvl', style: titleStyle(size: 16, color: Palette.holy, spacing: 0)),
+                ],
+              ),
+              const SizedBox(height: 2),
+              FittedBox(
+                child: Text(skill.label, style: const TextStyle(color: Palette.ash, fontSize: 14)),
+              ),
+              const SizedBox(height: 3),
+              StatBar(value: xpNeed == 0 ? 1 : xpIn / xpNeed, color: color, height: 3),
             ],
           ),
         ),

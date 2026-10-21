@@ -146,11 +146,9 @@ class _Offline extends StatelessWidget {
             const Icon(Icons.cloud_off, color: Palette.ash),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(
-                tr('Server non collegato: gilde e cavalieri sono di prova e restano su questo telefono.'),
-                style: const TextStyle(color: Palette.ash, fontSize: 14),
-              ),
+              child: Text(tr('Offline · di prova'), style: const TextStyle(color: Palette.ash, fontSize: 15)),
             ),
+            HelpButton(tr('Server non collegato: gilde e cavalieri sono di prova e restano su questo telefono.')),
             TextButton(
               onPressed: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
@@ -168,17 +166,23 @@ class _Intro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Tre icone dicono cos'è una gilda; la frase intera sta dietro il "?".
+    Widget what(IconData icon, String label) => Column(
+          children: [
+            Icon(icon, color: Sections.guild, size: 34),
+            const SizedBox(height: 4),
+            Text(label, style: const TextStyle(color: Palette.ash, fontSize: 15)),
+          ],
+        );
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+        padding: const EdgeInsets.fromLTRB(12, 14, 4, 14),
+        child: Row(
           children: [
-            const Icon(Icons.shield_outlined, color: Sections.guild, size: 40),
-            const SizedBox(height: 8),
-            Text(
-              tr('Una gilda è il tuo gruppo: vi allenate insieme in diretta e vi sfidate tra amici. Le sfide in gilda non toccano i punti dell\'Arena.'),
-              textAlign: TextAlign.center,
-            ),
+            Expanded(child: what(Icons.groups, tr('Gruppo'))),
+            Expanded(child: what(Icons.sensors, tr('In diretta'))),
+            Expanded(child: what(Icons.sports_kabaddi, tr('Sfide'))),
+            HelpButton(tr('Una gilda è il tuo gruppo: vi allenate insieme in diretta e vi sfidate tra amici. Le sfide in gilda non toccano i punti dell\'Arena.')),
           ],
         ),
       ),
@@ -306,7 +310,7 @@ class _Standing extends StatelessWidget {
             OneLine(
               [if (h != null) tr('Lv {n}', {'n': h.level}), ?badge].join(' · '),
               align: Alignment.center,
-              style: const TextStyle(color: Palette.ash, fontSize: 12),
+              style: const TextStyle(color: Palette.ash, fontSize: 14),
             ),
           ],
         ),
@@ -396,7 +400,7 @@ class _NoGuildState extends State<_NoGuild> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (!g.live) const _Offline(),
@@ -641,7 +645,7 @@ class _MyGuild extends StatelessWidget {
     final guild = g.guild!;
     final rooms = g.sessions.where((x) => !x.friendly).toList();
     final asking = g.members.where((m) => m.state == 3).toList();
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (!g.live) const _Offline(),
@@ -884,7 +888,7 @@ class _InviteState extends State<_Invite> {
             g.isLeader
                 ? tr('Cerca altri cavalieri nella scheda Cavalieri: prima diventate amici, poi li porti in gilda.')
                 : tr('Solo fondatore e ufficiali fanno entrare: tu mandi la richiesta d\'amicizia.'),
-            style: const TextStyle(color: Palette.ash, fontSize: 13),
+            style: const TextStyle(color: Palette.ash, fontSize: 15),
           ),
         ),
       ],
@@ -943,7 +947,7 @@ class _KnightsState extends State<_Knights> {
     final mates = g.friends.where((f) => f.state == 0).toList();
     void open(String id, String name, HeroCard? hero, bool online) =>
         showKnight(context, g, id: id, name: name, hero: hero, online: online);
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (!g.live) const _Offline(),

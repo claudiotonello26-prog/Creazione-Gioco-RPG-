@@ -240,7 +240,7 @@ const Map<String, String> enUiC = {
   'Argento lunare, inchiostro e la linea dell\'Intelligenza': 'Moon silver, ink and the Intelligence line',
   'Pietre di forgia e gemme': 'Forge Stones and gems',
   'Quest giornaliera': 'Daily quest',
-  '{p}% fatta · premio: una chiave che raddoppia il bottino (ne hai {n})': '{p}% done · reward: a key that doubles the loot (you have {n})',
+  'Chiave della Spedizione: raddoppia il bottino': 'Expedition Key: doubles the loot',
   'Spedizioni': 'Expeditions',
   'Caccia libera: tocca un nemico per combattere': 'Free hunt: tap an enemy to fight',
   'Tutti i nemici ({n})': 'All enemies ({n})',

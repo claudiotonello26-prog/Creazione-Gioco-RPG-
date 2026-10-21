@@ -273,7 +273,7 @@ class _PathScreenState extends State<PathScreen> {
                     ? tr('Con sedia, zaino o manubri. Il guardiano lascia il doppio del bottino.')
                     : tr('Nessun attrezzo: solo il tuo corpo.'),
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Palette.ash, fontSize: 13),
+            style: const TextStyle(color: Palette.ash, fontSize: 15),
           ),
           const SizedBox(height: 8),
           LayoutBuilder(
@@ -391,10 +391,10 @@ class _Node extends StatelessWidget {
             style: TextStyle(
               color: state == _NodeState.locked ? Palette.ash : Palette.holy,
               fontWeight: open ? FontWeight.bold : FontWeight.normal,
-              fontSize: 13,
+              fontSize: 15,
             ),
           ),
-          Text(subtitle, style: const TextStyle(color: Palette.ash, fontSize: 11)),
+          Text(subtitle, style: const TextStyle(color: Palette.ash, fontSize: 15)),
         ],
       ),
     );

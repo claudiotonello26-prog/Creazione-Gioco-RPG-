@@ -61,7 +61,7 @@ class AttributesScreen extends StatelessWidget {
               ),
             Text(
               tr('La scelta è definitiva: si cambia solo con un oggetto di Rinascita.'),
-              style: const TextStyle(color: Palette.ash, fontSize: 12),
+              style: const TextStyle(color: Palette.ash, fontSize: 14),
             ),
           ],
           SectionTitle(tr('Il tuo corpo')),

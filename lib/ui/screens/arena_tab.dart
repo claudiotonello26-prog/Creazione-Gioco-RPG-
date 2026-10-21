@@ -26,23 +26,25 @@ class ArenaTab extends StatelessWidget {
     final s = context.watch<GameState>();
     final wins = s.arenaHistory.where((r) => r.won > 0).length;
     final losses = s.arenaHistory.where((r) => r.won < 0).length;
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
+        // Stagione a colpo d'occhio: titolo, punti, vittorie e sconfitte.
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                Text(
-                  tr('ARENA PURA'),
-                  style: const TextStyle(letterSpacing: 4, color: Palette.goldBright, fontSize: 20),
-                ),
+                Text(s.seasonTitle.toUpperCase(),
+                    style: titleStyle(size: 18, color: Palette.goldBright, spacing: 3)),
                 const SizedBox(height: 12),
-                Text(tr('{title} · {points} punti stagione', {'title': s.seasonTitle, 'points': s.arenaPoints})),
-                Text(
-                  tr('Vittorie {wins} · Sconfitte {losses}', {'wins': wins, 'losses': losses}),
-                  style: const TextStyle(color: Palette.ash),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    StatChip(Icons.military_tech, '${s.arenaPoints}', color: Palette.goldBright),
+                    StatChip(Icons.emoji_events, '$wins', color: CostRow.ok),
+                    StatChip(Icons.close, '$losses', color: CostRow.missing),
+                  ],
                 ),
               ],
             ),
@@ -50,18 +52,30 @@ class ArenaTab extends StatelessWidget {
         ),
         SectionTitle(tr('Duello live online')),
         if (s.serverAddress.isEmpty || !s.useCamera)
-          Text(
-            s.serverAddress.isEmpty
-                ? tr('Imposta il server dell\'Arena nel Profilo per sfidare persone vere.')
-                : tr('Il live richiede la fotocamera: le rep devono essere verificate.'),
-            style: const TextStyle(color: Palette.ash),
+          Card(
+            color: Palette.stoneLight,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 4, 4, 4),
+              child: Row(
+                children: [
+                  Icon(s.serverAddress.isEmpty ? Icons.cloud_off : Icons.no_photography, color: Palette.ash),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(s.serverAddress.isEmpty ? tr('Offline') : tr('Serve la fotocamera'),
+                        style: const TextStyle(color: Palette.ash, fontSize: 15)),
+                  ),
+                  HelpButton(s.serverAddress.isEmpty
+                      ? tr('Imposta il server dell\'Arena nel Profilo per sfidare persone vere.')
+                      : tr('Il live richiede la fotocamera: le rep devono essere verificate.')),
+                ],
+              ),
+            ),
           )
         else
           for (final c in arenaChallenges.values)
             ActionTile(
               icon: Icons.public,
               title: tr('{exercise} · live', {'exercise': exercises[c.exercise]!.name}),
-              subtitle: tr('Contro una persona vera'),
               color: Palette.goldBright,
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => ArenaLiveScreen(challenge: c))),
@@ -71,7 +85,7 @@ class ArenaTab extends StatelessWidget {
           ActionTile(
             icon: Icons.sports_kabaddi,
             title: exercises[c.exercise]!.name,
-            subtitle: tr('Divisione: {division}', {'division': s.divisionOf(c.exercise).label}),
+            below: StatChip(Icons.shield_outlined, s.divisionOf(c.exercise).label, color: Palette.ash),
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => ArenaDuelScreen(challenge: c))),
           ),

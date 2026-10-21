@@ -49,11 +49,14 @@ const kTitleFont = 'Cinzel';
 const kBodyFont = 'EBGaramond';
 
 /// Bordo dei pannelli: filo di ferro e angoli dorati, come una cornice
-/// incisa. Usato da tutte le Card.
+/// incisa. Usato da tutte le Card. Sobrio di regola; [ornate] (fregi, stemmi
+/// e luce dall'alto) solo per quello che deve risaltare: la scelta attiva,
+/// i dialoghi, l'azione del giorno.
 class GildedBorder extends ShapeBorder {
-  const GildedBorder({this.color = Palette.gold, this.radius = 4});
+  const GildedBorder({this.color = Palette.gold, this.radius = 4, this.ornate = false});
   final Color color;
   final double radius;
+  final bool ornate;
 
   @override
   EdgeInsetsGeometry get dimensions => const EdgeInsets.all(1);
@@ -69,6 +72,7 @@ class GildedBorder extends ShapeBorder {
 
   @override
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    if (!ornate) return _plain(canvas, rect);
     _ornaments(canvas, rect);
     canvas.drawRRect(
       _r(rect.deflate(0.5)),
@@ -110,8 +114,39 @@ class GildedBorder extends ShapeBorder {
     }
   }
 
+  /// Filo di ferro grigio e quattro angoli dorati sottili.
+  void _plain(Canvas canvas, Rect rect) {
+    canvas.drawRRect(
+      _r(rect.deflate(0.5)),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1
+        ..color = Palette.ash.withValues(alpha: 0.22),
+    );
+    final corner = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.4
+      ..color = color.withValues(alpha: 0.6);
+    final l = (rect.shortestSide * 0.12).clamp(6.0, 12.0);
+    final r = rect.deflate(0.7);
+    for (final (o, dx, dy) in [
+      (r.topLeft, 1.0, 1.0),
+      (r.topRight, -1.0, 1.0),
+      (r.bottomLeft, 1.0, -1.0),
+      (r.bottomRight, -1.0, -1.0),
+    ]) {
+      canvas.drawPath(
+        Path()
+          ..moveTo(o.dx + dx * l, o.dy)
+          ..lineTo(o.dx, o.dy)
+          ..lineTo(o.dx, o.dy + dy * l),
+        corner,
+      );
+    }
+  }
+
   @override
-  ShapeBorder scale(double t) => GildedBorder(color: color, radius: radius * t);
+  ShapeBorder scale(double t) => GildedBorder(color: color, radius: radius * t, ornate: ornate);
 
   /// Filo interno e stemmi a metà dei lati lunghi: la cornice di un reliquiario.
   void _ornaments(Canvas canvas, Rect rect) {
@@ -317,10 +352,10 @@ ThemeData buildTheme() {
   );
   final base = ThemeData(useMaterial3: true, colorScheme: scheme, fontFamily: kBodyFont);
   final text = base.textTheme.apply(bodyColor: Palette.holy, displayColor: Palette.holy).copyWith(
-        bodyMedium: base.textTheme.bodyMedium?.copyWith(fontSize: 16, color: Palette.holy),
-        bodyLarge: base.textTheme.bodyLarge?.copyWith(fontSize: 17, color: Palette.holy),
+        bodyMedium: base.textTheme.bodyMedium?.copyWith(fontSize: 17, color: Palette.holy),
+        bodyLarge: base.textTheme.bodyLarge?.copyWith(fontSize: 18, color: Palette.holy),
         titleMedium: base.textTheme.titleMedium?.copyWith(
-          fontSize: 17,
+          fontSize: 19,
           fontWeight: FontWeight.w600,
           color: Palette.holy,
         ),
@@ -356,7 +391,7 @@ ThemeData buildTheme() {
     listTileTheme: const ListTileThemeData(
       titleTextStyle: TextStyle(
         fontFamily: kBodyFont,
-        fontSize: 17,
+        fontSize: 19,
         fontWeight: FontWeight.w600,
         color: Palette.holy,
       ),
@@ -373,9 +408,9 @@ ThemeData buildTheme() {
       labelTextStyle: WidgetStateProperty.resolveWith(
         (s) => TextStyle(
           fontFamily: kTitleFont,
-          fontSize: 12,
+          fontSize: 13,
           fontWeight: FontWeight.w700,
-          letterSpacing: 0.6,
+          letterSpacing: 0.4,
           color: s.contains(WidgetState.selected) ? Palette.goldBright : Palette.ash,
         ),
       ),
@@ -427,7 +462,28 @@ ThemeData buildTheme() {
             const TextStyle(fontFamily: kTitleFont, fontWeight: FontWeight.w700, fontSize: 15),
       ),
     ),
-    dialogTheme: const DialogThemeData(backgroundColor: Palette.stone, shape: GildedBorder()),
+    // Le schede in alto (Allenamento / Arena…): in carattere da titolo, grandi.
+    tabBarTheme: TabBarThemeData(
+      labelStyle: titleStyle(size: 17, spacing: 1.5),
+      unselectedLabelStyle: titleStyle(size: 17, spacing: 1.5),
+      labelColor: Palette.goldBright,
+      unselectedLabelColor: Palette.ash,
+      indicatorColor: Palette.gold,
+    ),
+    // Pastiglie dei filtri: scelta in oro pieno, niente spunta.
+    chipTheme: ChipThemeData(
+      showCheckmark: false,
+      selectedColor: Palette.gold,
+      backgroundColor: Palette.stone,
+      side: const BorderSide(color: Palette.iron),
+      labelStyle: TextStyle(
+        fontFamily: kBodyFont,
+        fontSize: 16,
+        color: WidgetStateColor.resolveWith(
+            (s) => s.contains(WidgetState.selected) ? Palette.night : Palette.holy),
+      ),
+    ),
+    dialogTheme: const DialogThemeData(backgroundColor: Palette.stone, shape: GildedBorder(ornate: true)),
     snackBarTheme: const SnackBarThemeData(
       backgroundColor: Palette.stoneLight,
       contentTextStyle: TextStyle(fontFamily: kBodyFont, fontSize: 16, color: Palette.holy),

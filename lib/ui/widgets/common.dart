@@ -57,7 +57,7 @@ class SectionTitle extends StatelessWidget {
                   child: OneLine(
                     text.toUpperCase(),
                     align: Alignment.center,
-                    style: titleStyle(size: 13, spacing: 1.6),
+                    style: titleStyle(size: 16, spacing: 1.8),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -103,7 +103,7 @@ class StatBar extends StatelessWidget {
         if (label != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 3),
-            child: Text(label!, style: const TextStyle(fontSize: 12, color: Palette.ash)),
+            child: Text(label!, style: const TextStyle(fontSize: 14, color: Palette.ash)),
           ),
         ClipRRect(
           borderRadius: BorderRadius.circular(2),
@@ -140,9 +140,9 @@ class StatChip extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: color),
+        Icon(icon, size: 18, color: color),
         const SizedBox(width: 3),
-        Text(text, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w700)),
+        Text(text, style: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w700)),
       ],
     );
   }
@@ -194,6 +194,26 @@ String xpLeftLabel(int xpIn, int xpNeed) => xpNeed <= 0
     ? '$xpIn XP'
     : tr('{xp} / {need} XP · mancano {left}', {'xp': xpIn, 'need': xpNeed, 'left': xpNeed - xpIn});
 
+/// Il "?": la spiegazione lunga sta qui dietro, non sulla pagina.
+class HelpButton extends StatelessWidget {
+  const HelpButton(this.text, {super.key, this.color = Palette.ash});
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        tooltip: '?',
+        icon: Icon(Icons.help_outline, color: color),
+        onPressed: () => showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(text, textAlign: TextAlign.center),
+            actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
+          ),
+        ),
+      );
+}
+
 class InfoChip extends StatelessWidget {
   const InfoChip(this.icon, this.text, {super.key, this.color = Palette.gold});
   final IconData icon;
@@ -214,7 +234,7 @@ class InfoChip extends StatelessWidget {
         children: [
           Icon(icon, size: 16, color: color),
           const SizedBox(width: 6),
-          Text(text, style: const TextStyle(fontSize: 13)),
+          Text(text, style: const TextStyle(fontSize: 15)),
         ],
       ),
     );
@@ -232,11 +252,14 @@ class ActionTile extends StatelessWidget {
     this.trailing,
     this.color = Palette.gold,
     this.enabled = true,
+    this.below,
   });
 
   final IconData icon;
   final String title;
   final String? subtitle;
+  /// Sotto il titolo al posto del testo, per esempio i costi in icone.
+  final Widget? below;
   final VoidCallback? onTap;
   final Widget? trailing;
   final Color color;
@@ -251,9 +274,15 @@ class ActionTile extends StatelessWidget {
           minVerticalPadding: 10,
           leading: Icon(icon, color: color, size: 30),
           title: OneLine(title, align: Alignment.centerLeft),
-          subtitle: subtitle == null
-              ? null
-              : Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 14)),
+          subtitle: below != null || subtitle != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (subtitle != null) Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 16)),
+                    if (below != null) Padding(padding: const EdgeInsets.only(top: 4), child: below),
+                  ],
+                )
+              : null,
           trailing: trailing ??
               (onTap != null ? Icon(Icons.chevron_right, color: color, size: 30) : null),
           onTap: enabled ? onTap : null,
@@ -363,6 +392,272 @@ class EnemyPortrait extends StatelessWidget {
   }
 }
 
+/// Cosa si raccoglie, sullo stesso fondo pietra dei mostri: l'albero o il
+/// filone (`assets/art/nodes/<id>.png`), altrimenti l'oggetto che lascia.
+class ResourcePortrait extends StatelessWidget {
+  const ResourcePortrait(this.id, {super.key, this.size = 96, this.border, this.dim = false});
+  final String id;
+  final double size;
+  final Color? border;
+  final bool dim;
+
+  @override
+  Widget build(BuildContext context) {
+    final node = 'assets/art/nodes/$id.png';
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: neutralBackdrop,
+        borderRadius: BorderRadius.circular(size * 0.14),
+        border: Border.all(color: border ?? Palette.gold, width: size >= 120 ? 2.5 : 2),
+        boxShadow: const [BoxShadow(color: Color(0x99000000), blurRadius: 8, offset: Offset(0, 3))],
+      ),
+      clipBehavior: Clip.antiAlias,
+      padding: EdgeInsets.all(size * 0.05),
+      child: Opacity(
+        opacity: dim ? 0.45 : 1,
+        child: Art.has(node)
+            ? Image.asset(node, fit: BoxFit.contain)
+            : Center(child: ItemIcon(id, size: size * 0.78)),
+      ),
+    );
+  }
+}
+
+/// Il busto di un mercante (`assets/art/npc/<id>.png`, testa e mezzo petto
+/// rivolti a destra), altrimenti il suo simbolo nel suo colore.
+class NpcBust extends StatelessWidget {
+  const NpcBust(this.id, {super.key, required this.icon, required this.color, this.size = 112});
+  final String id;
+  final IconData icon;
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final art = 'assets/art/npc/$id.png';
+    return Container(
+      width: size,
+      height: size * 1.15,
+      decoration: BoxDecoration(
+        gradient: neutralBackdrop,
+        borderRadius: BorderRadius.circular(size * 0.12),
+        border: Border.all(color: color, width: 2),
+        boxShadow: const [BoxShadow(color: Color(0x99000000), blurRadius: 8, offset: Offset(0, 3))],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Art.has(art)
+          ? Image.asset(art, fit: BoxFit.cover, alignment: Alignment.topCenter)
+          : Icon(icon, size: size * 0.5, color: color),
+    );
+  }
+}
+
+/// Una lista che non taglia niente a metà sulla prima schermata: il primo
+/// pezzo che finirebbe sotto il bordo in basso scende all'inizio della
+/// seconda, e sopra resta spazio vuoto. Scorrendo, tutto come una ListView.
+/// Pagina che riempie sempre lo schermo: il figlio (di solito una Column con
+/// qualche Expanded) prende l'altezza visibile; sui telefoni bassi scorre.
+class FillPage extends StatelessWidget {
+  const FillPage({super.key, required this.child, this.minHeight = 560, this.padding = const EdgeInsets.all(16)});
+  final Widget child;
+  final double minHeight;
+  final EdgeInsets padding;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, box) => SingleChildScrollView(
+          child: SizedBox(
+            height: box.maxHeight.isFinite && box.maxHeight > minHeight ? box.maxHeight : minHeight,
+            child: Padding(padding: padding, child: child),
+          ),
+        ),
+      );
+}
+
+class FoldedListView extends StatefulWidget {
+  const FoldedListView({super.key, required this.children, this.padding = EdgeInsets.zero});
+  final List<Widget> children;
+  final EdgeInsets padding;
+
+  @override
+  State<FoldedListView> createState() => _FoldedListViewState();
+}
+
+class _FoldedListViewState extends State<FoldedListView> {
+  final _controller = ScrollController();
+  final _list = GlobalKey();
+  List<GlobalKey> _keys = [];
+  int? _at;
+  double _gap = 0;
+  // La freccia "c'è dell'altro" finché non si è scorso un po'.
+  bool _more = false, _scrolled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final scrolled = _controller.offset > 24;
+      if (scrolled != _scrolled) setState(() => _scrolled = scrolled);
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _measure(double viewport) {
+    if (!mounted) return;
+    final more = _controller.hasClients && _controller.position.maxScrollExtent > 24;
+    if (more != _more) setState(() => _more = more);
+    if (_controller.hasClients && _controller.offset > 0) return;
+    final listBox = _list.currentContext?.findRenderObject() as RenderBox?;
+    if (listBox == null) return;
+    int? at;
+    var gap = 0.0;
+    for (var i = 1; i < _keys.length; i++) {
+      final box = _keys[i].currentContext?.findRenderObject() as RenderBox?;
+      if (box == null || !box.hasSize) break;
+      var top = box.localToGlobal(Offset.zero, ancestor: listBox).dy;
+      if (_at != null && i >= _at!) top -= _gap;
+      final bottom = top + box.size.height;
+      if (top >= viewport) break;
+      if (bottom > viewport + 1) {
+        // Un titolo di sezione scende insieme al suo primo pezzo.
+        var j = i;
+        if (j > 1 && widget.children[j - 1] is SectionTitle) {
+          final t = _keys[j - 1].currentContext?.findRenderObject() as RenderBox?;
+          if (t != null && t.hasSize) {
+            j--;
+            top = t.localToGlobal(Offset.zero, ancestor: listBox).dy;
+            if (_at != null && j >= _at!) top -= _gap;
+          }
+        }
+        // Non lasciare mezza schermata vuota per un pezzo enorme.
+        if (viewport - top < viewport * 0.4) {
+          at = j;
+          gap = viewport - top;
+        }
+        break;
+      }
+    }
+    if (at != _at || (gap - _gap).abs() > 1) {
+      setState(() {
+        _at = at;
+        _gap = gap;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_keys.length != widget.children.length) {
+      _keys = [for (final _ in widget.children) GlobalKey()];
+    }
+    return LayoutBuilder(
+      builder: (context, box) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _measure(box.maxHeight));
+        return Stack(
+          children: [
+            ListView(
+              key: _list,
+              controller: _controller,
+              padding: widget.padding,
+              children: [
+                for (final (i, c) in widget.children.indexed) ...[
+                  if (i == _at) SizedBox(height: _gap),
+                  KeyedSubtree(key: _keys[i], child: c),
+                ],
+              ],
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 8,
+              child: IgnorePointer(
+                child: AnimatedOpacity(
+                  opacity: _more && !_scrolled ? 1 : 0,
+                  duration: const Duration(milliseconds: 300),
+                  child: const Center(child: ScrollCue()),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Una doppia freccia in oro che rimbalza piano: sotto c'è dell'altro.
+class ScrollCue extends StatefulWidget {
+  const ScrollCue({super.key});
+
+  @override
+  State<ScrollCue> createState() => _ScrollCueState();
+}
+
+class _ScrollCueState extends State<ScrollCue> with SingleTickerProviderStateMixin {
+  late final _bounce = AnimationController(vsync: this, duration: const Duration(milliseconds: 450));
+
+  @override
+  void initState() {
+    super.initState();
+    _play();
+  }
+
+  // Quattro rimbalzi e poi ferma: si nota senza dare fastidio.
+  Future<void> _play() async {
+    for (var i = 0; i < 4 && mounted; i++) {
+      await _bounce.forward().orCancel.catchError((_) {});
+      if (!mounted) return;
+      await _bounce.reverse().orCancel.catchError((_) {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _bounce.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: _bounce,
+        builder: (context, child) => Transform.translate(
+          offset: Offset(0, 6 * Curves.easeInOut.transform(_bounce.value)),
+          child: child,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Palette.night.withValues(alpha: 0.85),
+            border: Border.all(color: Palette.gold.withValues(alpha: 0.7)),
+          ),
+          child: const Icon(Icons.keyboard_double_arrow_down, color: Palette.goldBright, size: 26),
+        ),
+      );
+}
+
+/// Il pallino rosso: qui c'è qualcosa da fare o da riscuotere.
+class AlertDot extends StatelessWidget {
+  const AlertDot({super.key, required this.on, required this.child});
+  final bool on;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Badge(
+        isLabelVisible: on,
+        smallSize: 10,
+        backgroundColor: const Color(0xFFE0483C),
+        child: child,
+      );
+}
+
 void toast(BuildContext context, String message) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
@@ -384,6 +679,14 @@ class ItemIcon extends StatelessWidget {
 
   static (IconData, Color) symbolOf(String id) {
     bool has(String s) => id.contains(s);
+    final weapon = weaponDefs[id];
+    if (weapon != null) {
+      return switch (weapon.style) {
+        WeaponStyle.ranged => (Icons.north_east, const Color(0xFF7FC25A)),
+        WeaponStyle.magic => (Icons.auto_fix_high, const Color(0xFF9B6BE0)),
+        _ => (Icons.gavel, Palette.ash),
+      };
+    }
     if (id.startsWith('amulet_')) {
       final a = amuletDefs[id.substring(7)]?.apply;
       if (a?.ward != null) return (Icons.shield_moon, a!.ward!.color);

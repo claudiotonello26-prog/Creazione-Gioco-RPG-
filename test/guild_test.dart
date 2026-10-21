@@ -103,12 +103,15 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(NavigationDestination, 'Gilda'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Server non collegato'), findsWidgets);
+    expect(find.textContaining('Offline'), findsWidgets);
     await tester.dragUntilVisible(
       find.text('Ordine della Brace'),
       find.byType(ListView).first,
       const Offset(0, -200),
     );
+    // A metà schermo, così non resta sotto la barra in basso.
+    await Scrollable.ensureVisible(tester.element(find.text('Ordine della Brace')), alignment: 0.5);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Ordine della Brace'));
     await tester.pumpAndSettle();
     expect(find.text('Aldric'), findsOneWidget);

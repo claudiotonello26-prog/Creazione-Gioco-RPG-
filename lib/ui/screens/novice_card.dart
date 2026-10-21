@@ -59,47 +59,49 @@ class NoviceCard extends StatelessWidget {
     if (q == null) return const SizedBox.shrink();
     final have = state.stat(q.stat).clamp(0, q.target);
     final ready = state.noviceReady;
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: ready ? Palette.goldBright : Palette.gold, width: ready ? 2 : 1),
-      ),
-      child: InkWell(
-        onTap: () => ready ? _claim(context, state) : _go(context, state, q),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              const TrainerFigure(pose: TrainerPose.pointing, height: 84),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(tr('CAMMINO DEL NOVIZIO · {n}/{total}', {'n': state.noviceStep + 1, 'total': noviceQuests.length}),
-                        style: titleStyle(size: 11, color: Palette.gold, spacing: 1.5)),
-                    const SizedBox(height: 2),
-                    Text(q.title, style: titleStyle(size: 17, color: Palette.holy, spacing: 0.5)),
-                    Text(q.goal, style: const TextStyle(color: Palette.ash, fontSize: 13)),
-                    const SizedBox(height: 6),
-                    StatBar(value: have / q.target, color: Palette.gold, label: '$have / ${q.target}'),
-                    const SizedBox(height: 6),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ready
-                          ? FilledButton(
-                              onPressed: () => _claim(context, state),
-                              child: Text(tr('RISCUOTI')))
-                          : OutlinedButton.icon(
-                              onPressed: () => _go(context, state, q),
-                              icon: const Icon(Icons.arrow_forward, size: 18),
-                              label: Text(tr('VAI')),
-                            ),
-                    ),
-                  ],
+    // Pallino fisso finché il Cammino non è finito: il nuovo giocatore sa
+    // sempre da dove ripartire.
+    return AlertDot(
+      on: true,
+      child: Card(
+        shape: GildedBorder(ornate: true, color: ready ? Palette.goldBright : Palette.gold),
+        child: InkWell(
+          onTap: () => ready ? _claim(context, state) : _go(context, state, q),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                const TrainerFigure(pose: TrainerPose.pointing, height: 84),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(tr('CAMMINO DEL NOVIZIO · {n}/{total}', {'n': state.noviceStep + 1, 'total': noviceQuests.length}),
+                          style: titleStyle(size: 13, color: Palette.gold, spacing: 1.5)),
+                      const SizedBox(height: 2),
+                      Text(q.title, style: titleStyle(size: 17, color: Palette.holy, spacing: 0.5)),
+                      Text(q.goal, style: const TextStyle(color: Palette.ash, fontSize: 15)),
+                      const SizedBox(height: 6),
+                      StatBar(value: have / q.target, color: Palette.gold, label: '$have / ${q.target}'),
+                      const SizedBox(height: 6),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ready
+                            ? FilledButton(
+                                onPressed: () => _claim(context, state),
+                                child: Text(tr('RISCUOTI')))
+                            : OutlinedButton.icon(
+                                onPressed: () => _go(context, state, q),
+                                icon: const Icon(Icons.arrow_forward, size: 18),
+                                label: Text(tr('VAI')),
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

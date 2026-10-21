@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'codex_screen.dart';
@@ -8,6 +10,7 @@ import '../../core/i18n.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/items.dart';
@@ -39,49 +42,97 @@ class ForgeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1.0,
-          children: [
-            for (final st in Station.values)
-              _StationButton(
-                station: st,
-                level: st == Station.enchant ? null : s.stationLevel(st),
-                onTap: () =>
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_) => StationScreen(station: st))),
-              ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        if (s.repairAllCost > 0) const _RepairTile(),
-        ActionTile(
-          icon: Icons.shield,
-          title: tr('Equipaggiamento'),
-          subtitle: tr('Arma, armatura pezzo per pezzo, mano sinistra, amuleti'),
-          color: Palette.goldBright,
-          onTap: () => openEquipment(context),
-        ),
-        ActionTile(
-          icon: Icons.auto_stories,
-          title: tr('Codice del Giuramento'),
-          subtitle: tr('Ogni oggetto: dove si trova e a cosa serve'),
-          onTap: () => openCodex(context),
-        ),
-        ActionTile(
-          icon: Icons.storefront,
-          title: tr('Mercato'),
-          subtitle: tr('Vendi quello che avanza, compra materiali, amuleti dalla Fattucchiera'),
-          onTap: () => openMarket(context),
-        ),
-      ],
+    Widget station(Station st) => _StationButton(
+          station: st,
+          level: st == Station.enchant ? null : s.stationLevel(st),
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => StationScreen(station: st))),
+        );
+    final st = Station.values;
+    final tiles = [
+      if (s.repairAllCost > 0) const _RepairTile(),
+      ActionTile(
+        icon: Icons.shield,
+        title: tr('Equipaggiamento'),
+        color: Palette.goldBright,
+        onTap: () => openEquipment(context),
+      ),
+      ActionTile(
+        icon: Icons.auto_stories,
+        title: tr('Codice del Giuramento'),
+        onTap: () => openCodex(context),
+      ),
+    ];
+    // Le quattro postazioni si allargano a riempire lo schermo.
+    return FillPage(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Sempre quadrate, il più grandi possibile; postazioni e scorciatoie
+          // stanno insieme, centrate nella pagina.
+          Expanded(
+            child: LayoutBuilder(builder: (context, box) {
+              const gap = 10.0;
+              final rows = (st.length + 1) ~/ 2;
+              final reserve = 12 + 80.0 * (tiles.length);
+              final side = min((box.maxWidth - gap) / 2, (box.maxHeight - reserve - gap * (rows - 1)) / rows);
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (var r = 0; r < st.length; r += 2) ...[
+                    if (r > 0) const SizedBox(height: gap),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox.square(dimension: side, child: station(st[r])),
+                        const SizedBox(width: gap),
+                        SizedBox.square(
+                            dimension: side, child: r + 1 < st.length ? station(st[r + 1]) : null),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 12),
+                  ...tiles,
+                ],
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// L'emblema di una postazione: l'illustrazione in
+/// `assets/art/emblems/station_NOME.png` se c'è, altrimenti il simbolo nel
+/// cerchio del suo colore.
+class StationEmblem extends StatelessWidget {
+  const StationEmblem(this.station, {super.key, this.size = 96});
+  final Station station;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final art = 'assets/art/emblems/station_${station.name}.png';
+    final glow = [BoxShadow(color: station.accent.withValues(alpha: 0.35), blurRadius: size * 0.15)];
+    if (Art.has(art)) {
+      return Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: glow),
+        child: ClipOval(child: Image.asset(art, fit: BoxFit.cover)),
+      );
+    }
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: station.accent, width: 1.5),
+        gradient: RadialGradient(colors: [station.accent.withValues(alpha: 0.35), Palette.night]),
+        boxShadow: glow,
+      ),
+      child: Icon(stationIcon(station), color: station.accent, size: size * 0.5),
     );
   }
 }
@@ -145,36 +196,27 @@ class _StationButton extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: station.accent, width: 1.5),
-                  gradient: RadialGradient(
-                    colors: [station.accent.withValues(alpha: 0.35), Palette.night],
-                  ),
-                  boxShadow: [
-                    BoxShadow(color: station.accent.withValues(alpha: 0.35), blurRadius: 14),
-                  ],
-                ),
-                child: Icon(stationIcon(station), color: station.accent, size: 32),
-              ),
-              const SizedBox(height: 10),
+              StationEmblem(station, size: 104),
+              const SizedBox(height: 14),
               FittedBox(
                 child: Text(
                   station.label.toUpperCase(),
-                  style: titleStyle(size: 14, color: station.accent),
+                  style: titleStyle(size: 16, color: station.accent),
                 ),
               ),
               Text(
-                level == null ? tr('Potenzia l\'arma') : tr('Livello {level}', {'level': level}),
-                style: const TextStyle(color: Palette.ash, fontSize: 13),
+                level == null ? tr('Potenzia l\'arma') : tr('Liv. {n}', {'n': level}),
+                style: const TextStyle(color: Palette.ash, fontSize: 15),
               ),
             ],
+          ),
+            ),
           ),
         ),
       ),
@@ -221,18 +263,18 @@ class StationScreen extends StatelessWidget {
     final offhands = unlockedPlusNext(
         offhandDefs.values.where((o) => o.station == station).toList(), (o) => o.craftLevel, lvl);
     return [
-      Icon(stationIcon(station), color: station.accent, size: 40),
-      const SizedBox(height: 6),
-      Text(
-        station.description,
-        textAlign: TextAlign.center,
-        style: const TextStyle(color: Palette.ash),
-      ),
-      const SizedBox(height: 10),
-      StatBar(
-        value: xpIn / xpNeed,
-        color: Palette.gold,
-        label: '${tr('Livello {n}', {'n': lvl})} · ${xpLeftLabel(xpIn, xpNeed)}',
+      // Icona, livello e barra in una riga; la descrizione sta dietro il "?".
+      Row(
+        children: [
+          StationEmblem(station, size: 48),
+          const SizedBox(width: 10),
+          Text(tr('Liv. {n}', {'n': lvl}), style: titleStyle(size: 17, color: station.accent)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: StatBar(value: xpIn / xpNeed, color: Palette.gold, label: '$xpIn / $xpNeed XP'),
+          ),
+          HelpButton(station.description),
+        ],
       ),
       if (mats.isNotEmpty) SectionTitle(tr('Lavorazioni')),
       for (final r in mats)
@@ -454,7 +496,7 @@ class _RecipeTile extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.lock_outline, color: Palette.iron, size: 24),
-              Text('Lv $level', style: const TextStyle(color: Palette.ash, fontSize: 13)),
+              Text('Lv $level', style: const TextStyle(color: Palette.ash, fontSize: 15)),
             ],
           )
         : FilledButton(

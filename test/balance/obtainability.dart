@@ -71,7 +71,7 @@ Map<String, Set<String>> sourcesFor(Attribute build) {
     }
   }
   for (final id in merchantStock) {
-    add(id, 'Mercante');
+    add(id, 'Botteghe');
   }
   for (final res in resources) {
     add(res.id, 'passi');

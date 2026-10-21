@@ -211,7 +211,7 @@ class _Thumbs extends StatelessWidget {
               Expanded(
                 child: OneLine(
                   current.$2,
-                  style: const TextStyle(color: Palette.ash, fontSize: 13),
+                  style: const TextStyle(color: Palette.ash, fontSize: 15),
                 ),
               ),
             ],

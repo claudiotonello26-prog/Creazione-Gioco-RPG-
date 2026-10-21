@@ -5,9 +5,7 @@ import '../widgets/oath_bar.dart';
 
 import 'package:provider/provider.dart';
 
-import '../../core/art.dart';
 import '../../core/theme.dart';
-import '../../game/battle_game.dart' show enemyArtPath;
 import '../../data/game_state.dart';
 import '../../domain/character.dart';
 import '../../domain/combat.dart';
@@ -45,44 +43,95 @@ const Map<MuscleGroup, String> groupMaterials = {
   MuscleGroup.stretching: 'Pietre di forgia e gemme',
 };
 
-class TrainTab extends StatelessWidget {
+class TrainTab extends StatefulWidget {
   const TrainTab({super.key, this.onNavigate});
   final void Function(int tab)? onNavigate;
 
   @override
+  State<TrainTab> createState() => _TrainTabState();
+}
+
+class _TrainTabState extends State<TrainTab> {
+  // I filtri della lista mostri, in fondo alla pagina.
+  ExerciseId? _exercise;
+  Difficulty? _difficulty;
+  MuscleGroup? _zone;
+
+  @override
   Widget build(BuildContext context) {
+    final onNavigate = widget.onNavigate;
     final s = context.watch<GameState>();
     final plan = weeklyPlan(s.daysPerWeek);
     final trainedThisWeek = s.trainedGroups.values.expand((g) => g).toSet();
-    return ListView(
+    final level = s.character.level;
+    final monsters = bestiary
+        .where((e) =>
+            !e.isAnimal &&
+            (_zone == null || e.group == _zone) &&
+            (_exercise == null || e.exercises.contains(_exercise)) &&
+            (_difficulty == null || Difficulty.of(e, level) == _difficulty))
+        .toList();
+    // Novizio e quest in cima, poi spedizioni, animali e tutti i mostri
+    // filtrabili: niente liste da aprire, si scorre e basta.
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
-        if (onNavigate != null) NoviceCard(onNavigate: onNavigate!),
-        ActionTile(
-          icon: Icons.assignment_outlined,
-          title: tr('Quest giornaliera'),
-          subtitle: tr(
-              '{p}% fatta · premio: una chiave che raddoppia il bottino (ne hai {n})',
-              {'p': (s.questProgress * 100).round(), 'n': s.expeditionKeys}),
-          onTap: () =>
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QuestScreen())),
+        if (onNavigate != null) NoviceCard(onNavigate: onNavigate),
+        // La quest a colpo d'occhio: barra e chiavi; il resto è dentro.
+        Card(
+          child: InkWell(
+            onTap: () =>
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QuestScreen())),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 12, 10, 12),
+              child: Row(
+                children: [
+                  Icon(s.questComplete ? Icons.task_alt : Icons.assignment_outlined,
+                      color: s.questComplete ? Palette.goldBright : Palette.gold, size: 30),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        OneLine(tr('Quest giornaliera'), align: Alignment.centerLeft),
+                        const SizedBox(height: 6),
+                        StatBar(
+                          value: s.questProgress,
+                          color: Palette.gold,
+                          label: '${(s.questProgress * 100).round()}%',
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Tooltip(
+                    message: tr('Chiave della Spedizione: raddoppia il bottino'),
+                    child: StatChip(Icons.key, '${s.expeditionKeys}', color: Palette.goldBright),
+                  ),
+                  const Icon(Icons.chevron_right, color: Palette.gold, size: 28),
+                ],
+              ),
+            ),
+          ),
         ),
-        _QuickFights(playerLevel: s.character.level),
         SectionTitle(tr('Spedizioni')),
-        ActionTile(
-          icon: Icons.history_edu,
-          title: tr('Bacheca delle Taglie'),
-          subtitle: s.contract == null
-              ? tr('Firma un contratto: spedizioni da finire per un forziere')
-              : s.contract!.complete
-                  ? tr('Contratto finito: torna a riscuotere!')
-                  : tr('Contratto di {who}: {done} / {n} spedizioni', {
-                      'who': s.contract!.contractor.name,
-                      'done': s.contract!.targets.where(s.contract!.done.contains).length,
-                      'n': s.contract!.targets.length,
-                    }),
-          color: s.contract?.complete == true ? Palette.goldBright : Palette.gold,
-          onTap: () => openContracts(context),
+        AlertDot(
+          on: s.contract?.complete ?? false,
+          child: ActionTile(
+            icon: Icons.history_edu,
+            title: tr('Bacheca delle Taglie'),
+            subtitle: s.contract == null
+                ? tr('Firma un contratto: spedizioni da finire per un forziere')
+                : s.contract!.complete
+                    ? tr('Contratto finito: torna a riscuotere!')
+                    : tr('Contratto di {who}: {done} / {n} spedizioni', {
+                        'who': s.contract!.contractor.name,
+                        'done': s.contract!.targets.where(s.contract!.done.contains).length,
+                        'n': s.contract!.targets.length,
+                      }),
+            color: s.contract?.complete == true ? Palette.goldBright : Palette.gold,
+            onTap: () => openContracts(context),
+          ),
         ),
         for (final g in worldGroups)
           _GroupCard(
@@ -92,82 +141,35 @@ class TrainTab extends StatelessWidget {
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
           ),
-        SectionTitle(tr('Caccia libera: tocca un nemico per combattere')),
+        SectionTitle(tr('Caccia libera')),
         for (final a in baseAnimals)
           _FreeFightTile(enemy: a, playerLevel: s.character.level, icon: Icons.pets),
-        ActionTile(
-          icon: Icons.menu_book,
-          title: tr('Tutti i nemici ({n})', {'n': bestiary.length}),
-          subtitle: tr('Filtra per esercizio, difficoltà e zona'),
-          color: Palette.goldBright,
-          onTap: () =>
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BestiaryScreen())),
+        SectionTitle(tr('Mostri')),
+        _HuntFilters(
+          exercise: _exercise,
+          difficulty: _difficulty,
+          zone: _zone,
+          onChanged: (ex, d, z) => setState(() {
+            _exercise = ex;
+            _difficulty = d;
+            _zone = z;
+          }),
         ),
+        if (monsters.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(tr('Nessun nemico con questi filtri'),
+                textAlign: TextAlign.center, style: const TextStyle(color: Palette.ash)),
+          ),
+        for (final e in monsters)
+          _FreeFightTile(enemy: e, playerLevel: level, icon: e.isBoss ? Icons.castle : null),
         const SizedBox(height: 6),
         Text(
           tr('Il tuo piano ({n} giorni a settimana): {plan}', {
             'n': s.daysPerWeek,
             'plan': plan.map((d) => d.map((g) => g.label).join(' + ')).join(' · '),
           }),
-          style: const TextStyle(color: Palette.ash, fontSize: 12),
-        ),
-      ],
-    );
-  }
-}
-
-/// In cima al Training: i nemici adatti al tuo livello, in grande e a
-/// colori su fondo neutro. Un tocco e si combatte.
-class _QuickFights extends StatelessWidget {
-  const _QuickFights({required this.playerLevel});
-  final int playerLevel;
-
-  @override
-  Widget build(BuildContext context) {
-    // Prima chi ha già l'illustrazione, poi dal più vicino al tuo livello.
-    final list = bestiary.where((e) => !e.isBoss && e.level <= playerLevel + 2).toList()
-      ..sort((a, b) {
-        final art = (Art.has(enemyArtPath(b)) ? 1 : 0) - (Art.has(enemyArtPath(a)) ? 1 : 0);
-        if (art != 0) return art;
-        return (a.level - playerLevel).abs().compareTo((b.level - playerLevel).abs());
-      });
-    final foes = list.take(8).toList();
-    if (foes.isEmpty) return const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SectionTitle(tr('Combatti subito')),
-        SizedBox(
-          height: 228,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: foes.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 10),
-            itemBuilder: (context, i) {
-              final e = foes[i];
-              return SizedBox(
-                width: 150,
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(21),
-                    onTap: () => startFreeFight(context, e, respawn: true),
-                    child: Column(
-                      children: [
-                        EnemyPortrait(e, size: 150),
-                        const SizedBox(height: 6),
-                        OneLine(e.name,
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                            align: Alignment.center),
-                        const SizedBox(height: 2),
-                        LevelBadge(e, playerLevel),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+          style: const TextStyle(color: Palette.ash, fontSize: 14),
         ),
       ],
     );
@@ -226,13 +228,13 @@ class _GroupCard extends StatelessWidget {
                         ),
                         Text(
                           '$cleared/4',
-                          style: const TextStyle(color: Palette.ash, fontSize: 12),
+                          style: const TextStyle(color: Palette.ash, fontSize: 14),
                         ),
                       ],
                     ),
                     Text(
                       tr(groupMaterials[group]!),
-                      style: const TextStyle(color: Palette.ash, fontSize: 13),
+                      style: const TextStyle(color: Palette.ash, fontSize: 15),
                     ),
                     const SizedBox(height: 4),
                     Row(
@@ -245,7 +247,7 @@ class _GroupCard extends StatelessWidget {
                           trainedThisWeek ? tr('Fatto questa settimana') : tr('Bonus Varietà'),
                           style: TextStyle(
                             color: trainedThisWeek ? Palette.ash : Palette.ember,
-                            fontSize: 11,
+                            fontSize: 15,
                           ),
                         ),
                       ],
@@ -309,109 +311,66 @@ class GroupScreen extends StatelessWidget {
   }
 }
 
-/// Tutti i nemici dell'allenamento libero, per livello, filtrabili.
-class BestiaryScreen extends StatefulWidget {
-  const BestiaryScreen({super.key});
-
-  @override
-  State<BestiaryScreen> createState() => _BestiaryScreenState();
-}
-
-class _BestiaryScreenState extends State<BestiaryScreen> {
-  /// null = tutti; 'animals' = solo animali; altrimenti un gruppo.
-  Object? _filter;
-  ExerciseId? _exercise;
-  Difficulty? _difficulty;
-
-  bool _keepGroup(EnemyDef e) => switch (_filter) {
-        null => true,
-        'animals' => e.isAnimal,
-        final MuscleGroup g => !e.isAnimal && e.group == g,
-        _ => true,
-      };
+/// I filtri della lista mostri: esercizio, difficoltà e zona, in tre righe
+/// di pastiglie che scorrono di lato.
+class _HuntFilters extends StatelessWidget {
+  const _HuntFilters({
+    required this.exercise,
+    required this.difficulty,
+    required this.zone,
+    required this.onChanged,
+  });
+  final ExerciseId? exercise;
+  final Difficulty? difficulty;
+  final MuscleGroup? zone;
+  final void Function(ExerciseId?, Difficulty?, MuscleGroup?) onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final s = context.watch<GameState>();
-    final level = s.character.level;
-    final list = bestiary
-        .where((e) =>
-            _keepGroup(e) &&
-            (_exercise == null || e.exercises.contains(_exercise)) &&
-            (_difficulty == null || Difficulty.of(e, level) == _difficulty))
-        .toList();
-    // Gli esercizi che compaiono nei nemici, nell'ordine dell'elenco esercizi.
-    final used = {for (final e in bestiary) ...e.exercises};
+    // Gli esercizi che compaiono nei mostri, nell'ordine dell'elenco esercizi.
+    final used = {for (final e in bestiary) if (!e.isAnimal) ...e.exercises};
     final exerciseIds = [for (final id in ExerciseId.values) if (used.contains(id)) id];
-    Widget chip<T>(String label, T? value, T? current, void Function(T?) set, {Color? color}) =>
-        Padding(
+    Widget chip(String label, bool selected, VoidCallback onTap, {Color? color}) => Padding(
           padding: const EdgeInsets.only(right: 6),
           child: ChoiceChip(
             label: Text(label, style: color == null ? null : TextStyle(color: color)),
-            selected: current == value,
-            onSelected: (_) => setState(() => set(value)),
+            selected: selected,
+            onSelected: (_) => onTap(),
           ),
         );
-    Widget bar(String title, List<Widget> chips) => Padding(
-          padding: const EdgeInsets.fromLTRB(12, 6, 0, 0),
+    Widget bar(IconData icon, List<Widget> chips) => Padding(
+          padding: const EdgeInsets.only(bottom: 6),
           child: Row(
             children: [
-              SizedBox(
-                width: 84,
-                child: Text(title,
-                    style: const TextStyle(color: Palette.ash, fontSize: 13)),
-              ),
+              Icon(icon, color: Palette.ash, size: 22),
+              const SizedBox(width: 8),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(right: 12),
                   child: Row(children: chips),
                 ),
               ),
             ],
           ),
         );
-    return Scaffold(
-      appBar: OathBar(title: Text(tr('CACCIA'))),
-      body: Column(
-        children: [
-          bar(tr('Esercizio'), [
-            chip<ExerciseId>(tr('Tutti'), null, _exercise, (v) => _exercise = v),
-            for (final id in exerciseIds)
-              chip<ExerciseId>(exercises[id]!.name, id, _exercise, (v) => _exercise = v),
-          ]),
-          bar(tr('Difficoltà'), [
-            chip<Difficulty>(tr('Tutte'), null, _difficulty, (v) => _difficulty = v),
-            for (final d in Difficulty.values)
-              chip<Difficulty>(d.label, d, _difficulty, (v) => _difficulty = v, color: d.color),
-          ]),
-          bar(tr('Zona'), [
-            chip<Object>(tr('Tutte'), null, _filter, (v) => _filter = v),
-            chip<Object>(tr('Animali'), 'animals', _filter, (v) => _filter = v),
-            for (final g in worldGroups.where((g) => g != MuscleGroup.stretching))
-              chip<Object>(g.label, g, _filter, (v) => _filter = v),
-          ]),
-          const SizedBox(height: 4),
-          Expanded(
-            child: list.isEmpty
-                ? Center(
-                    child: Text(tr('Nessun nemico con questi filtri'),
-                        style: const TextStyle(color: Palette.ash)),
-                  )
-                : ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                    children: [
-                      for (final e in list)
-                        _FreeFightTile(
-                          enemy: e,
-                          playerLevel: level,
-                          icon: e.isAnimal ? Icons.pets : (e.isBoss ? Icons.castle : null),
-                        ),
-                    ],
-                  ),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        bar(Icons.fitness_center, [
+          chip(tr('Tutti'), exercise == null, () => onChanged(null, difficulty, zone)),
+          for (final id in exerciseIds)
+            chip(exercises[id]!.name, exercise == id, () => onChanged(id, difficulty, zone)),
+        ]),
+        bar(Icons.local_fire_department, [
+          chip(tr('Tutte'), difficulty == null, () => onChanged(exercise, null, zone)),
+          for (final d in Difficulty.values)
+            chip(d.label, difficulty == d, () => onChanged(exercise, d, zone), color: d.color),
+        ]),
+        bar(Icons.map_outlined, [
+          chip(tr('Tutte'), zone == null, () => onChanged(exercise, difficulty, null)),
+          for (final g in worldGroups.where((g) => g != MuscleGroup.stretching))
+            chip(g.label, zone == g, () => onChanged(exercise, difficulty, g)),
+        ]),
+      ],
     );
   }
 }
@@ -574,10 +533,10 @@ class _EnemyRewards extends StatelessWidget {
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12, color: Palette.holy, height: 1.15),
+                style: const TextStyle(fontSize: 14, color: Palette.holy, height: 1.15),
               ),
               Text(note,
-                  style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 14, color: color, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
@@ -597,7 +556,7 @@ class _EnemyRewards extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(hint,
-                        style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                        style: const TextStyle(color: Palette.ash, fontSize: 14)),
                   ),
                 ],
               ),

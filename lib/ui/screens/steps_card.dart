@@ -81,7 +81,7 @@ class _StepsCardState extends State<StepsCard> with WidgetsBindingObserver {
                   const Icon(Icons.directions_walk, color: Palette.gold, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: OneLine(tr('PASSI DI OGGI'), style: titleStyle(size: 13, spacing: 1.6)),
+                    child: OneLine(tr('PASSI DI OGGI'), style: titleStyle(size: 15, spacing: 1.6)),
                   ),
                   Text(
                     steps == null ? tr('Collega i passi') : '${_fmt(steps)} / ${_fmt(top)}',
@@ -228,7 +228,7 @@ class _Mark extends StatelessWidget {
         OneLine(
           '$label · $runes',
           align: Alignment.center,
-          style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 15, color: color, fontWeight: FontWeight.w600),
         ),
       ],
     );
