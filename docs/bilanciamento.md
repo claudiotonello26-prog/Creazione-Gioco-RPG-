@@ -165,6 +165,29 @@ Cosa ha già trovato e corretto:
 
 4. **Rune senza uso**: dopo 90 giorni il giocatore medio aveva 115.000 rune e ne aveva spese 2.400. Ora ogni potenziamento dell'arma costa anche rune: 80 × livello^1,6 × (1 + livello di forgia dell'arma ÷ 6), il quintuplo per le armi speciali. La Lama del Pellegrino da +0 a +10 costa circa 16.000 rune in tutto (il +10 da solo 3.700), un'arma di livello 20 quasi quattro volte tanto. Il costo si vede sotto la pietra, all'Incantamento. Il simulatore controlla che si spenda almeno un quinto delle rune.
 
+### Build a confronto (Forza, Destrezza, Fede, Intelligenza)
+
+Altri quattro giocatori, uno per giuramento, con lo stesso impegno (test 20, 4 giorni a settimana, 180 rep, 9.000 passi), giocano un anno intero a ogni `flutter test` (pochi secondi). Ognuno mette due punti su tre nell'attributo della build e uno in Vigore, forgia l'arma migliore che riesce a fare adesso (scelta per quanto varrà a +10, non per com'è appena forgiata) e l'armatura della sua build. Dal giorno 90 in poi l'attacco della build più forte non deve superare di oltre il 30% quello della più debole (BLOCCO; avviso oltre il 15%). Nel primo mese è solo un avviso: le armi della build arrivano a giorni diversi. Rapporto in `build/balance/builds.md`.
+
+Un controllo statico sulla **collezione** verifica che ogni materiale chiesto da armi, armature, mani sinistre, pietre, amuleti e ricette di ogni build cada da qualche parte (mostri, forzieri, contratti, quest, boss, passi, Mercante o un'altra ricetta): uno introvabile è un BLOCCO, uno che non serve a niente un avviso.
+
+| Build | Giorno 30 | Giorno 90 | Giorno 180 | Giorno 365 |
+|---|---|---|---|---|
+| Forza | liv. 21, att. 136 | liv. 32, att. 375 | liv. 42, att. 725 | liv. 56, att. 807 |
+| Destrezza | liv. 21, att. 106 | liv. 32, att. 336 | liv. 42, att. 697 | liv. 56, att. 775 |
+| Fede | liv. 21, att. 131 | liv. 32, att. 367 | liv. 42, att. 725 | liv. 56, att. 807 |
+| Intelligenza | liv. 21, att. 98 | liv. 32, att. 354 | liv. 42, att. 706 | liv. 56, att. 776 |
+
+Cosa ha trovato e corretto la simulazione lunga:
+
+5. **Attributi senza tetto**: a fine anno l'attributo della build arrivava a 270 e la Fede, moltiplicata dall'armatura del Martire, faceva il doppio di danno delle altre. Ora ogni attributo si ferma a **99** (il «+» si spegne); i punti in più vanno in Vigore e Tempra.
+6. **La Magia non contava**: bastoni e catalizzatori allenano la Magia, ma il bonus di danno guardava il livello di Attacco, fermo a 10. Ora l'attacco mostrato e quello in combattimento usano la Magia per le armi magiche.
+7. **Incudine ferma al livello 6**: forgiare un'arma, un'armatura o una mano sinistra dava solo il triplo dell'XP di un lingotto. Ora vale **dieci volte** (`gearCraftXpFactor`): gli oggetti costano materiali rari e si fanno di rado.
+8. **Intelligenza lenta all'inizio**: il Bastone della Brace aveva il danno base più basso (16) e chiedeva 6 Essenze di bestia. Ora danno 22, ricetta 4 Assi di frassino + 3 Essenze.
+9. **Materiali solo da vendere**: Gemma grezza, Lingotto d'oro e Osso non servivano a niente. Ora alla Fornace 3 Gemme grezze fanno una Gemma tagliata (liv. 8), 3 tagliate una pura (14), 3 pure una perfetta (20); le Piastre del Templare chiedono 2 Lingotti d'oro; l'Impugnatura rinforzata 2 Ossa. Resta solo la Perla dei sogni (rara, per ora si vende).
+
+Da guardare (non ancora toccato): dopo un anno ogni build tiene più di un milione di rune, perché quando l'arma è a +10 non c'è più niente di caro da comprare; e lo stretching dà circa un terzo dell'XP totale.
+
 ## Dove sta nel codice
 
 - `lib/domain/combat.dart`:
@@ -176,5 +199,5 @@ Cosa ha già trovato e corretto:
 - `lib/domain/items.dart`: ricette, stazioni e armature.
 - `lib/data/game_state.dart`: `claimSteps`, `craftMaterial`, `bossLoot` e `logSet`.
 - `lib/domain/progress.dart`: storico, rep equivalenti e indice di forza.
-- Simulatore: `test/balance/simulator.dart` (giocatori), `test/balance/analysis.dart` (controlli e soglie, classe `Targets`), `test/balance/balance_test.dart` (avvio).
+- Simulatore: `test/balance/simulator.dart` (giocatori e build), `test/balance/analysis.dart` (controlli e soglie, classe `Targets`), `test/balance/obtainability.dart` (collezione), `test/balance/balance_test.dart` (avvio).
 - Test: `test/combat_test.dart`, `test/economy_test.dart` e `test/walking_test.dart`. La tabella qui sopra la stampa il test "tabella di bilanciamento".

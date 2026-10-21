@@ -1219,7 +1219,10 @@ class GameState extends ChangeNotifier {
 
   (int, int, int) skillProgressOf(Skill k) => skillProgress(skillXp[k] ?? 0, max: k.maxLevel);
 
-  int get attackLevel => skillLevel(Skill.attack);
+  /// Livello che potenzia l'arma impugnata: Magia per bastoni e
+  /// catalizzatori, Attacco per il resto (è quello che sale combattendo).
+  int get attackLevel =>
+      skillLevel(character.weapon.def.usesMagic ? Skill.magic : Skill.attack);
   int get defenseLevel => skillLevel(Skill.defense);
 
   /// Potere d'attacco mostrato nella Home: arma, attributi e livello di Attacco.
@@ -1299,7 +1302,7 @@ class GameState extends ChangeNotifier {
     if (!canCraft(def)) return false;
     def.recipe.forEach(character.spendMaterial);
     character.weapons.add(WeaponInstance(weaponId: def.id));
-    _gainSkill(Skill.forStation(def.station), craftXp(def.craftLevel) * 3);
+    _gainSkill(Skill.forStation(def.station), craftXp(def.craftLevel) * gearCraftXpFactor);
     _count('craft:${def.id}');
     _changed();
     return true;
@@ -1317,7 +1320,7 @@ class GameState extends ChangeNotifier {
     for (final slot in ArmorSlot.values) {
       character.worn[slot] = def.id;
     }
-    _gainSkill(Skill.smithing, craftXp(def.craftLevel) * 3);
+    _gainSkill(Skill.smithing, craftXp(def.craftLevel) * gearCraftXpFactor);
     _count('craft:${def.id}');
     _changed();
     return true;
@@ -1343,7 +1346,7 @@ class GameState extends ChangeNotifier {
     def.recipe.forEach(character.spendMaterial);
     character.offhands.add(def.id);
     character.offhandId = def.id;
-    _gainSkill(Skill.forStation(def.station), craftXp(def.craftLevel) * 3);
+    _gainSkill(Skill.forStation(def.station), craftXp(def.craftLevel) * gearCraftXpFactor);
     _count('craft:${def.id}');
     _changed();
     return true;

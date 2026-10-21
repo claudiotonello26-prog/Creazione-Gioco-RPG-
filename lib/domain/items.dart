@@ -201,6 +201,7 @@ const List<MaterialRecipe> materialRecipes = [
       {
         'ash_plank': 1,
         'beast_essence': 1,
+        'bone': 2,
       },
       level: 2),
   MaterialRecipe('oak_plank', Station.carpentry, {'oak_wood': 20}, level: 5),
@@ -219,6 +220,10 @@ const List<MaterialRecipe> materialRecipes = [
         'beast_essence': 3,
       },
       level: 14),
+  // Le gemme grezze si tagliano: tre di un grado fanno una del successivo.
+  MaterialRecipe('gem_cut', Station.furnace, {'gem_rough': 3}, level: 8),
+  MaterialRecipe('gem_pure', Station.furnace, {'gem_cut': 3}, level: 14),
+  MaterialRecipe('gem_perfect', Station.furnace, {'gem_pure': 3}, level: 20),
   MaterialRecipe('star_ingot', Station.furnace, {'star_ore': 20, 'coal': 20}, level: 18),
   // Il binario delle armi speciali: Tenebre I cade dai nemici, le altre si
   // fondono dalla precedente; l'Epica chiude a +5.
@@ -311,7 +316,7 @@ const Map<String, ArmorDef> armorDefs = {
     id: 'templar_plate',
     name: 'Piastre del Templare',
     reduction: 0.22,
-    recipe: {'steel_ingot': 6, 'holy_shard': 2, 'forge_stone_2': 1},
+    recipe: {'steel_ingot': 6, 'gold_ingot': 2, 'holy_shard': 2, 'forge_stone_2': 1},
     look: 2,
     craftLevel: 10,
   ),
@@ -575,10 +580,10 @@ const Map<String, WeaponDef> weaponDefs = {
     id: 'ember_staff',
     name: 'Bastone della Brace',
     style: WeaponStyle.magic,
-    baseDamage: 16,
+    baseDamage: 22,
     scaling: {Attribute.intelligence: ScalingGrade.a},
     damageType: DamageType.magic,
-    recipe: {'ash_plank': 3, 'beast_essence': 6},
+    recipe: {'ash_plank': 4, 'beast_essence': 3},
     craftLevel: 4,
   ),
   'steel_longsword': WeaponDef(

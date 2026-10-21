@@ -347,7 +347,9 @@ class _AttributePanelState extends State<_AttributePanel> {
                 attribute: a,
                 value: c.attr(a) + (_pending[a] ?? 0),
                 added: _pending[a] ?? 0,
-                onPlus: allocating && left > 0
+                onPlus: allocating &&
+                        left > 0 &&
+                        c.attr(a) + (_pending[a] ?? 0) < Character.maxAttribute
                     ? () => setState(() => _pending[a] = (_pending[a] ?? 0) + 1)
                     : null,
                 onMinus: (_pending[a] ?? 0) > 0

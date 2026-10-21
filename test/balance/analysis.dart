@@ -14,6 +14,7 @@ import 'package:iron_oath/domain/items.dart';
 import 'package:iron_oath/domain/market.dart';
 import 'package:iron_oath/domain/skills.dart';
 
+import 'obtainability.dart';
 import 'simulator.dart';
 
 enum Severity {
@@ -57,6 +58,10 @@ class Targets {
   /// Il furbo (un solo esercizio, forma sporca) deve prendere meno rune per
   /// rep del medio.
   static const double cheaterMaxRatio = 0.9;
+
+  /// Attacco della build più forte rispetto alla più debole, a parità di
+  /// impegno: oltre questo è un BLOCCO, oltre il secondo un avviso.
+  static const double buildSpreadMax = 1.3, buildSpreadWarn = 1.15;
 }
 
 class BalanceReport {
@@ -83,6 +88,85 @@ class BalanceReport {
     _effortChecks();
     _paceThresholds();
     _market();
+    _collection();
+  }
+
+  /// Solo le build a confronto (giocatori di [buildProfiles]).
+  void analyzeBuilds() {
+    _collection();
+    _builds();
+  }
+
+  /// Collezione: ogni materiale richiesto si trova, per ogni build.
+  void _collection() {
+    _md.writeln('## Collezione dei materiali\n');
+    var missing = 0;
+    for (final b in oathAttributes) {
+      final miss = unobtainable(b);
+      missing += miss.length;
+      for (final e in miss.entries) {
+        _add(Severity.block, 'Collezione', 'Materiale introvabile per la build ${b.label}',
+            '${e.key} serve a ${e.value.take(3).join(', ')} ma non cade da nessuna parte.');
+      }
+    }
+    final idle = unused().toList()..sort();
+    _md.writeln('Materiali richiesti senza fonte: $missing. '
+        'Materiali che si trovano ma non servono a niente: ${idle.isEmpty ? 'nessuno' : idle.join(', ')}.\n');
+    if (missing == 0) {
+      _add(Severity.ok, 'Collezione', 'Ogni materiale si trova', 'Per tutte e quattro le build.');
+    }
+    if (idle.isNotEmpty) {
+      _add(Severity.warn, 'Collezione', 'Materiali solo da vendere', idle.join(', '));
+    }
+  }
+
+  /// Build a confronto: a parità di impegno, Forza, Destrezza, Fede e
+  /// Intelligenza devono avere attacco e progressione simili.
+  void _builds() {
+    final builds = [
+      for (final b in oathAttributes)
+        if (players.containsKey(b.name)) _first(b.name),
+    ];
+    if (builds.length < 2) return;
+    _md.writeln('## Build a confronto\n');
+    final checkpoints = [30, 90, 180, 365].where((d) => d <= days).toList();
+    _md.writeln('| Build | ${checkpoints.map((d) => 'Giorno $d').join(' | ')} | Incudine | Arma |');
+    _md.writeln('|---|${checkpoints.map((_) => '---').join('|')}|---|---|');
+    for (final p in builds) {
+      String at(int d) {
+        final s = p.days[d - 1];
+        return 'liv. ${s.level}, att. ${s.attack}';
+      }
+
+      _md.writeln('| ${p.profile.label} | ${checkpoints.map(at).join(' | ')} '
+          '| ${p.state.skillLevel(Skill.smithing)} | ${p.state.character.weapon.def.nameIt} |');
+    }
+    _md.writeln();
+    for (final d in checkpoints) {
+      // Il primo mese conta poco: le armi della build arrivano a giorni
+      // diversi. Lì è solo un avviso.
+      final early = d < 90;
+      final atk = {for (final p in builds) p.profile.label: p.days[d - 1].attack};
+      final hi = atk.entries.reduce((a, b) => a.value >= b.value ? a : b);
+      final lo = atk.entries.reduce((a, b) => a.value <= b.value ? a : b);
+      final ratio = hi.value / max(1, lo.value);
+      final detail = 'giorno $d: ${hi.key} ${hi.value} contro ${lo.key} ${lo.value} '
+          '(${((ratio - 1) * 100).round()}% in più).';
+      if (ratio > Targets.buildSpreadMax && !early) {
+        _add(Severity.block, 'Build', 'Una build attacca molto più delle altre', detail);
+      } else if (ratio > (early ? Targets.buildSpreadMax : Targets.buildSpreadWarn)) {
+        _add(Severity.warn, 'Build', 'Build un po\' sbilanciate', detail);
+      } else {
+        _add(Severity.ok, 'Build', 'Build allineate', detail);
+      }
+    }
+    for (final p in builds) {
+      final top = p.state.character.attributes.values.reduce(max);
+      if (top > Character.maxAttribute) {
+        _add(Severity.block, 'Build', 'Attributo oltre il tetto',
+            '${p.profile.label}: $top (tetto ${Character.maxAttribute}).');
+      }
+    }
   }
 
   /// Quando arriva ogni livello, profilo per profilo.

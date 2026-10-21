@@ -124,3 +124,7 @@ Resource resourceById(String id) => resources.firstWhere((r) => r.id == id);
 
 /// XP del mestiere per un oggetto creato.
 int craftXp(int level) => 8 + level * 3;
+
+/// Armi, armature e mani sinistre valgono molto più di un lingotto: costano
+/// materiali rari e si fanno di rado, quindi devono far salire il mestiere.
+const int gearCraftXpFactor = 10;

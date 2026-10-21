@@ -10,6 +10,7 @@ import 'dart:math';
 import 'package:iron_oath/data/game_state.dart';
 import 'package:iron_oath/domain/character.dart';
 import 'package:iron_oath/domain/combat.dart';
+import 'package:iron_oath/domain/contracts.dart';
 import 'package:iron_oath/domain/enemies.dart';
 import 'package:iron_oath/domain/exercise.dart';
 import 'package:iron_oath/domain/hunting.dart';
@@ -126,6 +127,29 @@ const List<PlayerProfile> standardProfiles = [
     varied: false,
     stretching: false,
   ),
+];
+
+/// Quattro giocatori identici che cambiano solo build: Forza, Destrezza,
+/// Fede e Intelligenza. Servono a vedere se una build corre o resta indietro.
+final List<PlayerProfile> buildProfiles = [
+  for (final b in [
+    Attribute.strength,
+    Attribute.dexterity,
+    Attribute.faith,
+    Attribute.intelligence,
+  ])
+    PlayerProfile(
+      id: b.name,
+      label: 'Build ${b.label}',
+      testReps: 20,
+      secondsPerRep: 2.1,
+      pPerfect: 0.55,
+      pGood: 0.35,
+      daysPerWeek: 4,
+      repsPerSession: 180,
+      stepsPerDay: 9000,
+      build: b,
+    ),
 ];
 
 /// Una foto della partita alla fine di un giorno.
@@ -262,6 +286,7 @@ class SimPlayer {
       mode: PlayMode.path,
     );
     state.setOath(profile.build);
+    state.armUp();
     state.completeTest({
       for (final id in baseExercises) id: TestResult(reps: profile.testReps, variantLevel: 0),
     });
@@ -309,6 +334,7 @@ class SimPlayer {
       for (final g in _groupsToday()) {
         _expedition(g);
       }
+      _contract();
       _farm();
     }
     _manage();
@@ -512,7 +538,15 @@ class SimPlayer {
     final log = expeditionLog[e.id]!;
     if (c.level >= e.level) log.unlockedDay ??= _day;
     log.lastDay = _day;
-    if (state.expeditionProgress(e.id) >= GameState.mapChest) return;
+    _runExpedition(e);
+  }
+
+  /// Una mappa: le quattro tappe, il boss e il forziere. Ritorna true se
+  /// arriva in fondo.
+  bool _runExpedition(Expedition e) {
+    final g = e.group;
+    final log = expeditionLog[e.id]!;
+    if (state.expeditionProgress(e.id) >= GameState.mapChest) return false;
     log.attempts++;
     if (g == MuscleGroup.stretching) {
       for (var i = state.expeditionProgress(e.id); i < 4; i++) {
@@ -526,11 +560,11 @@ class SimPlayer {
       for (var i = state.expeditionProgress(e.id); i < 4; i++) {
         final step = e.steps[i];
         final enemy = step.monster;
-        if (_budget < _expectedReps(enemy, step.move)) return;
+        if (_budget < _expectedReps(enemy, step.move)) return false;
         final r = fight(enemy, step.move);
         if (r.status != CombatStatus.victory) {
           log.deaths++;
-          return;
+          return false;
         }
         state.expeditionKill(enemy);
         state.completeExpeditionStep(e.id, i);
@@ -547,7 +581,40 @@ class SimPlayer {
       if (id != 'runes') _loot += sellPrice(id) * n;
     }
     log.clearedDay ??= _day;
+    return true;
   }
+
+  // ------------------------------------------------------------ contratti
+
+  /// Firma il contratto migliore disponibile, fa le spedizioni richieste e lo
+  /// consegna. Se dopo due settimane non ce la fa, lo annulla.
+  void _contract() {
+    if (state.contract == null) {
+      _contractDay = _day;
+      final best = contractors.where(state.canSign).lastOrNull;
+      if (best != null) state.signContract(best, random: random);
+    }
+    final k = state.contract;
+    if (k == null) return;
+    for (final id in k.targets) {
+      if (k.done.contains(id) || _budget <= 10) continue;
+      _runExpedition(expeditionById(id));
+    }
+    if (k.complete) {
+      final out = _track('contratto', () => state.deliverContract(random: random));
+      for (final (id, n, rare) in out) {
+        if (id != 'runes') _loot += sellPrice(id) * n;
+        if (rare) contractRares.add(id);
+      }
+      contractsDone++;
+    } else if (_day - _contractDay > 14) {
+      state.cancelContract();
+    }
+  }
+
+  int _contractDay = 0;
+  int contractsDone = 0;
+  final List<String> contractRares = [];
 
   // ------------------------------------------------------------ farmare
 
@@ -602,11 +669,16 @@ class SimPlayer {
 
   /// Dopo l'allenamento: attributi, perk, forgia, potenziamenti, amuleti.
   void _manage() {
-    // Attributi: due nella build, uno in Vigore.
-    var i = 0;
+    // Attributi: due nella build, uno in Vigore; al tetto, il resto in
+    // Vigore e Tempra.
     while (c.availablePoints > 0) {
-      state.raiseAttribute(i % 3 == 2 ? Attribute.vigor : profile.build);
-      i++;
+      final order = [
+        if (_attrTick++ % 3 == 2) Attribute.vigor,
+        profile.build,
+        Attribute.vigor,
+        Attribute.endurance,
+      ];
+      if (!order.any(state.raiseAttribute)) break;
     }
     for (final choice in c.unlockedPerkChoices) {
       state.choosePerk(choice, choice.options.first);
@@ -621,12 +693,12 @@ class SimPlayer {
     final armor = _targetArmor();
     if (armor != null && _obtainAll(armor.recipe)) state.craftArmor(armor);
 
-    // Arma: la migliore per la build che si può impugnare.
-    final weapon = _targetWeapon();
-    if (weapon != null && _obtainAll(weapon.recipe) && state.craftWeapon(weapon)) {
-      final w = c.weapons.lastWhere((w) => w.weaponId == weapon.id);
-      if (w.attackRating(c) > c.weapon.attackRating(c)) state.equip(w);
+    // Arma: la migliore per la build che riesce a forgiare adesso (la
+    // migliore in assoluto può chiedere materiali che non ha ancora).
+    for (final weapon in _weaponCandidates()) {
+      if (_obtainAll(weapon.recipe) && state.craftWeapon(weapon)) break;
     }
+    _equipBest();
 
     _practice();
 
@@ -639,6 +711,20 @@ class SimPlayer {
       final runes = c.weapon.nextRuneCost;
       if (!state.upgradeWeapon(c.weapon)) break;
       _spentToday += runes;
+    }
+
+    // Amuleto d'affinità della build, se si riesce a incantarlo.
+    final affinity = const {
+      Attribute.strength: 'ember_amulet',
+      Attribute.dexterity: 'gale_amulet',
+      Attribute.faith: 'holy_amulet',
+      Attribute.intelligence: 'abyss_amulet',
+    }[profile.build]!;
+    if (c.weapon.sockets[0] == null) {
+      if (!state.ownsAmulet(affinity) && state.craftAmulet(affinity)) {
+        firstAffinityDay ??= _day;
+      }
+      if (state.ownsAmulet(affinity)) state.socketAmulet(c.weapon, 0, affinity);
     }
 
     // Amuleti passivi con le rune che avanzano.
@@ -657,22 +743,77 @@ class SimPlayer {
     }
   }
 
+  /// Giorno in cui ha incantato l'amuleto d'affinità della build.
+  int? firstAffinityDay;
+
+  /// Impugna l'arma migliore che ha (forgiata o trovata) e ci sposta gli
+  /// amuleti.
+  void _equipBest() {
+    WeaponInstance? best;
+    var bestRating = _potential(c.weapon.def) * 1.05;
+    for (final w in c.weapons) {
+      if (!state.canWield(w.def)) continue;
+      final r = _potential(w.def);
+      if (r > bestRating) {
+        best = w;
+        bestRating = r;
+      }
+    }
+    if (best == null) return;
+    final old = c.weapon;
+    final moved = [...old.sockets];
+    for (var i = 0; i < 3; i++) {
+      state.unsocketAmulet(old, i);
+    }
+    state.equip(best);
+    for (var i = 0; i < 3; i++) {
+      final id = moved[i];
+      if (id != null && best.sockets[i] == null) state.socketAmulet(best, i, id);
+    }
+    weaponLog.add('g$_day ${best.def.nameIt}');
+  }
+
+  /// Le armi impugnate, nell'ordine.
+  final List<String> weaponLog = [];
+
   /// Come un giocatore vero: con i materiali che avanzano lavora alle
   /// postazioni per alzarne il livello, e vende le armi fatte per esercizio.
   void _practice() {
-    bool spare(Map<String, int> m) => m.entries.every((e) => (c.materials[e.key] ?? 0) >= e.value * 2);
+    // Usa solo ciò che avanza; quel che manca lo compra se il Mercante lo
+    // vende e le rune abbondano.
+    bool spare(Map<String, int> m, {bool buy = false}) => m.entries.every((e) {
+          final have = c.materials[e.key] ?? 0;
+          if (have >= e.value * 2) return true;
+          if (!buy) return false;
+          final missing = e.value * 2 - have;
+          final cost = buyPrice(e.key) * missing;
+          if (!merchantStock.contains(e.key) || cost <= 0 || cost * 10 > c.runes) return false;
+          state.buyMaterial(e.key, missing);
+          _spentToday += cost;
+          return true;
+        });
     for (final station in [Station.carpentry, Station.furnace, Station.anvil]) {
       var guard = 0;
       while (guard++ < 30) {
         final level = state.stationLevel(station);
         final mats = materialRecipes
-            .where((r) => r.station == station && !r.tool && r.level <= level && spare(r.inputs))
+            // Pietre e gemme no: servono ai potenziamenti, non all'esercizio.
+            .where((r) =>
+                r.station == station &&
+                !r.tool &&
+                !r.output.contains('stone') &&
+                !r.output.startsWith('gem_') &&
+                r.level <= level &&
+                spare(r.inputs))
             .toList()
           ..sort((a, b) => b.level - a.level);
         if (mats.isNotEmpty && state.craftMaterial(mats.first)) continue;
         final weapons = weaponDefs.values
             .where((w) =>
-                w.station == station && w.recipe.isNotEmpty && w.craftLevel <= level && spare(w.recipe))
+                w.station == station &&
+                w.recipe.isNotEmpty &&
+                w.craftLevel <= level &&
+                spare(w.recipe, buy: true))
             .toList()
           ..sort((a, b) => b.craftLevel - a.craftLevel);
         if (weapons.isNotEmpty && state.craftWeapon(weapons.first)) {
@@ -684,34 +825,46 @@ class SimPlayer {
     }
   }
 
+  /// Un'armatura della build vale anche per il danno in più che dà.
+  double _armorScore(ArmorDef? a) => a == null
+      ? 0
+      : a.reduction + (a.attribute == profile.build ? c.attr(profile.build) / 10 * 0.05 * 0.5 : 0);
+
   ArmorDef? _targetArmor() {
-    final current = c.piece(ArmorSlot.chest)?.reduction ?? 0;
+    final current = _armorScore(c.piece(ArmorSlot.chest));
     ArmorDef? best;
     for (final a in armorDefs.values) {
-      if (c.armors.contains(a.id) || a.reduction <= current) continue;
+      if (c.armors.contains(a.id) || _armorScore(a) <= current) continue;
       if (!state.canWear(a.id) || state.stationLevel(Station.anvil) < a.craftLevel) continue;
       if (a.attribute != null && a.attribute != profile.build) continue;
-      if (best == null || a.reduction > best.reduction) best = a;
+      if (best == null || _armorScore(a) > _armorScore(best)) best = a;
     }
     return best;
   }
 
-  WeaponDef? _targetWeapon() {
-    final current = c.weapon.attackRating(c);
-    WeaponDef? best;
-    var bestRating = current * 1.05;
+  int _attrTick = 0;
+
+  /// Quanto vale un'arma portata al massimo: un giocatore la sceglie per
+  /// quello, non per com'è appena forgiata, perché poi la potenzia.
+  double _potential(WeaponDef w) =>
+      WeaponInstance(weaponId: w.id, upgrade: w.maxUpgrade).attackRating(c);
+
+  /// Armi forgiabili migliori di quella impugnata, dalla più forte.
+  List<WeaponDef> _weaponCandidates() {
+    final current = _potential(c.weapon.def) * 1.05;
+    final out = <(WeaponDef, double)>[];
     for (final w in weaponDefs.values) {
       if (w.recipe.isEmpty || !state.canWield(w)) continue;
       if (state.stationLevel(w.station) < w.craftLevel) continue;
       if (c.weapons.any((x) => x.weaponId == w.id) || c.weapon.weaponId == w.id) continue;
-      final r = WeaponInstance(weaponId: w.id).attackRating(c);
-      if (r > bestRating) {
-        best = w;
-        bestRating = r;
-      }
+      final r = _potential(w);
+      if (r > current) out.add((w, r));
     }
-    return best;
+    out.sort((a, b) => b.$2.compareTo(a.$2));
+    return [for (final (w, _) in out) w];
   }
+
+  WeaponDef? _targetWeapon() => _weaponCandidates().firstOrNull;
 
   /// Materiali che mancano alla prossima arma, armatura e pietra.
   List<String> _missingAll() {

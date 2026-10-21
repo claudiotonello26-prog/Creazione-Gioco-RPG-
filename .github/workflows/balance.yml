@@ -32,10 +32,10 @@ jobs:
           --dart-define=SIM_DAYS=${{ inputs.days || '365' }}
           --dart-define=SIM_SEEDS=${{ inputs.seeds || '3' }}
       - if: always()
-        run: test -f build/balance/report.md && cat build/balance/report.md >> "$GITHUB_STEP_SUMMARY" || true
+        run: cat build/balance/report.md build/balance/builds.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: bilanciamento-lungo
-          path: build/balance/report.md
+          path: build/balance/*.md
           if-no-files-found: ignore

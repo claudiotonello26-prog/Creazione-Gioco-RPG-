@@ -27,12 +27,12 @@ jobs:
       # Il simulatore di bilanciamento gira dentro flutter test: il suo
       # rapporto finisce nel riepilogo della CI e come artefatto.
       - if: always()
-        run: test -f build/balance/report.md && cat build/balance/report.md >> "$GITHUB_STEP_SUMMARY" || true
+        run: cat build/balance/report.md build/balance/builds.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: bilanciamento
-          path: build/balance/report.md
+          path: build/balance/*.md
           if-no-files-found: ignore
 
   server:

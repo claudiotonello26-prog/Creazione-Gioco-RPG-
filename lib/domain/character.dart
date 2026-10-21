@@ -54,6 +54,9 @@ class Character {
 
   static const int baseAttribute = 10;
 
+  /// Tetto di ogni attributo: oltre, i punti vanno spesi altrove.
+  static const int maxAttribute = 99;
+
   String name;
   int xp;
 
@@ -157,7 +160,7 @@ class Character {
   int get availablePoints => (level - 1) + disciplinePoints - spentPoints;
 
   bool raise(Attribute a) {
-    if (availablePoints <= 0) return false;
+    if (availablePoints <= 0 || attributes[a]! >= maxAttribute) return false;
     attributes[a] = attributes[a]! + 1;
     return true;
   }
