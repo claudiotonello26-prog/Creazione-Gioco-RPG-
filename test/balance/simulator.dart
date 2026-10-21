@@ -726,7 +726,7 @@ class SimPlayer {
     }
     // Il boss è un circuito: si completa sempre.
     final weighted = false;
-    final bossLoot = _track('boss', () => state.expeditionBossDown(e, weighted: weighted));
+    final bossLoot = _track('boss', () => state.expeditionBossDown(e, weighted: weighted, random: random));
     _loot += lootValueOf(bossLoot);
     final useKey = state.expeditionKeys > 0 && state.useExpeditionKey();
     final chest =
@@ -810,7 +810,8 @@ class SimPlayer {
       if (_budget < _expectedReps(e, m)) continue;
       // Più alto il gradino e il livello, meglio; molto meglio se lascia ciò che manca.
       var score = e.tier * 10.0 + e.level * 0.5;
-      if (e.loot.keys.any(missing.contains)) score += 25;
+      if (e.commonLoot.keys.any(missing.contains)) score += 25;
+      if ([...e.uncommonLoot, ...e.rareLoot].any(missing.contains)) score += 10;
       if (score <= bestScore) continue;
       if (!canBeat(e, m)) continue;
       best = (e, m);

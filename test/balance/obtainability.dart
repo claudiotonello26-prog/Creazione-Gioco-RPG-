@@ -7,7 +7,6 @@ import 'dart:math';
 
 import 'package:iron_oath/data/game_state.dart';
 import 'package:iron_oath/domain/character.dart';
-import 'package:iron_oath/domain/combat.dart';
 import 'package:iron_oath/domain/contracts.dart';
 import 'package:iron_oath/domain/enemies.dart';
 import 'package:iron_oath/domain/exercise.dart';
@@ -24,16 +23,13 @@ Map<String, Set<String>> sourcesFor(Attribute build) {
       out.putIfAbsent(forBuild(id, build), () => {}).add(where);
 
   for (final e in [...enemyDefs.values, ...baseAnimals, ...huntAnimals]) {
-    for (final id in e.loot.keys) {
+    for (final id in e.commonLoot.keys) {
       add(id, e.nameIt);
     }
-    final rare = e.rareDrop;
-    if (rare != null && !weaponDefs.containsKey(rare)) {
-      add(amuletDefs.containsKey(rare) ? 'amulet_$rare' : rare, '${e.nameIt} (raro)');
+    for (final id in [...e.uncommonLoot, ...e.rareLoot]) {
+      if (weaponDefs.containsKey(id)) continue;
+      add(amuletDefs.containsKey(id) ? 'amulet_$id' : id, '${e.nameIt} (raro)');
     }
-  }
-  for (final id in [...CombatEngine.uncommonDrops, ...CombatEngine.rareDrops]) {
-    add(id, 'drop casuale in combattimento');
   }
   for (final e in expeditions) {
     for (final id in e.chest.guaranteed.keys) {

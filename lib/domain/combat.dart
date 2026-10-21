@@ -193,14 +193,10 @@ class CombatEngine {
   /// +0,5% di colpi assorbiti per livello di Difesa, fino al 30%.
   static double defenseBonus(int level) => min(0.3, 0.005 * (level - 1));
 
-  /// Probabilità di un drop non comune e di uno raro per nemico abbattuto:
-  /// in caccia infinita crescono del 35% a ondata.
-  static const double uncommonBase = 0.08, rareBase = 0.015, dropGrowth = 1.35;
+  /// In caccia infinita la probabilità di un drop non comune o raro cresce
+  /// del 35% a ondata (vedi [EnemyDef.specialChance]).
+  static const double dropGrowth = 1.35;
   double get dropMultiplier => pow(dropGrowth, wave).toDouble();
-  double get uncommonChance => min(0.9, uncommonBase * dropMultiplier);
-  double get rareChance => min(0.6, rareBase * dropMultiplier);
-  static const List<String> uncommonDrops = ['holy_shard', 'forge_stone_2', 'moon_silver'];
-  static const List<String> rareDrops = ['ancient_stone', 'somber_stone', 'star_ore'];
 
   /// Danno di ogni colpo del nemico, prima di postura e perk.
   late final double hitDamage;
@@ -383,31 +379,23 @@ class CombatEngine {
       return CombatRewards(xp: xp, runes: 0, materials: const {});
     }
     final pay = (1 + lootBonus + _amulets.lootBonus) * effortFactor * averageQuality * waveBonus;
-    final materials = <String, int>{
-      for (final e in enemy.loot.entries) e.key: max(1, (e.value * pay).round()),
+    var materials = <String, int>{
+      for (final e in enemy.commonLoot.entries) e.key: max(1, (e.value * pay).round()),
     };
-    // Drop casuali: anche un nemico facile può lasciare qualcosa di buono,
-    // e più resisti in caccia più è probabile.
-    if (_random.nextDouble() < uncommonChance) {
-      final id = uncommonDrops[_random.nextInt(uncommonDrops.length)];
-      materials[id] = (materials[id] ?? 0) + 1;
-    }
-    if (_random.nextDouble() < rareChance) {
-      final id = rareDrops[_random.nextInt(rareDrops.length)];
-      materials[id] = (materials[id] ?? 0) + 1;
-    }
+    // Una vittoria su qualche mostro più alto si trasforma in un pezzo non
+    // comune o raro al posto dei comuni: più il mostro è alto, più capita.
+    // In caccia infinita cresce a ogni ondata; gli amuleti da cacciatore
+    // aiutano con le bestie.
     String? rare;
-    var weaponChance = enemy.rareDropChance;
-    if (enemy.isBeast) weaponChance += _amulets.rareLoot;
-    if (enemy.rareDrop != null &&
-        _random.nextDouble() < weaponChance * (1 + lootBonus) * dropMultiplier) {
-      // Il raro può essere un'arma, un amuleto o un materiale.
-      final id = enemy.rareDrop!;
+    final id = enemy.rollSpecial(_random,
+        multiplier: (1 + lootBonus) * dropMultiplier,
+        bonus: enemy.isBeast ? _amulets.rareLoot : 0);
+    if (id != null) {
+      materials = {};
       if (weaponDefs.containsKey(id)) {
         rare = id;
       } else {
-        final key = amuletDefs.containsKey(id) ? 'amulet_$id' : id;
-        materials[key] = (materials[key] ?? 0) + 1;
+        materials[amuletDefs.containsKey(id) ? 'amulet_$id' : id] = 1;
       }
     }
     return CombatRewards(
