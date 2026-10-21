@@ -2513,9 +2513,10 @@
       "living_bellows_idle.png",
       "hollow_goblin_idle.png"
     ],
-    "attempts": 1,
+    "attempts": 2,
     "pink_pixels": 0,
-    "status": "done"
+    "status": "approved_clean",
+    "final_prompt": "Berta: solid rustic red bandana without uncolored spots, warm friendly smile looking into camera, spectacles, clean skin"
   },
   {
     "id": "hunter",
@@ -2558,9 +2559,10 @@
       "living_bellows_idle.png",
       "hollow_goblin_idle.png"
     ],
-    "attempts": 1,
+    "attempts": 2,
     "pink_pixels": 0,
-    "status": "done"
+    "status": "approved_clean",
+    "final_prompt": "Ash tree: pale desaturated sage/ash-green leaves, twisted grey-white bark, pale grey ash ground, 0 pink pixels"
   },
   {
     "id": "oak_wood",

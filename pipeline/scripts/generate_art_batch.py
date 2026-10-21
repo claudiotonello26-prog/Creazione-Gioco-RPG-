@@ -101,13 +101,15 @@ ITEMS = {
         ),
         "desc": (
             "Berta of the General Store. Woman in her fifties, very warm and friendly welcoming smile, kind friendly eyes looking directly at the viewer/screen. "
-            "Smooth natural weathered medieval skin tones, completely solid and fully painted skin with no white specks, no glitter, and no unpainted spots. "
-            "Grey-streaked chestnut hair tied in a loose bun under a solid faded red cloth headscarf. Small circular brass spectacles perched neatly on her nose. "
-            "Wearing a practical cream linen blouse, a coarse brown wool shawl draped around her, a leather apron strap over one shoulder, "
-            "a pencil tucked behind her ear, and a small ring of brass keys hanging at the collar. "
-            "Warm, friendly shopkeeper greeting the player warmly. "
-            "Warm weathered colours strictly: faded red cloth, cream linen, brown wool, brass metal, natural warm skin tones. "
-            "Bold crisp black inked outlines, clean smooth cel-shading, completely solid painted surfaces with NO white specks, NO uncolored patches, NO noise artifacts."
+            "She wears a SOLID, FULLY PAINTED rustic dark red cloth bandana/headscarf (rich dark red-crimson cloth #8B2522, #9C332E) tied neatly over her hair. "
+            "CRITICAL REQUIREMENT FOR THE HEADSCARF: The red bandana covers the top of her head neatly and is COMPLETELY, SOLIDLY PAINTED in rich weathered red fabric with dark inked cloth folds. "
+            "There are absolutely NO missing red spots, NO white gaps, NO transparent holes, NO unpainted patches, and NO errors on the red headscarf. The red cloth is fully and evenly colored. "
+            "Grey-streaked chestnut hair peeking out neatly around the edges of the red headscarf. "
+            "Small circular brass spectacles perched neatly on the bridge of her nose, friendly sparkling eyes behind them. "
+            "Wearing a practical cream linen blouse, a coarse brown wool shawl draped over her shoulders, a sturdy leather apron strap over one shoulder, "
+            "a carpenter's wooden pencil tucked behind her ear, and a small ring of brass keys hanging at the collar. "
+            "Completely solid painted surfaces, no white noise specks, clean inked outlines, rich but muted medieval colours. "
+            "Warm weathered colours strictly: rustic dark red cloth, cream linen, brown wool, brass metal, warm natural skin tones."
         )
     },
     "smith": {
@@ -183,9 +185,12 @@ ITEMS = {
             "No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background."
         ),
         "desc": (
-            "Ash tree woodcutting node. Whole small gnarled ash tree with a twisted pale grey-white bark trunk and branches, "
-            "sparse delicate ashen grey foliage leaves, sitting on a small isolated circular mound of earth dusted with powdery pale grey ash. "
-            "Inked outlines, dark fantasy painterly style. Colours strictly: ash grey, pale bone white, weathered stone grey, charcoal."
+            "Ash tree woodcutting node. Whole small gnarled ash tree with a twisted pale grey-white bark trunk and branches. "
+            "CRITICAL LEAF COLOUR: The foliage leaves are painted in a very soft, pale, muted, desaturated light green leaning towards pale light grey ash (foglie di un verde molto chiaro chiaro spento tendente alla cenere chiara grigia, pale sage-ash green). "
+            "The leaves are definitely NOT pure white and NOT bone white; they have a distinct soft muted pale greenish-ash tint. "
+            "Sitting on a small isolated circular mound of earth dusted with powdery pale grey ash and small grey stones. "
+            "Inked outlines, dark fantasy souls-like painterly style. "
+            "Colours strictly: pale muted light green-ash leaves, pale grey-white bark trunk, weathered stone grey, powdery pale grey ash on the ground."
         )
     },
     "oak_wood": {
