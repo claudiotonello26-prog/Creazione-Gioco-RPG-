@@ -2386,5 +2386,165 @@
     "status": "done",
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2"
+  },
+  {
+    "id": "ember_ore",
+    "file": "assets/art/items/ember_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of black volcanic rock split by glowing molten orange veins, like a vein of ember inside the stone.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_bane_fire",
+    "file": "assets/art/items/amulet_bane_fire.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Rime Gem, a faceted oval gem of icy white-blue frost with tiny frozen crystals on its surface, set in a small iron claw mount with a short slot stub, made to quench fire.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "copper_ore",
+    "file": "assets/art/items/copper_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of grey rock with veins of raw copper, warm orange-brown with a few green verdigris spots.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "gold_ore",
+    "file": "assets/art/items/gold_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of pale stone with thick veins and nuggets of raw antique gold.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "abyss_geode",
+    "file": "assets/art/items/abyss_geode.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a broken round geode, rough dark outer shell, the open half full of deep blue-black crystals with a faint cold blue gleam.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "living_obsidian",
+    "file": "assets/art/items/living_obsidian.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a sharp glossy black obsidian chunk with thin pulsing dark red cracks, as if it still had a heartbeat.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "storm_resin",
+    "file": "assets/art/items/storm_resin.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a large drop of hardened amber pine resin with a tiny frozen pale-green lightning bolt trapped inside, a sliver of scorched bark still attached.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "star_pickaxe",
+    "file": "assets/art/items/star_pickaxe.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a masterwork pickaxe with a dark star-metal head flecked with tiny azure sparks and a jet-black ebony handle with gold rivets, same shape family as the steel pickaxe.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "star_axe",
+    "file": "assets/art/items/star_axe.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a masterwork woodcutter axe with a dark star-metal head flecked with tiny azure sparks and a jet-black ebony handle, same shape family as the steel axe.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_bane_wind",
+    "file": "assets/art/items/amulet_bane_wind.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Bedrock Gem, a faceted oval gem of heavy dark brown-grey stone with gold flecks, solid and immovable, set in a small iron claw mount with a short slot stub.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_bane_holy",
+    "file": "assets/art/items/amulet_bane_holy.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Shadow Gem, a faceted oval gem of smoky black glass with a dim cold grey inner light, set in a small iron claw mount with a short slot stub.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_bane_arcane",
+    "file": "assets/art/items/amulet_bane_arcane.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Seal Gem, a faceted oval gem of opaque red sealing wax colour engraved with a tiny closed-lock rune, set in a small iron claw mount with a short slot stub.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_ward_fire",
+    "file": "assets/art/items/amulet_ward_fire.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Rime Talisman, a round iron medallion on a short dark chain, frosted white-blue enamel with a snowflake emblem and a small icy stone in the centre.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_ward_wind",
+    "file": "assets/art/items/amulet_ward_wind.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Bedrock Talisman, a round medallion of dark carved stone on a short dark chain, with a mountain emblem and a small brown-grey stone in the centre.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_ward_holy",
+    "file": "assets/art/items/amulet_ward_holy.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Shadow Talisman, a round blackened iron medallion on a short dark chain, with an eclipse emblem (a dark disc covering a thin gold ring) and a small smoky stone in the centre.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_ward_arcane",
+    "file": "assets/art/items/amulet_ward_arcane.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Seal Talisman, a round bronze medallion on a short dark chain, shaped like a wax seal with a closed-lock rune, a small dark red stone in the centre.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
   }
 ]
