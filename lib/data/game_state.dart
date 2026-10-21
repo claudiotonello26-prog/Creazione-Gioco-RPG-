@@ -1571,11 +1571,29 @@ class GameState extends ChangeNotifier {
     return true;
   }
 
+  /// Il livello che apre gli scaffali di una bottega: il suo mestiere o,
+  /// per l'Emporio, il livello del personaggio.
+  int shopLevel(ShopKeeper k) => k.skill == null ? character.level : skillLevel(k.skill!);
+
+  /// Qualche bottega lo vende già, al tuo livello.
+  bool inStock(String id) => ShopKeeper.values
+      .any((k) => shopStock[k]!.any((i) => i.$1 == id && i.$2 <= shopLevel(k)));
+
   bool buyMaterial(String id, [int n = 1]) {
     final cost = buyPrice(id) * n;
-    if (cost <= 0 || character.runes < cost) return false;
+    if (!inStock(id) || cost <= 0 || character.runes < cost) return false;
     character.runes -= cost;
     character.addMaterial(id, n);
+    _changed();
+    return true;
+  }
+
+  /// Compra un'arma da una bottega: va nella rastrelliera.
+  bool buyWeapon(String id) {
+    final cost = weaponBuyPrice(id);
+    if (!inStock(id) || character.runes < cost) return false;
+    character.runes -= cost;
+    character.weapons.add(WeaponInstance(weaponId: id));
     _changed();
     return true;
   }

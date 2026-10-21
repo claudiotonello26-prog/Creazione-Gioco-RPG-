@@ -16,6 +16,7 @@ import '../../domain/walking.dart';
 import '../../health/live_steps.dart';
 import '../../health/step_source.dart';
 import '../widgets/common.dart';
+import 'codex_screen.dart';
 import '../widgets/trainer.dart';
 import '../../core/sound.dart';
 
@@ -173,36 +174,88 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
     );
   }
 
+  /// Una risorsa come un mostro della caccia: l'immagine grande a sinistra,
+  /// a destra passi, scorta e cosa manca, a colpo d'occhio.
   Widget _resourceTile(GameState s, Resource r) {
     final levelOk = s.skillLevel(r.skill) >= r.level;
     final unlocked = s.canGather(r);
     final selected = s.gatherTarget == r.id;
     final bonus = s.gatherBonus(r.skill);
     final steps = (r.stepsPerUnit / (1 + bonus)).round();
-    return ActionTile(
-      icon: unlocked
-          ? (selected ? Icons.radio_button_checked : Icons.radio_button_off)
-          : Icons.lock_outline,
-      color: selected ? Palette.goldBright : (unlocked ? Palette.gold : Palette.iron),
-      title: r.name,
-      subtitle: !levelOk
-          ? tr('Si sblocca a {skill} livello {n}', {'skill': r.skill.label, 'n': r.level})
-          : !unlocked
-              ? tr('Serve: {tool} (si crea in Forgia)', {'tool': materialNames[r.tool]})
-              : '${tr('{where} · {n} passi', {'where': r.where, 'n': steps})}'
-                  '${bonus > 0 ? tr(' (attrezzo +{p}%)', {'p': (bonus * 100).round()}) : ''}'
-                  '${tr(' · hai {n}', {'n': s.character.materials[r.id] ?? 0})}',
-      enabled: unlocked,
-      onTap: unlocked
-          ? () {
-              s.setGatherTarget(r.id);
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => GatherScreen(resource: r, stepsToday: _steps),
+    final have = s.character.materials[r.id] ?? 0;
+    final ring = selected ? Palette.goldBright : (unlocked ? Palette.gold : Palette.iron);
+    void open() {
+      s.setGatherTarget(r.id);
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => GatherScreen(resource: r, stepsToday: _steps)),
+      );
+    }
+
+    Widget fact(IconData icon, String text, Color color) => Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 18, color: color),
+            const SizedBox(width: 4),
+            Text(text, style: TextStyle(color: color, fontSize: 15, fontWeight: FontWeight.w600)),
+          ],
+        );
+
+    return Card(
+      shape: selected ? const GildedBorder(color: Palette.goldBright) : null,
+      child: InkWell(
+        onTap: unlocked ? open : null,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              ResourcePortrait(r.id, size: 96, border: ring, dim: !unlocked),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    OneLine(r.name,
+                        align: Alignment.centerLeft,
+                        style: titleStyle(size: 15, spacing: 1)
+                            .copyWith(color: unlocked ? null : Palette.ash)),
+                    const SizedBox(height: 6),
+                    if (!levelOk)
+                      fact(Icons.lock_outline, tr('Liv. {n}', {'n': r.level}), Palette.ember)
+                    else if (!unlocked)
+                      CodexTap(
+                        r.tool!,
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.lock_outline, size: 18, color: Palette.ember),
+                          const SizedBox(width: 4),
+                          ItemIcon(r.tool!, size: 30),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(materialNames[r.tool] ?? r.tool!,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Palette.ember, fontSize: 14)),
+                          ),
+                        ]),
+                      )
+                    else
+                      Wrap(
+                        spacing: 14,
+                        runSpacing: 4,
+                        children: [
+                          fact(Icons.directions_walk, '$steps', Palette.holy),
+                          fact(Icons.inventory_2_outlined, '$have', Palette.goldBright),
+                          if (bonus > 0) fact(Icons.handyman, '+${(bonus * 100).round()}%', Palette.frost),
+                        ],
+                      ),
+                  ],
                 ),
-              );
-            }
-          : null,
+              ),
+              if (unlocked)
+                Icon(selected ? Icons.check_circle : Icons.chevron_right, color: ring, size: 28),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -482,7 +535,7 @@ class _GatherScreenState extends State<GatherScreen> {
           ListView(
             padding: const EdgeInsets.all(20),
             children: [
-              Center(child: ItemIcon(_r.id, size: 110)),
+              Center(child: ResourcePortrait(_r.id, size: 170)),
               const SizedBox(height: 6),
               OneLine(_r.name, align: Alignment.center, style: titleStyle(size: 20)),
               Text(

@@ -254,14 +254,13 @@ Widget _grid(List<MapEntry<String, int>> items) => GridView.count(
       ],
     );
 
-/// Il Mercato: Mercante (compra e vendi) e Fattucchiera (amuleti).
+/// Il Mercato: le botteghe dei mercanti e la Fattucchiera (amuleti).
 class MarketScreen extends StatelessWidget {
   const MarketScreen({super.key, this.initialTab = 0});
   final int initialTab;
 
   @override
   Widget build(BuildContext context) {
-    final runes = context.select<GameState, int>((s) => s.character.runes);
     return DefaultTabController(
       length: 2,
       initialIndex: initialTab,
@@ -269,57 +268,305 @@ class MarketScreen extends StatelessWidget {
         appBar: OathBar(
           accent: Sections.market,
           title: Text(tr('MERCATO')),
-          actions: [
-            Center(
-              child: Text('${tr('{runes} rune', {'runes': runes})}  ', style: const TextStyle(color: Palette.goldBright)),
-            ),
-          ],
+          actions: const [_Runes()],
           bottom: TabBar(
             tabs: [
-              Tab(text: tr('Mercante')),
+              Tab(text: tr('Botteghe')),
               Tab(text: tr('Fattucchiera')),
             ],
           ),
         ),
-        body: const TabBarView(children: [_Merchant(), _Witch()]),
+        body: const TabBarView(children: [_Shops(), _Witch()]),
       ),
     );
   }
 }
 
-class _Merchant extends StatelessWidget {
-  const _Merchant();
+class _Runes extends StatelessWidget {
+  const _Runes();
+
+  @override
+  Widget build(BuildContext context) {
+    final runes = context.select<GameState, int>((s) => s.character.runes);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          const Icon(Icons.diamond_outlined, color: Palette.goldBright, size: 20),
+          const SizedBox(width: 4),
+          Text('$runes', style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold)),
+        ]),
+      ),
+    );
+  }
+}
+
+extension ShopLook on ShopKeeper {
+  Color get color => switch (this) {
+        ShopKeeper.general => Palette.gold,
+        ShopKeeper.smith => Palette.frost,
+        ShopKeeper.hunter => const Color(0xFF7FC25A),
+        ShopKeeper.mage => const Color(0xFF9B6BE0),
+      };
+
+  IconData get icon => switch (this) {
+        ShopKeeper.general => Icons.storefront,
+        ShopKeeper.smith => Icons.hardware,
+        ShopKeeper.hunter => Icons.pets,
+        ShopKeeper.mage => Icons.auto_fix_high,
+      };
+
+  int levelIn(GameState s) => s.shopLevel(this);
+
+  /// Gli articoli in vendita adesso, più il prossimo che si sblocca.
+  List<ShopItem> stockFor(GameState s) =>
+      unlockedPlusNext(shopStock[this]!, (i) => i.$2, levelIn(s));
+}
+
+void openShop(BuildContext context, ShopKeeper k) =>
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => ShopScreen(keeper: k)));
+
+/// Un pulsante per bottega: il busto del mercante a sinistra, a destra il
+/// nome e qualche articolo che vende.
+class _Shops extends StatelessWidget {
+  const _Shops();
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        for (final k in ShopKeeper.values)
+          Card(
+            child: InkWell(
+              onTap: () => openShop(context, k),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    NpcBust(k.art, icon: k.icon, color: k.color, size: 100),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          OneLine(k.role.toUpperCase(),
+                              align: Alignment.centerLeft,
+                              style: titleStyle(size: 17, spacing: 1.5).copyWith(color: k.color)),
+                          const SizedBox(height: 2),
+                          OneLine(k.name,
+                              align: Alignment.centerLeft,
+                              style: const TextStyle(color: Palette.ash, fontSize: 15)),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 4,
+                            runSpacing: 4,
+                            children: [
+                              for (final (id, _) in k.stockFor(s).where((i) => i.$2 <= k.levelIn(s)).take(5))
+                                ItemIcon(id, size: 30),
+                              if (k == ShopKeeper.general)
+                                const Icon(Icons.sell_outlined, color: Palette.goldBright, size: 26),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.chevron_right, color: k.color, size: 30),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Una bottega: il mercante in grande, gli articoli al tuo livello (più il
+/// prossimo, col lucchetto) e, all'Emporio, la vendita e i mantelli.
+class ShopScreen extends StatelessWidget {
+  const ShopScreen({super.key, required this.keeper});
+  final ShopKeeper keeper;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final k = keeper;
+    final lvl = k.levelIn(s);
+    return Scaffold(
+      appBar: OathBar(
+        accent: Sections.market,
+        title: Text(k.role.toUpperCase()),
+        actions: const [_Runes()],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Row(
+            children: [
+              NpcBust(k.art, icon: k.icon, color: k.color, size: 140),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(k.name, style: titleStyle(size: 18, spacing: 1).copyWith(color: k.color)),
+                    const SizedBox(height: 6),
+                    if (k.skill != null)
+                      StatChip(Icons.trending_up, '${k.skill!.label} $lvl', color: Palette.ash),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SectionTitle(tr('Compra')),
+          for (final (id, need) in k.stockFor(s))
+            need <= lvl ? _BuyRow(id) : _LockedRow(id, need, k),
+          if (k == ShopKeeper.general) ...[
+            const _SellList(),
+            const _Capes(),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Icona, nome, quanti ne hai e il prezzo sul pulsante.
+class _BuyRow extends StatelessWidget {
+  const _BuyRow(this.id);
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final weapon = weaponDefs[id];
+    final price = weapon != null ? weaponBuyPrice(id) : buyPrice(id);
+    final have = weapon != null
+        ? s.character.weapons.where((w) => w.weaponId == id).length
+        : s.character.materials[id] ?? 0;
+    void buy() {
+      if (weapon != null ? s.buyWeapon(id) : s.buyMaterial(id)) {
+        Sound.play(Sfx.buy);
+      } else {
+        Sound.play(Sfx.locked);
+        toast(context, tr('Rune insufficienti'));
+      }
+    }
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Row(
+          children: [
+            CodexTap(id, child: ItemIcon(id, size: 46)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  OneLine(itemName(id), align: Alignment.centerLeft),
+                  StatChip(Icons.inventory_2_outlined, '$have', color: Palette.ash),
+                ],
+              ),
+            ),
+            FilledButton.icon(
+              style: FilledButton.styleFrom(
+                minimumSize: const Size(0, 40),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+              ),
+              onPressed: s.character.runes >= price ? buy : null,
+              icon: const Icon(Icons.diamond_outlined, size: 18),
+              label: Text('$price'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Il prossimo articolo: si vede cos'è e a che livello arriva.
+class _LockedRow extends StatelessWidget {
+  const _LockedRow(this.id, this.level, this.keeper);
+  final String id;
+  final int level;
+  final ShopKeeper keeper;
+
+  @override
+  Widget build(BuildContext context) => Opacity(
+        opacity: 0.5,
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            child: Row(
+              children: [
+                CodexTap(id, child: ItemIcon(id, size: 46)),
+                const SizedBox(width: 10),
+                Expanded(child: OneLine(itemName(id), align: Alignment.centerLeft)),
+                const Icon(Icons.lock_outline, color: Palette.ember, size: 20),
+                const SizedBox(width: 4),
+                Text(
+                  keeper.skill == null
+                      ? tr('Liv. {n}', {'n': level})
+                      : '${keeper.skill!.label} $level',
+                  style: const TextStyle(color: Palette.ember, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+}
+
+/// L'Emporio compra tutto: materiali e armi della rastrelliera.
+class _SellList extends StatelessWidget {
+  const _SellList();
 
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
     final c = s.character;
     final toSell = c.materials.entries.where((e) => e.value > 0 && sellable(e.key)).toList();
-    return ListView(
-      padding: const EdgeInsets.all(16),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionTitle(tr('Vendi')),
         if (toSell.isEmpty && c.weapons.isEmpty)
           Text(tr('Niente da vendere.'), style: const TextStyle(color: Palette.ash)),
         for (final e in toSell)
-          ActionTile(
-            icon: Icons.sell_outlined,
-            title: materialNames[e.key] ?? e.key,
-            subtitle: tr('Hai {n} · {price} rune l\'uno', {'n': e.value, 'price': sellPrice(e.key)}) +
-                (e.value > 1 ? tr(', tutti {total}', {'total': sellPrice(e.key) * e.value}) : ''),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _SmallButton(tr('VENDI 1'), () {
-                  s.sellMaterial(e.key);
-                  Sound.play(Sfx.sell);
-                }),
-                if (e.value > 1)
-                  _SmallButton(tr('TUTTI'), () {
-                    s.sellMaterial(e.key, e.value);
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              child: Row(
+                children: [
+                  CodexTap(e.key, child: ItemIcon(e.key, size: 40)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        OneLine(itemName(e.key), align: Alignment.centerLeft),
+                        Row(children: [
+                          StatChip(Icons.inventory_2_outlined, '${e.value}', color: Palette.ash),
+                          const SizedBox(width: 10),
+                          StatChip(Icons.diamond_outlined, '${sellPrice(e.key)}', color: Palette.goldBright),
+                        ]),
+                      ],
+                    ),
+                  ),
+                  _SmallButton(tr('VENDI 1'), () {
+                    s.sellMaterial(e.key);
                     Sound.play(Sfx.sell);
                   }),
-              ],
+                  if (e.value > 1)
+                    _SmallButton(tr('TUTTI'), () {
+                      s.sellMaterial(e.key, e.value);
+                      Sound.play(Sfx.sell);
+                    }),
+                ],
+              ),
             ),
           ),
         for (final w in List.of(c.weapons))
@@ -336,24 +583,21 @@ class _Merchant extends StatelessWidget {
               child: Text(tr('{runes} rune', {'runes': weaponValue(w)})),
             ),
           ),
-        SectionTitle(tr('Compra')),
-        for (final id in merchantStock)
-          ActionTile(
-            icon: Icons.shopping_bag_outlined,
-            title: materialNames[id] ?? id,
-            subtitle: tr('Hai {n}', {'n': c.materials[id] ?? 0}),
-            trailing: TextButton(
-              onPressed: () {
-                if (s.buyMaterial(id)) {
-                  Sound.play(Sfx.buy);
-                } else {
-                  Sound.play(Sfx.locked);
-                  toast(context, tr('Rune insufficienti'));
-                }
-              },
-              child: Text(tr('{runes} rune', {'runes': buyPrice(id)})),
-            ),
-          ),
+      ],
+    );
+  }
+}
+
+class _Capes extends StatelessWidget {
+  const _Capes();
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final c = s.character;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
         SectionTitle(tr('Mantelli')),
         for (final cape in capeDefs.values.where((x) => x.price > 0))
           ActionTile(

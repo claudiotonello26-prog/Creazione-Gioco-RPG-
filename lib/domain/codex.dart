@@ -276,8 +276,10 @@ List<CodexSource> codexSources(String id, Attribute build) {
   if (id.startsWith('amulet_') && amuletRecipes.containsKey(id.substring(7))) {
     out.add(CodexSource(SourceKind.craft, Station.enchant.label));
   }
-  if (merchantStock.contains(id)) {
-    out.add(CodexSource(SourceKind.shop, tr('Mercante · {runes} rune', {'runes': buyPrice(id)})));
+  for (final k in ShopKeeper.values) {
+    if (!shopStock[k]!.any((i) => i.$1 == id)) continue;
+    final price = weaponDefs.containsKey(id) ? weaponBuyPrice(id) : buyPrice(id);
+    out.add(CodexSource(SourceKind.shop, tr('{shop} · {runes} rune', {'shop': k.role, 'runes': price})));
   }
   if (id.startsWith('amulet_') && amuletPrices.containsKey(id.substring(7))) {
     out.add(
@@ -291,7 +293,7 @@ List<CodexSource> codexSources(String id, Attribute build) {
   if (cape != null) {
     out.add(
       cape.price > 0
-          ? CodexSource(SourceKind.shop, tr('Mercante · {runes} rune', {'runes': cape.price}))
+          ? CodexSource(SourceKind.shop, tr('{shop} · {runes} rune', {'shop': ShopKeeper.general.role, 'runes': cape.price}))
           : CodexSource(SourceKind.shop, tr('Ce l\'hai dall\'inizio')),
     );
   }

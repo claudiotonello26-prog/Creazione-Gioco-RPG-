@@ -968,7 +968,7 @@ class SimPlayer {
           if (!buy) return false;
           final missing = e.value * 2 - have;
           final cost = buyPrice(e.key) * missing;
-          if (!merchantStock.contains(e.key) || cost <= 0 || cost * 10 > c.runes) return false;
+          if (!state.inStock(e.key) || cost <= 0 || cost * 10 > c.runes) return false;
           state.buyMaterial(e.key, missing);
           _spentToday += cost;
           return true;
@@ -1105,7 +1105,7 @@ class SimPlayer {
     // Il Mercante: compra solo se costa meno di un terzo delle rune.
     final missing = qty - (c.materials[id] ?? 0);
     final cost = buyPrice(id) * missing;
-    if (merchantStock.contains(id) && cost > 0 && cost * 3 <= c.runes) {
+    if (state.inStock(id) && cost > 0 && cost * 3 <= c.runes) {
       state.buyMaterial(id, missing);
       _spentToday += cost;
       return true;

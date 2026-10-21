@@ -363,6 +363,68 @@ class EnemyPortrait extends StatelessWidget {
   }
 }
 
+/// Cosa si raccoglie, sullo stesso fondo pietra dei mostri: l'albero o il
+/// filone (`assets/art/nodes/<id>.png`), altrimenti l'oggetto che lascia.
+class ResourcePortrait extends StatelessWidget {
+  const ResourcePortrait(this.id, {super.key, this.size = 96, this.border, this.dim = false});
+  final String id;
+  final double size;
+  final Color? border;
+  final bool dim;
+
+  @override
+  Widget build(BuildContext context) {
+    final node = 'assets/art/nodes/$id.png';
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: neutralBackdrop,
+        borderRadius: BorderRadius.circular(size * 0.14),
+        border: Border.all(color: border ?? Palette.gold, width: size >= 120 ? 2.5 : 2),
+        boxShadow: const [BoxShadow(color: Color(0x99000000), blurRadius: 8, offset: Offset(0, 3))],
+      ),
+      clipBehavior: Clip.antiAlias,
+      padding: EdgeInsets.all(size * 0.05),
+      child: Opacity(
+        opacity: dim ? 0.45 : 1,
+        child: Art.has(node)
+            ? Image.asset(node, fit: BoxFit.contain)
+            : Center(child: ItemIcon(id, size: size * 0.78)),
+      ),
+    );
+  }
+}
+
+/// Il busto di un mercante (`assets/art/npc/<id>.png`, testa e mezzo petto
+/// rivolti a destra), altrimenti il suo simbolo nel suo colore.
+class NpcBust extends StatelessWidget {
+  const NpcBust(this.id, {super.key, required this.icon, required this.color, this.size = 112});
+  final String id;
+  final IconData icon;
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final art = 'assets/art/npc/$id.png';
+    return Container(
+      width: size,
+      height: size * 1.15,
+      decoration: BoxDecoration(
+        gradient: neutralBackdrop,
+        borderRadius: BorderRadius.circular(size * 0.12),
+        border: Border.all(color: color, width: 2),
+        boxShadow: const [BoxShadow(color: Color(0x99000000), blurRadius: 8, offset: Offset(0, 3))],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Art.has(art)
+          ? Image.asset(art, fit: BoxFit.cover, alignment: Alignment.topCenter)
+          : Icon(icon, size: size * 0.5, color: color),
+    );
+  }
+}
+
 void toast(BuildContext context, String message) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
@@ -384,6 +446,14 @@ class ItemIcon extends StatelessWidget {
 
   static (IconData, Color) symbolOf(String id) {
     bool has(String s) => id.contains(s);
+    final weapon = weaponDefs[id];
+    if (weapon != null) {
+      return switch (weapon.style) {
+        WeaponStyle.ranged => (Icons.north_east, const Color(0xFF7FC25A)),
+        WeaponStyle.magic => (Icons.auto_fix_high, const Color(0xFF9B6BE0)),
+        _ => (Icons.gavel, Palette.ash),
+      };
+    }
     if (id.startsWith('amulet_')) {
       final a = amuletDefs[id.substring(7)]?.apply;
       if (a?.ward != null) return (Icons.shield_moon, a!.ward!.color);
