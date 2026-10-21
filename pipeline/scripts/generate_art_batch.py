@@ -100,11 +100,14 @@ ITEMS = {
             "Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted."
         ),
         "desc": (
-            "Berta of the General Store. Woman in her fifties, very warm and friendly welcoming smile, kind sparkling eyes looking directly at the viewer/screen, rosy cheeks, "
-            "grey-streaked chestnut hair tied in a loose bun under a faded red headscarf. Small brass spectacles perched on her nose. "
+            "Berta of the General Store. Woman in her fifties, very warm and friendly welcoming smile, kind friendly eyes looking directly at the viewer/screen. "
+            "Smooth natural weathered medieval skin tones, completely solid and fully painted skin with no white specks, no glitter, and no unpainted spots. "
+            "Grey-streaked chestnut hair tied in a loose bun under a solid faded red cloth headscarf. Small circular brass spectacles perched neatly on her nose. "
             "Wearing a practical cream linen blouse, a coarse brown wool shawl draped around her, a leather apron strap over one shoulder, "
             "a pencil tucked behind her ear, and a small ring of brass keys hanging at the collar. "
-            "Warm, friendly shopkeeper greeting the player. Warm weathered colours strictly: faded red, cream linen, brown wool, brass, natural skin tones. Bold inked outlines."
+            "Warm, friendly shopkeeper greeting the player warmly. "
+            "Warm weathered colours strictly: faded red cloth, cream linen, brown wool, brass metal, natural warm skin tones. "
+            "Bold crisp black inked outlines, clean smooth cel-shading, completely solid painted surfaces with NO white specks, NO uncolored patches, NO noise artifacts."
         )
     },
     "smith": {
@@ -122,8 +125,8 @@ ITEMS = {
             "Master Gorran the Blacksmith. Big bald man in his forties, hearty friendly smile, warm kind eyes looking directly into the camera / at the viewer, "
             "thick braided red-brown beard with a few singed hairs. "
             "Black soot smudges on his forehead and rugged cheeks, thick powerful neck. "
-            "Heavy leather apron over a sleeveless sweat-darkened coarse grey shirt, thick hairy muscular forearm visible at the bottom edge, "
-            "a pair of heavy iron blacksmith tongs resting casually over his shoulder. "
+            "Heavy leather apron over a sleeveless sweat-darkened coarse grey shirt. "
+            "His thick muscular, hairy, soot-stained arm and hand is raised to firmly grip and hold the heavy iron blacksmith tongs resting securely over his shoulder. "
             "Glow of the forge lighting him warm orange from below on one side. Welcoming master craftsman greeting the player warmly. "
             "Colours strictly: steel grey, leather brown, forge orange, natural ruddy skin tones. Bold inked outlines."
         )
