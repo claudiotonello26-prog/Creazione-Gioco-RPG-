@@ -585,130 +585,122 @@ class _GatherScreenState extends State<GatherScreen> {
       ),
       body: Stack(
         children: [
-          // Una schermata sola: chi è, spendi tutto, scegli quanti, cammina.
-          ListView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-            children: [
-              Row(
-                children: [
-                  ResourcePortrait(_r.id, size: 120),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(_r.name, style: titleStyle(size: 17, spacing: 1)),
-                        const SizedBox(height: 6),
-                        Wrap(
-                          spacing: 12,
-                          runSpacing: 4,
-                          children: [
-                            StatChip(Icons.inventory_2_outlined, '$have', color: Palette.goldBright),
-                            StatChip(Icons.directions_walk, '$per', color: Palette.holy),
-                            StatChip(Icons.auto_awesome, '+${_r.xp}', color: Palette.ash),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text('${_r.skill.label} · ${tr('Liv. {n}', {'n': lvl})}',
-                            style: const TextStyle(color: Palette.ash, fontSize: 13)),
-                        const SizedBox(height: 4),
-                        StatBar(value: xpIn / xpNeed, color: _r.skill.realmColor, height: 6),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
-
-              // 1. Tutti i passi in un colpo, con conferma.
-              if (!_known && bank == 0)
-                _Panel(
-                  child: Text(tr('Collega i passi nella Raccolta per spenderli qui.'),
-                      style: const TextStyle(color: Palette.ash)),
-                )
-              else if (ready == 0)
-                _Panel(
-                  child: Text(
-                    tr('Ti servono ancora {n} passi per la prossima unità.', {'n': per - bank % per}),
-                    style: const TextStyle(color: Palette.ash),
-                  ),
-                )
-              else ...[
-                SizedBox(
-                  height: 56,
-                  child: FilledButton.icon(
-                    onPressed: () => _spendAll(s, ready, per),
-                    icon: Icon(_r.skill == Skill.mining ? Icons.hardware : Icons.forest),
-                    label: Text(tr('SPENDILI TUTTI · {n}×', {'n': ready})),
-                  ),
-                ),
-                // 2. Oppure scegli quanti.
-                if (ready > 1) ...[
-                  const SizedBox(height: 12),
-                  _Panel(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Slider(
-                          value: units.toDouble(),
-                          min: 1,
-                          max: ready.toDouble(),
-                          divisions: ready - 1,
-                          label: '$units',
-                          onChanged: (v) => setState(() => _units = v.round()),
-                        ),
-                        OutlinedButton(
-                          onPressed: () => _gain(s, units * per),
-                          child: Text('$verb $units× · -${units * per}'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-              const SizedBox(height: 12),
-
-              // 3. Dal vivo: premi e cammina.
-              _Panel(
-                active: live,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (live) ...[
-                      StatBar(
-                        value: _charge / per,
-                        color: Sections.gathering,
-                        height: 22,
-                        label: tr('{a} / {b} passi', {'a': _charge, 'b': per}),
-                      ),
-                      const SizedBox(height: 8),
+          // Una schermata sola e sempre piena: chi è in alto, la scelta dei
+          // passi al centro che prende tutto lo spazio, camminare in fondo.
+          LayoutBuilder(
+            builder: (context, box) => SingleChildScrollView(
+              child: SizedBox(
+                height: max(box.maxHeight, 560),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          StatChip(Icons.directions_walk, '$_sessionSteps', color: Palette.holy),
+                          ResourcePortrait(_r.id, size: 130),
                           const SizedBox(width: 14),
-                          StatChip(Icons.inventory_2_outlined, '+$_sessionUnits',
-                              color: Palette.goldBright),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(_r.name, style: titleStyle(size: 17, spacing: 1)),
+                                const SizedBox(height: 6),
+                                Wrap(
+                                  spacing: 12,
+                                  runSpacing: 4,
+                                  children: [
+                                    StatChip(Icons.inventory_2_outlined, '$have', color: Palette.goldBright),
+                                    StatChip(Icons.directions_walk, '$per', color: Palette.holy),
+                                    StatChip(Icons.auto_awesome, '+${_r.xp}', color: Palette.ash),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text('${_r.skill.label} · ${tr('Liv. {n}', {'n': lvl})}',
+                                    style: const TextStyle(color: Palette.ash, fontSize: 13)),
+                                const SizedBox(height: 4),
+                                StatBar(value: xpIn / xpNeed, color: _r.skill.realmColor, height: 6),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 14),
+                      Expanded(
+                        child: _Panel(
+                          child: !_known && bank == 0
+                              ? Center(
+                                  child: Text(tr('Collega i passi nella Raccolta per spenderli qui.'),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(color: Palette.ash, fontSize: 16)),
+                                )
+                              : ready == 0
+                                  ? Center(
+                                      child: Text(
+                                        tr('Ti servono ancora {n} passi per la prossima unità.',
+                                            {'n': per - bank % per}),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(color: Palette.ash, fontSize: 16),
+                                      ),
+                                    )
+                                  : _ChooseUnits(
+                                      units: units,
+                                      ready: ready,
+                                      per: per,
+                                      xp: _r.xp,
+                                      verb: verb,
+                                      color: _r.skill.realmColor,
+                                      onChanged: (n) => setState(() => _units = n),
+                                      onTake: () => _gain(s, units * per),
+                                      onAll: () => _spendAll(s, ready, per),
+                                    ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      _Panel(
+                        active: live,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (live) ...[
+                              StatBar(
+                                value: _charge / per,
+                                color: Sections.gathering,
+                                height: 22,
+                                label: tr('{a} / {b} passi', {'a': _charge, 'b': per}),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  StatChip(Icons.directions_walk, '$_sessionSteps', color: Palette.holy),
+                                  const SizedBox(width: 14),
+                                  StatChip(Icons.inventory_2_outlined, '+$_sessionUnits',
+                                      color: Palette.goldBright),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                            ],
+                            live
+                                ? OutlinedButton.icon(
+                                    onPressed: _toggleLive,
+                                    icon: const Icon(Icons.stop_circle_outlined),
+                                    label: Text(tr('FERMA')),
+                                  )
+                                : FilledButton.icon(
+                                    style: FilledButton.styleFrom(backgroundColor: Sections.gathering),
+                                    onPressed: _starting ? null : _toggleLive,
+                                    icon: const Icon(Icons.directions_walk),
+                                    label: Text(_liveVerb(_r.skill)),
+                                  ),
+                          ],
+                        ),
+                      ),
                     ],
-                    live
-                        ? OutlinedButton.icon(
-                            onPressed: _toggleLive,
-                            icon: const Icon(Icons.stop_circle_outlined),
-                            label: Text(tr('FERMA')),
-                          )
-                        : FilledButton.icon(
-                            style: FilledButton.styleFrom(backgroundColor: Sections.gathering),
-                            onPressed: _starting ? null : _toggleLive,
-                            icon: const Icon(Icons.directions_walk),
-                            label: Text(_liveVerb(_r.skill)),
-                          ),
-                  ],
+                  ),
                 ),
               ),
-            ],
+            ),
           ),
           if (_popup != null)
             Positioned.fill(
@@ -716,6 +708,137 @@ class _GatherScreenState extends State<GatherScreen> {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// La scelta dei passi, grande: quante unità in cifre, cursore spesso con
+/// meno e più, PRENDI e SPENDILI TUTTI.
+class _ChooseUnits extends StatelessWidget {
+  const _ChooseUnits({
+    required this.units,
+    required this.ready,
+    required this.per,
+    required this.xp,
+    required this.verb,
+    required this.color,
+    required this.onChanged,
+    required this.onTake,
+    required this.onAll,
+  });
+  final int units, ready, per, xp;
+  final String verb;
+  final Color color;
+  final ValueChanged<int> onChanged;
+  final VoidCallback onTake, onAll;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget step(IconData icon, int to) => IconButton.outlined(
+          iconSize: 30,
+          style: IconButton.styleFrom(
+            foregroundColor: Palette.goldBright,
+            side: const BorderSide(color: Palette.gold),
+          ),
+          onPressed: to >= 1 && to <= ready && to != units ? () => onChanged(to) : null,
+          icon: Icon(icon),
+        );
+    // Scorciatoie: 1, 5, 10, 25 e metà; tutti è il pulsante in fondo.
+    final quick = {for (final n in [5, 10, 25, ready ~/ 2]) if (n > 1 && n < ready) n}.toList()..sort();
+    Widget pick(int n, String label) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: ChoiceChip(
+            label: Text(label),
+            selected: units == n,
+            showCheckmark: false,
+            selectedColor: Palette.gold,
+            labelStyle: TextStyle(color: units == n ? Palette.night : Palette.holy),
+            onSelected: (_) => onChanged(n),
+          ),
+        );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(tr('quanti ne prendi').toUpperCase(),
+            textAlign: TextAlign.center, style: titleStyle(size: 12, color: Palette.ash, spacing: 2.5)),
+        Expanded(
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text('$units×',
+                  style: titleStyle(size: 120, color: Palette.holy, spacing: 0).copyWith(
+                    shadows: [Shadow(color: color.withValues(alpha: 0.6), blurRadius: 24)],
+                  )),
+            ),
+          ),
+        ),
+        if (quick.isNotEmpty) ...[
+          Wrap(
+            alignment: WrapAlignment.center,
+            runSpacing: 6,
+            children: [
+              pick(1, '1'),
+              for (final n in quick) pick(n, n == ready ~/ 2 && n != 5 && n != 10 && n != 25 ? tr('metà') : '$n'),
+            ],
+          ),
+          const SizedBox(height: 14),
+        ],
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            StatChip(Icons.directions_walk, '-${units * per}', color: Palette.holy),
+            const SizedBox(width: 16),
+            StatChip(Icons.auto_awesome, '+${units * xp} XP', color: Palette.goldBright),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            step(Icons.remove, units - 1),
+            Expanded(
+              child: SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  trackHeight: 10,
+                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 14),
+                  activeTrackColor: color,
+                  inactiveTrackColor: Palette.iron,
+                  thumbColor: Palette.goldBright,
+                ),
+                child: Slider(
+                  value: units.toDouble(),
+                  min: 1,
+                  max: max(ready, 2).toDouble(),
+                  divisions: max(ready - 1, 1),
+                  label: '$units',
+                  onChanged: ready > 1 ? (v) => onChanged(v.round()) : null,
+                ),
+              ),
+            ),
+            step(Icons.add, units + 1),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 54,
+                child: OutlinedButton(onPressed: onTake, child: Text('$verb $units×')),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: SizedBox(
+                height: 54,
+                child: FilledButton(
+                  onPressed: onAll,
+                  child: FittedBox(child: Text(tr('TUTTI · {n}×', {'n': ready}))),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
