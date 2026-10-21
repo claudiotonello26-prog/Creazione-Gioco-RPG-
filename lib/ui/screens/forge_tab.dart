@@ -225,18 +225,18 @@ class StationScreen extends StatelessWidget {
     final offhands = unlockedPlusNext(
         offhandDefs.values.where((o) => o.station == station).toList(), (o) => o.craftLevel, lvl);
     return [
-      Icon(stationIcon(station), color: station.accent, size: 40),
-      const SizedBox(height: 6),
-      Text(
-        station.description,
-        textAlign: TextAlign.center,
-        style: const TextStyle(color: Palette.ash),
-      ),
-      const SizedBox(height: 10),
-      StatBar(
-        value: xpIn / xpNeed,
-        color: Palette.gold,
-        label: '${tr('Livello {n}', {'n': lvl})} · ${xpLeftLabel(xpIn, xpNeed)}',
+      // Icona, livello e barra in una riga; la descrizione sta dietro il "?".
+      Row(
+        children: [
+          Icon(stationIcon(station), color: station.accent, size: 36),
+          const SizedBox(width: 10),
+          Text(tr('Liv. {n}', {'n': lvl}), style: titleStyle(size: 17, color: station.accent)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: StatBar(value: xpIn / xpNeed, color: Palette.gold, label: '$xpIn / $xpNeed XP'),
+          ),
+          HelpButton(station.description),
+        ],
       ),
       if (mats.isNotEmpty) SectionTitle(tr('Lavorazioni')),
       for (final r in mats)

@@ -161,6 +161,8 @@ const Map<String, String> enUiB = {
   'quanti ne prendi': 'how many',
   'Offline · di prova': 'Offline · demo',
   'Gruppo': 'Group',
+  'Offline': 'Offline',
+  'Serve la fotocamera': 'Camera needed',
   'In diretta': 'Live',
   'Sfide': 'Duels',
   'Caccia libera': 'Free hunt',

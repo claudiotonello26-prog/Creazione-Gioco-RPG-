@@ -252,11 +252,14 @@ class ActionTile extends StatelessWidget {
     this.trailing,
     this.color = Palette.gold,
     this.enabled = true,
+    this.below,
   });
 
   final IconData icon;
   final String title;
   final String? subtitle;
+  /// Sotto il titolo al posto del testo, per esempio i costi in icone.
+  final Widget? below;
   final VoidCallback? onTap;
   final Widget? trailing;
   final Color color;
@@ -271,9 +274,15 @@ class ActionTile extends StatelessWidget {
           minVerticalPadding: 10,
           leading: Icon(icon, color: color, size: 30),
           title: OneLine(title, align: Alignment.centerLeft),
-          subtitle: subtitle == null
-              ? null
-              : Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 14)),
+          subtitle: below != null || subtitle != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (subtitle != null) Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 14)),
+                    if (below != null) Padding(padding: const EdgeInsets.only(top: 4), child: below),
+                  ],
+                )
+              : null,
           trailing: trailing ??
               (onTap != null ? Icon(Icons.chevron_right, color: color, size: 30) : null),
           onTap: enabled ? onTap : null,

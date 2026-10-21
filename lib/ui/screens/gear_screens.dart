@@ -663,9 +663,11 @@ class _Witch extends StatelessWidget {
             icon: Icons.brightness_7,
             color: amuletDefs[e.key]!.apply.aura!.color,
             title: amuletDefs[e.key]!.name,
-            subtitle: e.value.entries
-                .map((m) => '${m.value}× ${itemName(m.key)} (${s.character.materials[m.key] ?? 0})')
-                .join(' · '),
+            below: CostRow(
+              needs: e.value,
+              have: s.character.materials,
+              onTapItem: (id) => openCodex(context, id),
+            ),
             trailing: FilledButton(
               onPressed: s.canCraftAmulet(e.key)
                   ? () async {
@@ -693,7 +695,12 @@ class _Witch extends StatelessWidget {
               icon: a.isWard ? Icons.shield_moon : Icons.diamond,
               color: el.color,
               title: a.name + (s.amuletCount(a.id) > 0 ? ' ×${s.amuletCount(a.id)}' : ''),
-              subtitle: '${a.description}\n${e.value.entries.map((m) => '${m.value}× ${itemName(m.key)} (${s.character.materials[m.key] ?? 0})').join(' · ')}',
+              subtitle: a.description,
+              below: CostRow(
+                needs: e.value,
+                have: s.character.materials,
+                onTapItem: (id) => openCodex(context, id),
+              ),
               trailing: FilledButton(
                 onPressed: s.canCraftAmulet(e.key)
                     ? () async {
