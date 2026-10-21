@@ -1,19 +1,33 @@
 name: CI
 
+# Il repo è privato: il piano gratuito dà 2.000 minuti al mese. A ogni push
+# girano solo analisi, test (con il simulatore di bilanciamento) e il server,
+# pochi minuti. APK, emulatori e pubblicazione partono solo a mano, da
+# Actions → CI → Run workflow (o con l'API workflow_dispatch sul ramo voluto).
 on:
   pull_request:
   push:
     branches: [main]
   workflow_dispatch:
     inputs:
+      emulatori:
+        description: "Prova l'APK su 3 emulatori Android prima di pubblicarlo (circa 30 minuti in più)"
+        type: boolean
+        default: true
       ios:
-        description: "Compila anche iOS (senza firma, su macOS)"
+        description: "Compila anche iOS (senza firma, su macOS: minuti x10)"
         type: boolean
         default: false
+
+# Un push nuovo sullo stesso ramo ferma la prova vecchia ancora in corso.
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -37,6 +51,7 @@ jobs:
 
   server:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: server
@@ -49,9 +64,12 @@ jobs:
       - run: npm run build
       - run: node --test test/arena.test.js
 
+  # Da qui in giù solo a mano: sono i job che consumano più minuti.
   android:
+    if: github.event_name == 'workflow_dispatch'
     needs: test
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -82,8 +100,10 @@ jobs:
   # Avvia l'APK vero su emulatori Android (vecchio e recente) e fallisce se
   # l'app si chiude all'avvio. Il logcat resta come artefatto.
   android-smoke:
+    if: github.event_name == 'workflow_dispatch' && inputs.emulatori
     needs: android
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -122,14 +142,19 @@ jobs:
             screen.png
           if-no-files-found: ignore
 
-  # APK scaricabile direttamente dal telefono, senza zip: release di prova
-  # "apk-latest" ricreata a ogni build che supera la prova sugli emulatori.
+  # APK scaricabile direttamente dal telefono, senza zip e senza login:
+  # release "apk-latest" ricreata nel repo PUBBLICO che contiene solo gli APK
+  # (vars.APK_REPO, di base claudiotonello26-prog/gym-oath-apk), con il token
+  # del segreto APK_REPO_TOKEN. Senza quel segreto pubblica in questo repo,
+  # che però da privato richiede il login per scaricare.
   publish-apk:
-    needs: android-smoke
-    # I rami della grafica, della gilda, del simulatore e del Codice non pubblicano: l'APK di prova esce
-    # dal ramo delle traduzioni, che lo contiene già, così resta in inglese.
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository) && github.head_ref != 'claude/project-thread-u1igq7' && github.head_ref != 'claude/gilda-amici-vpyet8' && github.head_ref != 'claude/simulatore-bilanciamento-2bod7o' && github.head_ref != 'claude/project-thread-e358xd' && github.head_ref != 'claude/project-thread-hr9ciq'
+    needs: [android, android-smoke]
+    if: >-
+      always() && github.event_name == 'workflow_dispatch' &&
+      needs.android.result == 'success' &&
+      (needs.android-smoke.result == 'success' || needs.android-smoke.result == 'skipped')
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
     steps:
@@ -138,22 +163,28 @@ jobs:
           name: iron-oath-android
       - name: Pubblica l'APK
         env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          BRANCH: ${{ github.head_ref || github.ref_name }}
+          APK_TOKEN: ${{ secrets.APK_REPO_TOKEN }}
+          GH_TOKEN: ${{ secrets.APK_REPO_TOKEN || github.token }}
+          GH_REPO: ${{ secrets.APK_REPO_TOKEN && (vars.APK_REPO || 'claudiotonello26-prog/gym-oath-apk') || github.repository }}
+          SHA: ${{ github.sha }}
+          BRANCH: ${{ github.ref_name }}
         run: |
+          # Nel repo degli APK il commit del codice non esiste: la release
+          # si appoggia al suo ramo principale.
+          TARGET=()
+          if [ -z "$APK_TOKEN" ]; then TARGET=(--target "$SHA"); fi
           gh release delete apk-latest --yes --cleanup-tag || true
           gh release create apk-latest iron-oath-arm64.apk iron-oath.apk \
-            --prerelease --target "$SHA" \
+            --prerelease "${TARGET[@]}" \
             --title "Iron Oath – APK di prova (build ${{ github.run_number }})" \
-            --notes "Build ${{ github.run_number }} dal ramo $BRANCH. Scarica iron-oath-arm64.apk dal telefono e installalo sopra la versione precedente; iron-oath.apk funziona su tutti i telefoni ma pesa di più."
+            --notes "Build ${{ github.run_number }} dal ramo $BRANCH (${SHA:0:7}). Scarica iron-oath-arm64.apk dal telefono e installalo sopra la versione precedente; iron-oath.apk funziona su tutti i telefoni ma pesa di più."
+          echo "Link fisso: https://github.com/$GH_REPO/releases/download/apk-latest/iron-oath-arm64.apk" >> "$GITHUB_STEP_SUMMARY"
 
   # IPA non firmata: si installa su iPhone da Windows con Sideloadly e un
-  # Apple ID gratuito. Gira su macOS (minuti costosi), quindi solo su main o
-  # a mano da Actions → CI → Run workflow.
+  # Apple ID gratuito. Gira su macOS (ogni minuto ne vale 10), quindi solo a
+  # mano da Actions → CI → Run workflow con la casella iOS.
   ios:
-    if: (github.event_name == 'workflow_dispatch' && inputs.ios) || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'workflow_dispatch' && inputs.ios
     needs: test
     runs-on: macos-latest
     steps:

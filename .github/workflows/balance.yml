@@ -1,11 +1,10 @@
 name: Bilanciamento
 
 # Il simulatore di bilanciamento in versione lunga: un anno di gioco, tre
-# semi per profilo. Gira ogni notte e a mano; il rapporto resta nel
-# riepilogo e come artefatto. Non compila né pubblica APK.
+# semi per profilo. Gira solo a mano (ogni notte costerebbe fino a 1.800
+# minuti al mese sul repo privato); il rapporto resta nel riepilogo e come
+# artefatto. Non compila né pubblica APK.
 on:
-  schedule:
-    - cron: "30 3 * * *"
   workflow_dispatch:
     inputs:
       days:
