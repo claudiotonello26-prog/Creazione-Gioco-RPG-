@@ -171,4 +171,17 @@ void main() {
     expect(b.enemyMaxHp, greaterThan(a.enemyMaxHp));
     expect(b.hitDamage, greaterThan(a.hitDamage));
   });
+
+  test('un boss di fine gioco abbatte con un colpo un personaggio appena creato', () {
+    final fresh = Character();
+    final boss = enemyDefs.values.where((e) => e.isBoss).reduce((a, b) => a.level >= b.level ? a : b);
+    final e = CombatEngine(enemy: boss, character: fresh, testReps: 20);
+    expect(e.hitDamage, greaterThanOrEqualTo(fresh.maxHp));
+  });
+
+  test('il divario di livello pesa solo se il nemico è sopra di te', () {
+    expect(CombatEngine.levelGapFactor(0), 1.0);
+    expect(CombatEngine.levelGapFactor(-10), 1.0);
+    expect(CombatEngine.levelGapFactor(10), greaterThan(2));
+  });
 }

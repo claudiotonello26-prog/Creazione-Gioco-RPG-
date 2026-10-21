@@ -62,6 +62,10 @@ class Targets {
   /// Attacco della build più forte rispetto alla più debole, a parità di
   /// impegno: oltre questo è un BLOCCO, oltre il secondo un avviso.
   static const double buildSpreadMax = 1.3, buildSpreadWarn = 1.15;
+
+  /// Da questo livello un boss abbatte con un colpo un personaggio appena
+  /// creato (livello 1, senza armatura).
+  static const int oneShotBossLevel = 40;
 }
 
 class BalanceReport {
@@ -89,6 +93,36 @@ class BalanceReport {
     _paceThresholds();
     _market();
     _collection();
+    _levelGap();
+  }
+
+  /// Un personaggio appena creato (livello 1, senza armatura, attributi
+  /// base) contro i boss: quelli di fine gioco lo abbattono con un colpo.
+  void _levelGap() {
+    _md.writeln('## Boss contro un personaggio nuovo\n');
+    _md.writeln('| Boss | Livello | Danno a colpo | Colpi per abbatterlo |');
+    _md.writeln('|---|---|---|---|');
+    final fresh = Character();
+    final bosses = enemyDefs.values.where((e) => e.isBoss).toList()
+      ..sort((a, b) => a.level - b.level);
+    final seen = <int>{};
+    for (final e in bosses) {
+      final hit = CombatEngine(enemy: e, character: fresh, testReps: 20).hitDamage;
+      final hits = (fresh.maxHp / hit).ceil();
+      if (seen.add(e.level)) {
+        _md.writeln('| ${e.nameIt} | ${e.level} | ${hit.round()} | $hits |');
+      }
+      if (e.level >= Targets.oneShotBossLevel && hits > 1) {
+        _add(Severity.block, 'Boss', 'Un boss di fine gioco non abbatte un personaggio nuovo',
+            '${e.nameIt} (liv. ${e.level}) fa ${hit.round()} danni su ${fresh.maxHp} di vita: '
+                'servono $hits colpi.');
+      }
+    }
+    _md.writeln();
+    if (!findings.any((f) => f.area == 'Boss')) {
+      _add(Severity.ok, 'Boss', 'I boss di fine gioco abbattono un personaggio nuovo con un colpo',
+          'Dal livello ${Targets.oneShotBossLevel} in su.');
+    }
   }
 
   /// Solo le build a confronto (giocatori di [buildProfiles]).

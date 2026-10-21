@@ -80,8 +80,19 @@ class CombatEngine {
     // rep ogni ~2 secondi vince con poco margine; chi rallenta, sbaglia la
     // forma o ha una build debole muore. Il Vigore dà tempo in più.
     final secondsToKill = expectedReps * secondsPerRep * enemy.pressure;
-    hitDamage = baseHeroHp * enemy.attackInterval / secondsToKill * (1 + waveDamageStep * wave);
+    hitDamage = baseHeroHp *
+        enemy.attackInterval /
+        secondsToKill *
+        (1 + waveDamageStep * wave) *
+        levelGapFactor(enemy.level - character.level);
   }
+
+  /// Un nemico sopra il tuo livello picchia più forte: +9% a livello di
+  /// distanza, composto. Cinque livelli sotto si sente (×1,5), dieci sono
+  /// pericolosi (×2,4), un boss di fine gioco contro un personaggio appena
+  /// nato lo abbatte con un colpo. Allo stesso livello o sopra non cambia.
+  static double levelGapFactor(int gap) => gap <= 0 ? 1.0 : pow(levelGapStep, gap).toDouble();
+  static const double levelGapStep = 1.09;
 
   /// Ritmo di riferimento della taratura.
   static const double secondsPerRep = 2.2;

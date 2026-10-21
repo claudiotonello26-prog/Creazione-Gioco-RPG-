@@ -9,6 +9,7 @@ Regola di fondo: **si guadagna per ogni rep fatta bene, non per ogni mostro ucci
   - La pressione per gradino è 1,9 / 1,75 / 1,6 / 1,45 / 1,35; i boss hanno ×0,9.
   - Il nemico attacca ogni 4 s (boss ogni 3,5 s).
   - In caccia il danno sale del 10% a ondata.
+  - **Divario di livello**: un nemico sopra il tuo livello colpisce più forte, +9% per ogni livello di distanza (composto): 5 livelli ×1,5, 10 livelli ×2,4, 20 livelli ×5,6. Allo stesso livello o sotto non cambia niente. Un personaggio appena creato (livello 1, senza armatura, 140 di vita) prende 13 danni dai boss di livello 9 (11 colpi), 39 da quelli di livello 22 (4 colpi), 190 da quelli di livello 41 e oltre 1.400 da quelli di livello 65: un colpo solo. Il simulatore lo controlla dal livello 40 in su.
 - **Se ti fermi più di 3 secondi** il nemico recupera il 3% della vita al secondo, quindi non si vince facendo una rep ogni tanto.
 - **Effetto pratico** con il goblin e un test di 20:
   - con una rep ogni 2 s vinci con poco margine;
