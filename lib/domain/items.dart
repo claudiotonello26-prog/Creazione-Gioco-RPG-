@@ -141,7 +141,69 @@ enum Affinity {
     Attribute.intelligence: arcane,
     Attribute.faith: holy,
   };
+
+  /// La ruota degli elementi: l'Arcano batte il Fuoco (la mente vince la
+  /// forza bruta), il Fuoco il Vento, il Vento la Luce, la Luce l'Arcano.
+  Affinity get beats => switch (this) {
+        arcane => fire,
+        fire => wind,
+        wind => holy,
+        holy => arcane,
+      };
+
+  /// L'elemento che batte questo.
+  Affinity get weakness => values.firstWhere((a) => a.beats == this);
 }
+
+/// Qualità di un pezzo forgiato: più il mestiere supera il livello della
+/// ricetta, meglio viene. Grezza al livello giusto, Buona 5 livelli sopra,
+/// Fine 10, Capolavoro 15; a volte il martello azzecca un grado in più.
+enum CraftQuality {
+  crude('Grezza', Color(0xFF9A8F80)),
+  good('Buona', Color(0xFF7FC36B)),
+  fine('Fine', Color(0xFF5AA9F0)),
+  masterwork('Capolavoro', Color(0xFFE9B949));
+
+  const CraftQuality(this._label, this.color);
+  final String _label;
+  String get label => tr(_label);
+  final Color color;
+
+  /// +6% di attacco o di protezione per grado.
+  double get bonus => 0.06 * index;
+
+  static const int levelsPerGrade = 5;
+  static const double luckyChance = 0.2;
+
+  /// Grado sicuro con il mestiere a [skillLevel] per una ricetta di
+  /// livello [craftLevel].
+  static CraftQuality base(int skillLevel, int craftLevel) =>
+      values[((skillLevel - craftLevel) ~/ levelsPerGrade).clamp(0, values.length - 1)];
+
+  static CraftQuality roll(int skillLevel, int craftLevel, Random r) {
+    final b = base(skillLevel, craftLevel);
+    if (b != masterwork && r.nextDouble() < luckyChance) return values[b.index + 1];
+    return b;
+  }
+}
+
+/// Manutenzione leggera: ogni scontro consuma un punto d'usura dell'arma e
+/// dell'armatura colpita. Fino al 60% d'usura non cambia nulla; oltre,
+/// attacco o protezione calano fino al −20% a usura piena. Non si rompe mai:
+/// all'Incudine si ripara con le rune (e la Forgiatura sale).
+const int maxWear = 100;
+const int wearFreeUpTo = 60;
+const double wornOutPenalty = 0.20;
+
+double conditionFactor(int wear) {
+  if (wear <= wearFreeUpTo) return 1.0;
+  final over = (min(wear, maxWear) - wearFreeUpTo) / (maxWear - wearFreeUpTo);
+  return 1 - wornOutPenalty * over;
+}
+
+/// Rune per riparare [wear] punti di un oggetto di livello [craftLevel]:
+/// un'armatura di livello 15 consumata a metà costa circa 400 rune.
+int repairCost(int craftLevel, int wear) => (wear * (2 + craftLevel * 0.4)).round();
 
 /// Lavorazione di un materiale in un altro (Fornace e Carpenteria), sbloccata
 /// dal livello della postazione.
@@ -196,6 +258,20 @@ const List<MaterialRecipe> materialRecipes = [
     tool: true,
   ),
   MaterialRecipe(
+    'star_axe',
+    Station.anvil,
+    {'star_ingot': 2, 'ebony_plank': 1},
+    level: 20,
+    tool: true,
+  ),
+  MaterialRecipe(
+    'star_pickaxe',
+    Station.anvil,
+    {'star_ingot': 3, 'ebony_plank': 1},
+    level: 20,
+    tool: true,
+  ),
+  MaterialRecipe(
       'reinforced_grip',
       Station.carpentry,
       {
@@ -225,6 +301,26 @@ const List<MaterialRecipe> materialRecipes = [
   MaterialRecipe('gem_pure', Station.furnace, {'gem_cut': 3}, level: 14),
   MaterialRecipe('gem_perfect', Station.furnace, {'gem_pure': 3}, level: 20),
   MaterialRecipe('star_ingot', Station.furnace, {'star_ore': 20, 'coal': 20}, level: 18),
+  // I metalli dei gruppi si fondono anche dai minerali dei passi.
+  MaterialRecipe('bronze_ingot', Station.furnace, {'copper_ore': 15, 'coal': 5}, level: 4),
+  MaterialRecipe('gold_ingot', Station.furnace, {'gold_ore': 20, 'coal': 10}, level: 10),
+  // I materiali speciali delle build: un Minatore o un Taglialegna alto e una
+  // Fornace alta li fanno da sé, senza aspettare che cadano dai mostri.
+  MaterialRecipe('ember_iron', Station.furnace, {'ember_ore': 15, 'steel_ingot': 1, 'coal': 10},
+      level: 15),
+  MaterialRecipe('gale_silver', Station.furnace, {'silver_ingot': 2, 'storm_resin': 10},
+      level: 15),
+  MaterialRecipe('hallowed_gold', Station.furnace, {'gold_ingot': 2, 'holy_shard': 2},
+      level: 15),
+  MaterialRecipe('abyss_crystal', Station.furnace, {'abyss_geode': 12, 'coal': 10}, level: 17),
+  MaterialRecipe('godforge_steel', Station.furnace, {'ember_iron': 2, 'star_ingot': 1},
+      level: 24),
+  MaterialRecipe('steel_feather', Station.furnace,
+      {'gale_silver': 2, 'star_ingot': 1, 'storm_resin': 5},
+      level: 24),
+  MaterialRecipe('martyr_obsidian', Station.furnace, {'living_obsidian': 12, 'hallowed_gold': 1},
+      level: 24),
+  MaterialRecipe('star_iron', Station.furnace, {'abyss_crystal': 2, 'star_ingot': 1}, level: 24),
   // Il binario delle armi speciali: Tenebre I cade dai nemici, le altre si
   // fondono dalla precedente; l'Epica chiude a +5.
   MaterialRecipe('somber_stone_2', Station.furnace, {'somber_stone': 2, 'holy_shard': 1},
@@ -772,13 +868,27 @@ const Map<String, WeaponDef> weaponDefs = {
 };
 
 class WeaponInstance {
-  WeaponInstance({required this.weaponId, this.upgrade = 0, List<String?>? sockets})
-      : sockets = sockets == null || sockets.length != 3
+  WeaponInstance({
+    required this.weaponId,
+    this.upgrade = 0,
+    List<String?>? sockets,
+    this.quality = CraftQuality.crude,
+    this.wear = 0,
+  }) : sockets = sockets == null || sockets.length != 3
             ? List<String?>.filled(3, null)
             : List<String?>.of(sockets);
 
   final String weaponId;
   int upgrade;
+
+  /// Qualità della forgia (le armi trovate restano Grezze, senza grado).
+  final CraftQuality quality;
+
+  /// Punti d'usura, 0..[maxWear].
+  int wear;
+
+  /// Le armi forgiate mostrano il grado di qualità.
+  bool get crafted => def.recipe.isNotEmpty;
 
   WeaponDef get def => weaponDefs[weaponId]!;
 
@@ -809,7 +919,7 @@ class WeaponInstance {
           ScalingGrade.c.coefficient *
           (1 + 0.05 * upgrade);
     }
-    return (base + scaled) * (1 + amuletBonus);
+    return (base + scaled) * (1 + amuletBonus) * (1 + quality.bonus) * conditionFactor(wear);
   }
 
   /// Pietra richiesta per il prossimo potenziamento: Forgia I fino a +3, II
@@ -834,12 +944,20 @@ class WeaponInstance {
 
   Iterable<Amulet> get amulets => sockets.map((id) => amuletDefs[id]).whereType<Amulet>();
 
-  Map<String, dynamic> toJson() => {'id': weaponId, 'up': upgrade, 'am': sockets};
+  Map<String, dynamic> toJson() => {
+        'id': weaponId,
+        'up': upgrade,
+        'am': sockets,
+        if (quality != CraftQuality.crude) 'q': quality.index,
+        if (wear > 0) 'w': wear,
+      };
 
   factory WeaponInstance.fromJson(Map<String, dynamic> j) => WeaponInstance(
         weaponId: j['id'] as String,
         upgrade: j['up'] as int,
         sockets: (j['am'] as List?)?.cast<String?>(),
+        quality: CraftQuality.values[(j['q'] as int? ?? 0).clamp(0, 3)],
+        wear: j['w'] as int? ?? 0,
       );
 }
 
@@ -886,6 +1004,11 @@ class Amulet {
   /// Gli amuleti d'affinità vanno nella prima incastonatura, gli altri nelle
   /// due passive.
   bool get isAffinity => apply.aura != null;
+
+  /// I talismani contro un elemento si portano solo al collo, le gemme del
+  /// flagello solo nell'arma.
+  bool get isWard => apply.ward != null;
+  bool get isBane => apply.bane != null;
 }
 
 class AmuletEffect {
@@ -899,7 +1022,20 @@ class AmuletEffect {
     this.bossDamage = 0,
     this.critDamage = 0,
     this.aura,
+    this.ward,
+    this.bane,
   });
+
+  /// Talismano da collo: −[wardReduction] di danno dai nemici di questo
+  /// elemento.
+  final Affinity? ward;
+
+  /// Gemma dell'arma: +[banePower] di potere d'attacco contro i nemici di
+  /// questo elemento.
+  final Affinity? bane;
+
+  static const double wardReduction = 0.25;
+  static const double banePower = 0.20;
 
   /// Danno in più contro i boss.
   final double bossDamage;
@@ -994,7 +1130,61 @@ const Map<String, Amulet> amuletDefs = {
     '+10% rune e materiali da ogni vittoria',
     AmuletEffect(lootBonus: 0.10),
   ),
+  // Gemme del flagello (nell'arma) e talismani (al collo), uno per elemento
+  // nemico: servono contro i boss che battono la tua build.
+  'bane_fire': Amulet(
+    'bane_fire',
+    'Gemma di Brina',
+    '+20% attacco contro i nemici di Fuoco',
+    AmuletEffect(bane: Affinity.fire),
+  ),
+  'bane_wind': Amulet(
+    'bane_wind',
+    'Gemma della Roccia',
+    '+20% attacco contro i nemici di Vento',
+    AmuletEffect(bane: Affinity.wind),
+  ),
+  'bane_holy': Amulet(
+    'bane_holy',
+    'Gemma d\'Ombra',
+    '+20% attacco contro i nemici di Luce',
+    AmuletEffect(bane: Affinity.holy),
+  ),
+  'bane_arcane': Amulet(
+    'bane_arcane',
+    'Gemma del Sigillo',
+    '+20% attacco contro i nemici Arcani',
+    AmuletEffect(bane: Affinity.arcane),
+  ),
+  'ward_fire': Amulet(
+    'ward_fire',
+    'Talismano di Brina',
+    '−25% danno dai nemici di Fuoco',
+    AmuletEffect(ward: Affinity.fire),
+  ),
+  'ward_wind': Amulet(
+    'ward_wind',
+    'Talismano della Roccia',
+    '−25% danno dai nemici di Vento',
+    AmuletEffect(ward: Affinity.wind),
+  ),
+  'ward_holy': Amulet(
+    'ward_holy',
+    'Talismano d\'Ombra',
+    '−25% danno dai nemici di Luce',
+    AmuletEffect(ward: Affinity.holy),
+  ),
+  'ward_arcane': Amulet(
+    'ward_arcane',
+    'Talismano del Sigillo',
+    '−25% danno dai nemici Arcani',
+    AmuletEffect(ward: Affinity.arcane),
+  ),
 };
+
+/// Gemma e talismano contro l'elemento [a].
+String baneFor(Affinity a) => 'bane_${a.name}';
+String wardFor(Affinity a) => 'ward_${a.name}';
 
 /// Gli amuleti d'aura si incantano con il cuore della build.
 const Map<String, Map<String, int>> amuletRecipes = {
@@ -1002,6 +1192,17 @@ const Map<String, Map<String, int>> amuletRecipes = {
   'gale_amulet': {'storm_eye': 1, 'gem_pure': 1, 'gale_silver': 4},
   'holy_amulet': {'martyr_tear': 1, 'gem_pure': 1, 'hallowed_gold': 4},
   'abyss_amulet': {'star_core': 1, 'gem_pure': 1, 'abyss_crystal': 4},
+  // Contro un elemento: la gemma dello Stretching più i materiali comuni del
+  // gruppo di quell'elemento (chi vuole battere i boss di Fuoco va prima a
+  // farsi le ossa e il ferro delle Forge).
+  'bane_fire': {'gem_cut': 1, 'bone': 6, 'steel_ingot': 2},
+  'bane_wind': {'gem_cut': 1, 'raw_hide': 6, 'tanned_leather': 2},
+  'bane_holy': {'gem_cut': 1, 'bronze_ingot': 4, 'gold_ingot': 1},
+  'bane_arcane': {'gem_cut': 1, 'abyss_ink': 3, 'silver_ingot': 1},
+  'ward_fire': {'gem_pure': 1, 'bone': 10, 'steel_ingot': 4},
+  'ward_wind': {'gem_pure': 1, 'raw_hide': 6, 'tanned_leather': 6},
+  'ward_holy': {'gem_pure': 1, 'bronze_ingot': 4, 'gold_ingot': 3},
+  'ward_arcane': {'gem_pure': 1, 'abyss_ink': 5, 'silver_ingot': 2},
 };
 
 /// Il nome di qualunque oggetto: materiale, arma o amuleto.
@@ -1036,6 +1237,15 @@ const Map<String, String> materialNamesIt = {
   'iron_pickaxe': 'Piccone di ferro',
   'steel_axe': 'Accetta d\'acciaio',
   'steel_pickaxe': 'Piccone d\'acciaio',
+  'star_axe': 'Accetta stellare',
+  'star_pickaxe': 'Piccone stellare',
+  // Minerali e resine dei mestieri alti.
+  'copper_ore': 'Minerale di rame',
+  'gold_ore': 'Minerale d\'oro',
+  'ember_ore': 'Vena di brace',
+  'abyss_geode': 'Geode d\'abisso',
+  'living_obsidian': 'Ossidiana viva',
+  'storm_resin': 'Resina di bufera',
   'holy_shard': 'Scheggia sacra',
   'forge_stone_1': 'Pietra di forgia I',
   'forge_stone_2': 'Pietra di forgia II',

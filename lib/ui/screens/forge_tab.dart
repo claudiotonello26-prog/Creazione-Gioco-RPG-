@@ -13,6 +13,7 @@ import '../../data/game_state.dart';
 import '../../domain/items.dart';
 import '../../domain/skills.dart';
 import '../widgets/common.dart';
+import '../widgets/element_badge.dart';
 import '../widgets/weapon_sockets.dart';
 import '../widgets/knight_view.dart';
 import 'gear_screens.dart';
@@ -60,6 +61,7 @@ class ForgeTab extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
+        if (s.repairAllCost > 0) const _RepairTile(),
         ActionTile(
           icon: Icons.shield,
           title: tr('Equipaggiamento'),
@@ -80,6 +82,51 @@ class ForgeTab extends StatelessWidget {
           onTap: () => openMarket(context),
         ),
       ],
+    );
+  }
+}
+
+/// Manutenzione: un solo tasto ripara arma e armature con le rune.
+class _RepairTile extends StatelessWidget {
+  const _RepairTile();
+
+  @override
+  Widget build(BuildContext context) {
+    final s = context.watch<GameState>();
+    final cost = s.repairAllCost;
+    final worn = s.gearWornOut;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            Icon(Icons.build, color: worn ? Palette.ember : Palette.ash, size: 30),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(tr('Manutenzione'), style: titleStyle(size: 15, color: worn ? Palette.ember : Palette.holy)),
+                  const SizedBox(height: 4),
+                  WearBar(s.worstWear, width: 120),
+                ],
+              ),
+            ),
+            FilledButton.icon(
+              onPressed: s.character.runes >= cost
+                  ? () {
+                      if (s.repairAll()) {
+                        Sound.play(Sfx.confirm);
+                        toast(context, tr('Tutto riparato.'));
+                      }
+                    }
+                  : null,
+              icon: const Icon(Icons.hardware, size: 18),
+              label: Text(tr('{runes} rune', {'runes': cost})),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -214,7 +261,10 @@ class StationScreen extends StatelessWidget {
           canMake: s.canCraft(d),
           onMake: () {
             s.craftWeapon(d);
-            toast(context, tr('{weapon} è pronta: impugnala dall\'Armeria.', {'weapon': d.name}));
+            toast(
+                context,
+                tr('{weapon} ({quality}) è pronta: impugnala dall\'Armeria.',
+                    {'weapon': d.name, 'quality': s.lastCraftQuality!.label}));
           },
           icon: Icons.gavel,
           stationLabel: station.label,
@@ -224,6 +274,7 @@ class StationScreen extends StatelessWidget {
           stats: [
             StatChip(styleIcon(d.style), '${d.baseDamage}'),
             StatChip(Icons.auto_awesome, d.affinity.label, color: d.affinity.color),
+            if (lvl >= d.craftLevel) QualityPips(s.craftQuality(station, d.craftLevel)),
             if (d.wieldLevel > 1)
               StatChip(
                 d.usesMagic ? Icons.auto_fix_high : Icons.colorize,
@@ -240,10 +291,11 @@ class StationScreen extends StatelessWidget {
           level: a.craftLevel,
           unlocked: lvl >= a.craftLevel,
           canMake: s.canCraftArmor(a),
-          done: s.character.armors.contains(a.id),
+          done: s.character.armors.contains(a.id) && !s.canReforgeArmor(a),
           onMake: () {
             s.craftArmor(a);
-            toast(context, tr('{armor} indossata.', {'armor': a.name}));
+            toast(context,
+                tr('{armor} ({quality}) indossata.', {'armor': a.name, 'quality': s.lastCraftQuality!.label}));
           },
           icon: Icons.shield_outlined,
           stationLabel: station.label,
@@ -252,6 +304,8 @@ class StationScreen extends StatelessWidget {
           itemId: a.id,
           stats: [
             StatChip(Icons.shield, '-${(a.reduction * 100).round()}%'),
+            if (lvl >= a.craftLevel) QualityPips(s.craftQuality(Station.anvil, a.craftLevel)),
+            if (s.canReforgeArmor(a)) StatChip(Icons.upgrade, tr('Riforgia'), color: Palette.goldBright),
             if (a.wearLevel > 1) StatChip(Icons.lock_open, 'Lv ${a.wearLevel}', color: Palette.ash),
           ],
         ),
@@ -288,6 +342,8 @@ class StationScreen extends StatelessWidget {
     final next = WeaponInstance(
       weaponId: w.weaponId,
       upgrade: (w.upgrade + 1).clamp(0, w.def.maxUpgrade),
+      quality: w.quality,
+      wear: w.wear,
     );
     final stone = w.nextStone;
     return [

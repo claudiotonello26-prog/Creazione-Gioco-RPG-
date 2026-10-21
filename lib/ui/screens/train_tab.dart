@@ -17,6 +17,7 @@ import '../../domain/hunting.dart';
 import '../../domain/items.dart';
 import '../../domain/routine.dart';
 import '../widgets/common.dart';
+import '../widgets/element_badge.dart';
 import '../widgets/trainer.dart';
 import 'codex_screen.dart';
 import 'contracts_screen.dart';
@@ -443,7 +444,13 @@ class _FreeFightTile extends StatelessWidget {
                   children: [
                     OneLine(enemy.name, style: titleStyle(size: 16, spacing: 1)),
                     const SizedBox(height: 4),
-                    LevelBadge(enemy, playerLevel),
+                    Row(children: [
+                      LevelBadge(enemy, playerLevel),
+                      if (enemy.element != null) ...[
+                        const SizedBox(width: 8),
+                        ElementIcon(enemy.element!, size: 18),
+                      ],
+                    ]),
                     const SizedBox(height: 6),
                     Row(
                       children: [

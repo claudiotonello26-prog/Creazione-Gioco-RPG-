@@ -222,6 +222,32 @@ class ExpeditionLog {
   int deaths = 0;
 }
 
+/// Lo stesso boss affrontato con l'elemento a favore, neutro, contro e
+/// contro ma con talismano e gemma: misura quanto pesa la ruota.
+enum Matchup { strong, neutral, weak, weakCountered }
+
+class MatchupResult {
+  MatchupResult(this.winRate, this.danger, this.maxHit);
+
+  /// Vittorie su [ElementProbe.tries].
+  final double winRate;
+
+  /// Vita persa in media (1 = morto).
+  final double danger;
+
+  /// Il colpo singolo più forte, in quota della vita massima.
+  final double maxHit;
+}
+
+class ElementProbe {
+  ElementProbe(this.day, this.level, this.boss, this.results);
+  static const int tries = 8;
+  final int day;
+  final int level;
+  final String boss;
+  final Map<Matchup, MatchupResult> results;
+}
+
 /// Valore al Mercante di un bottino.
 int lootValueOf(Map<String, int> m) {
   var v = 0;
@@ -338,6 +364,16 @@ class SimPlayer {
       _farm();
     }
     _manage();
+    if (state.gearWornOut) wornDays++;
+    for (final m in craftMilestones) {
+      if (state.skillLevel(m.$1) >= m.$2) milestoneDay.putIfAbsent(m, () => _day);
+    }
+    firstSpecialDay ??= buildMaterials.values
+            .expand((l) => l.take(2))
+            .any((id) => state.stat('craft:$id') > 0)
+        ? _day
+        : null;
+    if (SimPlayer.probeDays.contains(_day)) _probeElements();
 
     days.add(DaySnapshot(
       day: _day,
@@ -412,6 +448,7 @@ class SimPlayer {
     bool apply = true,
     double? pace,
   }) {
+    _gearFor(enemy);
     final engine = _engine(enemy, move, wave);
     final secPerRep = pace ?? profile.secondsPerRep;
     final qualities = <RepQuality>[];
@@ -444,6 +481,7 @@ class SimPlayer {
               qualities,
               victory: victory,
               random: random,
+              hitsTaken: engine.hitsTaken,
             ));
     _reps += qualities.length;
     _budget -= qualities.length;
@@ -471,8 +509,124 @@ class SimPlayer {
         difficulty: move.difficulty,
         attackLevel: state.attackLevel,
         defenseLevel: state.defenseLevel,
+        heroElement: state.heroElement,
         random: random,
       );
+
+  /// Prima di uno scontro un giocatore attento mette il talismano e la gemma
+  /// contro l'elemento del nemico, se li ha.
+  void _gearFor(EnemyDef enemy) {
+    final el = enemy.element;
+    if (el == null) return;
+    final ward = wardFor(el);
+    if (c.neck != ward && state.ownsAmulet(ward)) state.wearNeck(ward);
+    final bane = baneFor(el);
+    if (!c.weapon.sockets.contains(bane) && state.ownsAmulet(bane)) {
+      state.socketAmulet(c.weapon, 2, bane);
+    }
+  }
+
+  // ------------------------------------------------ elementi e critici
+
+  final List<ElementProbe> probes = [];
+
+  /// Giorni in cui si misura la ruota degli elementi.
+  static const List<int> probeDays = [45, 90, 180, 270, 364];
+
+  /// Il boss più alto fino a 4 livelli sopra il giocatore, affrontato con
+  /// la stessa arma e la stessa armatura cambiando solo gli elementi: così
+  /// si vede quanto pesa la ruota e se talismano e gemma bastano.
+  void _probeElements() {
+    final bosses = enemyDefs.values
+        // Un boss un po' sopra il proprio livello: la sfida dove l'elemento
+        // può decidere lo scontro.
+        .where((e) => e.isBoss && e.element != null && e.level <= c.level + 4)
+        .toList()
+      ..sort((a, b) => a.level - b.level);
+    if (bosses.isEmpty) return;
+    final boss = bosses.last;
+    final move = _moveFor(boss) ?? boss.moves.first;
+    final el = boss.element!;
+    final savedNeck = c.neck;
+    final savedSocket = c.weapon.sockets[2];
+    MatchupResult run(Affinity hero, {bool counters = false}) {
+      c.neck = counters ? wardFor(el) : null;
+      c.weapon.sockets[2] = counters ? baneFor(el) : null;
+      var wins = 0;
+      var danger = 0.0, maxHit = 0.0;
+      for (var i = 0; i < ElementProbe.tries; i++) {
+        final e = CombatEngine(
+          enemy: boss,
+          character: c,
+          testReps: max(3, (state.testRepsFor(move.trackAs) / move.difficulty).round()),
+          difficulty: move.difficulty,
+          attackLevel: state.attackLevel,
+          defenseLevel: state.defenseLevel,
+          heroElement: hero,
+          weaponElementOverride: hero,
+          random: random,
+        );
+        var t = 0.0;
+        var nextRep = profile.secondsPerRep;
+        while (e.status == CombatStatus.fighting && t < 600) {
+          t += 0.1;
+          final hit = e.tick(0.1);
+          if (hit > 0) maxHit = max(maxHit, hit / e.heroMaxHp);
+          if (e.status != CombatStatus.fighting) break;
+          if (t >= nextRep) {
+            e.registerRep(_quality());
+            nextRep = t + profile.secondsPerRep * (0.8 + random.nextDouble() * 0.4);
+          }
+        }
+        if (e.status == CombatStatus.victory) wins++;
+        danger += e.status == CombatStatus.victory ? 1 - e.heroHp / e.heroMaxHp : 1.0;
+      }
+      return MatchupResult(wins / ElementProbe.tries, danger / ElementProbe.tries, maxHit);
+    }
+
+    // Neutro: un elemento che non batte e non è battuto (per la ruota a
+    // quattro è quello opposto).
+    final neutral = el.beats.beats;
+    probes.add(ElementProbe(_day, c.level, boss.nameIt, {
+      Matchup.strong: run(el.weakness),
+      Matchup.neutral: run(neutral),
+      Matchup.weak: run(el.beats),
+      Matchup.weakCountered: run(el.beats, counters: true),
+    }));
+    c.neck = savedNeck;
+    c.weapon.sockets[2] = savedSocket;
+  }
+
+  // ------------------------------------------------ manutenzione
+
+  /// Rune spese in riparazioni e quante volte.
+  int repairRunes = 0;
+  int repairs = 0;
+
+  /// Giorni chiusi con l'arma o l'armatura già indebolite dall'usura.
+  int wornDays = 0;
+
+  /// Qualità dei pezzi forgiati per tenerli (non quelli da esercizio).
+  final Map<CraftQuality, int> keptQuality = {};
+
+  /// Giorno della prima colata di un materiale speciale di build.
+  int? firstSpecialDay;
+
+  /// Tappe dei mestieri: i livelli che sbloccano minerali e materiali
+  /// speciali, e il tetto.
+  static const List<(Skill, int)> craftMilestones = [
+    (Skill.mining, 14),
+    (Skill.mining, 22),
+    (Skill.mining, maxSkillLevel),
+    (Skill.woodcutting, 14),
+    (Skill.smelting, 15),
+    (Skill.smelting, 24),
+    (Skill.smithing, 15),
+    (Skill.smithing, 23),
+  ];
+
+  /// Giorno in cui ogni tappa è stata raggiunta.
+  final Map<(Skill, int), int> milestoneDay = {};
 
   RepQuality _quality() {
     final r = random.nextDouble();
@@ -685,18 +839,44 @@ class SimPlayer {
     }
 
     // Attrezzi per raccogliere.
-    for (final t in ['ash_pickaxe', 'iron_axe', 'iron_pickaxe', 'steel_axe', 'steel_pickaxe']) {
+    for (final t in [...pickaxes, ...axes]) {
       if (!state.hasTool(t)) _obtain(t, 1);
     }
 
-    // Armatura: la migliore che si può indossare.
-    final armor = _targetArmor();
-    if (armor != null && _obtainAll(armor.recipe)) state.craftArmor(armor);
+    // Manutenzione: ripara appena qualcosa perde forza.
+    if (state.gearWornOut && c.runes >= state.repairAllCost) {
+      final cost = state.repairAllCost;
+      if (state.repairAll()) {
+        repairRunes += cost;
+        repairs++;
+        _spentToday += cost;
+      }
+    }
+
+    // Armatura: la migliore che si può indossare, o la stessa riforgiata
+    // quando la Forgiatura la farebbe di un grado migliore.
+    final armor = _targetArmor() ??
+        (c.worn[ArmorSlot.chest] != null && state.canReforgeArmor(armorDefs[c.worn[ArmorSlot.chest]]!)
+            ? armorDefs[c.worn[ArmorSlot.chest]]
+            : null);
+    if (armor != null && _obtainAll(armor.recipe) && state.craftArmor(armor, random: random)) {
+      keptQuality[state.lastCraftQuality!] = (keptQuality[state.lastCraftQuality!] ?? 0) + 1;
+    }
+
+    // Talismano e gemma contro l'elemento che batte la build.
+    final weak = state.heroElement.weakness;
+    for (final id in [wardFor(weak), baneFor(weak)]) {
+      final owned = state.ownsAmulet(id) || c.neck == id || c.weapon.sockets.contains(id);
+      if (!owned && _obtainAll(amuletRecipes[id]!)) state.craftAmulet(id);
+    }
 
     // Arma: la migliore per la build che riesce a forgiare adesso (la
     // migliore in assoluto può chiedere materiali che non ha ancora).
     for (final weapon in _weaponCandidates()) {
-      if (_obtainAll(weapon.recipe) && state.craftWeapon(weapon)) break;
+      if (_obtainAll(weapon.recipe) && state.craftWeapon(weapon, random: random)) {
+        keptQuality[state.lastCraftQuality!] = (keptQuality[state.lastCraftQuality!] ?? 0) + 1;
+        break;
+      }
     }
     _equipBest();
 
@@ -816,7 +996,7 @@ class SimPlayer {
                 spare(w.recipe, buy: true))
             .toList()
           ..sort((a, b) => b.craftLevel - a.craftLevel);
-        if (weapons.isNotEmpty && state.craftWeapon(weapons.first)) {
+        if (weapons.isNotEmpty && state.craftWeapon(weapons.first, random: random)) {
           state.sellWeapon(c.weapons.lastWhere((w) => w.weaponId == weapons.first.id));
           continue;
         }

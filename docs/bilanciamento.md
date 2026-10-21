@@ -7,9 +7,17 @@ Regola di fondo: **si guadagna per ogni rep fatta bene, non per ogni mostro ucci
 - **Vita del nemico** = rep previste = test × fattore del gradino (0,60 / 0,68 / 0,75 / 0,88 / 1,00; boss ×1,6). In caccia infinita la vita sale del 20% a ondata.
 - **Danno del nemico**: è tarato perché l'eroe base (Vigore 10, 140 di vita) muoia dopo *rep previste × 2,2 s × pressione*.
   - La pressione per gradino è 1,9 / 1,75 / 1,6 / 1,45 / 1,35; i boss hanno ×0,9.
-  - Il nemico attacca ogni 4 s (boss ogni 3,5 s).
+  - Il nemico attacca in media ogni 4 s (boss ogni 3,5 s), ma il colpo vero arriva a un momento a caso fra metà e una volta e mezzo l'intervallo. **Non c'è barra dell'attacco**: lo si sente arrivare.
+  - **Critici del nemico**: 8% dei colpi (boss 15%) fanno ×1,8. Il danno base è diviso per (1 + probabilità × 0,8), così in media il nemico fa lo stesso danno di prima: cambia solo la varianza. Il critico si vede («CRITICO -n», più grande e arancio) e fa vibrare il telefono.
   - In caccia il danno sale del 10% a ondata.
   - **Divario di livello**: un nemico sopra il tuo livello colpisce più forte, +9% per ogni livello di distanza (composto): 5 livelli ×1,5, 10 livelli ×2,4, 20 livelli ×5,6. Allo stesso livello o sotto non cambia niente. Un personaggio appena creato (livello 1, senza armatura, 140 di vita) prende 13 danni dai boss di livello 9 (11 colpi), 39 da quelli di livello 22 (4 colpi), 190 da quelli di livello 41 e oltre 1.400 da quelli di livello 65: un colpo solo. Il simulatore lo controlla dal livello 40 in su.
+- **Ruota degli elementi**: ogni nemico ha l'elemento del suo gruppo (Spinta = Fuoco, Gambe = Vento, Core = Luce, Cardio = Arcano; lo Stretching nessuno). La tua build ha quello del Giuramento (Forza Fuoco, Destrezza Vento, Fede Luce, Intelligenza Arcano). L'Arcano batte il Fuoco, il Fuoco il Vento, il Vento la Luce, la Luce l'Arcano.
+  - Il nemico che batte la tua build ti fa **+30%** di danno, quello che la tua build batte **−15%**.
+  - Un'arma il cui elemento (aura dell'amuleto d'affinità, se no lo scaling) batte il nemico fa +15% di danno a rep, quella battuta −15%.
+  - Sui nemici normali tutto vale a metà, sui boss per intero.
+  - Contromisure: **Talismano** al collo contro un elemento (−25% di danno da quell'elemento) e **Gemma del flagello** nell'arma (+20% di danno a rep contro quell'elemento). Con entrambi un Forza contro un boss Arcano passa da +30%/−15% a −2,5%/+5%.
+  - È l'unica eccezione alla regola d'oro «la build non toglie rep»: con la gemma giusta un boss elementare cade con qualche rep in meno.
+  - In combattimento sotto la barra della vita del nemico c'è il suo simbolo con scudo e spada colorati (verde conviene, rosso no) e la percentuale.
 - **Se ti fermi più di 3 secondi** il nemico recupera il 3% della vita al secondo, quindi non si vince facendo una rep ogni tanto.
 - **Effetto pratico** con il goblin e un test di 20:
   - con una rep ogni 2 s vinci con poco margine;
@@ -74,14 +82,21 @@ Come su Gymscape, i passi si accumulano in una riserva e si convertono nel mater
 | Legno di frassino | Taglialegna | 1 | 40 |
 | Legno di quercia | Taglialegna | 5 | 70 |
 | Legno di tasso | Taglialegna | 12 | 110 |
+| Resina di bufera | Taglialegna | 14 | 140 |
 | Legno d'ebano | Taglialegna | 20 | 180 |
 | Carbone | Minatore | 1 | 30 |
 | Minerale di ferro | Minatore | 1 | 50 |
+| Minerale di rame | Minatore | 4 | 60 |
 | Argento lunare | Minatore | 8 | 90 |
+| Minerale d'oro | Minatore | 10 | 110 |
+| Vena di brace | Minatore | 14 | 140 |
 | Minerale stellare | Minatore | 16 | 150 |
+| Geode d'abisso | Minatore | 18 | 170 |
+| Ossidiana viva | Minatore | 22 | 200 (Piccone stellare) |
 
 - Il tetto è 25.000 passi al giorno; i passi già riscossi non si contano due volte.
-- Raccogliere dà XP al mestiere. XP per livello: 40 × livello^1,5, fino al livello 30.
+- Raccogliere dà XP al mestiere. XP per livello: 40 × livello^1,5, fino al livello 30. Gli XP per unità sono stati ridotti del 40% quando sono arrivati i minerali alti: prima il Minatore arrivava al 30 in un mese e mezzo.
+- Attrezzi: Accetta e Piccone stellari (Incudine 20) raccolgono il 60% in più e servono per l'Ossidiana viva.
 - La Raccolta mostra solo i passi ancora da consumare (riserva + passi nuovi). Il totale del giorno si vede nella Home.
 
 ### Traguardi di passi del giorno
@@ -100,14 +115,33 @@ Totale massimo 100 rune al giorno, quanto un nemico debole: un premio piccolo ma
 ## 5. Mestieri e forgia
 
 - Quattro stazioni: Carpenteria (assi, impugnature, archi, bastoni), Fornace (lingotti, pietre di forgia), Incudine (spade, armature) e Incantamento.
-- Ogni ricetta ha un livello minimo del mestiere della stazione. Creare dà 8 + 3 × livello della ricetta in XP di mestiere.
+- Ogni ricetta ha un livello minimo del mestiere della stazione. Creare dà 8 + 3 × livello della ricetta in XP di mestiere; le lavorazioni (lingotti, assi, materiali speciali) lo moltiplicano per la materia prima consumata ÷ 10, fino a ×4: un lingotto di ferro (30 pezzi) vale il triplo. Prima la Fornace saliva dieci volte più piano del Minatore che la riforniva.
 - Le armature riducono il danno subito: Gambeson 8%, Cotta di Maglia 15%, Piastre del Templare 22%, Armatura Stellare 30%.
+- **Materiali speciali alla Fornace**: oltre a cadere dai mostri, i materiali delle build si fondono dai minerali dei passi.
+
+| Materiale | Fornace | Ricetta |
+|---|---|---|
+| Lingotto di bronzo | 4 | 15 Minerale di rame + 5 Carbone |
+| Lingotto d'oro | 10 | 20 Minerale d'oro + 10 Carbone |
+| Ferro di Brace (Forza) | 15 | 15 Vena di brace + 1 Acciaio + 10 Carbone |
+| Argento di Bufera (Destrezza) | 15 | 2 Argento lunare + 10 Resina di bufera |
+| Oro Consacrato (Fede) | 15 | 2 Lingotti d'oro + 2 Schegge sacre |
+| Cristallo d'Abisso (Intelligenza) | 17 | 12 Geode d'abisso + 10 Carbone |
+| Acciaio della Fucina Divina | 24 | 2 Ferro di Brace + 1 Lingotto stellare |
+| Piuma d'Acciaio | 24 | 2 Argento di Bufera + 1 Lingotto stellare + 5 Resina |
+| Ossidiana del Martire | 24 | 12 Ossidiana viva + 1 Oro Consacrato |
+| Ferro Stellare | 24 | 2 Cristalli d'Abisso + 1 Lingotto stellare |
+
+- **Qualità della forgia** per armi e armature: Grezza al livello della ricetta, Buona 5 livelli sopra, Fine 10, Capolavoro 15; il 20% delle volte il martello azzecca un grado in più. Ogni grado vale +6% di attacco o di protezione (Capolavoro +18%). Un'armatura già tua si può **riforgiare** quando la Forgiatura la farebbe di un grado migliore. In Forgia e in Armeria il grado si vede come tre rombi colorati.
+- **Manutenzione (leggera)**: ogni scontro consuma 1 punto dell'arma impugnata e, se il nemico ti ha colpito, 1 di ogni armatura indossata. Fino a 60 punti non cambia niente; da 60 a 100 attacco o protezione calano fino al −20%. Non si rompe mai. In Forgia c'è un solo tasto «Manutenzione» che ripara tutto: costa usura × (2 + livello di forgia × 0,4) rune e dà 2 XP di Forgiatura per punto. Il simulatore misura che costi fra il 3% e il 25% delle rune (oggi circa il 5%, una riparazione a settimana) e che si giochi raramente con l'equipaggiamento consumato.
 - Incantamento: ogni livello ha la sua pietra, mostrata come pulsante con l'icona, e un costo in rune (sezione 9).
   - Armi normali (fino a +10): Pietra di forgia I per +1..+3 (1, 2, 3 pietre), II per +4..+6, III per +7..+9, Pietra di forgia astrale (1) per il +10.
   - Armi speciali (fino a +5, non per forza più forti ma con effetti diversi): Pietra delle Tenebre I, II, III, IV per +1..+4 e Pietra Epica dell'Eclissi per il +5, una pietra per livello. Alla Fornace: Tenebre II = 2 Tenebre I + 1 Scheggia sacra (liv. 10), III = 2 II + 3 Essenza di bestia (14), IV = 2 III + 1 Gemma tagliata (18), Epica = 2 IV + 1 Gemma perfetta (22).
 - Amuleti dell'arma: tre incastri per arma, dalla Fattucchiera (o dall'Armeria e dall'Incantamento). Si cambiano quando si vuole; quello tolto torna nella borsa.
   - Incastro 1, affinità (uno solo): fuoco, vento, arcano o luce. Dà colore e aura alla lama e aggiunge scaling C sul suo attributo (Forza, Destrezza, Intelligenza, Fede). A +3 la lama si tinge, a +6 si accende, a +10 aura piena. Senza amuleto d'affinità la lama resta acciaio: il colore non dipende dall'attributo più alto.
-  - Incastri 2 e 3, passivi: Sigillo del Regicida +5% contro i boss (700 rune), Zanna del Lupo Grigio +10% danno dei critici (650), Sigillo del Giuramento +5% danno (500), più quelli dei forzieri (Fervente, Colosso, Cacciatore, Martire, Insonne).
+  - Incastri 2 e 3, passivi: Sigillo del Regicida +5% contro i boss (700 rune), Zanna del Lupo Grigio +10% danno dei critici (650), Sigillo del Giuramento +5% danno (500), più quelli dei forzieri (Fervente, Colosso, Cacciatore, Martire, Insonne). Qui vanno anche le **Gemme del flagello** contro un elemento.
+  - Al collo: un passivo o un **Talismano** contro un elemento (i talismani solo al collo, le gemme solo nell'arma).
+  - Gemme e talismani si creano dalla Fattucchiera con una gemma dello Stretching e i materiali comuni del gruppo di quell'elemento: contro il Fuoco ossa e acciaio delle Forge, contro il Vento pelli e cuoio, contro la Luce bronzo e oro, contro l'Arcano inchiostro d'abisso e argento. Gemma = 1 Gemma tagliata + materiali; Talismano = 1 Gemma pura + materiali.
 
 ## 6. Sentieri di allenamento e boss
 
@@ -155,6 +189,10 @@ Il simulatore controlla, e la CI fallisce se trova un BLOCCO:
 - **Muri**: una spedizione consigliata al tuo livello che non finisci entro 28 giorni; una postazione della forgia che dopo 30 giorni non arriva al livello 3.
 - **Scorciatoie**: la versione facile di un esercizio che rende più di 1,25× per unità di sforzo; il furbo che prende più del 90% per rep del giocatore medio; i forzieri oltre il 60% delle rune; guadagni sicuri comprando, forgiando e rivendendo al Mercante.
 - **Velocità**: il giocatore medio deve arrivare al livello 10 fra il giorno 4 e il 35.
+- **Ruota degli elementi**: a 45, 90, 180, 270 e 364 giorni ogni giocatore affronta il boss più alto fino a 4 livelli sopra di sé, otto volte per ogni caso, cambiando solo l'elemento (a favore, neutro, contro, contro con talismano e gemma). Contro l'elemento che ti batte devi perdere almeno il 10% di vita in più del neutro (se no la ruota non si sente, avviso); con talismano e gemma al massimo il 25% in più e non più di 15 punti di vittorie in meno (BLOCCO). Oggi: ×1,4–1,6 di vita persa contro, ×0,9–1,0 con le contromisure; il principiante al giorno 45 vince 2 su 8 contro e 8 su 8 con le contromisure.
+- **Critici**: il colpo singolo più forte di quel boss, con l'elemento neutro, non deve togliere più del 60% della vita (BLOCCO; avviso oltre il 45%). Oggi al massimo il 16%.
+- **Manutenzione**: le riparazioni devono costare fra il 3% e il 25% delle rune (BLOCCO oltre il 40%) e i giorni chiusi con l'equipaggiamento già indebolito non oltre il 20%.
+- **Mestieri**: per ogni profilo il giorno in cui Minatore, Taglialegna, Fusione e Forgiatura arrivano ai livelli che sbloccano minerali e materiali speciali, il primo materiale di build fuso e quanti pezzi escono Grezzi, Buoni, Fini o Capolavori. In un anno di build: Minatore 14 al giorno 10, 22 al 33, 30 al 70; Fusione 15 (materiali di build) fra il 48 e il 58, 24 (secondo grado) verso il 100.
 
 Il rapporto completo (progressione, fonti di XP e rune, spedizioni, mestieri, ritmo minimo per vincere ogni gradino) si legge nel riepilogo della CI e in `build/balance/report.md`.
 
@@ -187,6 +225,9 @@ Cosa ha trovato e corretto la simulazione lunga:
 8. **Intelligenza lenta all'inizio**: il Bastone della Brace aveva il danno base più basso (16) e chiedeva 6 Essenze di bestia. Ora danno 22, ricetta 4 Assi di frassino + 3 Essenze.
 9. **Materiali solo da vendere**: Gemma grezza, Lingotto d'oro e Osso non servivano a niente. Ora alla Fornace 3 Gemme grezze fanno una Gemma tagliata (liv. 8), 3 tagliate una pura (14), 3 pure una perfetta (20); le Piastre del Templare chiedono 2 Lingotti d'oro; l'Impugnatura rinforzata 2 Ossa. Resta solo la Perla dei sogni (rara, per ora si vende).
 
+10. **Minatore finito in un mese e mezzo, Fornace ferma**: con i minerali alti il Minatore arrivava al 30 al giorno 45 mentre la Fusione restava sotto il 15 per quattro mesi, e nessuno fondeva i materiali speciali prima del giorno 135. Ora la raccolta dà il 40% di XP in meno e le lavorazioni pesano la materia prima consumata: il Minatore arriva al 30 verso il giorno 70 e la Fusione al 15 verso il 50.
+11. **Ruota degli elementi**: con +30% di danno subito il principiante perdeva 6 boss su 8 contro l'elemento che lo batte. Talismano e gemma li riportano a 8 su 8, alla pari del neutro.
+
 Da guardare (non ancora toccato): dopo un anno ogni build tiene più di un milione di rune, perché quando l'arma è a +10 non c'è più niente di caro da comprare; e lo stretching dà circa un terzo dell'XP totale.
 
 ## Dove sta nel codice
@@ -194,7 +235,9 @@ Da guardare (non ancora toccato): dopo un anno ogni build tiene più di un milio
 - `lib/domain/combat.dart`:
   - per la difficoltà: `hitDamage`, rigenerazione e `wave`;
   - per le ricompense: `effortFactor`, `averageQuality`, `waveBonus` e `lootBonus`.
-- `lib/domain/enemies.dart`: `pressure` e `runeReward`.
+- `lib/domain/enemies.dart`: `pressure`, `runeReward`, `critChance`, `element` ed `elementWeight`.
+- `lib/domain/combat.dart`: `elementTakenMult`, `elementDamageMult`, `_nextAttackDelay` (attacchi a tempo casuale).
+- `lib/domain/items.dart`: `Affinity.beats` (ruota), `CraftQuality`, `conditionFactor` e `repairCost` (manutenzione), gemme e talismani in `amuletDefs` e `amuletRecipes`.
 - `lib/data/game_state.dart`: `fatigueAt` e `applyCombatRewards`.
 - `lib/domain/skills.dart`: materiali raccoglibili e curva dei mestieri.
 - `lib/domain/items.dart`: ricette, stazioni e armature.

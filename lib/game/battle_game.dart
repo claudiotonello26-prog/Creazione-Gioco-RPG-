@@ -131,14 +131,19 @@ class BattleGame extends FlameGame {
   }
 
   /// Il nemico attacca a tempo.
-  void enemyStrike(double damage) {
+  void enemyStrike(double damage, {bool critical = false}) {
     if (!isLoaded) return;
     _enemy.add(SequenceEffect([
-      MoveByEffect(Vector2(-40, 0), EffectController(duration: 0.1)),
-      MoveByEffect(Vector2(40, 0), EffectController(duration: 0.2)),
+      MoveByEffect(Vector2(critical ? -70 : -40, 0), EffectController(duration: 0.1)),
+      MoveByEffect(Vector2(critical ? 70 : 40, 0), EffectController(duration: 0.2)),
     ]));
     _hero.flash(Palette.blood);
-    _floating('-${damage.round()}', _hero.position + Vector2(0, -170), Palette.blood, 22);
+    _floating(
+      critical ? tr('CRITICO -{n}', {'n': damage.round()}) : '-${damage.round()}',
+      _hero.position + Vector2(0, -170),
+      critical ? Palette.ember : Palette.blood,
+      critical ? 30 : 22,
+    );
   }
 
   void enemyDefeated() {

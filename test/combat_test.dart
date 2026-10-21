@@ -44,8 +44,10 @@ void main() {
   });
 
   test('la build non riduce mai le rep sotto il previsto', () {
+    // Nemico di Fuoco contro arma di Fuoco: nessun vantaggio d'elemento
+    // (l'elemento è l'unica eccezione alla regola, vedi elements_test).
     final e = CombatEngine(
-      enemy: enemyDefs['hollow_goblin']!,
+      enemy: enemyDefs['slag_goblin']!,
       character: strongHero(),
       testReps: 20,
     );

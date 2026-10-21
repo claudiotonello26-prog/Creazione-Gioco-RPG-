@@ -410,7 +410,7 @@ class _Witch extends StatelessWidget {
         SectionTitle(w.displayName),
         WeaponSockets(weapon: w),
         SectionTitle(tr('Affinità')),
-        for (final e in amuletRecipes.entries)
+        for (final e in amuletRecipes.entries.where((e) => amuletDefs[e.key]!.isAffinity))
           ActionTile(
             icon: Icons.brightness_7,
             color: amuletDefs[e.key]!.apply.aura!.color,
@@ -434,6 +434,35 @@ class _Witch extends StatelessWidget {
               child: Text(tr('CREA')),
             ),
           ),
+        // Gemme (nell'arma) e talismani (al collo) contro l'elemento di un
+        // nemico: per i boss che battono la tua build.
+        SectionTitle(tr('Contro gli elementi')),
+        for (final e in amuletRecipes.entries.where((e) => !amuletDefs[e.key]!.isAffinity))
+          Builder(builder: (context) {
+            final a = amuletDefs[e.key]!;
+            final el = a.apply.ward ?? a.apply.bane!;
+            return ActionTile(
+              icon: a.isWard ? Icons.shield_moon : Icons.diamond,
+              color: el.color,
+              title: a.name + (s.amuletCount(a.id) > 0 ? ' ×${s.amuletCount(a.id)}' : ''),
+              subtitle: '${a.description}\n${e.value.entries.map((m) => '${m.value}× ${itemName(m.key)} (${s.character.materials[m.key] ?? 0})').join(' · ')}',
+              trailing: FilledButton(
+                onPressed: s.canCraftAmulet(e.key)
+                    ? () async {
+                        final ok = await craftCountdown(
+                          context,
+                          title: a.name,
+                          itemId: 'amulet_${e.key}',
+                          color: el.color,
+                          sound: Sfx.craftEnchant,
+                        );
+                        if (ok && context.mounted) s.craftAmulet(e.key);
+                      }
+                    : null,
+                child: Text(tr('CREA')),
+              ),
+            );
+          }),
         SectionTitle(tr('Passivi')),
         for (final a in amuletDefs.values.where((a) => !a.isAffinity && amuletPrices[a.id] != null))
           ActionTile(

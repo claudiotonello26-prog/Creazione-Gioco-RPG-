@@ -385,8 +385,10 @@ class ItemIcon extends StatelessWidget {
   static (IconData, Color) symbolOf(String id) {
     bool has(String s) => id.contains(s);
     if (id.startsWith('amulet_')) {
-      final aura = amuletDefs[id.substring(7)]?.apply.aura;
-      return (Icons.brightness_7, aura?.color ?? Palette.goldBright);
+      final a = amuletDefs[id.substring(7)]?.apply;
+      if (a?.ward != null) return (Icons.shield_moon, a!.ward!.color);
+      if (a?.bane != null) return (Icons.diamond, a!.bane!.color);
+      return (Icons.brightness_7, a?.aura?.color ?? Palette.goldBright);
     }
     if (has('somber')) return (Icons.hexagon, const Color(0xFF9B6BE0));
     if (id == 'epic_stone') return (Icons.auto_awesome, const Color(0xFFFF8A3D));

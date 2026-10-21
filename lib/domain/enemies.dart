@@ -103,8 +103,27 @@ class EnemyDef {
   /// più difficile.
   double get pressure => const [1.9, 1.75, 1.6, 1.45, 1.35][tier - 1] * (isBoss ? 0.9 : 1.0);
 
-  /// Secondi tra un attacco e l'altro.
+  /// Secondi tra un attacco e l'altro, in media: il colpo vero arriva a un
+  /// momento a caso fra metà e una volta e mezzo, senza barra che lo annunci.
   double get attackInterval => isBoss ? 3.5 : 4.0;
+
+  /// Probabilità che un colpo sia critico (×[critMultiplier]).
+  double get critChance => isBoss ? 0.15 : 0.08;
+  static const double critMultiplier = 1.8;
+
+  /// Elemento del nemico, dal gruppo: la Spinta è Fuoco (forge e giganti),
+  /// le Gambe Vento, il Core Luce (cripte e cattedrali), il Cardio Arcano
+  /// (stelle e biblioteche). Lo Stretching non ne ha.
+  Affinity? get element => switch (group) {
+        MuscleGroup.push => Affinity.fire,
+        MuscleGroup.legs => Affinity.wind,
+        MuscleGroup.core => Affinity.holy,
+        MuscleGroup.cardio => Affinity.arcane,
+        _ => null,
+      };
+
+  /// L'elemento pesa per intero sui boss e a metà sugli altri nemici.
+  double get elementWeight => isBoss ? 1.0 : 0.5;
 
   /// Rune per uccisione: crescono più delle rep richieste, così per ogni rep
   /// un nemico più duro paga di più.

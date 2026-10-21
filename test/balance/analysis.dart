@@ -66,6 +66,24 @@ class Targets {
   /// Da questo livello un boss abbatte con un colpo un personaggio appena
   /// creato (livello 1, senza armatura).
   static const int oneShotBossLevel = 40;
+
+  /// Ruota degli elementi, con il boss più alto al proprio livello: contro
+  /// l'elemento che ti batte devi perdere almeno il 10% di vita in più (se
+  /// no la ruota non si sente); con talismano e gemma al massimo il 25% in
+  /// più del neutro e non più di 15 punti di vittorie in meno.
+  static const double weakMinDanger = 1.1, counteredMaxDanger = 1.25;
+  static const double counteredMaxWinDrop = 0.15;
+
+  /// Un critico di un boss al tuo livello non deve togliere più di questa
+  /// quota della vita in un colpo (avviso oltre la seconda).
+  static const double critMaxHit = 0.6, critWarnHit = 0.45;
+
+  /// Manutenzione: quota delle rune spese in riparazioni. Sotto la prima non
+  /// serve a niente, oltre la seconda pesa, oltre la terza è un BLOCCO.
+  static const double repairShareMin = 0.03, repairShareWarn = 0.25, repairShareMax = 0.4;
+
+  /// Giorni chiusi con equipaggiamento indebolito dall'usura, al massimo.
+  static const double wornDaysMax = 0.2;
 }
 
 class BalanceReport {
@@ -94,6 +112,7 @@ class BalanceReport {
     _market();
     _collection();
     _levelGap();
+    _systems();
   }
 
   /// Un personaggio appena creato (livello 1, senza armatura, attributi
@@ -129,6 +148,144 @@ class BalanceReport {
   void analyzeBuilds() {
     _collection();
     _builds();
+    _systems();
+  }
+
+  /// Mestieri a livelli, ruota degli elementi, critici dei nemici e
+  /// manutenzione.
+  void _systems() {
+    _crafting();
+    _elements();
+    _upkeep();
+  }
+
+  /// Mestieri: quando arrivano i materiali speciali e di che qualità si
+  /// forgia.
+  void _crafting() {
+    _md.writeln('## Mestieri a livelli e qualità della forgia\n');
+    final ms = SimPlayer.craftMilestones;
+    _md.writeln('Giorno in cui ogni mestiere arriva al livello che sblocca i minerali e i '
+        'materiali speciali (`·` = mai).\n');
+    _md.writeln('| Profilo | ${ms.map((m) => '${m.$1.label} ${m.$2}').join(' | ')} |');
+    _md.writeln('|---|${ms.map((_) => '---').join('|')}|');
+    for (final e in players.entries) {
+      final p = e.value.first;
+      _md.writeln('| ${e.key} | ${ms.map((m) => p.milestoneDay[m] == null ? '·' : 'g${p.milestoneDay[m]}').join(' | ')} |');
+    }
+    _md.writeln();
+    _md.writeln('| Profilo | Minatore | Taglialegna | Fornace | Incudine | '
+        'Primo materiale speciale fuso | Pezzi tenuti (Grezza/Buona/Fine/Capolavoro) |');
+    _md.writeln('|---|---|---|---|---|---|---|');
+    for (final e in players.entries) {
+      final p = e.value.first;
+      final q = CraftQuality.values.map((v) => p.keptQuality[v] ?? 0).join('/');
+      _md.writeln('| ${p.profile.id} | ${p.state.skillLevel(Skill.mining)} '
+          '| ${p.state.skillLevel(Skill.woodcutting)} | ${p.state.skillLevel(Skill.smelting)} '
+          '| ${p.state.skillLevel(Skill.smithing)} '
+          '| ${p.firstSpecialDay == null ? '·' : 'g${p.firstSpecialDay}'} | $q |');
+    }
+    _md.writeln();
+    if (days < 180) return;
+    for (final e in players.entries) {
+      final p = e.value.first;
+      if (!p.profile.varied) continue;
+      if (p.firstSpecialDay == null) {
+        _add(Severity.warn, 'Mestieri', 'Materiali speciali mai fusi',
+            '${p.profile.label}: in $days giorni non ha mai fuso un materiale di build.');
+      }
+      final better = CraftQuality.values.skip(1).fold(0, (a, v) => a + (p.keptQuality[v] ?? 0));
+      if (better == 0) {
+        _add(Severity.warn, 'Mestieri', 'Mai forgiato sopra il grado Grezzo',
+            '${p.profile.label}: la Forgiatura non migliora mai i pezzi.');
+      }
+    }
+  }
+
+  /// Ruota degli elementi e critici dei boss, dalle prove dei giocatori.
+  void _elements() {
+    final all = [for (final l in players.values) ...l.first.probes];
+    if (all.isEmpty) return;
+    _md.writeln('## Ruota degli elementi e critici\n');
+    _md.writeln('Stesso boss, stessa build: cambia solo l\'elemento. '
+        'Vittorie su ${ElementProbe.tries} e vita persa in media; «colpo max» è il '
+        'singolo colpo più forte (critici compresi) in quota della vita.\n');
+    _md.writeln('| Profilo | Giorno | Liv. | Boss | A favore | Neutro | Contro | Contro + talismano e gemma | Colpo max |');
+    _md.writeln('|---|---|---|---|---|---|---|---|---|');
+    String cell(MatchupResult r) =>
+        '${(r.winRate * ElementProbe.tries).round()}/${ElementProbe.tries}, -${(r.danger * 100).round()}%';
+    var weakSum = 0.0, neutralSum = 0.0, counteredSum = 0.0, n = 0;
+    for (final e in players.entries) {
+      for (final pr in e.value.first.probes) {
+        final r = pr.results;
+        final maxHit = r.values.map((x) => x.maxHit).reduce(max);
+        _md.writeln('| ${e.key} | ${pr.day} | ${pr.level} | ${pr.boss} '
+            '| ${cell(r[Matchup.strong]!)} | ${cell(r[Matchup.neutral]!)} '
+            '| ${cell(r[Matchup.weak]!)} | ${cell(r[Matchup.weakCountered]!)} '
+            '| ${(maxHit * 100).round()}% |');
+        weakSum += r[Matchup.weak]!.danger;
+        neutralSum += r[Matchup.neutral]!.danger;
+        counteredSum += r[Matchup.weakCountered]!.danger;
+        n++;
+        final where = '${e.key}, giorno ${pr.day}, ${pr.boss}';
+        // Il colpo più forte con l'elemento neutro: lo svantaggio è voluto.
+        final neutralHit = r[Matchup.neutral]!.maxHit;
+        if (neutralHit > Targets.critMaxHit) {
+          _add(Severity.block, 'Critici', 'Un critico quasi abbatte in un colpo',
+              '$where: ${(neutralHit * 100).round()}% della vita in un colpo.');
+        } else if (neutralHit > Targets.critWarnHit) {
+          _add(Severity.warn, 'Critici', 'Critici molto forti',
+              '$where: ${(neutralHit * 100).round()}% della vita in un colpo.');
+        }
+        final drop = r[Matchup.neutral]!.winRate - r[Matchup.weakCountered]!.winRate;
+        if (drop > Targets.counteredMaxWinDrop + 1e-9) {
+          _add(Severity.block, 'Elementi', 'Talismano e gemma non bastano',
+              '$where: ${cell(r[Matchup.weakCountered]!)} contro ${cell(r[Matchup.neutral]!)} da neutro.');
+        }
+      }
+    }
+    _md.writeln();
+    final weak = weakSum / max(1e-9, neutralSum);
+    final countered = counteredSum / max(1e-9, neutralSum);
+    final detail = 'vita persa contro l\'elemento che ti batte ×${weak.toStringAsFixed(2)} '
+        'rispetto al neutro, con talismano e gemma ×${countered.toStringAsFixed(2)} ($n prove).';
+    if (weak < Targets.weakMinDanger) {
+      _add(Severity.warn, 'Elementi', 'La ruota degli elementi quasi non si sente', detail);
+    } else if (countered > Targets.counteredMaxDanger) {
+      _add(Severity.block, 'Elementi', 'Le contromisure non pareggiano lo svantaggio', detail);
+    } else {
+      _add(Severity.ok, 'Elementi', 'La ruota pesa e le contromisure la pareggiano', detail);
+    }
+    _md.writeln('$detail\n');
+  }
+
+  /// Manutenzione: quanto costa e quanto spesso l'usura pesa davvero.
+  void _upkeep() {
+    _md.writeln('## Manutenzione\n');
+    _md.writeln('| Profilo | Riparazioni | Rune in riparazioni | Quota delle rune | Giorni con usura che pesa |');
+    _md.writeln('|---|---|---|---|---|');
+    for (final e in players.entries) {
+      final p = e.value.first;
+      final earned = p.days.fold(0, (a, d) => a + d.runesEarned);
+      final share = earned == 0 ? 0.0 : p.repairRunes / earned;
+      final worn = p.wornDays / max(1, p.days.length);
+      _md.writeln('| ${e.key} | ${p.repairs} | ${p.repairRunes} | ${(share * 100).toStringAsFixed(1)}% '
+          '| ${(worn * 100).round()}% |');
+      if (!p.profile.varied || p.days.length < 60) continue;
+      final detail = '${p.profile.label}: ${(share * 100).toStringAsFixed(1)}% delle rune, '
+          '${p.repairs} riparazioni in ${p.days.length} giorni.';
+      if (share > Targets.repairShareMax) {
+        _add(Severity.block, 'Manutenzione', 'Le riparazioni mangiano le rune', detail);
+      } else if (share > Targets.repairShareWarn) {
+        _add(Severity.warn, 'Manutenzione', 'Riparazioni care', detail);
+      } else if (share < Targets.repairShareMin) {
+        _add(Severity.warn, 'Manutenzione', 'Riparazioni quasi gratis', detail);
+      }
+      if (worn > Targets.wornDaysMax) {
+        _add(Severity.warn, 'Manutenzione', 'Si gioca spesso con l\'equipaggiamento consumato',
+            '${p.profile.label}: ${(worn * 100).round()}% dei giorni.');
+      }
+    }
+    _md.writeln();
   }
 
   /// Collezione: ogni materiale richiesto si trova, per ogni build.

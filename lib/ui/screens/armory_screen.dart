@@ -8,6 +8,7 @@ import '../../data/game_state.dart';
 import '../../domain/character.dart';
 import '../../domain/items.dart';
 import '../widgets/common.dart';
+import '../widgets/element_badge.dart';
 import '../widgets/knight_view.dart';
 import '../widgets/oath_bar.dart';
 import '../widgets/weapon_sockets.dart';
@@ -313,12 +314,18 @@ class _Choice {
     required this.detail,
     required this.worn,
     this.onTap,
+    this.quality,
+    this.wear,
   });
   final Widget icon;
   final String name;
   final String detail;
   final bool worn;
   final VoidCallback? onTap;
+
+  /// Grado della forgia e usura, per armi e armature forgiate.
+  final CraftQuality? quality;
+  final int? wear;
 }
 
 class _Choices extends StatelessWidget {
@@ -348,6 +355,8 @@ class _Choices extends StatelessWidget {
                 : tr('Serve {skill} {level}', {'skill': w.def.usesMagic ? tr('Magia') : tr('Attacco'), 'level': w.def.wieldLevel}),
             worn: identical(w, c.weapon),
             onTap: identical(w, c.weapon) || !wield ? null : () => s.equip(w),
+            quality: w.crafted ? w.quality : null,
+            wear: w.wear,
           ));
         }
         extra = Column(
@@ -380,7 +389,7 @@ class _Choices extends StatelessWidget {
         final ids = {
           ?c.neck,
           for (final a in amuletDefs.values)
-            if (!a.isAffinity && s.amuletCount(a.id) > 0) a.id,
+            if (!a.isAffinity && !a.isBane && s.amuletCount(a.id) > 0) a.id,
         };
         for (final id in ids) {
           final a = amuletDefs[id]!;
@@ -423,10 +432,12 @@ class _Choices extends StatelessWidget {
             icon: gearIcon(slot, c, id: id),
             name: a.name,
             detail: wear
-                ? tr('Assorbe il {pct}%', {'pct': (a.reduction * armor.weight * 100).toStringAsFixed(1)})
+                ? tr('Assorbe il {pct}%', {'pct': (c.armorReduction(a) * armor.weight * 100).toStringAsFixed(1)})
                 : tr('Serve Difesa {level}', {'level': a.wearLevel}),
             worn: c.worn[armor] == id,
             onTap: !wear ? null : () => s.wearPiece(armor, c.worn[armor] == id ? null : id),
+            quality: c.qualityOf(id),
+            wear: c.wearOf(id),
           ));
         }
         empty = tr('Nessuna armatura: la prima si forgia all\'Incudine.');
@@ -516,6 +527,17 @@ class _ChoiceTile extends StatelessWidget {
                   align: Alignment.center,
                   style: const TextStyle(fontSize: 11, color: Palette.ash),
                 ),
+                if (ch.quality != null || (ch.wear ?? 0) > 0) ...[
+                  const SizedBox(height: 3),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (ch.quality != null) QualityPips(ch.quality!, size: 6),
+                      const SizedBox(width: 4),
+                      WearBar(ch.wear ?? 0, width: 30),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

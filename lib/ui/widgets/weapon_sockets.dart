@@ -82,7 +82,7 @@ class _Socket extends StatelessWidget {
   void _pick(BuildContext context) {
     final s = context.read<GameState>();
     final options = amuletDefs.values
-        .where((a) => a.isAffinity == (slot == 0) && s.amuletCount(a.id) > 0)
+        .where((a) => a.isAffinity == (slot == 0) && !a.isWard && s.amuletCount(a.id) > 0)
         .toList();
     showModalBottomSheet<void>(
       context: context,

@@ -817,8 +817,10 @@ class GameState extends ChangeNotifier {
     required bool victory,
     Stance stance = Stance.balanced,
     Random? random,
+    int hitsTaken = 0,
   }) {
     _rollDay();
+    if (reps.isNotEmpty) _wearGear(hitsTaken);
     // La postura decide dove va l'esperienza di combattimento.
     final combatXp = reps.length * 4;
     // Il bastone e il catalizzatore allenano la Magia; spade e archi l'Attacco.
@@ -1213,7 +1215,67 @@ class GameState extends ChangeNotifier {
   bool hasMaterials(Map<String, int> needed) =>
       needed.entries.every((e) => (character.materials[e.key] ?? 0) >= e.value);
 
+  // ------------------------------------------------------------ manutenzione
+
+  /// Ogni scontro consuma un punto dell'arma impugnata e, se il nemico ha
+  /// colpito, uno di ogni armatura indossata.
+  void _wearGear(int hitsTaken) {
+    final w = character.weapon;
+    if (w.wear < maxWear) w.wear++;
+    if (hitsTaken <= 0) return;
+    for (final id in character.worn.values.toSet()) {
+      character.armorWear[id] = min(maxWear, character.wearOf(id) + 1);
+    }
+  }
+
+  /// Oggetti da riparare: (id, livello di forgia, usura). Le armi rare
+  /// valgono come livello 25.
+  List<(String, int, int)> get gearToRepair => [
+        for (final w in [character.weapon, ...character.weapons])
+          if (w.wear > 0) (w.weaponId, w.def.rare ? 25 : w.def.craftLevel, w.wear),
+        for (final id in character.armors)
+          if (character.wearOf(id) > 0) (id, armorDefs[id]!.craftLevel, character.wearOf(id)),
+      ];
+
+  int get repairAllCost =>
+      gearToRepair.fold(0, (sum, g) => sum + repairCost(g.$2, g.$3));
+
+  /// Qualcosa ha già perso forza per l'usura.
+  bool get gearWornOut =>
+      character.weapon.wear > wearFreeUpTo ||
+      character.worn.values.any((id) => character.wearOf(id) > wearFreeUpTo);
+
+  /// Usura più alta fra l'arma impugnata e l'armatura indossata.
+  int get worstWear => [
+        character.weapon.wear,
+        for (final id in character.worn.values) character.wearOf(id),
+      ].reduce(max);
+
+  /// Ripara tutto all'Incudine: costa rune e allena la Forgiatura (2 XP per
+  /// punto d'usura).
+  bool repairAll() {
+    final cost = repairAllCost;
+    if (cost <= 0 || character.runes < cost) return false;
+    var points = 0;
+    for (final w in [character.weapon, ...character.weapons]) {
+      points += w.wear;
+      w.wear = 0;
+    }
+    for (final v in character.armorWear.values) {
+      points += v;
+    }
+    character.armorWear.clear();
+    character.runes -= cost;
+    _gainSkill(Skill.smithing, points * 2);
+    _count('repairs');
+    _changed();
+    return true;
+  }
+
   // ----------------------------------------------------------------- mestieri
+
+  /// Elemento della build per la ruota degli elementi.
+  Affinity get heroElement => Affinity.attributes[build]!;
 
   int skillLevel(Skill k) => skillProgress(skillXp[k] ?? 0, max: k.maxLevel).$1;
 
@@ -1284,7 +1346,7 @@ class GameState extends ChangeNotifier {
     if (!canCraftMaterial(r)) return false;
     r.inputs.forEach(character.spendMaterial);
     character.addMaterial(r.output, r.qty);
-    _gainSkill(Skill.forStation(r.station), craftXp(r.level));
+    _gainSkill(Skill.forStation(r.station), materialCraftXp(r.level, r.inputs));
     _count('craft:${r.output}', r.qty);
     _changed();
     return true;
@@ -1298,25 +1360,45 @@ class GameState extends ChangeNotifier {
       stationLevel(def.station) >= def.craftLevel &&
       hasMaterials(def.recipe);
 
-  bool craftWeapon(WeaponDef def) {
+  /// Grado di qualità sicuro se lo forgi adesso.
+  CraftQuality craftQuality(Station station, int craftLevel) =>
+      CraftQuality.base(stationLevel(station), craftLevel);
+
+  bool craftWeapon(WeaponDef def, {Random? random}) {
     if (!canCraft(def)) return false;
     def.recipe.forEach(character.spendMaterial);
-    character.weapons.add(WeaponInstance(weaponId: def.id));
+    final q = CraftQuality.roll(stationLevel(def.station), def.craftLevel, random ?? Random());
+    lastCraftQuality = q;
+    character.weapons.add(WeaponInstance(weaponId: def.id, quality: q));
     _gainSkill(Skill.forStation(def.station), craftXp(def.craftLevel) * gearCraftXpFactor);
     _count('craft:${def.id}');
     _changed();
     return true;
   }
 
+  /// Un'armatura si forgia una volta, e si riforgia solo quando la
+  /// Forgiatura è salita abbastanza da farla di un grado migliore.
+  bool canReforgeArmor(ArmorDef def) =>
+      character.armors.contains(def.id) &&
+      craftQuality(Station.anvil, def.craftLevel).index > character.qualityOf(def.id).index;
+
   bool canCraftArmor(ArmorDef def) =>
-      !character.armors.contains(def.id) &&
+      (!character.armors.contains(def.id) || canReforgeArmor(def)) &&
       stationLevel(Station.anvil) >= def.craftLevel &&
       hasMaterials(def.recipe);
 
-  bool craftArmor(ArmorDef def) {
+  /// Qualità dell'ultimo pezzo forgiato, per la festa a schermo.
+  CraftQuality? lastCraftQuality;
+
+  bool craftArmor(ArmorDef def, {Random? random}) {
     if (!canCraftArmor(def)) return false;
     def.recipe.forEach(character.spendMaterial);
+    var q = CraftQuality.roll(stationLevel(Station.anvil), def.craftLevel, random ?? Random());
+    if (q.index < character.qualityOf(def.id).index) q = character.qualityOf(def.id);
+    lastCraftQuality = q;
     character.armors.add(def.id);
+    character.armorQuality[def.id] = q;
+    character.armorWear.remove(def.id);
     for (final slot in ArmorSlot.values) {
       character.worn[slot] = def.id;
     }
@@ -1373,7 +1455,7 @@ class GameState extends ChangeNotifier {
     final old = character.neck;
     if (id != null) {
       final a = amuletDefs[id];
-      if (a == null || a.isAffinity || amuletCount(id) <= 0) return false;
+      if (a == null || a.isAffinity || a.isBane || amuletCount(id) <= 0) return false;
       character.spendMaterial('amulet_$id', 1);
     }
     if (old != null) character.addMaterial('amulet_$old', 1);
@@ -1435,7 +1517,7 @@ class GameState extends ChangeNotifier {
   /// nella borsa.
   bool socketAmulet(WeaponInstance w, int slot, String id, {bool notify = true}) {
     final a = amuletDefs[id];
-    if (a == null || a.isAffinity != (slot == 0) || amuletCount(id) <= 0) return false;
+    if (a == null || a.isAffinity != (slot == 0) || a.isWard || amuletCount(id) <= 0) return false;
     final old = w.sockets[slot];
     character.spendMaterial('amulet_$id', 1);
     if (old != null) character.addMaterial('amulet_$old', 1);

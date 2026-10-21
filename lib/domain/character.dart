@@ -33,6 +33,8 @@ class Character {
     Set<String>? perks,
     Map<ArmorSlot, String>? worn,
     Set<String>? armors,
+    Map<String, CraftQuality>? armorQuality,
+    Map<String, int>? armorWear,
     this.offhandId,
     Set<String>? offhands,
     this.capeId = 'pilgrim_cape',
@@ -50,6 +52,8 @@ class Character {
        perks = perks ?? {},
        worn = worn ?? {},
        armors = armors ?? {},
+       armorQuality = armorQuality ?? {},
+       armorWear = armorWear ?? {},
        offhands = offhands ?? {};
 
   static const int baseAttribute = 10;
@@ -83,6 +87,28 @@ class Character {
 
   ArmorDef? piece(ArmorSlot slot) => armorDefs[worn[slot]];
 
+  /// Qualità di forgia e usura di ogni armatura posseduta (tutti i pezzi
+  /// della stessa armatura le condividono).
+  final Map<String, CraftQuality> armorQuality;
+  final Map<String, int> armorWear;
+
+  CraftQuality qualityOf(String armorId) => armorQuality[armorId] ?? CraftQuality.crude;
+  int wearOf(String armorId) => armorWear[armorId] ?? 0;
+
+  /// Protezione vera di un'armatura: qualità della forgia e usura.
+  double armorReduction(ArmorDef a) =>
+      a.reduction * (1 + qualityOf(a.id).bonus) * conditionFactor(wearOf(a.id));
+
+  /// L'elemento della build: quello dell'attributo più alto fra Forza,
+  /// Destrezza, Fede e Intelligenza.
+  Affinity get buildAffinity {
+    var best = oathAttributes.first;
+    for (final a in oathAttributes) {
+      if (attr(a) > attr(best)) best = a;
+    }
+    return Affinity.attributes[best]!;
+  }
+
   /// Mano sinistra (scudo o seconda lama) e oggetti posseduti.
   String? offhandId;
   final Set<String> offhands;
@@ -112,7 +138,8 @@ class Character {
   double get damageReduction {
     var r = 0.0;
     for (final slot in ArmorSlot.values) {
-      r += (piece(slot)?.reduction ?? 0) * slot.weight;
+      final p = piece(slot);
+      if (p != null) r += armorReduction(p) * slot.weight;
     }
     return r + (offhand?.reduction ?? 0) + (cape?.reduction ?? 0);
   }
@@ -201,6 +228,8 @@ class Character {
     'perks': perks.toList(),
     'worn': {for (final e in worn.entries) e.key.name: e.value},
     'armors': armors.toList(),
+    if (armorQuality.isNotEmpty) 'armorQ': {for (final e in armorQuality.entries) e.key: e.value.index},
+    if (armorWear.isNotEmpty) 'armorW': armorWear,
     'offhand': offhandId,
     'offhands': offhands.toList(),
     'cape': capeId,
@@ -228,6 +257,11 @@ class Character {
     perks: Set<String>.from(j['perks'] as List),
     worn: _readWorn(j),
     armors: Set<String>.from(j['armors'] as List? ?? const []),
+    armorQuality: {
+      for (final e in ((j['armorQ'] as Map?) ?? const {}).entries)
+        e.key as String: CraftQuality.values[(e.value as int).clamp(0, 3)],
+    },
+    armorWear: Map<String, int>.from(j['armorW'] as Map? ?? const {}),
     offhandId: j['offhand'] as String?,
     offhands: Set<String>.from(j['offhands'] as List? ?? const []),
     capeId: j.containsKey('capes') ? j['cape'] as String? : 'pilgrim_cape',

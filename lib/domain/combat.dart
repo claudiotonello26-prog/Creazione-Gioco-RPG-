@@ -68,14 +68,17 @@ class CombatEngine {
     this.attackLevel = 1,
     this.defenseLevel = 1,
     this.difficulty = 1.0,
+    Affinity? heroElement,
+    this.weaponElementOverride,
     Random? random,
   })  : _random = random ?? Random(),
+        heroElement = heroElement ?? character.buildAffinity,
         expectedReps = max(3, (testReps * enemy.repFactor).round()) {
     enemyMaxHp = expectedReps * (1 + waveHpStep * wave);
     enemyHp = enemyMaxHp;
     heroMaxHp = character.maxHp.toDouble();
     heroHp = heroMaxHp;
-    _attackTimer = enemy.attackInterval;
+    _attackTimer = _nextAttackDelay();
     // Il nemico è tarato sull'eroe base (vita 140): chi tiene il ritmo di una
     // rep ogni ~2 secondi vince con poco margine; chi rallenta, sbaglia la
     // forma o ha una build debole muore. Il Vigore dà tempo in più.
@@ -84,8 +87,68 @@ class CombatEngine {
         enemy.attackInterval /
         secondsToKill *
         (1 + waveDamageStep * wave) *
-        levelGapFactor(enemy.level - character.level);
+        levelGapFactor(enemy.level - character.level) /
+        // I critici non cambiano la taratura: in media il nemico fa lo stesso
+        // danno, ma a volte di più e a volte di meno.
+        (1 + enemy.critChance * (EnemyDef.critMultiplier - 1));
   }
+
+  /// Il prossimo attacco arriva fra metà e una volta e mezzo l'intervallo
+  /// medio: non c'è barra, si sente arrivare solo il colpo.
+  double _nextAttackDelay() =>
+      enemy.attackInterval * (1 - attackJitter + 2 * attackJitter * _random.nextDouble());
+  static const double attackJitter = 0.5;
+
+  /// L'elemento della build del giocatore (quello del Giuramento).
+  final Affinity heroElement;
+
+  /// Ruota degli elementi, a pieno sui boss e a metà sugli altri: il nemico
+  /// che batte la tua build ti fa +30% di danno, quello che la tua build
+  /// batte −15%. L'arma il cui elemento batte il nemico fa +15% di danno a
+  /// rep, quella battuta −15%.
+  static const double elementWeakTaken = 0.30;
+  static const double elementResistTaken = 0.15;
+  static const double elementEdge = 0.15;
+  static const double elementPenalty = 0.15;
+
+  /// Elemento dell'arma: l'aura dell'amuleto d'affinità, se no lo scaling
+  /// (il simulatore di bilanciamento può fissarlo per confrontare gli
+  /// elementi a parità di tutto il resto).
+  Affinity get weaponElement =>
+      weaponElementOverride ?? character.weapon.aura ?? character.weapon.def.affinity;
+  final Affinity? weaponElementOverride;
+
+  /// Moltiplicatore del danno subito per l'elemento, talismano al collo
+  /// compreso (−25% dal suo elemento).
+  double get elementTakenMult {
+    final e = enemy.element;
+    if (e == null) return 1.0;
+    var m = 1.0;
+    if (e.beats == heroElement) m += elementWeakTaken * enemy.elementWeight;
+    if (heroElement.beats == e) m -= elementResistTaken * enemy.elementWeight;
+    if (character.wornAmulets.any((a) => a.apply.ward == e)) {
+      m *= 1 - AmuletEffect.wardReduction;
+    }
+    return m;
+  }
+
+  /// Moltiplicatore del danno di ogni rep per l'elemento, gemma del
+  /// flagello compresa (+20% contro il suo elemento).
+  double get elementDamageMult {
+    final e = enemy.element;
+    if (e == null) return 1.0;
+    var m = 1.0;
+    if (weaponElement.beats == e) m += elementEdge * enemy.elementWeight;
+    if (e.beats == weaponElement) m -= elementPenalty * enemy.elementWeight;
+    if (character.weapon.amulets.any((a) => a.apply.bane == e)) m += AmuletEffect.banePower;
+    return m;
+  }
+
+  /// L'ultimo colpo del nemico era un critico.
+  bool lastStrikeCritical = false;
+
+  /// Colpi del nemico andati a segno: consumano l'armatura.
+  int hitsTaken = 0;
 
   /// Un nemico sopra il tuo livello picchia più forte: +9% a livello di
   /// distanza, composto. Cinque livelli sotto si sente (×1,5), dieci sono
@@ -160,8 +223,6 @@ class CombatEngine {
   int perfectReps = 0;
   double _qualitySum = 0;
   CombatStatus status = CombatStatus.fighting;
-
-  double get attackTimerProgress => 1 - _attackTimer / enemy.attackInterval;
 
   /// Gli amuleti incastonati nell'arma impugnata.
   AmuletEffect get _amulets {
@@ -246,7 +307,10 @@ class CombatEngine {
         penetration *
         (1 + rampage * rampageMaxBonus) *
         (charged ? 1.5 : 1.0) *
-        (critical ? 1 + _amulets.critDamage : 1.0);
+        (critical ? 1 + _amulets.critDamage : 1.0) *
+        // L'elemento è l'unica eccezione alla regola d'oro: con la gemma
+        // giusta un boss che ti batte cade con qualche rep in meno.
+        elementDamageMult;
     // Una rep valida fa sempre almeno un minimo di danno: il combattimento
     // non si blocca mai.
     damage = max(damage, 0.1);
@@ -282,9 +346,12 @@ class CombatEngine {
 
     _attackTimer -= dt;
     if (_attackTimer > 0) return 0;
-    _attackTimer += enemy.attackInterval;
+    _attackTimer += _nextAttackDelay();
 
-    var taken = hitDamage * stance.damageTakenMult;
+    lastStrikeCritical = _random.nextDouble() < enemy.critChance;
+    var taken = hitDamage * stance.damageTakenMult * elementTakenMult;
+    if (lastStrikeCritical) taken *= EnemyDef.critMultiplier;
+    hitsTaken++;
     if (character.perks.contains('iron_skin')) taken *= 0.9;
     taken *= 1 - min(0.75, character.damageReduction + defenseBonus(defenseLevel));
     heroHp = max(0, heroHp - taken);

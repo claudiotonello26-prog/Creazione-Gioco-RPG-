@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/i18n.dart';
 import '../widgets/oath_bar.dart';
@@ -20,6 +21,7 @@ import '../../game/battle_game.dart';
 import '../../pose/rep_counter.dart';
 import '../../pose/rep_input.dart';
 import '../widgets/common.dart';
+import '../widgets/element_badge.dart';
 import '../widgets/exercise_demo.dart';
 import '../widgets/exercise_view.dart';
 import '../widgets/knight_view.dart';
@@ -147,6 +149,7 @@ class _CombatScreenState extends State<CombatScreen> {
         difficulty: widget.move?.difficulty ?? 1,
         attackLevel: state.attackLevel,
         defenseLevel: state.defenseLevel,
+        heroElement: state.heroElement,
       );
 
   void _startCountdown(int seconds) {
@@ -190,8 +193,9 @@ class _CombatScreenState extends State<CombatScreen> {
     _last = now;
     final taken = _engine.tick(dt);
     if (taken > 0) {
-      _game.enemyStrike(taken);
+      _game.enemyStrike(taken, critical: _engine.lastStrikeCritical);
       Sound.play(Sfx.enemyHit);
+      if (_engine.lastStrikeCritical) HapticFeedback.heavyImpact();
     }
     if (mounted) setState(() {});
     _checkEnd();
@@ -214,6 +218,7 @@ class _CombatScreenState extends State<CombatScreen> {
           List.of(_reps),
           victory: victory,
           stance: widget.stance,
+          hitsTaken: _engine.hitsTaken,
         );
     if (victory && fatigue < 1) _minFatigue = fatigue < _minFatigue ? fatigue : _minFatigue;
     _totalReps += _reps.length;
@@ -350,12 +355,17 @@ class _CombatScreenState extends State<CombatScreen> {
                             '${_wave > 0 ? tr(' · +{p}% vita', {'p': (_wave * CombatEngine.waveHpStep * 100).round()}) : ''}',
                         height: 12,
                       ),
-                      const SizedBox(height: 4),
-                      StatBar(
-                        value: _phase == _Phase.fighting ? e.attackTimerProgress : 0,
-                        color: Palette.ember,
-                        height: 4,
-                      ),
+                      // Niente barra dell'attacco: il nemico colpisce quando
+                      // vuole. Si vede solo il suo elemento contro il tuo.
+                      if (widget.enemy.element != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: MatchupBadge(
+                            element: widget.enemy.element!,
+                            takenMult: e.elementTakenMult,
+                            damageMult: e.elementDamageMult,
+                          ),
+                        ),
                     ],
                   ),
                 ),
