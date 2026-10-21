@@ -3,7 +3,9 @@ name: CI
 # Il repo è privato: il piano gratuito dà 2.000 minuti al mese. A ogni push
 # girano solo analisi, test (con il simulatore di bilanciamento) e il server,
 # pochi minuti. APK, emulatori e pubblicazione partono solo a mano, da
-# Actions → CI → Run workflow (o con l'API workflow_dispatch sul ramo voluto).
+# Actions → CI → Run workflow (o con l'API workflow_dispatch sul ramo voluto),
+# e da soli quando un ramo viene unito a main: così il link del telefono ha
+# sempre l'ultima versione confermata.
 on:
   pull_request:
   push:
@@ -64,9 +66,9 @@ jobs:
       - run: npm run build
       - run: node --test test/arena.test.js
 
-  # Da qui in giù solo a mano: sono i job che consumano più minuti.
+  # Da qui in giù solo a mano o su main: sono i job che consumano più minuti.
   android:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 40
@@ -100,7 +102,7 @@ jobs:
   # Avvia l'APK vero su emulatori Android (vecchio e recente) e fallisce se
   # l'app si chiude all'avvio. Il logcat resta come artefatto.
   android-smoke:
-    if: github.event_name == 'workflow_dispatch' && inputs.emulatori
+    if: (github.event_name == 'workflow_dispatch' && inputs.emulatori) || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     needs: android
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -150,7 +152,8 @@ jobs:
   publish-apk:
     needs: [android, android-smoke]
     if: >-
-      always() && github.event_name == 'workflow_dispatch' &&
+      always() &&
+      (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')) &&
       needs.android.result == 'success' &&
       (needs.android-smoke.result == 'success' || needs.android-smoke.result == 'skipped')
     runs-on: ubuntu-latest
