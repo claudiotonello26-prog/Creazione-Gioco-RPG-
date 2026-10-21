@@ -97,49 +97,43 @@ enum ShopKeeper {
 /// vendita. Un id di [weaponDefs] è un'arma, il resto materiali.
 typedef ShopItem = (String id, int level);
 
+/// Le botteghe vendono solo quello che potresti anche raccogliere, creare
+/// o trovare come bottino comune, per comodità e a caro prezzo. Mai quello
+/// che si guadagna combattendo e allenandosi: essenze, pietre di forgia,
+/// schegge sacre, gemme, pietre delle Tenebre, materiali delle build, cuori,
+/// né il livello più alto (stellare, ebano) o le armi oltre la prima.
 const Map<ShopKeeper, List<ShopItem>> shopStock = {
   ShopKeeper.general: [
     ('ash_wood', 1),
     ('coal', 1),
     ('iron_ore', 1),
     ('raw_hide', 1),
-    ('beast_essence', 2),
     ('oak_wood', 5),
     ('yew_wood', 12),
   ],
   ShopKeeper.smith: [
     ('iron_ore', 1),
     ('coal', 1),
-    ('forge_stone_1', 1),
     ('bronze_ingot', 3),
     ('iron_ingot', 5),
     ('reinforced_grip', 5),
     ('gold_ingot', 8),
     ('steel_ingot', 10),
     ('silver_ingot', 12),
-    ('forge_stone_2', 15),
-    ('star_ingot', 22),
   ],
   ShopKeeper.hunter: [
     ('raw_hide', 1),
     ('bone', 1),
-    ('beast_essence', 1),
     ('ash_plank', 2),
     ('tanned_leather', 3),
     ('ashwood_bow', 3),
     ('oak_plank', 6),
     ('yew_plank', 12),
-    ('yew_longbow', 12),
   ],
   ShopKeeper.mage: [
     ('abyss_ink', 1),
-    ('gem_rough', 1),
-    ('holy_shard', 3),
     ('ember_staff', 4),
     ('moon_silver', 6),
-    ('gem_cut', 10),
-    ('somber_stone', 15),
-    ('ebony_staff', 20),
   ],
 };
 
