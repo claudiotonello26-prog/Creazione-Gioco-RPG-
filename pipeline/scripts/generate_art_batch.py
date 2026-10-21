@@ -117,15 +117,15 @@ ITEMS = {
         "file": "assets/art/npc/smith.png",
         "name": "Master Gorran the Blacksmith",
         "framing": (
-            "Framing: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). "
+            "Framing: Large close-up bust portrait filling canvas height and width to match other NPC scales (cut cleanly at mid-chest, just under the shoulders). "
             "Front-facing towards the camera/viewer (or very slight three-quarter angle), eyes looking straight into the camera / at the player with a hearty, friendly, warm and jovial warrior smile. "
-            "Head positioned in the upper half of the canvas with a little space above the head, broad powerful shoulders filling the canvas width. "
+            "Head positioned high in the canvas near the top edge (head top at y=10, height 502px), broad powerful shoulders filling the canvas width. "
             "Light source from the upper left, plus warm forge glow from below on one side. Weathered, believable craftsman, hearty and friendly. "
             "Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted."
         ),
         "desc": (
             "Master Gorran the Blacksmith. Big bald man in his forties, hearty friendly smile, warm kind eyes looking directly into the camera / at the viewer, "
-            "thick braided red-brown beard with a few singed hairs. "
+            "thick braided red-brown beard with a few singed hairs. Large prominent bust portrait scale matching the other merchants. "
             "Black soot smudges on his forehead and rugged cheeks, thick powerful neck. "
             "Heavy leather apron over a sleeveless sweat-darkened coarse grey shirt. "
             "His thick muscular, hairy, soot-stained arm and hand is raised to firmly grip and hold the heavy iron blacksmith tongs resting securely over his shoulder. "

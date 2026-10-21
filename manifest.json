@@ -479,9 +479,10 @@
       "living_bellows_idle.png",
       "hollow_goblin_idle.png"
     ],
-    "attempts": 1,
+    "attempts": 2,
     "pink_pixels": 0,
-    "status": "done"
+    "status": "approved_clean",
+    "final_prompt": "Master Gorran: large close-up bust matching other NPC scales, holding tongs over shoulder with hand, warm friendly smile looking into camera, height 502px, top y=10"
   },
   "general_store": {
     "id": "general_store",

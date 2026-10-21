@@ -74,7 +74,7 @@ npc_meta = {
     'smith': {
         'name': 'Mastro Gorran',
         'role': 'Fabbro delle Fiamme',
-        'desc': 'Impugna saldamente la tenaglia da forgia sulla spalla con la mano. Barba intrecciata, riflessi caldi di forgia, sorriso fiero ed accogliente rivolto in camera.',
+        'desc': 'Dimensione e scala ingrandite per allinearsi perfettamente agli altri mercanti (altezza 502px, testa in cima). Impugna saldamente la tenaglia da forgia sulla spalla con la mano, sorriso fiero ed accogliente rivolto in camera.',
         'tag': 'NPC Mercante'
     },
     'hunter': {
@@ -229,7 +229,7 @@ html = f"""<!DOCTYPE html>
         <h1 class="text-base sm:text-lg font-bold text-[#E6D5B8] tracking-wide flex items-center gap-2">
           <span class="text-[#C9A24A]">⚔</span> GYM OATH — Anteprima Grafica HD
         </h1>
-        <p class="text-xs text-[#A09383] mt-0.5">Berta (bandana rossa solida e uniforme) + Frassino (foglie verde chiaro spento/cenere) + 16 altri asset</p>
+        <p class="text-xs text-[#A09383] mt-0.5">Fabbro (ingrandito & allineato in scala) + Berta (bandana rossa rifinita) + Frassino (foglie verde chiaro/cenere)</p>
       </div>
       <div class="flex items-center gap-2">
         <span class="px-2.5 py-1 text-xs font-semibold bg-[#1C2C16] text-[#86EFAC] border border-[#2B4E20] rounded-full">
@@ -260,7 +260,7 @@ html = f"""<!DOCTYPE html>
       <!-- SECTION 1: MERCHANTS -->
       <div id="content-merchants" class="space-y-4">
         <div class="bg-[#1C1815]/70 border border-[#2E2721] rounded-lg p-3 text-xs text-[#A09383]">
-          <strong class="text-[#E6D5B8]">Ultimo aggiornamento Berta:</strong> La bandana rossa in testa è ora completamente dipinta in rosso rustico solido e uniforme, senza difetti o punti mancanti. Sguardo amichevole rivolto verso lo schermo.
+          <strong class="text-[#E6D5B8]">Ultimo aggiornamento Mastro Gorran:</strong> Dimensioni e scala ingrandite e calibrate (502px di altezza, testa allineata in cima alla stessa altezza di Berta, Edda e Velthar). Impugna saldamente la tenaglia da forgia sulla spalla, sguardo amichevole in camera.
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
           {npc_cards}
