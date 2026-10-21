@@ -352,10 +352,10 @@ ThemeData buildTheme() {
   );
   final base = ThemeData(useMaterial3: true, colorScheme: scheme, fontFamily: kBodyFont);
   final text = base.textTheme.apply(bodyColor: Palette.holy, displayColor: Palette.holy).copyWith(
-        bodyMedium: base.textTheme.bodyMedium?.copyWith(fontSize: 16, color: Palette.holy),
-        bodyLarge: base.textTheme.bodyLarge?.copyWith(fontSize: 17, color: Palette.holy),
+        bodyMedium: base.textTheme.bodyMedium?.copyWith(fontSize: 17, color: Palette.holy),
+        bodyLarge: base.textTheme.bodyLarge?.copyWith(fontSize: 18, color: Palette.holy),
         titleMedium: base.textTheme.titleMedium?.copyWith(
-          fontSize: 17,
+          fontSize: 19,
           fontWeight: FontWeight.w600,
           color: Palette.holy,
         ),
@@ -391,7 +391,7 @@ ThemeData buildTheme() {
     listTileTheme: const ListTileThemeData(
       titleTextStyle: TextStyle(
         fontFamily: kBodyFont,
-        fontSize: 17,
+        fontSize: 19,
         fontWeight: FontWeight.w600,
         color: Palette.holy,
       ),
@@ -408,9 +408,9 @@ ThemeData buildTheme() {
       labelTextStyle: WidgetStateProperty.resolveWith(
         (s) => TextStyle(
           fontFamily: kTitleFont,
-          fontSize: 12,
+          fontSize: 13,
           fontWeight: FontWeight.w700,
-          letterSpacing: 0.6,
+          letterSpacing: 0.4,
           color: s.contains(WidgetState.selected) ? Palette.goldBright : Palette.ash,
         ),
       ),
@@ -460,6 +460,27 @@ ThemeData buildTheme() {
         minimumSize: const Size(48, 48),
         textStyle:
             const TextStyle(fontFamily: kTitleFont, fontWeight: FontWeight.w700, fontSize: 15),
+      ),
+    ),
+    // Le schede in alto (Allenamento / Arena…): in carattere da titolo, grandi.
+    tabBarTheme: TabBarThemeData(
+      labelStyle: titleStyle(size: 17, spacing: 1.5),
+      unselectedLabelStyle: titleStyle(size: 17, spacing: 1.5),
+      labelColor: Palette.goldBright,
+      unselectedLabelColor: Palette.ash,
+      indicatorColor: Palette.gold,
+    ),
+    // Pastiglie dei filtri: scelta in oro pieno, niente spunta.
+    chipTheme: ChipThemeData(
+      showCheckmark: false,
+      selectedColor: Palette.gold,
+      backgroundColor: Palette.stone,
+      side: const BorderSide(color: Palette.iron),
+      labelStyle: TextStyle(
+        fontFamily: kBodyFont,
+        fontSize: 16,
+        color: WidgetStateColor.resolveWith(
+            (s) => s.contains(WidgetState.selected) ? Palette.night : Palette.holy),
       ),
     ),
     dialogTheme: const DialogThemeData(backgroundColor: Palette.stone, shape: GildedBorder(ornate: true)),

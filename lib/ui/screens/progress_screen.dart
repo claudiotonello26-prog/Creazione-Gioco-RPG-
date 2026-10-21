@@ -65,7 +65,7 @@ class _ProgressCardState extends State<ProgressCard> {
               '${tr('Rep in questo periodo: {n}', {'n': current.reps})}'
               '${previous != null ? tr(' (prima {n})', {'n': previous.reps}) : ''}. '
               '${tr('100 è la tua forza al primo test: le versioni più dure contano di più.')}',
-              style: const TextStyle(color: Palette.ash, fontSize: 13),
+              style: const TextStyle(color: Palette.ash, fontSize: 15),
             ),
             if (widget.showDetails)
               Align(
@@ -106,7 +106,7 @@ class _RegionStat extends StatelessWidget {
               decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
             const SizedBox(width: 6),
-            Text(region.label, style: const TextStyle(color: Palette.ash, fontSize: 13)),
+            Text(region.label, style: const TextStyle(color: Palette.ash, fontSize: 15)),
           ],
         ),
         Text(
@@ -119,7 +119,7 @@ class _RegionStat extends StatelessWidget {
               : tr('{d}% dall\'inizio', {'d': '${delta >= 0 ? '+' : ''}${delta.round()}'}),
           style: TextStyle(
             color: delta == null ? Palette.ash : (delta >= 0 ? Palette.moss : Palette.blood),
-            fontSize: 12,
+            fontSize: 14,
           ),
         ),
       ],
@@ -153,7 +153,7 @@ class StrengthChartPainter extends CustomPainter {
       ..strokeWidth = 1;
     final label = TextStyle(
       color: Palette.ash.withValues(alpha: 0.8),
-      fontSize: 11,
+      fontSize: 15,
       fontFamily: 'EBGaramond',
     );
     void text(String t, Offset at, {bool center = false}) {
@@ -300,7 +300,7 @@ class _ExerciseRow extends StatelessWidget {
                 'days': e.daysInPeriod,
                 'record': '${e.record}$unit',
               }),
-              style: const TextStyle(color: Palette.ash, fontSize: 13),
+              style: const TextStyle(color: Palette.ash, fontSize: 15),
             ),
             Text(
               '${tr('Ultima volta: {n}', {'n': '${e.lastBest}$unit'})}'
@@ -311,7 +311,7 @@ class _ExerciseRow extends StatelessWidget {
               style: TextStyle(
                 color:
                     vsUsual == null ? Palette.ash : (vsUsual >= 0 ? Palette.moss : Palette.blood),
-                fontSize: 13,
+                fontSize: 15,
               ),
             ),
           ],

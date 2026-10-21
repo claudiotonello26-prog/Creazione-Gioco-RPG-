@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'codex_screen.dart';
@@ -39,45 +41,60 @@ class ForgeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    Widget station(Station st) => Expanded(
-          child: _StationButton(
-            station: st,
-            level: st == Station.enchant ? null : s.stationLevel(st),
-            onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => StationScreen(station: st))),
-          ),
+    Widget station(Station st) => _StationButton(
+          station: st,
+          level: st == Station.enchant ? null : s.stationLevel(st),
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => StationScreen(station: st))),
         );
     final st = Station.values;
+    final tiles = [
+      if (s.repairAllCost > 0) const _RepairTile(),
+      ActionTile(
+        icon: Icons.shield,
+        title: tr('Equipaggiamento'),
+        color: Palette.goldBright,
+        onTap: () => openEquipment(context),
+      ),
+      ActionTile(
+        icon: Icons.auto_stories,
+        title: tr('Codice del Giuramento'),
+        onTap: () => openCodex(context),
+      ),
+    ];
     // Le quattro postazioni si allargano a riempire lo schermo.
     return FillPage(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (var r = 0; r < st.length; r += 2) ...[
-            if (r > 0) const SizedBox(height: 10),
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+          // Sempre quadrate, il più grandi possibile; postazioni e scorciatoie
+          // stanno insieme, centrate nella pagina.
+          Expanded(
+            child: LayoutBuilder(builder: (context, box) {
+              const gap = 10.0;
+              final rows = (st.length + 1) ~/ 2;
+              final reserve = 12 + 80.0 * (tiles.length);
+              final side = min((box.maxWidth - gap) / 2, (box.maxHeight - reserve - gap * (rows - 1)) / rows);
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  station(st[r]),
-                  const SizedBox(width: 10),
-                  if (r + 1 < st.length) station(st[r + 1]) else const Spacer(),
+                  for (var r = 0; r < st.length; r += 2) ...[
+                    if (r > 0) const SizedBox(height: gap),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox.square(dimension: side, child: station(st[r])),
+                        const SizedBox(width: gap),
+                        SizedBox.square(
+                            dimension: side, child: r + 1 < st.length ? station(st[r + 1]) : null),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 12),
+                  ...tiles,
                 ],
-              ),
-            ),
-          ],
-          const SizedBox(height: 12),
-          if (s.repairAllCost > 0) const _RepairTile(),
-          ActionTile(
-            icon: Icons.shield,
-            title: tr('Equipaggiamento'),
-            color: Palette.goldBright,
-            onTap: () => openEquipment(context),
-          ),
-          ActionTile(
-            icon: Icons.auto_stories,
-            title: tr('Codice del Giuramento'),
-            onTap: () => openCodex(context),
+              );
+            }),
           ),
         ],
       ),
@@ -458,7 +475,7 @@ class _RecipeTile extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.lock_outline, color: Palette.iron, size: 24),
-              Text('Lv $level', style: const TextStyle(color: Palette.ash, fontSize: 13)),
+              Text('Lv $level', style: const TextStyle(color: Palette.ash, fontSize: 15)),
             ],
           )
         : FilledButton(

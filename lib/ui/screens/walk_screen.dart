@@ -141,7 +141,7 @@ class _BigSteps extends StatelessWidget {
             ],
           ),
           Text(tr('passi da spendere').toUpperCase(),
-              style: titleStyle(size: 12, color: Palette.ash, spacing: 2.5)),
+              style: titleStyle(size: 14, color: Palette.ash, spacing: 2.5)),
         ],
       );
 }
@@ -585,76 +585,80 @@ class _GatherScreenState extends State<GatherScreen> {
       ),
       body: Stack(
         children: [
-          // Una schermata sola e sempre piena: chi è in alto, la scelta dei
-          // passi al centro che prende tutto lo spazio, camminare in fondo.
+          // Una schermata sola: la risorsa in grande nella metà alta, poi
+          // nome e livello, la scelta dei passi compatta, camminare in fondo.
           LayoutBuilder(
             builder: (context, box) => SingleChildScrollView(
               child: SizedBox(
-                height: max(box.maxHeight, 560),
+                height: max(box.maxHeight, 640),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      Expanded(
+                        child: LayoutBuilder(
+                          builder: (context, img) => Center(
+                            child: ResourcePortrait(_r.id,
+                                size: min(img.maxWidth * 0.86, img.maxHeight), border: _r.skill.realmColor),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      OneLine(_r.name.toUpperCase(),
+                          align: Alignment.center, style: titleStyle(size: 18, spacing: 1.5)),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          StatChip(Icons.inventory_2_outlined, '$have', color: Palette.goldBright),
+                          const SizedBox(width: 16),
+                          StatChip(Icons.directions_walk, '$per', color: Palette.holy),
+                          const SizedBox(width: 16),
+                          StatChip(Icons.auto_awesome, '+${_r.xp}', color: Palette.ash),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
-                          ResourcePortrait(_r.id, size: 130),
-                          const SizedBox(width: 14),
+                          Text(tr('Liv. {n}', {'n': lvl}),
+                              style: titleStyle(size: 15, color: _r.skill.realmColor)),
+                          const SizedBox(width: 10),
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_r.name, style: titleStyle(size: 17, spacing: 1)),
-                                const SizedBox(height: 6),
-                                Wrap(
-                                  spacing: 12,
-                                  runSpacing: 4,
-                                  children: [
-                                    StatChip(Icons.inventory_2_outlined, '$have', color: Palette.goldBright),
-                                    StatChip(Icons.directions_walk, '$per', color: Palette.holy),
-                                    StatChip(Icons.auto_awesome, '+${_r.xp}', color: Palette.ash),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Text('${_r.skill.label} · ${tr('Liv. {n}', {'n': lvl})}',
-                                    style: const TextStyle(color: Palette.ash, fontSize: 13)),
-                                const SizedBox(height: 4),
-                                StatBar(value: xpIn / xpNeed, color: _r.skill.realmColor, height: 6),
-                              ],
-                            ),
+                            child: StatBar(value: xpIn / xpNeed, color: _r.skill.realmColor, height: 6),
                           ),
                         ],
                       ),
                       const SizedBox(height: 14),
-                      Expanded(
-                        child: _Panel(
-                          child: !_known && bank == 0
-                              ? Center(
-                                  child: Text(tr('Collega i passi nella Raccolta per spenderli qui.'),
+                      _Panel(
+                        child: !_known && bank == 0
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                child: Text(tr('Collega i passi nella Raccolta per spenderli qui.'),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(color: Palette.ash, fontSize: 16)),
+                              )
+                            : ready == 0
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    child: Text(
+                                      tr('Ti servono ancora {n} passi per la prossima unità.',
+                                          {'n': per - bank % per}),
                                       textAlign: TextAlign.center,
-                                      style: const TextStyle(color: Palette.ash, fontSize: 16)),
-                                )
-                              : ready == 0
-                                  ? Center(
-                                      child: Text(
-                                        tr('Ti servono ancora {n} passi per la prossima unità.',
-                                            {'n': per - bank % per}),
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(color: Palette.ash, fontSize: 16),
-                                      ),
-                                    )
-                                  : _ChooseUnits(
-                                      units: units,
-                                      ready: ready,
-                                      per: per,
-                                      xp: _r.xp,
-                                      verb: verb,
-                                      color: _r.skill.realmColor,
-                                      onChanged: (n) => setState(() => _units = n),
-                                      onTake: () => _gain(s, units * per),
-                                      onAll: () => _spendAll(s, ready, per),
+                                      style: const TextStyle(color: Palette.ash, fontSize: 16),
                                     ),
-                        ),
+                                  )
+                                : _ChooseUnits(
+                                    units: units,
+                                    ready: ready,
+                                    per: per,
+                                    xp: _r.xp,
+                                    verb: verb,
+                                    color: _r.skill.realmColor,
+                                    onChanged: (n) => setState(() => _units = n),
+                                    onTake: () => _gain(s, units * per),
+                                    onAll: () => _spendAll(s, ready, per),
+                                  ),
                       ),
                       const SizedBox(height: 12),
                       _Panel(
@@ -759,20 +763,28 @@ class _ChooseUnits extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(tr('quanti ne prendi').toUpperCase(),
-            textAlign: TextAlign.center, style: titleStyle(size: 12, color: Palette.ash, spacing: 2.5)),
-        Expanded(
-          child: Center(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text('$units×',
-                  style: titleStyle(size: 120, color: Palette.holy, spacing: 0).copyWith(
-                    shadows: [Shadow(color: color.withValues(alpha: 0.6), blurRadius: 24)],
-                  )),
+        // Quante unità, grande ma non enorme, con passi e XP accanto.
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('$units×',
+                style: titleStyle(size: 44, color: Palette.holy, spacing: 0).copyWith(
+                  shadows: [Shadow(color: color.withValues(alpha: 0.6), blurRadius: 16)],
+                )),
+            const SizedBox(width: 18),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StatChip(Icons.directions_walk, '-${units * per}', color: Palette.holy),
+                const SizedBox(height: 4),
+                StatChip(Icons.auto_awesome, '+${units * xp} XP', color: Palette.goldBright),
+              ],
             ),
-          ),
+          ],
         ),
         if (quick.isNotEmpty) ...[
+          const SizedBox(height: 8),
           Wrap(
             alignment: WrapAlignment.center,
             runSpacing: 6,
@@ -781,16 +793,7 @@ class _ChooseUnits extends StatelessWidget {
               for (final n in quick) pick(n, n == ready ~/ 2 && n != 5 && n != 10 && n != 25 ? tr('metà') : '$n'),
             ],
           ),
-          const SizedBox(height: 14),
         ],
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            StatChip(Icons.directions_walk, '-${units * per}', color: Palette.holy),
-            const SizedBox(width: 16),
-            StatChip(Icons.auto_awesome, '+${units * xp} XP', color: Palette.goldBright),
-          ],
-        ),
         const SizedBox(height: 8),
         Row(
           children: [

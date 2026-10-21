@@ -36,7 +36,7 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
     final canPop = Navigator.of(context).canPop();
     final color = accent ?? Palette.gold;
     final name = DefaultTextStyle(
-      style: titleStyle(size: 15, spacing: 2.6, color: accent ?? Palette.holy).copyWith(
+      style: titleStyle(size: 18, spacing: 2.6, color: accent ?? Palette.holy).copyWith(
         shadows: [Shadow(color: color.withValues(alpha: 0.5), blurRadius: 10)],
       ),
       maxLines: 1,
@@ -57,7 +57,7 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
             onTap: () => Navigator.of(context).maybePop(),
           )
         else
-          Image.asset('assets/images/logo_helmet.png', height: 30),
+          Image.asset('assets/images/logo_helmet.png', height: 42),
         if (actions != null) ...[
           const SizedBox(width: 6),
           Container(

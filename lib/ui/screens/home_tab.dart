@@ -135,7 +135,7 @@ class HomeTab extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             tr('Hai guadagnato una Chiave della Spedizione. Torna domani per la prossima quest.'),
-            style: const TextStyle(color: Palette.ash, fontSize: 13),
+            style: const TextStyle(color: Palette.ash, fontSize: 15),
           ),
         ],
         if (s.retestDue) ...[
@@ -190,7 +190,7 @@ class _GearButton extends StatelessWidget {
                     style: const TextStyle(
                       color: Palette.night,
                       fontWeight: FontWeight.bold,
-                      fontSize: 13,
+                      fontSize: 15,
                       letterSpacing: 0.8,
                     ),
                   ),
@@ -408,7 +408,7 @@ class _AttrTile extends StatelessWidget {
             FittedBox(
               child: Text(
                 attribute.label,
-                style: const TextStyle(color: Palette.ash, fontSize: 12),
+                style: const TextStyle(color: Palette.ash, fontSize: 14),
               ),
             ),
             if (allocating) ...[
@@ -456,7 +456,7 @@ class _QuestCalendar extends StatelessWidget {
                 for (final n in names)
                   Expanded(
                     child: Center(
-                      child: Text(n, style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                      child: Text(n, style: const TextStyle(color: Palette.ash, fontSize: 14)),
                     ),
                   ),
               ],
@@ -477,9 +477,9 @@ class _QuestCalendar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.circle, size: 10, color: Palette.goldBright),
-                Text(tr(' quest fatta    '), style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                Text(tr(' quest fatta    '), style: const TextStyle(color: Palette.ash, fontSize: 14)),
                 const Icon(Icons.circle_outlined, size: 10, color: Palette.gold),
-                Text(tr(' app aperta'), style: const TextStyle(color: Palette.ash, fontSize: 12)),
+                Text(tr(' app aperta'), style: const TextStyle(color: Palette.ash, fontSize: 14)),
               ],
             ),
           ],
@@ -510,7 +510,7 @@ class _QuestCalendar extends StatelessWidget {
         child: Text(
           '${d.day}',
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 14,
             color: quest ? Palette.night : (future ? Palette.iron : Palette.ash),
             fontWeight: quest ? FontWeight.bold : FontWeight.normal,
           ),
@@ -753,7 +753,7 @@ class _LevelLine extends StatelessWidget {
                 c.armed ? c.weapon.displayName : tr('A mani vuote'),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Palette.ash, fontSize: 13),
+                style: const TextStyle(color: Palette.ash, fontSize: 15),
               ),
             ),
           ],
@@ -761,7 +761,7 @@ class _LevelLine extends StatelessWidget {
         const SizedBox(height: 4),
         StatBar(value: xpIn / xpNeed, color: Palette.gold, height: 6),
         const SizedBox(height: 2),
-        Text('$xpIn / $xpNeed XP', style: const TextStyle(color: Palette.ash, fontSize: 11)),
+        Text('$xpIn / $xpNeed XP', style: const TextStyle(color: Palette.ash, fontSize: 15)),
       ],
     );
   }
@@ -868,7 +868,7 @@ class _SkillChip extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               FittedBox(
-                child: Text(skill.label, style: const TextStyle(color: Palette.ash, fontSize: 10.5)),
+                child: Text(skill.label, style: const TextStyle(color: Palette.ash, fontSize: 14)),
               ),
               const SizedBox(height: 3),
               StatBar(value: xpNeed == 0 ? 1 : xpIn / xpNeed, color: color, height: 3),

@@ -916,7 +916,7 @@ class GameState extends ChangeNotifier {
   // Pallini rossi: dove c'è qualcosa da fare o da riscuotere.
 
   /// Training: Cammino del Novizio o contratto da riscuotere.
-  bool get trainingAlert => noviceReady || (contract?.complete ?? false);
+  bool get trainingAlert => noviceQuest != null || (contract?.complete ?? false);
 
   /// Raccolta: passi in banca bastano per almeno un'unità.
   bool get gatheringAlert => stepBank >= stepsPerUnit(resourceById(gatherTarget));

@@ -56,7 +56,7 @@ class _Socket extends StatelessWidget {
               OneLine(
                 slot == 0 ? tr('AFFINITÀ') : tr('PASSIVO'),
                 align: Alignment.center,
-                style: titleStyle(size: 10, spacing: 1.2, color: color),
+                style: titleStyle(size: 12, spacing: 1.2, color: color),
               ),
               const SizedBox(height: 6),
               a == null
@@ -67,7 +67,7 @@ class _Socket extends StatelessWidget {
                 a?.name ?? tr('Vuoto'),
                 align: Alignment.center,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   color: a == null ? Palette.ash : Palette.holy,
                   fontWeight: FontWeight.w600,
                 ),

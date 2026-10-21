@@ -59,8 +59,10 @@ class NoviceCard extends StatelessWidget {
     if (q == null) return const SizedBox.shrink();
     final have = state.stat(q.stat).clamp(0, q.target);
     final ready = state.noviceReady;
+    // Pallino fisso finché il Cammino non è finito: il nuovo giocatore sa
+    // sempre da dove ripartire.
     return AlertDot(
-      on: ready,
+      on: true,
       child: Card(
         shape: GildedBorder(ornate: true, color: ready ? Palette.goldBright : Palette.gold),
         child: InkWell(
@@ -76,10 +78,10 @@ class NoviceCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(tr('CAMMINO DEL NOVIZIO · {n}/{total}', {'n': state.noviceStep + 1, 'total': noviceQuests.length}),
-                          style: titleStyle(size: 11, color: Palette.gold, spacing: 1.5)),
+                          style: titleStyle(size: 13, color: Palette.gold, spacing: 1.5)),
                       const SizedBox(height: 2),
                       Text(q.title, style: titleStyle(size: 17, color: Palette.holy, spacing: 0.5)),
-                      Text(q.goal, style: const TextStyle(color: Palette.ash, fontSize: 13)),
+                      Text(q.goal, style: const TextStyle(color: Palette.ash, fontSize: 15)),
                       const SizedBox(height: 6),
                       StatBar(value: have / q.target, color: Palette.gold, label: '$have / ${q.target}'),
                       const SizedBox(height: 6),

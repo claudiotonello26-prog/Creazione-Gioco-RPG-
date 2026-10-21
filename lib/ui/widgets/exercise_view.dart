@@ -199,7 +199,7 @@ class _ManualPad extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             tr('Rep non verificate: non valgono per le classifiche.'),
-            style: const TextStyle(color: Palette.ash, fontSize: 12),
+            style: const TextStyle(color: Palette.ash, fontSize: 14),
           ),
           const SizedBox(height: 20),
           if (input.isHold)
@@ -256,7 +256,7 @@ class RepCounterBadge extends StatelessWidget {
               style: const TextStyle(
                   fontSize: 36, fontWeight: FontWeight.bold, color: Palette.goldBright)),
           if (caption != null)
-            Text(caption!, style: const TextStyle(fontSize: 12, color: Palette.ash)),
+            Text(caption!, style: const TextStyle(fontSize: 14, color: Palette.ash)),
         ],
       ),
     );

@@ -176,7 +176,7 @@ class _Total extends StatelessWidget {
           Text(value, style: titleStyle(size: 22, color: color, spacing: 0)),
           Text(
             label.toUpperCase(),
-            style: const TextStyle(color: Palette.ash, fontSize: 11, letterSpacing: 1),
+            style: const TextStyle(color: Palette.ash, fontSize: 15, letterSpacing: 1),
           ),
         ],
       );
@@ -518,14 +518,14 @@ class _ChoiceTile extends StatelessWidget {
                   ch.name,
                   align: Alignment.center,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 15,
                     color: ch.worn ? Palette.goldBright : Palette.holy,
                   ),
                 ),
                 OneLine(
                   ch.detail,
                   align: Alignment.center,
-                  style: const TextStyle(fontSize: 11, color: Palette.ash),
+                  style: const TextStyle(fontSize: 15, color: Palette.ash),
                 ),
                 if (ch.quality != null || (ch.wear ?? 0) > 0) ...[
                   const SizedBox(height: 3),

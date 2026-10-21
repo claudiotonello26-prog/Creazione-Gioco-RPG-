@@ -244,7 +244,7 @@ Widget _grid(List<MapEntry<String, int>> items) => GridView.count(
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 11, color: Palette.ash, height: 1.1),
+                    style: const TextStyle(fontSize: 15, color: Palette.ash, height: 1.1),
                   ),
                 ],
               ),

@@ -131,7 +131,7 @@ class _ActiveContract extends StatelessWidget {
               Text(
                 tr('Batti il boss di ogni spedizione.'),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Palette.ash, fontSize: 13),
+                style: const TextStyle(color: Palette.ash, fontSize: 15),
               ),
             TextButton(onPressed: () => _cancel(context), child: Text(tr('Strappa il contratto'))),
           ],
@@ -160,7 +160,7 @@ class _TargetTile extends StatelessWidget {
         title: OneLine('${e.roman} · ${e.name}'),
         subtitle: Text(
           '${e.group.label} · LV ${e.level} · ${tr('Boss: {name}', {'name': e.boss.name})}',
-          style: const TextStyle(color: Palette.ash, fontSize: 13),
+          style: const TextStyle(color: Palette.ash, fontSize: 15),
         ),
         trailing: done ? null : const Icon(Icons.chevron_right, color: Palette.gold),
         onTap: done

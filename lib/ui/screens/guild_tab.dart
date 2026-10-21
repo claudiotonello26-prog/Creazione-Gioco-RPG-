@@ -171,7 +171,7 @@ class _Intro extends StatelessWidget {
           children: [
             Icon(icon, color: Sections.guild, size: 34),
             const SizedBox(height: 4),
-            Text(label, style: const TextStyle(color: Palette.ash, fontSize: 13)),
+            Text(label, style: const TextStyle(color: Palette.ash, fontSize: 15)),
           ],
         );
     return Card(
@@ -310,7 +310,7 @@ class _Standing extends StatelessWidget {
             OneLine(
               [if (h != null) tr('Lv {n}', {'n': h.level}), ?badge].join(' · '),
               align: Alignment.center,
-              style: const TextStyle(color: Palette.ash, fontSize: 12),
+              style: const TextStyle(color: Palette.ash, fontSize: 14),
             ),
           ],
         ),
@@ -888,7 +888,7 @@ class _InviteState extends State<_Invite> {
             g.isLeader
                 ? tr('Cerca altri cavalieri nella scheda Cavalieri: prima diventate amici, poi li porti in gilda.')
                 : tr('Solo fondatore e ufficiali fanno entrare: tu mandi la richiesta d\'amicizia.'),
-            style: const TextStyle(color: Palette.ash, fontSize: 13),
+            style: const TextStyle(color: Palette.ash, fontSize: 15),
           ),
         ),
       ],

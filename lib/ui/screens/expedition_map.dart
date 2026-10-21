@@ -364,7 +364,7 @@ class _MapOptions extends StatelessWidget {
             ),
             child: Text(
               tr('Livello consigliato {n}. Sei più debole: migliora armi e armature o rischi di cadere.', {'n': underLevel}),
-              style: const TextStyle(color: Palette.blood, fontSize: 12),
+              style: const TextStyle(color: Palette.blood, fontSize: 14),
             ),
           ),
       ],
@@ -551,7 +551,7 @@ class _Label extends StatelessWidget {
             style: TextStyle(
               color: dim ? Palette.ash : (red ? const Color(0xFFE88A7A) : Palette.holy),
               fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-              fontSize: 12,
+              fontSize: 14,
               height: 1.1,
             ),
           ),
@@ -559,7 +559,7 @@ class _Label extends StatelessWidget {
             subtitle,
             textAlign: TextAlign.center,
             maxLines: 2,
-            style: const TextStyle(color: Palette.ash, fontSize: 10.5, height: 1.1),
+            style: const TextStyle(color: Palette.ash, fontSize: 14, height: 1.1),
           ),
         ],
       ),
@@ -583,7 +583,7 @@ class _Bubble extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: const TextStyle(color: Palette.night, fontSize: 13, fontStyle: FontStyle.italic),
+        style: const TextStyle(color: Palette.night, fontSize: 15, fontStyle: FontStyle.italic),
       ),
     );
   }

@@ -57,7 +57,7 @@ class SectionTitle extends StatelessWidget {
                   child: OneLine(
                     text.toUpperCase(),
                     align: Alignment.center,
-                    style: titleStyle(size: 13, spacing: 1.6),
+                    style: titleStyle(size: 16, spacing: 1.8),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -103,7 +103,7 @@ class StatBar extends StatelessWidget {
         if (label != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 3),
-            child: Text(label!, style: const TextStyle(fontSize: 12, color: Palette.ash)),
+            child: Text(label!, style: const TextStyle(fontSize: 14, color: Palette.ash)),
           ),
         ClipRRect(
           borderRadius: BorderRadius.circular(2),
@@ -140,9 +140,9 @@ class StatChip extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: color),
+        Icon(icon, size: 18, color: color),
         const SizedBox(width: 3),
-        Text(text, style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w700)),
+        Text(text, style: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w700)),
       ],
     );
   }
@@ -234,7 +234,7 @@ class InfoChip extends StatelessWidget {
         children: [
           Icon(icon, size: 16, color: color),
           const SizedBox(width: 6),
-          Text(text, style: const TextStyle(fontSize: 13)),
+          Text(text, style: const TextStyle(fontSize: 15)),
         ],
       ),
     );
@@ -278,7 +278,7 @@ class ActionTile extends StatelessWidget {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (subtitle != null) Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 14)),
+                    if (subtitle != null) Text(subtitle!, style: const TextStyle(color: Palette.ash, fontSize: 16)),
                     if (below != null) Padding(padding: const EdgeInsets.only(top: 4), child: below),
                   ],
                 )
@@ -491,6 +491,17 @@ class _FoldedListViewState extends State<FoldedListView> {
   List<GlobalKey> _keys = [];
   int? _at;
   double _gap = 0;
+  // La freccia "c'è dell'altro" finché non si è scorso un po'.
+  bool _more = false, _scrolled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final scrolled = _controller.offset > 24;
+      if (scrolled != _scrolled) setState(() => _scrolled = scrolled);
+    });
+  }
 
   @override
   void dispose() {
@@ -499,7 +510,10 @@ class _FoldedListViewState extends State<FoldedListView> {
   }
 
   void _measure(double viewport) {
-    if (!mounted || (_controller.hasClients && _controller.offset > 0)) return;
+    if (!mounted) return;
+    final more = _controller.hasClients && _controller.position.maxScrollExtent > 24;
+    if (more != _more) setState(() => _more = more);
+    if (_controller.hasClients && _controller.offset > 0) return;
     final listBox = _list.currentContext?.findRenderObject() as RenderBox?;
     if (listBox == null) return;
     int? at;
@@ -546,20 +560,87 @@ class _FoldedListViewState extends State<FoldedListView> {
     return LayoutBuilder(
       builder: (context, box) {
         WidgetsBinding.instance.addPostFrameCallback((_) => _measure(box.maxHeight));
-        return ListView(
-          key: _list,
-          controller: _controller,
-          padding: widget.padding,
+        return Stack(
           children: [
-            for (final (i, c) in widget.children.indexed) ...[
-              if (i == _at) SizedBox(height: _gap),
-              KeyedSubtree(key: _keys[i], child: c),
-            ],
+            ListView(
+              key: _list,
+              controller: _controller,
+              padding: widget.padding,
+              children: [
+                for (final (i, c) in widget.children.indexed) ...[
+                  if (i == _at) SizedBox(height: _gap),
+                  KeyedSubtree(key: _keys[i], child: c),
+                ],
+              ],
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 8,
+              child: IgnorePointer(
+                child: AnimatedOpacity(
+                  opacity: _more && !_scrolled ? 1 : 0,
+                  duration: const Duration(milliseconds: 300),
+                  child: const Center(child: ScrollCue()),
+                ),
+              ),
+            ),
           ],
         );
       },
     );
   }
+}
+
+/// Una doppia freccia in oro che rimbalza piano: sotto c'è dell'altro.
+class ScrollCue extends StatefulWidget {
+  const ScrollCue({super.key});
+
+  @override
+  State<ScrollCue> createState() => _ScrollCueState();
+}
+
+class _ScrollCueState extends State<ScrollCue> with SingleTickerProviderStateMixin {
+  late final _bounce = AnimationController(vsync: this, duration: const Duration(milliseconds: 450));
+
+  @override
+  void initState() {
+    super.initState();
+    _play();
+  }
+
+  // Quattro rimbalzi e poi ferma: si nota senza dare fastidio.
+  Future<void> _play() async {
+    for (var i = 0; i < 4 && mounted; i++) {
+      await _bounce.forward().orCancel.catchError((_) {});
+      if (!mounted) return;
+      await _bounce.reverse().orCancel.catchError((_) {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _bounce.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: _bounce,
+        builder: (context, child) => Transform.translate(
+          offset: Offset(0, 6 * Curves.easeInOut.transform(_bounce.value)),
+          child: child,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Palette.night.withValues(alpha: 0.85),
+            border: Border.all(color: Palette.gold.withValues(alpha: 0.7)),
+          ),
+          child: const Icon(Icons.keyboard_double_arrow_down, color: Palette.goldBright, size: 26),
+        ),
+      );
 }
 
 /// Il pallino rosso: qui c'è qualcosa da fare o da riscuotere.

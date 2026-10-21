@@ -284,11 +284,11 @@ class _SkillChapter extends StatelessWidget {
             next != null
                 ? tr('Livello {lvl} · prossimo sblocco al {next}', {'lvl': level, 'next': next.$1})
                 : tr('Livello {lvl}', {'lvl': level}),
-            style: const TextStyle(color: Palette.ash, fontSize: 12.5),
+            style: const TextStyle(color: Palette.ash, fontSize: 14),
           ),
           childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
           children: [
-            Text(intro, style: const TextStyle(color: Palette.ash, fontSize: 13.5)),
+            Text(intro, style: const TextStyle(color: Palette.ash, fontSize: 15)),
             const SizedBox(height: 8),
             for (final u in unlocks) _UnlockRow(unlock: u, reached: level >= u.$1),
           ],
@@ -327,7 +327,7 @@ class _UnlockRow extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: TextStyle(color: reached ? Palette.holy : Palette.ash, fontSize: 13.5),
+              style: TextStyle(color: reached ? Palette.holy : Palette.ash, fontSize: 15),
             ),
           ),
           Icon(reached ? Icons.check : Icons.lock_outline, size: 16, color: color),

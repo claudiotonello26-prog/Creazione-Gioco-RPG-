@@ -166,6 +166,7 @@ const Map<String, String> enUiB = {
   'In diretta': 'Live',
   'Sfide': 'Duels',
   'Caccia libera': 'Free hunt',
+  'Mostri': 'Monsters',
   'metà': 'half',
   'TUTTI · {n}×': 'ALL · {n}×',
   'Tocca qui per: {tab}': 'Tap here for: {tab}',
