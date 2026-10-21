@@ -87,24 +87,24 @@ GLOBAL_STYLE_INSTRUCTION = (
 
 # 4. Item Definitions
 ITEMS = {
-    # Part 1: Merchants (4 busts)
+    # Part 1: Merchants (4 busts) - Friendly, looking into camera / viewer
     "general_store": {
         "type": "npc",
         "file": "assets/art/npc/general_store.png",
         "name": "Berta of the General Store",
         "framing": (
             "Framing: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). "
-            "Three-quarter view turned to the RIGHT of the image, eyes looking right. "
+            "Front-facing towards the camera/viewer (or very slight three-quarter angle), eyes looking straight into the camera / at the player with a warm, friendly and welcoming smile. "
             "Head positioned in the upper half of the canvas with a little space above the head, shoulders broad and filling the canvas width. "
-            "Light source from the upper left. Weathered, believable person of a grim medieval world, not a hero, not a monster. "
+            "Light source from the upper left. Weathered, believable person of a grim medieval world, warm and inviting shopkeeper, not a hero, not a monster. "
             "Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted."
         ),
         "desc": (
-            "Berta of the General Store. Woman in her fifties, round friendly but shrewd weathered face, rosy cheeks, "
+            "Berta of the General Store. Woman in her fifties, very warm and friendly welcoming smile, kind sparkling eyes looking directly at the viewer/screen, rosy cheeks, "
             "grey-streaked chestnut hair tied in a loose bun under a faded red headscarf. Small brass spectacles perched on her nose. "
             "Wearing a practical cream linen blouse, a coarse brown wool shawl draped around her, a leather apron strap over one shoulder, "
             "a pencil tucked behind her ear, and a small ring of brass keys hanging at the collar. "
-            "Warm weathered colours strictly: faded red, cream linen, brown wool, brass, natural skin tones. Bold inked outlines."
+            "Warm, friendly shopkeeper greeting the player. Warm weathered colours strictly: faded red, cream linen, brown wool, brass, natural skin tones. Bold inked outlines."
         )
     },
     "smith": {
@@ -113,17 +113,18 @@ ITEMS = {
         "name": "Master Gorran the Blacksmith",
         "framing": (
             "Framing: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). "
-            "Three-quarter view turned to the RIGHT of the image, eyes looking right. "
+            "Front-facing towards the camera/viewer (or very slight three-quarter angle), eyes looking straight into the camera / at the player with a hearty, friendly, warm and jovial warrior smile. "
             "Head positioned in the upper half of the canvas with a little space above the head, broad powerful shoulders filling the canvas width. "
-            "Light source from the upper left, plus warm forge glow from below on one side. Weathered, believable person of a grim medieval world, not a hero, not a monster. "
+            "Light source from the upper left, plus warm forge glow from below on one side. Weathered, believable craftsman, hearty and friendly. "
             "Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted."
         ),
         "desc": (
-            "Master Gorran the Blacksmith. Big bald man in his forties, thick braided red-brown beard with a few singed hairs. "
+            "Master Gorran the Blacksmith. Big bald man in his forties, hearty friendly smile, warm kind eyes looking directly into the camera / at the viewer, "
+            "thick braided red-brown beard with a few singed hairs. "
             "Black soot smudges on his forehead and rugged cheeks, thick powerful neck. "
             "Heavy leather apron over a sleeveless sweat-darkened coarse grey shirt, thick hairy muscular forearm visible at the bottom edge, "
             "a pair of heavy iron blacksmith tongs resting casually over his shoulder. "
-            "Glow of the forge lighting him warm orange from below on one side. "
+            "Glow of the forge lighting him warm orange from below on one side. Welcoming master craftsman greeting the player warmly. "
             "Colours strictly: steel grey, leather brown, forge orange, natural ruddy skin tones. Bold inked outlines."
         )
     },
@@ -133,17 +134,18 @@ ITEMS = {
         "name": "Edda the Huntress",
         "framing": (
             "Framing: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). "
-            "Three-quarter view turned to the RIGHT of the image, eyes looking right. "
+            "Front-facing towards the camera/viewer (or very slight three-quarter angle), eyes looking straight into the camera / at the player with a friendly, welcoming, gentle smile and kind eyes. "
             "Head positioned in the upper half of the canvas with a little space above the head, shoulders filling the canvas width. "
-            "Light source from the upper left. Weathered, believable person of a grim medieval world, not a hero, not a monster. "
+            "Light source from the upper left. Weathered, believable person of a grim medieval world, friendly and trustworthy ally. "
             "Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted."
         ),
         "desc": (
-            "Edda the Huntress. Lean woman in her thirties, sharp weathered hawk-like face, a thin pale scar across one cheek. "
+            "Edda the Huntress. Lean woman in her thirties, sharp weathered hawk-like face softened by a warm, friendly smile and kind welcoming eyes looking straight at the viewer, "
+            "a thin pale scar across one cheek. "
             "Dark blonde hair braided in a practical side braid over one shoulder. "
             "Wearing a forest green-brown hooded cloak with the hood down around her neck, a rough grey wolf fur collar, "
             "a sturdy oiled leather jerkin, a thick leather quiver strap across the chest with fletched feathered arrows visible behind her shoulder, "
-            "and a carved bone talisman hanging from a leather cord. "
+            "and a carved bone talisman hanging from a leather cord. Friendly, welcoming demeanor. "
             "Colours strictly: forest green, wolf fur grey, weathered leather brown, bone white. Bold inked outlines."
         )
     },
@@ -153,16 +155,17 @@ ITEMS = {
         "name": "Velthar the Mage",
         "framing": (
             "Framing: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). "
-            "Three-quarter view turned to the RIGHT of the image, eyes looking right. "
+            "Front-facing towards the camera/viewer (or very slight three-quarter angle), eyes looking straight into the camera / at the player with a warm, friendly, benevolent smile and kind wise eyes. "
             "Head positioned in the upper half of the canvas with a little space above the head, shoulders filling the canvas width. "
-            "Light source from the upper left. Weathered, believable person of a grim medieval world, mysterious but kind, NOT evil, NOT corrupted. "
+            "Light source from the upper left. Weathered, believable person of a grim medieval world, mysterious but kind, gentle and welcoming, NOT evil, NOT corrupted. "
             "Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted."
         ),
         "desc": (
-            "Velthar the Mage. Old thin weathered scholar man, long flowing silver beard and mustache, deep-set clever wise eyes with a faint subtle violet glint. "
+            "Velthar the Mage. Old thin weathered scholar man, warm gentle benevolent smile, wise kind eyes with a faint subtle violet sparkle looking straight into the camera / at the viewer, "
+            "long flowing silver beard and mustache. "
             "Wearing a tall soft pointed scholar hood of deep indigo cloth embroidered with small faded antique silver runes, high collar robes. "
             "The carved top of an ancient wooden staff with an embedded pale crystal visible beside his shoulder, and a few small glass potion vials with pale liquids hanging from a shoulder strap. "
-            "Colours strictly: deep indigo cloth, subtle violet glow, antique silver, weathered aged parchment skin tones. Mysterious and wise, kind demeanor. Bold inked outlines."
+            "Colours strictly: deep indigo cloth, subtle violet glow, antique silver, weathered aged parchment skin tones. Gentle, warm, kind mentor demeanor. Bold inked outlines."
         )
     },
 
