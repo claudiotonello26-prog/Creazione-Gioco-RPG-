@@ -91,15 +91,155 @@ Future<void> showTrainer(BuildContext context, List<TrainerLine> lines) {
   );
 }
 
+/// Gesti da mostrare una volta per schermata, dopo le battute del trainer:
+/// se si scorre in giù e, se c'è, la seconda scheda in alto da toccare.
+const Map<String, (bool, String?)> gestureHints = {
+  'home': (true, null),
+  'training': (true, 'Arena'),
+  'walk': (true, null),
+  'market': (false, 'Fattucchiera'),
+  'guild': (true, 'Cavalieri'),
+};
+
 /// Il consiglio [id] alla prima volta che serve, poi mai più.
 void maybeShowHint(BuildContext context, String id) {
   final s = context.read<GameState>();
   final lines = trainerHints[id];
-  if (lines == null || !s.trainerEnabled || s.seenHints.contains(id)) return;
-  WidgetsBinding.instance.addPostFrameCallback((_) {
+  final gesture = gestureHints[id];
+  if ((lines == null && gesture == null) || !s.trainerEnabled || s.seenHints.contains(id)) return;
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
     if (!context.mounted || !s.markHint(id)) return;
-    showTrainer(context, lines);
+    if (lines != null) await showTrainer(context, lines);
+    if (gesture != null && context.mounted) {
+      await showGestureHint(context, scroll: gesture.$1, tab: gesture.$2);
+    }
   });
+}
+
+/// La mano che mostra il gesto: freccia che rimbalza verso il basso per
+/// scorrere, cerchio che pulsa sulla seconda scheda in alto. Sparisce da
+/// sola o al tocco.
+Future<void> showGestureHint(BuildContext context, {bool scroll = true, String? tab}) {
+  return showGeneralDialog<void>(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: 'Hint',
+    barrierColor: Colors.black.withValues(alpha: 0.35),
+    transitionDuration: const Duration(milliseconds: 200),
+    pageBuilder: (_, _, _) => _GestureHint(scroll: scroll, tab: tab),
+  );
+}
+
+class _GestureHint extends StatefulWidget {
+  const _GestureHint({required this.scroll, this.tab});
+  final bool scroll;
+  final String? tab;
+
+  @override
+  State<_GestureHint> createState() => _GestureHintState();
+}
+
+/// La scritta su una targhetta scura, leggibile sopra qualsiasi cosa.
+Widget _pill(Widget child) => Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Palette.night.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Palette.gold.withValues(alpha: 0.6)),
+      ),
+      child: child,
+    );
+
+class _GestureHintState extends State<_GestureHint> with SingleTickerProviderStateMixin {
+  late final _anim = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
+    ..repeat(reverse: true);
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 4500), () {
+      if (mounted) Navigator.of(context).maybePop();
+    });
+  }
+
+  @override
+  void dispose() {
+    _anim.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final pad = MediaQuery.paddingOf(context);
+    final w = MediaQuery.sizeOf(context).width;
+    const label = TextStyle(
+      color: Palette.goldBright,
+      fontSize: 15,
+      fontWeight: FontWeight.w700,
+      decoration: TextDecoration.none,
+      shadows: [Shadow(color: Colors.black, blurRadius: 6)],
+    );
+    return GestureDetector(
+      onTap: () => Navigator.of(context).maybePop(),
+      child: Material(
+        type: MaterialType.transparency,
+        child: Stack(
+          children: [
+            if (widget.tab != null)
+              // La seconda scheda è la metà destra della riga sotto la testata.
+              Positioned(
+                top: pad.top + 57,
+                left: w / 2,
+                width: w / 2,
+                height: 48,
+                child: AnimatedBuilder(
+                  animation: _anim,
+                  builder: (_, _) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: Palette.goldBright.withValues(alpha: 0.5 + 0.5 * _anim.value),
+                        width: 2 + 2 * _anim.value,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            if (widget.tab != null)
+              Positioned(
+                top: pad.top + 57 + 52,
+                left: w / 2,
+                width: w / 2,
+                child: Column(
+                  children: [
+                    const Icon(Icons.touch_app, color: Palette.goldBright, size: 34),
+                    _pill(Text(tr('Tocca qui per: {tab}', {'tab': tr(widget.tab!)}),
+                        textAlign: TextAlign.center, style: label)),
+                  ],
+                ),
+              ),
+            if (widget.scroll)
+              Positioned(
+                bottom: pad.bottom + 110,
+                left: 0,
+                right: 0,
+                child: AnimatedBuilder(
+                  animation: _anim,
+                  builder: (_, child) =>
+                      Transform.translate(offset: Offset(0, 14 * _anim.value), child: child),
+                  child: Column(
+                    children: [
+                      _pill(Text(tr('Scorri in giù: c\'è dell\'altro'), style: label)),
+                      const Icon(Icons.keyboard_double_arrow_down, color: Palette.goldBright, size: 44),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _TrainerOverlay extends StatefulWidget {

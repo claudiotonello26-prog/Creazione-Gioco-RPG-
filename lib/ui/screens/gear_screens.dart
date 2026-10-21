@@ -329,7 +329,7 @@ class _Shops extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         for (final k in ShopKeeper.values)
@@ -395,7 +395,7 @@ class ShopScreen extends StatelessWidget {
         title: Text(k.role.toUpperCase()),
         actions: const [_Runes()],
       ),
-      body: ListView(
+      body: FoldedListView(
         padding: const EdgeInsets.all(16),
         children: [
           Row(

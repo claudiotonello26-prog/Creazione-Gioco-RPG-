@@ -913,6 +913,17 @@ class GameState extends ChangeNotifier {
     return q != null && stat(q.stat) >= q.target;
   }
 
+  // Pallini rossi: dove c'è qualcosa da fare o da riscuotere.
+
+  /// Training: Cammino del Novizio o contratto da riscuotere.
+  bool get trainingAlert => noviceReady || (contract?.complete ?? false);
+
+  /// Raccolta: passi in banca bastano per almeno un'unità.
+  bool get gatheringAlert => stepBank >= stepsPerUnit(resourceById(gatherTarget));
+
+  /// Forgia: l'equipaggiamento ha perso forza per l'usura.
+  bool get forgeAlert => gearWornOut;
+
   /// Riscuote la missione completata e passa alla prossima.
   NoviceQuest? claimNovice() {
     final q = noviceQuest;

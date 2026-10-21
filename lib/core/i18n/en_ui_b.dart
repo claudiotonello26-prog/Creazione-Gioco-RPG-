@@ -154,6 +154,8 @@ const Map<String, String> enUiB = {
   'Mercante': 'Merchant',
   'Fattucchiera': 'Witch',
   'Botteghe': 'Shops',
+  'Tocca qui per: {tab}': 'Tap here for: {tab}',
+  'Scorri in giù: c\'è dell\'altro': 'Scroll down: there is more',
   'Emporio': 'General Store',
   'Fabbro': 'Blacksmith',
   'Cacciatrice': 'Huntress',

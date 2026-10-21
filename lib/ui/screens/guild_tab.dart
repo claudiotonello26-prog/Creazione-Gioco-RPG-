@@ -396,7 +396,7 @@ class _NoGuildState extends State<_NoGuild> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (!g.live) const _Offline(),
@@ -641,7 +641,7 @@ class _MyGuild extends StatelessWidget {
     final guild = g.guild!;
     final rooms = g.sessions.where((x) => !x.friendly).toList();
     final asking = g.members.where((m) => m.state == 3).toList();
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (!g.live) const _Offline(),
@@ -943,7 +943,7 @@ class _KnightsState extends State<_Knights> {
     final mates = g.friends.where((f) => f.state == 0).toList();
     void open(String id, String name, HeroCard? hero, bool online) =>
         showKnight(context, g, id: id, name: name, hero: hero, online: online);
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (!g.live) const _Offline(),

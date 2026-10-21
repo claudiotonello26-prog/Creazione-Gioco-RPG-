@@ -26,7 +26,7 @@ class ArenaTab extends StatelessWidget {
     final s = context.watch<GameState>();
     final wins = s.arenaHistory.where((r) => r.won > 0).length;
     final losses = s.arenaHistory.where((r) => r.won < 0).length;
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         Card(

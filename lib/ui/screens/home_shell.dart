@@ -89,7 +89,8 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final points = context.watch<GameState>().character.availablePoints;
+    final gs = context.watch<GameState>();
+    final points = gs.character.availablePoints;
     _notifyPoints(points);
     final quest = context.read<GameState>().questComplete;
     if (_questDone == false && quest) Sound.play(Sfx.questDone);
@@ -160,22 +161,25 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
             destinations: [
               NavigationDestination(
-                icon: Badge(
-                  isLabelVisible: points > 0,
-                  label: Text('$points'),
-                  child: _navIcon('home', Icons.castle_outlined),
-                ),
+                icon: points > 0
+                    ? Badge(label: Text('$points'), child: _navIcon('home', Icons.castle_outlined))
+                    : AlertDot(on: gs.noviceReady, child: _navIcon('home', Icons.castle_outlined)),
                 label: tr('Home'),
               ),
               NavigationDestination(
-                icon: _navIcon('training', Icons.fitness_center),
+                icon: AlertDot(
+                    on: gs.trainingAlert, child: _navIcon('training', Icons.fitness_center)),
                 label: tr('Training'),
               ),
               NavigationDestination(
-                icon: _navIcon('gathering', Icons.directions_walk),
+                icon: AlertDot(
+                    on: gs.gatheringAlert, child: _navIcon('gathering', Icons.directions_walk)),
                 label: tr('Gathering'),
               ),
-              NavigationDestination(icon: _navIcon('forge', Icons.hardware), label: tr('Forge')),
+              NavigationDestination(
+                icon: AlertDot(on: gs.forgeAlert, child: _navIcon('forge', Icons.hardware)),
+                label: tr('Forge'),
+              ),
               NavigationDestination(
                   icon: _navIcon('market', Icons.storefront), label: tr('Market')),
               NavigationDestination(
@@ -215,7 +219,18 @@ class _TrainingSection extends StatelessWidget {
               Sound.music(i == 0 ? Music.training : Music.arena);
               if (i == 1) maybeShowHint(context, 'arena');
             },
-            tabs: [Tab(text: tr('Allenamento')), Tab(text: tr('Arena'))],
+            tabs: [
+              Tab(
+                child: AlertDot(
+                  on: context.watch<GameState>().trainingAlert,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: Text(tr('Allenamento')),
+                  ),
+                ),
+              ),
+              Tab(text: tr('Arena')),
+            ],
           ),
         ),
         body: TabBarView(

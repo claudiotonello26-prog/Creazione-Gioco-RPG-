@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../../core/i18n.dart';
@@ -42,36 +44,58 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
       textAlign: TextAlign.center,
       child: title,
     );
-    final right = [
-      if (actions != null)
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Palette.stone,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Palette.gold.withValues(alpha: 0.4)),
+    // Rune e simili a sinistra accanto a indietro, guida e impostazioni a
+    // destra; il nome sta al centro dello schermo, con lo stesso margine dai
+    // due lati, e se è lungo si rimpicciolisce invece di finire sotto i tasti.
+    final left = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (canPop)
+          BarButton(
+            icon: Icons.arrow_back,
+            tooltip: tr('Indietro'),
+            onTap: () => Navigator.of(context).maybePop(),
+          )
+        else
+          Image.asset('assets/images/logo_helmet.png', height: 30),
+        if (actions != null) ...[
+          const SizedBox(width: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Palette.stone,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Palette.gold.withValues(alpha: 0.4)),
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: actions!),
           ),
-          child: Row(mainAxisSize: MainAxisSize.min, children: actions!),
-        ),
-      if (tools) ...[
-        const SizedBox(width: 6),
-        BarButton(
-          icon: Icons.menu_book_outlined,
-          tooltip: tr('Guida'),
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const GuideScreen()),
-          ),
-        ),
-        const SizedBox(width: 6),
-        BarButton(
-          icon: Icons.settings_outlined,
-          tooltip: tr('Impostazioni'),
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const SettingsScreen()),
-          ),
-        ),
+        ],
       ],
-    ];
+    );
+    final right = tools
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              BarButton(
+                icon: Icons.menu_book_outlined,
+                tooltip: tr('Guida'),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const GuideScreen()),
+                ),
+              ),
+              const SizedBox(width: 6),
+              BarButton(
+                icon: Icons.settings_outlined,
+                tooltip: tr('Impostazioni'),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                ),
+              ),
+            ],
+          )
+        : null;
+    // Spazio che i tasti occupano sul lato più pieno.
+    final side = [36.0 + (actions != null ? 84 : 0), tools ? 78.0 : 0.0].reduce(max) + 8;
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -91,29 +115,27 @@ class OathBar extends StatelessWidget implements PreferredSizeWidget {
                 height: _top,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
+                  child: Stack(
+                    alignment: Alignment.center,
                     children: [
-                      if (canPop)
-                        BarButton(
-                          icon: Icons.arrow_back,
-                          tooltip: tr('Indietro'),
-                          onTap: () => Navigator.of(context).maybePop(),
-                        )
-                      else
-                        Image.asset('assets/images/logo_helmet.png', height: 30),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(width: 34, child: _Flourish(flip: true, color: color)),
-                            const SizedBox(width: 8),
-                            Flexible(child: FittedBox(fit: BoxFit.scaleDown, child: name)),
-                            const SizedBox(width: 8),
-                            SizedBox(width: 34, child: _Flourish(color: color)),
-                          ],
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: side),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(width: 30, child: _Flourish(flip: true, color: color)),
+                              const SizedBox(width: 8),
+                              name,
+                              const SizedBox(width: 8),
+                              SizedBox(width: 30, child: _Flourish(color: color)),
+                            ],
+                          ),
                         ),
                       ),
-                      ...right,
+                      Align(alignment: Alignment.centerLeft, child: left),
+                      if (right != null) Align(alignment: Alignment.centerRight, child: right),
                     ],
                   ),
                 ),

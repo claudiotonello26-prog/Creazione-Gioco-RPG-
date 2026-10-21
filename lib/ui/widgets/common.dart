@@ -425,6 +425,110 @@ class NpcBust extends StatelessWidget {
   }
 }
 
+/// Una lista che non taglia niente a metà sulla prima schermata: il primo
+/// pezzo che finirebbe sotto il bordo in basso scende all'inizio della
+/// seconda, e sopra resta spazio vuoto. Scorrendo, tutto come una ListView.
+class FoldedListView extends StatefulWidget {
+  const FoldedListView({super.key, required this.children, this.padding = EdgeInsets.zero});
+  final List<Widget> children;
+  final EdgeInsets padding;
+
+  @override
+  State<FoldedListView> createState() => _FoldedListViewState();
+}
+
+class _FoldedListViewState extends State<FoldedListView> {
+  final _controller = ScrollController();
+  final _list = GlobalKey();
+  List<GlobalKey> _keys = [];
+  int? _at;
+  double _gap = 0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _measure(double viewport) {
+    if (!mounted || (_controller.hasClients && _controller.offset > 0)) return;
+    final listBox = _list.currentContext?.findRenderObject() as RenderBox?;
+    if (listBox == null) return;
+    int? at;
+    var gap = 0.0;
+    for (var i = 1; i < _keys.length; i++) {
+      final box = _keys[i].currentContext?.findRenderObject() as RenderBox?;
+      if (box == null || !box.hasSize) break;
+      var top = box.localToGlobal(Offset.zero, ancestor: listBox).dy;
+      if (_at != null && i >= _at!) top -= _gap;
+      final bottom = top + box.size.height;
+      if (top >= viewport) break;
+      if (bottom > viewport + 1) {
+        // Un titolo di sezione scende insieme al suo primo pezzo.
+        var j = i;
+        if (j > 1 && widget.children[j - 1] is SectionTitle) {
+          final t = _keys[j - 1].currentContext?.findRenderObject() as RenderBox?;
+          if (t != null && t.hasSize) {
+            j--;
+            top = t.localToGlobal(Offset.zero, ancestor: listBox).dy;
+            if (_at != null && j >= _at!) top -= _gap;
+          }
+        }
+        // Non lasciare mezza schermata vuota per un pezzo enorme.
+        if (viewport - top < viewport * 0.4) {
+          at = j;
+          gap = viewport - top;
+        }
+        break;
+      }
+    }
+    if (at != _at || (gap - _gap).abs() > 1) {
+      setState(() {
+        _at = at;
+        _gap = gap;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_keys.length != widget.children.length) {
+      _keys = [for (final _ in widget.children) GlobalKey()];
+    }
+    return LayoutBuilder(
+      builder: (context, box) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _measure(box.maxHeight));
+        return ListView(
+          key: _list,
+          controller: _controller,
+          padding: widget.padding,
+          children: [
+            for (final (i, c) in widget.children.indexed) ...[
+              if (i == _at) SizedBox(height: _gap),
+              KeyedSubtree(key: _keys[i], child: c),
+            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Il pallino rosso: qui c'è qualcosa da fare o da riscuotere.
+class AlertDot extends StatelessWidget {
+  const AlertDot({super.key, required this.on, required this.child});
+  final bool on;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Badge(
+        isLabelVisible: on,
+        smallSize: 10,
+        backgroundColor: const Color(0xFFE0483C),
+        child: child,
+      );
+}
+
 void toast(BuildContext context, String message) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()

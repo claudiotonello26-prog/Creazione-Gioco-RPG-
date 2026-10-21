@@ -108,7 +108,7 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
       appBar: OathBar(title: Text(tr('Gathering').toUpperCase()), accent: Sections.gathering),
       body: RefreshIndicator(
         onRefresh: _refresh,
-        child: ListView(
+        child: FoldedListView(
           padding: const EdgeInsets.all(16),
           children: [
             Center(

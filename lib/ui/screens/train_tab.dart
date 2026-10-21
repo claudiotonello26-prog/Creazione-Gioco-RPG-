@@ -54,7 +54,7 @@ class TrainTab extends StatelessWidget {
     final s = context.watch<GameState>();
     final plan = weeklyPlan(s.daysPerWeek);
     final trainedThisWeek = s.trainedGroups.values.expand((g) => g).toSet();
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (onNavigate != null) NoviceCard(onNavigate: onNavigate!),
@@ -97,20 +97,23 @@ class TrainTab extends StatelessWidget {
         ),
         _QuickFights(playerLevel: s.character.level),
         SectionTitle(tr('Spedizioni')),
-        ActionTile(
-          icon: Icons.history_edu,
-          title: tr('Bacheca delle Taglie'),
-          subtitle: s.contract == null
-              ? tr('Firma un contratto: spedizioni da finire per un forziere')
-              : s.contract!.complete
-                  ? tr('Contratto finito: torna a riscuotere!')
-                  : tr('Contratto di {who}: {done} / {n} spedizioni', {
-                      'who': s.contract!.contractor.name,
-                      'done': s.contract!.targets.where(s.contract!.done.contains).length,
-                      'n': s.contract!.targets.length,
-                    }),
-          color: s.contract?.complete == true ? Palette.goldBright : Palette.gold,
-          onTap: () => openContracts(context),
+        AlertDot(
+          on: s.contract?.complete ?? false,
+          child: ActionTile(
+            icon: Icons.history_edu,
+            title: tr('Bacheca delle Taglie'),
+            subtitle: s.contract == null
+                ? tr('Firma un contratto: spedizioni da finire per un forziere')
+                : s.contract!.complete
+                    ? tr('Contratto finito: torna a riscuotere!')
+                    : tr('Contratto di {who}: {done} / {n} spedizioni', {
+                        'who': s.contract!.contractor.name,
+                        'done': s.contract!.targets.where(s.contract!.done.contains).length,
+                        'n': s.contract!.targets.length,
+                      }),
+            color: s.contract?.complete == true ? Palette.goldBright : Palette.gold,
+            onTap: () => openContracts(context),
+          ),
         ),
         for (final g in worldGroups)
           _GroupCard(

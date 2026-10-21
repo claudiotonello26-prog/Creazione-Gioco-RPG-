@@ -39,7 +39,7 @@ class ForgeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    return ListView(
+    return FoldedListView(
       padding: const EdgeInsets.all(16),
       children: [
         GridView.count(
