@@ -1068,11 +1068,18 @@ class GameState extends ChangeNotifier {
 
   /// Il boss della mappa cade dopo il circuito: lascia il suo bottino e
   /// mostra il forziere.
-  Map<String, int> expeditionBossDown(Expedition e, {bool weighted = false}) {
+  Map<String, int> expeditionBossDown(Expedition e, {bool weighted = false, Random? random}) {
     _rollDay();
     final m = weighted ? 2 : 1;
-    final loot = _forBuild({for (final l in e.boss.loot.entries) l.key: l.value * m});
-    loot.forEach(character.addMaterial);
+    // Come ogni vittoria: i comuni, o al loro posto un pezzo speciale.
+    final special = e.boss.rollSpecial(random ?? Random(), multiplier: m.toDouble());
+    final Map<String, int> loot;
+    if (special == null) {
+      loot = _forBuild({for (final l in e.boss.commonLoot.entries) l.key: l.value * m});
+      loot.forEach(character.addMaterial);
+    } else {
+      loot = {_grantItem(special): 1};
+    }
     _gainXp(150 * m);
     _gainSkill(Skill.expeditions, 60);
     daily.expeditionStep[e.id] = mapChest;
@@ -1194,7 +1201,7 @@ class GameState extends ChangeNotifier {
   CombatRewards holdVictory(EnemyDef e, {required int seconds, double lootMultiplier = 1}) {
     _rollDay();
     final materials = _forBuild({
-      for (final l in e.loot.entries) l.key: max(1, (l.value * lootMultiplier).round()),
+      for (final l in e.commonLoot.entries) l.key: max(1, (l.value * lootMultiplier).round()),
     });
     materials.forEach(character.addMaterial);
     final runes = (e.runeReward * lootMultiplier).round();

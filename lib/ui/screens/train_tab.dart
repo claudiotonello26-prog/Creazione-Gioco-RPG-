@@ -479,14 +479,15 @@ class _FreeFightTile extends StatelessWidget {
                             runSpacing: 2,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
-                              for (final k in {for (final k in enemy.loot.keys) forBuild(k, oath)})
+                              for (final k in {for (final k in enemy.commonLoot.keys) forBuild(k, oath)})
                                 CodexTap(k,
                                     child: Tooltip(
                                         message: itemName(k), child: ItemIcon(k, size: 26))),
-                              if (enemy.rareDrop != null)
+                              if (enemy.rareLoot.isNotEmpty)
                                 Tooltip(
-                                  message:
-                                      tr('Raro: {name}', {'name': itemName(enemy.rareDrop!)}),
+                                  message: tr('Raro: {name}', {
+                                    'name': enemy.rareLoot.map((id) => itemName(_dropKey(id, oath))).join(', '),
+                                  }),
                                   child: const Icon(Icons.star, color: _rareColor, size: 20),
                                 ),
                             ],
@@ -541,14 +542,12 @@ class _EnemyRewards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final oath = context.watch<GameState>().build;
-    final raw = enemy.rareDrop;
-    final special = raw == null
-        ? null
-        : amuletDefs.containsKey(raw)
-            ? 'amulet_$raw'
-            : forBuild(raw, oath);
-    final uncommon = CombatEngine.uncommonDrops;
-    final rare = [for (final r in CombatEngine.rareDrops) if (r != special) r];
+    final special = enemy.specialChance;
+    final uncommon = [for (final id in enemy.uncommonLoot) _dropKey(id, oath)];
+    final rare = [for (final id in enemy.rareLoot) _dropKey(id, oath)];
+    // Probabilità di ciascun pezzo, a vittoria.
+    final pUncommon = uncommon.isEmpty ? 0.0 : special * (1 - enemy.rareShare) / uncommon.length;
+    final pRare = rare.isEmpty ? 0.0 : special * enemy.rareShare / rare.length;
     Widget item(String id, String note, Color color, {bool highlight = false}) => CodexTap(
         id,
         child: SizedBox(
@@ -610,23 +609,29 @@ class _EnemyRewards extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (enemy.loot.isNotEmpty)
-          row(tr('Comuni'), _commonColor, tr('a ogni vittoria'), [
-            for (final e in lootForBuild(enemy.loot, oath).entries)
-              item(e.key, 'x${e.value}', _commonColor),
+        row(tr('Comuni'), _commonColor, tr('a ogni vittoria'), [
+          for (final e in lootForBuild(enemy.commonLoot, oath).entries)
+            item(e.key, 'x${e.value}', _commonColor),
+        ]),
+        if (uncommon.isNotEmpty)
+          row(tr('Non comuni'), _uncommonColor, tr('al posto dei comuni'), [
+            for (final id in uncommon) item(id, _pct(pUncommon), _uncommonColor),
           ]),
-        row(tr('Non comuni'), _uncommonColor,
-            tr('uno a caso, {p}', {'p': _pct(CombatEngine.uncommonBase)}), [
-          for (final id in uncommon) item(id, '', _uncommonColor),
-        ]),
-        row(tr('Rari'), _rareColor, tr('più spesso in caccia infinita'), [
-          if (special != null)
-            item(special, _pct(enemy.rareDropChance), _rareColor, highlight: true),
-          for (final id in rare) item(id, _pct(CombatEngine.rareBase), _rareColor),
-        ]),
+        if (rare.isNotEmpty)
+          row(tr('Rari'), _rareColor, tr('più spesso in caccia infinita'), [
+            for (final id in rare) item(id, _pct(pRare), _rareColor, highlight: true),
+          ]),
       ],
     );
   }
+}
+
+/// La chiave d'inventario di un drop per la build: amuleti col prefisso,
+/// componenti delle build convertiti.
+String _dropKey(String id, Attribute oath) {
+  if (amuletDefs.containsKey(id)) return 'amulet_$id';
+  if (weaponDefs.containsKey(id)) return id;
+  return forBuild(id, oath);
 }
 
 class _ExpeditionCard extends StatelessWidget {
@@ -680,7 +685,7 @@ class _ExpeditionCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 6,
                   children: [
-                    for (final d in {for (final d in e.drops) forBuild(d, oath)})
+                    for (final d in {for (final d in e.drops) _dropKey(d, oath)})
                       CodexTap(d,
                           child: Tooltip(message: itemName(d), child: ItemIcon(d, size: 30))),
                   ],

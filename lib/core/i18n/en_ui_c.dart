@@ -289,6 +289,7 @@ const Map<String, String> enUiC = {
   'a ogni vittoria': 'every victory',
   'Non comuni': 'Uncommon',
   'uno a caso, {p}': 'one at random, {p}',
+  'al posto dei comuni': 'instead of the commons',
   'Rari': 'Rare',
   'più spesso in caccia infinita': 'more often in the endless hunt',
   'Ricompense': 'Rewards',

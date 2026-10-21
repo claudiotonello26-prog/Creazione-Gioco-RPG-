@@ -37,6 +37,27 @@ Rune e materiali = base del nemico × **sforzo** × **forma** × **ondata** × (
 
 Le rune base per gradino sono 20 / 40 / 65 / 95 / 130, ×3 per i boss. Crescono più in fretta delle rep richieste, quindi **un nemico più duro paga di più per ogni rep**.
 
+### Comuni, non comuni e rari
+
+Ogni mostro ha tre liste corte:
+
+- **Comuni**: una o due risorse, che escono **a ogni vittoria** nelle quantità mostrate (poi scalate da sforzo e forma).
+- **Non comuni** (da 1 a 4: pietre di forgia, schegge sacre, gemme grezze e tagliate, impugnature) solo dai mostri dal **livello 5**.
+- **Rari** (al massimo 2: pietre alte, gemme pure, cuori, amuleti, armi speciali) solo dal **livello 10**.
+
+Animali e mostri bassi danno solo comuni. Sopra, a volte la vittoria **si trasforma**: al posto dei comuni esce un pezzo non comune o raro. La probabilità cresce in modo esponenziale col livello del mostro: 4% al livello 5, poi +4,5% composto a livello (5% al 10, 8% al 22, 20% al 41, tetto 35%), ×1,5 per boss e Veterani, ×1,35 a ondata in caccia infinita. Fra i pezzi speciali, la quota dei rari va dall'8% al livello 10 fino al 35%.
+
+| Mostro | Su 300 vittorie: comuni / non comuni / rari |
+|---|---|
+| Goblin (liv. 1) | 300 / 0 / 0 |
+| Scriba Annegato (liv. 10) | 285 / 14 / 1 |
+| Carceriere del Bastione (liv. 19) | 278 / 20 / 3 |
+| Fuochista Incatenato (liv. 29) | 265 / 29 / 6 |
+| Inquisitore Nero (liv. 45) | 230 / 48 / 22 |
+| Gargoyle della Cattedrale (liv. 50) | 213 / 57 / 30 |
+
+Le probabilità di ogni pezzo si vedono nella scheda del mostro e nel Codice. Codice: `EnemyDef.commonLoot`, `uncommonLoot`, `rareLoot`, `specialChance`, `rareShare` e `dropRarity` in `lib/domain/enemies.dart`.
+
 ### Rune per rep, con test 20 e rep perfette (dai test automatici)
 
 | Nemico | Rep | Danno nemico | Rune per rep |

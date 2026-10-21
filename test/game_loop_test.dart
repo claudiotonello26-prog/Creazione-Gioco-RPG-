@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iron_oath/data/game_state.dart';
 import 'package:iron_oath/domain/character.dart';
 import 'package:iron_oath/domain/combat.dart';
 import 'package:iron_oath/domain/enemies.dart';
 import 'package:iron_oath/domain/exercise.dart';
+import 'package:iron_oath/domain/hunting.dart';
 import 'package:iron_oath/domain/market.dart';
 import 'package:iron_oath/domain/novice.dart';
 import 'package:iron_oath/domain/skills.dart';
@@ -40,13 +43,46 @@ void main() {
     expect(s.defenseValue, lessThanOrEqualTo(0.75));
   });
 
-  test('nella caccia la probabilità di drop raro cresce in modo esponenziale', () {
+  test('nella caccia la probabilità di drop speciale cresce in modo esponenziale', () {
     CombatEngine at(int wave) => CombatEngine(
         enemy: enemyDefs['hollow_goblin']!, character: Character(), testReps: 20, wave: wave);
-    expect(at(0).rareChance, closeTo(0.015, 1e-9));
-    expect(at(5).rareChance / at(4).rareChance, closeTo(1.35, 1e-9));
-    expect(at(30).rareChance, 0.6);
-    expect(at(30).uncommonChance, 0.9);
+    expect(at(5).dropMultiplier / at(4).dropMultiplier, closeTo(1.35, 1e-9));
+  });
+
+  test('ogni mostro: 1-2 comuni sempre, al massimo 4 non comuni e 2 rari', () {
+    for (final e in [...enemyDefs.values, ...baseAnimals, ...huntAnimals]) {
+      expect(e.commonLoot.length, inInclusiveRange(1, 2), reason: e.id);
+      expect(e.uncommonLoot.length, lessThanOrEqualTo(4), reason: e.id);
+      expect(e.rareLoot.length, lessThanOrEqualTo(2), reason: e.id);
+      if (e.isAnimal || e.level < EnemyDef.uncommonFromLevel) {
+        expect(e.specialChance, 0, reason: e.id);
+      }
+      if (e.level < EnemyDef.rareFromLevel) expect(e.rareLoot, isEmpty, reason: e.id);
+    }
+  });
+
+  test('i mostri bassi danno sempre i loro comuni, quelli alti a volte un pezzo speciale', () {
+    final goblin = enemyDefs['hollow_goblin']!;
+    for (var i = 0; i < 50; i++) {
+      final f = CombatEngine(enemy: goblin, character: Character(), testReps: 20, random: Random(i));
+      while (f.status == CombatStatus.fighting) {
+        f.registerRep(RepQuality.perfect);
+      }
+      expect(f.rewards().materials.keys.toSet(), goblin.commonLoot.keys.toSet());
+    }
+    final high = enemyDefs.values.where((e) => !e.isBoss).reduce((a, b) => a.level >= b.level ? a : b);
+    var special = 0;
+    for (var i = 0; i < 300; i++) {
+      final f = CombatEngine(enemy: high, character: Character(), testReps: 20, random: Random(i));
+      while (f.status == CombatStatus.fighting) {
+        f.registerRep(RepQuality.perfect);
+      }
+      final r = f.rewards();
+      if (r.rareWeapon != null || !r.materials.keys.toSet().containsAll(high.commonLoot.keys)) {
+        special++;
+      }
+    }
+    expect(special, inInclusiveRange(60, 140));
   });
 
   test('ogni mostro ha il suo esercizio', () {

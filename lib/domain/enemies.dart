@@ -1,6 +1,8 @@
 // I nomi restano in italiano nel campo privato e si traducono nel getter.
 // ignore_for_file: prefer_initializing_formals
 
+import 'dart:math';
+
 import '../core/i18n.dart';
 import 'exercise.dart';
 import 'items.dart';
@@ -65,6 +67,101 @@ class EnemyDef {
   final Map<String, int> loot;
   final String? rareDrop;
   final double rareDropChance;
+
+  /// Comuni: le risorse che lascia SEMPRE, una o due, nelle quantità
+  /// mostrate (poi scalate dallo sforzo).
+  Map<String, int> get commonLoot {
+    final out = <String, int>{
+      for (final e in loot.entries)
+        if (dropRarity(e.key) == Rarity.common) e.key: e.value,
+    };
+    // Gli spiriti dello Stretching lasciano pietre e gemme: sono le loro
+    // risorse.
+    if (out.isEmpty) out.addAll(loot);
+    return Map.fromEntries(out.entries.take(2));
+  }
+
+  /// Non comuni possibili (da 1 a 4): solo dal livello [uncommonFromLevel],
+  /// mai dagli animali.
+  List<String> get uncommonLoot {
+    if (isAnimal || level < uncommonFromLevel) return const [];
+    final common = commonLoot.keys.toSet();
+    final out = <String>[
+      for (final id in loot.keys)
+        if (!common.contains(id) && dropRarity(id) == Rarity.uncommon) id,
+      if (rareDrop != null && dropRarity(rareDrop!) == Rarity.uncommon) rareDrop!,
+    ];
+    // Il gradino porta con sé le sue pietre e schegge.
+    for (final id in _tierUncommons[tier - 1]) {
+      if (out.length >= 2) break;
+      if (!out.contains(id)) out.add(id);
+    }
+    return out.toSet().take(4).toList();
+  }
+
+  /// Rari possibili (al massimo 2): solo dal livello [rareFromLevel].
+  List<String> get rareLoot {
+    if (isAnimal || level < rareFromLevel) return const [];
+    final common = commonLoot.keys.toSet();
+    final out = <String>[
+      if (rareDrop != null && dropRarity(rareDrop!) == Rarity.rare) rareDrop!,
+      for (final id in loot.keys)
+        if (!common.contains(id) && dropRarity(id) == Rarity.rare) id,
+    ];
+    if (out.length < 2) {
+      final extra = _tierRares[tier - 1];
+      if (extra != null && !out.contains(extra)) out.add(extra);
+    }
+    return out.toSet().take(2).toList();
+  }
+
+  /// Probabilità che una vittoria si trasformi in un non comune o in un
+  /// raro al posto dei comuni: zero sotto il livello 5, poi cresce del 4,5%
+  /// a livello (≈5% al 10, 8% al 22, 20% al 41, 35% dal 55), ×1,5 per boss
+  /// e Veterani.
+  double get specialChance {
+    if (uncommonLoot.isEmpty && rareLoot.isEmpty) return 0;
+    var p = 0.04 * pow(1.045, level - uncommonFromLevel);
+    if (isBoss) p *= 1.5;
+    if (isVeteran) p *= 1.5;
+    return min(isBoss ? 0.5 : 0.35, p.toDouble());
+  }
+
+  /// Fra i drop speciali, quota dei rari: dall'8% al livello 10 fino al
+  /// 35%.
+  double get rareShare {
+    if (rareLoot.isEmpty) return 0;
+    if (uncommonLoot.isEmpty) return 1;
+    return min(0.35, 0.08 * pow(1.04, level - rareFromLevel)).toDouble();
+  }
+
+  /// Tira il drop speciale di una vittoria: null se restano i comuni,
+  /// altrimenti l'id del pezzo non comune o raro che li sostituisce.
+  /// [multiplier] alza la probabilità (caccia infinita, bottino), [bonus] la
+  /// somma (amuleti da cacciatore).
+  String? rollSpecial(Random random, {double multiplier = 1, double bonus = 0}) {
+    if (random.nextDouble() >= min(0.9, specialChance * multiplier + bonus)) return null;
+    final rares = rareLoot, uncommons = uncommonLoot;
+    final pickRare = rares.isNotEmpty && (uncommons.isEmpty || random.nextDouble() < rareShare);
+    final pool = pickRare ? rares : uncommons;
+    return pool.isEmpty ? null : pool[random.nextInt(pool.length)];
+  }
+
+  static const int uncommonFromLevel = 5, rareFromLevel = 10;
+  static const List<List<String>> _tierUncommons = [
+    ['forge_stone_1'],
+    ['forge_stone_1', 'holy_shard'],
+    ['forge_stone_2', 'holy_shard'],
+    ['forge_stone_2', 'gem_rough'],
+    ['forge_stone_2', 'gem_cut'],
+  ];
+  static const List<String?> _tierRares = [
+    null,
+    'somber_stone',
+    'somber_stone',
+    'ancient_stone',
+    'ancient_stone',
+  ];
 
   /// Il mostro come lo si incontra su una tappa: gradino e livello della
   /// tappa, e da Veterano bottino ×1,5 e raro ×2.
@@ -1238,8 +1335,10 @@ class Expedition {
 
   /// Tutti i materiali che può lasciare, per mostrarli prima di partire.
   List<String> get drops =>
-      {for (final m in monsters) ...m.loot.keys, ...boss.loot.keys, ...chest.guaranteed.keys}
-          .toList();
+      {
+        for (final e in [...monsters, boss]) ...[...e.commonLoot.keys, ...e.uncommonLoot, ...e.rareLoot],
+        ...chest.guaranteed.keys,
+      }.toList();
 }
 
 const List<Expedition> expeditions = [
@@ -1689,3 +1788,42 @@ List<Expedition> expeditionsOf(MuscleGroup g) =>
     expeditions.where((e) => e.group == g).toList();
 
 Expedition expeditionById(String id) => expeditions.firstWhere((e) => e.id == id);
+
+enum Rarity { common, uncommon, rare }
+
+/// Rarità di un drop: le risorse di base sono comuni (anche i componenti
+/// delle build), pietre, schegge e gemme grezze non comuni, pietre alte,
+/// gemme pure, cuori, amuleti e armi rari.
+Rarity dropRarity(String id) {
+  if (weaponDefs.containsKey(id) || amuletDefs.containsKey(id) || id.startsWith('amulet_')) {
+    return Rarity.rare;
+  }
+  const uncommon = {
+    'forge_stone_1',
+    'forge_stone_2',
+    'holy_shard',
+    'gem_rough',
+    'gem_cut',
+    'reinforced_grip',
+    'somber_stone_2',
+  };
+  const rare = {
+    'forge_stone_3',
+    'ancient_stone',
+    'somber_stone',
+    'somber_stone_3',
+    'somber_stone_4',
+    'epic_stone',
+    'gem_pure',
+    'gem_perfect',
+    'ember_heart',
+    'storm_eye',
+    'martyr_tear',
+    'star_core',
+    'dream_pearl',
+    'hunter_heart',
+  };
+  if (rare.contains(id)) return Rarity.rare;
+  if (uncommon.contains(id)) return Rarity.uncommon;
+  return Rarity.common;
+}

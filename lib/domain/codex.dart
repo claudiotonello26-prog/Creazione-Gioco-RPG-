@@ -4,7 +4,6 @@
 
 import '../core/i18n.dart';
 import 'character.dart';
-import 'combat.dart';
 import 'contracts.dart';
 import 'enemies.dart';
 import 'hunting.dart';
@@ -162,46 +161,21 @@ List<CodexSource> codexSources(String id, Attribute build) {
   bool same(String raw) => _bagKey(raw, build) == id;
 
   for (final e in _allEnemies) {
-    if (e.loot.keys.any(same)) {
-      out.add(
-        CodexSource(
-          SourceKind.enemy,
-          tr('{enemy} · {region}', {'enemy': e.name, 'region': e.region}),
-          enemy: e,
-          level: e.level,
-        ),
-      );
+    String label() => tr('{enemy} · {region}', {'enemy': e.name, 'region': e.region});
+    if (e.commonLoot.keys.any(same)) {
+      out.add(CodexSource(SourceKind.enemy, label(), enemy: e, level: e.level));
     }
-    final rare = e.rareDrop;
-    if (rare != null && same(rare)) {
-      out.add(
-        CodexSource(
-          SourceKind.enemy,
-          tr('{enemy} · {region}', {'enemy': e.name, 'region': e.region}),
-          chance: e.rareDropChance,
+    final uncommon = e.uncommonLoot, rare = e.rareLoot;
+    if (uncommon.any(same)) {
+      out.add(CodexSource(SourceKind.enemy, label(),
+          chance: e.specialChance * (1 - e.rareShare) / uncommon.length,
           enemy: e,
-          level: e.level,
-        ),
-      );
+          level: e.level));
     }
-  }
-  if (CombatEngine.uncommonDrops.contains(id)) {
-    out.add(
-      CodexSource(
-        SourceKind.anyFight,
-        tr('Qualunque nemico, come drop non comune'),
-        chance: CombatEngine.uncommonBase / CombatEngine.uncommonDrops.length,
-      ),
-    );
-  }
-  if (CombatEngine.rareDrops.contains(id)) {
-    out.add(
-      CodexSource(
-        SourceKind.anyFight,
-        tr('Qualunque nemico, come drop raro'),
-        chance: CombatEngine.rareBase / CombatEngine.rareDrops.length,
-      ),
-    );
+    if (rare.any(same)) {
+      out.add(CodexSource(SourceKind.enemy, label(),
+          chance: e.specialChance * e.rareShare / rare.length, enemy: e, level: e.level));
+    }
   }
   for (final x in expeditions) {
     if (x.chest.guaranteed.keys.any(same)) {
