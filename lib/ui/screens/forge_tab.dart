@@ -10,6 +10,7 @@ import '../../core/i18n.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../core/art.dart';
 import '../../core/theme.dart';
 import '../../data/game_state.dart';
 import '../../domain/items.dart';
@@ -102,6 +103,40 @@ class ForgeTab extends StatelessWidget {
   }
 }
 
+/// L'emblema di una postazione: l'illustrazione in
+/// `assets/art/emblems/station_NOME.png` se c'è, altrimenti il simbolo nel
+/// cerchio del suo colore.
+class StationEmblem extends StatelessWidget {
+  const StationEmblem(this.station, {super.key, this.size = 96});
+  final Station station;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final art = 'assets/art/emblems/station_${station.name}.png';
+    final glow = [BoxShadow(color: station.accent.withValues(alpha: 0.35), blurRadius: size * 0.15)];
+    if (Art.has(art)) {
+      return Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: glow),
+        child: ClipOval(child: Image.asset(art, fit: BoxFit.cover)),
+      );
+    }
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: station.accent, width: 1.5),
+        gradient: RadialGradient(colors: [station.accent.withValues(alpha: 0.35), Palette.night]),
+        boxShadow: glow,
+      ),
+      child: Icon(stationIcon(station), color: station.accent, size: size * 0.5),
+    );
+  }
+}
+
 /// Manutenzione: un solo tasto ripara arma e armature con le rune.
 class _RepairTile extends StatelessWidget {
   const _RepairTile();
@@ -167,21 +202,7 @@ class _StationButton extends StatelessWidget {
               child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 96,
-                height: 96,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: station.accent, width: 1.5),
-                  gradient: RadialGradient(
-                    colors: [station.accent.withValues(alpha: 0.35), Palette.night],
-                  ),
-                  boxShadow: [
-                    BoxShadow(color: station.accent.withValues(alpha: 0.35), blurRadius: 14),
-                  ],
-                ),
-                child: Icon(stationIcon(station), color: station.accent, size: 48),
-              ),
+              StationEmblem(station, size: 104),
               const SizedBox(height: 14),
               FittedBox(
                 child: Text(
@@ -245,7 +266,7 @@ class StationScreen extends StatelessWidget {
       // Icona, livello e barra in una riga; la descrizione sta dietro il "?".
       Row(
         children: [
-          Icon(stationIcon(station), color: station.accent, size: 36),
+          StationEmblem(station, size: 48),
           const SizedBox(width: 10),
           Text(tr('Liv. {n}', {'n': lvl}), style: titleStyle(size: 17, color: station.accent)),
           const SizedBox(width: 12),
