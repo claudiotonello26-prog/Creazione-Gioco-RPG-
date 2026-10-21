@@ -2758,5 +2758,60 @@
     "attempts": 1,
     "pink_pixels": 0,
     "status": "done"
+  },
+  {
+    "id": "station_carpentry",
+    "file": "assets/art/emblems/station_carpentry.png",
+    "type": "emblem",
+    "size": 512,
+    "prompt": "STYLE REFERENCES: Match the hand-painted dark fantasy illustration style, bold black ink outlines, gritty painterly brushwork, and souls-like mood (Dark Souls, Elden Ring, Gym Oath) of these reference characters.\nCRITICAL FORMAT & COMPOSITION RULES:\n- Exactly ONE circular medallion/crest/seal, perfectly centered, filling about 92% of the canvas.\n- Background OUTSIDE the circular medallion: pure flat solid black #000000 filling the entire canvas outside the circle. No shapes, no colors, no vignettes outside the circle.\n- Medallion rim: thick round rim of dark worn metal with small rivets or simple carved runes, matching the format reference.\n- Inside the rim: ONE bold central symbol of the station, big and simple, with strong graphic contrast between the pale symbol and the dark field.\n- Lighting strictly from the upper left.\n- Soft inner atmospheric glow in the station's accent colour behind or inside the central symbol.\n- STRICT COLOR PALETTE: MONOCHROME BASE ONLY. The entire emblem base is made only of black, charcoal, dark grey, mid grey, light grey, and off-white (like old iron, dark steel, and pale stone). ABSOLUTELY NO gold, NO yellow, NO bronze, NO brown, NO rust, NO rainbow hues.\n- The ONLY color allowed is the station's own accent colour, used for the glow, the hot/magic parts, and thin highlights.\n- Readable as a small icon: few big shapes, strong contrast, no tiny details that turn into noise when scaled to 128x128.\n- NO text, NO words, NO letters, NO numbers, NO UI frame, NO drop shadow plate.\n\nSUBJECT: Crafting Station Emblem - Carpentry (Woodworking & Bowcraft)\nSTATION ACCENT COLOR: Warm Orange #D9893A (like warm wood and sawdust in lamplight).\nDETAILS:\n- A circular worn dark metal medallion seal with a thick circular rim of dark pitted iron and simple carved runes, identical in size and shape to the set reference.\n- Central symbol: A traditional carpenter's hand saw crossed with a heavy woodworking axe over a cut tree log round ring (growth rings clearly visible).\n- The sharp saw teeth and the concentric log rings catch the warm orange light (#D9893A).\n- A few curled wood shavings resting near the bottom inner rim, catching the warm orange glow.\n- Everything else (axe head, metal saw blade body, dark iron rim, background field) is strictly monochrome dark charcoal, steel grey, and black. NO brown, NO yellow, NO rust.\n- Soft inner glow in warm orange (#D9893A) radiating from behind the central symbol.\n- Inked outlines, hand-painted dark fantasy souls-like feel, strong bold icon readability.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "station_anvil.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "station_furnace",
+    "file": "assets/art/emblems/station_furnace.png",
+    "type": "emblem",
+    "size": 512,
+    "prompt": "STYLE REFERENCES: Match the hand-painted dark fantasy illustration style, bold black ink outlines, gritty painterly brushwork, and souls-like mood (Dark Souls, Elden Ring, Gym Oath) of these reference characters.\nCRITICAL FORMAT & COMPOSITION RULES:\n- Exactly ONE circular medallion/crest/seal, perfectly centered, filling about 92% of the canvas.\n- Background OUTSIDE the circular medallion: pure flat solid black #000000 filling the entire canvas outside the circle. No shapes, no colors, no vignettes outside the circle.\n- Medallion rim: thick round rim of dark worn metal with small rivets or simple carved runes, matching the format reference.\n- Inside the rim: ONE bold central symbol of the station, big and simple, with strong graphic contrast between the pale symbol and the dark field.\n- Lighting strictly from the upper left.\n- Soft inner atmospheric glow in the station's accent colour behind or inside the central symbol.\n- STRICT COLOR PALETTE: MONOCHROME BASE ONLY. The entire emblem base is made only of black, charcoal, dark grey, mid grey, light grey, and off-white (like old iron, dark steel, and pale stone). ABSOLUTELY NO gold, NO yellow, NO bronze, NO brown, NO rust, NO rainbow hues.\n- The ONLY color allowed is the station's own accent colour, used for the glow, the hot/magic parts, and thin highlights.\n- Readable as a small icon: few big shapes, strong contrast, no tiny details that turn into noise when scaled to 128x128.\n- NO text, NO words, NO letters, NO numbers, NO UI frame, NO drop shadow plate.\n\nSUBJECT: Crafting Station Emblem - Furnace (Smelting & Refining)\nSTATION ACCENT COLOR: Glowing Molten Red #D2452F (like molten metal, fire and embers).\nDETAILS:\n- A circular worn dark metal medallion seal with a thick circular rim of dark iron and small rivets, identical in size and shape to the set reference.\n- Central symbol: A stone smelting furnace mouth (arched opening) with a heavy crucible tilted and pouring a thin stream of glowing red molten metal into an ingot mould below.\n- The molten metal stream, ingot mould fill, and furnace arched mouth interior glow vibrant molten red (#D2452F).\n- Tiny glowing red embers rise softly into the dark field above the furnace.\n- The furnace stones, crucible, ingot mould, and rim are strictly monochrome dark charcoal, grey, and black.\n- Soft inner glow in glowing molten red (#D2452F) radiating from inside the furnace mouth.\n- Inked outlines, hand-painted dark fantasy souls-like feel, strong bold icon readability.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "station_anvil.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "station_anvil",
+    "file": "assets/art/emblems/station_anvil.png",
+    "type": "emblem",
+    "size": 512,
+    "prompt": "STYLE REFERENCES: Match the hand-painted dark fantasy illustration style, bold black ink outlines, gritty painterly brushwork, and souls-like mood (Dark Souls, Elden Ring, Gym Oath) of these reference characters.\nCRITICAL FORMAT & COMPOSITION RULES:\n- Exactly ONE circular medallion/crest/seal, perfectly centered, filling about 92% of the canvas.\n- Background OUTSIDE the circular medallion: pure flat solid black #000000 filling the entire canvas outside the circle. No shapes, no colors, no vignettes outside the circle.\n- Medallion rim: thick round rim of dark worn metal with small rivets or simple carved runes, matching the format reference.\n- Inside the rim: ONE bold central symbol of the station, big and simple, with strong graphic contrast between the pale symbol and the dark field.\n- Lighting strictly from the upper left.\n- Soft inner atmospheric glow in the station's accent colour behind or inside the central symbol.\n- STRICT COLOR PALETTE: MONOCHROME BASE ONLY. The entire emblem base is made only of black, charcoal, dark grey, mid grey, light grey, and off-white (like old iron, dark steel, and pale stone). ABSOLUTELY NO gold, NO yellow, NO bronze, NO brown, NO rust, NO rainbow hues.\n- The ONLY color allowed is the station's own accent colour, used for the glow, the hot/magic parts, and thin highlights.\n- Readable as a small icon: few big shapes, strong contrast, no tiny details that turn into noise when scaled to 128x128.\n- NO text, NO words, NO letters, NO numbers, NO UI frame, NO drop shadow plate.\n\nSUBJECT: Crafting Station Emblem - Anvil (Weapons & Armor Forging)\nSTATION ACCENT COLOR: Cold Steel Blue #6E9BC9 and blue-white glowing light.\nDETAILS:\n- A circular forged iron medallion seal with a thick circular rim of dark pitted iron and subtle hammered rivets.\n- Central symbol: A massive blacksmith anvil seen from the side, with a smith's hammer raised angled above it, and a sword blade lying horizontally on the anvil with a blue-white hot glowing line along its cutting edge.\n- Steel parts have cold blue highlights (#6E9BC9). The rest is strictly monochrome dark grey, charcoal, and black.\n- Soft inner glow in cold steel blue (#6E9BC9) behind and inside the central symbol.\n- Inked outlines, hand-painted dark fantasy souls-like feel.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "station_enchant",
+    "file": "assets/art/emblems/station_enchant.png",
+    "type": "emblem",
+    "size": 512,
+    "prompt": "STYLE REFERENCES: Match the hand-painted dark fantasy illustration style, bold black ink outlines, gritty painterly brushwork, and souls-like mood (Dark Souls, Elden Ring, Gym Oath) of these reference characters.\nCRITICAL FORMAT & COMPOSITION RULES:\n- Exactly ONE circular medallion/crest/seal, perfectly centered, filling about 92% of the canvas.\n- Background OUTSIDE the circular medallion: pure flat solid black #000000 filling the entire canvas outside the circle. No shapes, no colors, no vignettes outside the circle.\n- Medallion rim: thick round rim of dark worn metal with small rivets or simple carved runes, matching the format reference.\n- Inside the rim: ONE bold central symbol of the station, big and simple, with strong graphic contrast between the pale symbol and the dark field.\n- Lighting strictly from the upper left.\n- Soft inner atmospheric glow in the station's accent colour behind or inside the central symbol.\n- STRICT COLOR PALETTE: MONOCHROME BASE ONLY. The entire emblem base is made only of black, charcoal, dark grey, mid grey, light grey, and off-white (like old iron, dark steel, and pale stone). ABSOLUTELY NO gold, NO yellow, NO bronze, NO brown, NO rust, NO rainbow hues.\n- The ONLY color allowed is the station's own accent colour, used for the glow, the hot/magic parts, and thin highlights.\n- Readable as a small icon: few big shapes, strong contrast, no tiny details that turn into noise when scaled to 128x128.\n- NO text, NO words, NO letters, NO numbers, NO UI frame, NO drop shadow plate.\n\nSUBJECT: Crafting Station Emblem - Enchanting (Awakening Weapon Auras)\nSTATION ACCENT COLOR: Mystic Violet #A77BE0 (mysterious, ethereal magic, not evil or corrupted).\nDETAILS:\n- A circular worn dark metal medallion seal with a thick circular rim of dark iron and carved runes, identical in size and shape to the set reference.\n- Central symbol: A straight knight sword pointing vertically upward, its blade passing cleanly through the center of a faceted cut gemstone or rune stone.\n- A ring of small mystical violet runes and delicate four-pointed star sparks floating around the sword blade and gemstone.\n- The faceted gemstone, the floating runes, and the star sparks glow ethereal violet (#A77BE0).\n- The sword blade, crossguard, hilt, rim, and field are strictly monochrome dark steel, charcoal, and black.\n- Soft inner glow in mystic violet (#A77BE0) radiating from the enchanted gemstone.\n- Inked outlines, hand-painted dark fantasy souls-like feel, strong bold icon readability.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "station_anvil.png"
+    ],
+    "attempts": 1,
+    "status": "done"
   }
 ]
