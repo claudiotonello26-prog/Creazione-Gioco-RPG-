@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../core/i18n.dart';
@@ -54,9 +55,17 @@ class TrainTab extends StatelessWidget {
     final s = context.watch<GameState>();
     final plan = weeklyPlan(s.daysPerWeek);
     final trainedThisWeek = s.trainedGroups.values.expand((g) => g).toSet();
-    return FoldedListView(
+    // Prima schermata piena: novizio, quest e mostri grandi quanto lo spazio
+    // che resta; sotto, scorrendo, spedizioni e caccia libera.
+    return LayoutBuilder(
+      builder: (context, box) => ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        SizedBox(
+          height: max(box.maxHeight - 32, 520),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
         if (onNavigate != null) NoviceCard(onNavigate: onNavigate!),
         // La quest a colpo d'occhio: barra e chiavi; il resto è dentro.
         Card(
@@ -95,7 +104,10 @@ class TrainTab extends StatelessWidget {
             ),
           ),
         ),
-        _QuickFights(playerLevel: s.character.level),
+        Expanded(child: _QuickFights(playerLevel: s.character.level)),
+            ],
+          ),
+        ),
         SectionTitle(tr('Spedizioni')),
         AlertDot(
           on: s.contract?.complete ?? false,
@@ -123,13 +135,12 @@ class TrainTab extends StatelessWidget {
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => GroupScreen(group: g))),
           ),
-        SectionTitle(tr('Caccia libera: tocca un nemico per combattere')),
+        SectionTitle(tr('Caccia libera')),
         for (final a in baseAnimals)
           _FreeFightTile(enemy: a, playerLevel: s.character.level, icon: Icons.pets),
         ActionTile(
           icon: Icons.menu_book,
           title: tr('Tutti i nemici ({n})', {'n': bestiary.length}),
-          subtitle: tr('Filtra per esercizio, difficoltà e zona'),
           color: Palette.goldBright,
           onTap: () =>
               Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BestiaryScreen())),
@@ -143,6 +154,7 @@ class TrainTab extends StatelessWidget {
           style: const TextStyle(color: Palette.ash, fontSize: 12),
         ),
       ],
+      ),
     );
   }
 }
@@ -168,37 +180,44 @@ class _QuickFights extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionTitle(tr('Combatti subito')),
-        SizedBox(
-          height: 228,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: foes.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 10),
-            itemBuilder: (context, i) {
-              final e = foes[i];
-              return SizedBox(
-                width: 150,
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(21),
-                    onTap: () => startFreeFight(context, e, respawn: true),
-                    child: Column(
-                      children: [
-                        EnemyPortrait(e, size: 150),
-                        const SizedBox(height: 6),
-                        OneLine(e.name,
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                            align: Alignment.center),
-                        const SizedBox(height: 2),
-                        LevelBadge(e, playerLevel),
-                      ],
+        // Il ritratto prende tutta l'altezza rimasta (nome e livello sotto).
+        Expanded(
+          child: LayoutBuilder(builder: (context, box) {
+            final size = (box.maxHeight - 72).clamp(110.0, 280.0);
+            return ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: foes.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 12),
+              itemBuilder: (context, i) {
+                final e = foes[i];
+                return SizedBox(
+                  width: size,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(21),
+                      onTap: () => startFreeFight(context, e, respawn: true),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          EnemyPortrait(e, size: size),
+                          const SizedBox(height: 6),
+                          OneLine(e.name,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              align: Alignment.center),
+                          const SizedBox(height: 2),
+                          LevelBadge(e, playerLevel),
+                        ],
+                      ),
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            );
+          }),
         ),
       ],
     );

@@ -194,6 +194,26 @@ String xpLeftLabel(int xpIn, int xpNeed) => xpNeed <= 0
     ? '$xpIn XP'
     : tr('{xp} / {need} XP · mancano {left}', {'xp': xpIn, 'need': xpNeed, 'left': xpNeed - xpIn});
 
+/// Il "?": la spiegazione lunga sta qui dietro, non sulla pagina.
+class HelpButton extends StatelessWidget {
+  const HelpButton(this.text, {super.key, this.color = Palette.ash});
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        tooltip: '?',
+        icon: Icon(Icons.help_outline, color: color),
+        onPressed: () => showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(text, textAlign: TextAlign.center),
+            actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
+          ),
+        ),
+      );
+}
+
 class InfoChip extends StatelessWidget {
   const InfoChip(this.icon, this.text, {super.key, this.color = Palette.gold});
   final IconData icon;
@@ -428,6 +448,25 @@ class NpcBust extends StatelessWidget {
 /// Una lista che non taglia niente a metà sulla prima schermata: il primo
 /// pezzo che finirebbe sotto il bordo in basso scende all'inizio della
 /// seconda, e sopra resta spazio vuoto. Scorrendo, tutto come una ListView.
+/// Pagina che riempie sempre lo schermo: il figlio (di solito una Column con
+/// qualche Expanded) prende l'altezza visibile; sui telefoni bassi scorre.
+class FillPage extends StatelessWidget {
+  const FillPage({super.key, required this.child, this.minHeight = 560, this.padding = const EdgeInsets.all(16)});
+  final Widget child;
+  final double minHeight;
+  final EdgeInsets padding;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, box) => SingleChildScrollView(
+          child: SizedBox(
+            height: box.maxHeight.isFinite && box.maxHeight > minHeight ? box.maxHeight : minHeight,
+            child: Padding(padding: padding, child: child),
+          ),
+        ),
+      );
+}
+
 class FoldedListView extends StatefulWidget {
   const FoldedListView({super.key, required this.children, this.padding = EdgeInsets.zero});
   final List<Widget> children;

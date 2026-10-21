@@ -146,11 +146,9 @@ class _Offline extends StatelessWidget {
             const Icon(Icons.cloud_off, color: Palette.ash),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(
-                tr('Server non collegato: gilde e cavalieri sono di prova e restano su questo telefono.'),
-                style: const TextStyle(color: Palette.ash, fontSize: 14),
-              ),
+              child: Text(tr('Offline · di prova'), style: const TextStyle(color: Palette.ash, fontSize: 15)),
             ),
+            HelpButton(tr('Server non collegato: gilde e cavalieri sono di prova e restano su questo telefono.')),
             TextButton(
               onPressed: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
@@ -168,17 +166,23 @@ class _Intro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Tre icone dicono cos'è una gilda; la frase intera sta dietro il "?".
+    Widget what(IconData icon, String label) => Column(
+          children: [
+            Icon(icon, color: Sections.guild, size: 34),
+            const SizedBox(height: 4),
+            Text(label, style: const TextStyle(color: Palette.ash, fontSize: 13)),
+          ],
+        );
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+        padding: const EdgeInsets.fromLTRB(12, 14, 4, 14),
+        child: Row(
           children: [
-            const Icon(Icons.shield_outlined, color: Sections.guild, size: 40),
-            const SizedBox(height: 8),
-            Text(
-              tr('Una gilda è il tuo gruppo: vi allenate insieme in diretta e vi sfidate tra amici. Le sfide in gilda non toccano i punti dell\'Arena.'),
-              textAlign: TextAlign.center,
-            ),
+            Expanded(child: what(Icons.groups, tr('Gruppo'))),
+            Expanded(child: what(Icons.sensors, tr('In diretta'))),
+            Expanded(child: what(Icons.sports_kabaddi, tr('Sfide'))),
+            HelpButton(tr('Una gilda è il tuo gruppo: vi allenate insieme in diretta e vi sfidate tra amici. Le sfide in gilda non toccano i punti dell\'Arena.')),
           ],
         ),
       ),

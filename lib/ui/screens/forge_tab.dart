@@ -39,41 +39,48 @@ class ForgeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    return FoldedListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1.0,
-          children: [
-            for (final st in Station.values)
-              _StationButton(
-                station: st,
-                level: st == Station.enchant ? null : s.stationLevel(st),
-                onTap: () =>
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_) => StationScreen(station: st))),
+    Widget station(Station st) => Expanded(
+          child: _StationButton(
+            station: st,
+            level: st == Station.enchant ? null : s.stationLevel(st),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => StationScreen(station: st))),
+          ),
+        );
+    final st = Station.values;
+    // Le quattro postazioni si allargano a riempire lo schermo.
+    return FillPage(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var r = 0; r < st.length; r += 2) ...[
+            if (r > 0) const SizedBox(height: 10),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  station(st[r]),
+                  const SizedBox(width: 10),
+                  if (r + 1 < st.length) station(st[r + 1]) else const Spacer(),
+                ],
               ),
+            ),
           ],
-        ),
-        const SizedBox(height: 12),
-        if (s.repairAllCost > 0) const _RepairTile(),
-        ActionTile(
-          icon: Icons.shield,
-          title: tr('Equipaggiamento'),
-          color: Palette.goldBright,
-          onTap: () => openEquipment(context),
-        ),
-        ActionTile(
-          icon: Icons.auto_stories,
-          title: tr('Codice del Giuramento'),
-          onTap: () => openCodex(context),
-        ),
-      ],
+          const SizedBox(height: 12),
+          if (s.repairAllCost > 0) const _RepairTile(),
+          ActionTile(
+            icon: Icons.shield,
+            title: tr('Equipaggiamento'),
+            color: Palette.goldBright,
+            onTap: () => openEquipment(context),
+          ),
+          ActionTile(
+            icon: Icons.auto_stories,
+            title: tr('Codice del Giuramento'),
+            onTap: () => openCodex(context),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -137,12 +144,15 @@ class _StationButton extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 64,
-                height: 64,
+                width: 96,
+                height: 96,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: station.accent, width: 1.5),
@@ -153,20 +163,22 @@ class _StationButton extends StatelessWidget {
                     BoxShadow(color: station.accent.withValues(alpha: 0.35), blurRadius: 14),
                   ],
                 ),
-                child: Icon(stationIcon(station), color: station.accent, size: 32),
+                child: Icon(stationIcon(station), color: station.accent, size: 48),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 14),
               FittedBox(
                 child: Text(
                   station.label.toUpperCase(),
-                  style: titleStyle(size: 14, color: station.accent),
+                  style: titleStyle(size: 16, color: station.accent),
                 ),
               ),
               Text(
-                level == null ? tr('Potenzia l\'arma') : tr('Livello {level}', {'level': level}),
-                style: const TextStyle(color: Palette.ash, fontSize: 13),
+                level == null ? tr('Potenzia l\'arma') : tr('Liv. {n}', {'n': level}),
+                style: const TextStyle(color: Palette.ash, fontSize: 15),
               ),
             ],
+          ),
+            ),
           ),
         ),
       ),

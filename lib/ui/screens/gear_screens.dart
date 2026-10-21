@@ -329,51 +329,60 @@ class _Shops extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<GameState>();
-    return FoldedListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        for (final k in ShopKeeper.values)
-          Card(
-            child: InkWell(
-              onTap: () => openShop(context, k),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    NpcBust(k.art, icon: k.icon, color: k.color, size: 100),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+    // Le quattro botteghe si dividono tutto lo schermo; il busto cresce con lo spazio.
+    return FillPage(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final k in ShopKeeper.values)
+            Expanded(
+              child: Card(
+                child: InkWell(
+                  onTap: () => openShop(context, k),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: LayoutBuilder(
+                      builder: (context, box) => Row(
                         children: [
-                          OneLine(k.role.toUpperCase(),
-                              align: Alignment.centerLeft,
-                              style: titleStyle(size: 17, spacing: 1.5).copyWith(color: k.color)),
-                          const SizedBox(height: 2),
-                          OneLine(k.name,
-                              align: Alignment.centerLeft,
-                              style: const TextStyle(color: Palette.ash, fontSize: 15)),
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 4,
-                            runSpacing: 4,
-                            children: [
-                              for (final (id, _) in k.stockFor(s).where((i) => i.$2 <= k.levelIn(s)).take(5))
-                                ItemIcon(id, size: 30),
-                              if (k == ShopKeeper.general)
-                                const Icon(Icons.sell_outlined, color: Palette.goldBright, size: 26),
-                            ],
+                          NpcBust(k.art,
+                              icon: k.icon, color: k.color, size: (box.maxHeight / 1.15).clamp(60.0, 150.0)),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                OneLine(k.role.toUpperCase(),
+                                    align: Alignment.centerLeft,
+                                    style: titleStyle(size: 19, spacing: 1.5).copyWith(color: k.color)),
+                                const SizedBox(height: 2),
+                                OneLine(k.name,
+                                    align: Alignment.centerLeft,
+                                    style: const TextStyle(color: Palette.ash, fontSize: 15)),
+                                const SizedBox(height: 8),
+                                Wrap(
+                                  spacing: 4,
+                                  runSpacing: 4,
+                                  children: [
+                                    for (final (id, _) in k.stockFor(s).where((i) => i.$2 <= k.levelIn(s)).take(5))
+                                      ItemIcon(id, size: 30),
+                                    if (k == ShopKeeper.general)
+                                      const Icon(Icons.sell_outlined, color: Palette.goldBright, size: 26),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
+                          Icon(Icons.chevron_right, color: k.color, size: 30),
                         ],
                       ),
                     ),
-                    Icon(Icons.chevron_right, color: k.color, size: 30),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

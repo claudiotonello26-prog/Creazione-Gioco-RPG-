@@ -103,7 +103,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(NavigationDestination, 'Gilda'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Server non collegato'), findsWidgets);
+    expect(find.textContaining('Offline'), findsWidgets);
     await tester.dragUntilVisible(
       find.text('Ordine della Brace'),
       find.byType(ListView).first,
