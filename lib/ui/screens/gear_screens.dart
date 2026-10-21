@@ -288,16 +288,11 @@ class _Runes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final runes = context.select<GameState, int>((s) => s.character.runes);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(right: 10),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.diamond_outlined, color: Palette.goldBright, size: 20),
-          const SizedBox(width: 4),
-          Text('$runes', style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold)),
-        ]),
-      ),
-    );
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      const Icon(Icons.diamond_outlined, color: Palette.goldBright, size: 18),
+      const SizedBox(width: 4),
+      Text('$runes', style: const TextStyle(color: Palette.goldBright, fontWeight: FontWeight.bold)),
+    ]);
   }
 }
 

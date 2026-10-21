@@ -201,7 +201,7 @@ class _WalkScreenState extends State<WalkScreen> with WidgetsBindingObserver {
         );
 
     return Card(
-      shape: selected ? const GildedBorder(color: Palette.goldBright) : null,
+      shape: selected ? const GildedBorder(color: Palette.goldBright, ornate: true) : null,
       child: InkWell(
         onTap: unlocked ? open : null,
         child: Padding(

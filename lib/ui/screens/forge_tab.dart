@@ -65,21 +65,13 @@ class ForgeTab extends StatelessWidget {
         ActionTile(
           icon: Icons.shield,
           title: tr('Equipaggiamento'),
-          subtitle: tr('Arma, armatura pezzo per pezzo, mano sinistra, amuleti'),
           color: Palette.goldBright,
           onTap: () => openEquipment(context),
         ),
         ActionTile(
           icon: Icons.auto_stories,
           title: tr('Codice del Giuramento'),
-          subtitle: tr('Ogni oggetto: dove si trova e a cosa serve'),
           onTap: () => openCodex(context),
-        ),
-        ActionTile(
-          icon: Icons.storefront,
-          title: tr('Mercato'),
-          subtitle: tr('Vendi quello che avanza, compra materiali, amuleti dalla Fattucchiera'),
-          onTap: () => openMarket(context),
         ),
       ],
     );

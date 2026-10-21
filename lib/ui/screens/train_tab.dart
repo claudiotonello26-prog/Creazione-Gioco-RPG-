@@ -58,14 +58,42 @@ class TrainTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         if (onNavigate != null) NoviceCard(onNavigate: onNavigate!),
-        ActionTile(
-          icon: Icons.assignment_outlined,
-          title: tr('Quest giornaliera'),
-          subtitle: tr(
-              '{p}% fatta · premio: una chiave che raddoppia il bottino (ne hai {n})',
-              {'p': (s.questProgress * 100).round(), 'n': s.expeditionKeys}),
-          onTap: () =>
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QuestScreen())),
+        // La quest a colpo d'occhio: barra e chiavi; il resto è dentro.
+        Card(
+          child: InkWell(
+            onTap: () =>
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QuestScreen())),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 12, 10, 12),
+              child: Row(
+                children: [
+                  Icon(s.questComplete ? Icons.task_alt : Icons.assignment_outlined,
+                      color: s.questComplete ? Palette.goldBright : Palette.gold, size: 30),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        OneLine(tr('Quest giornaliera'), align: Alignment.centerLeft),
+                        const SizedBox(height: 6),
+                        StatBar(
+                          value: s.questProgress,
+                          color: Palette.gold,
+                          label: '${(s.questProgress * 100).round()}%',
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Tooltip(
+                    message: tr('Chiave della Spedizione: raddoppia il bottino'),
+                    child: StatChip(Icons.key, '${s.expeditionKeys}', color: Palette.goldBright),
+                  ),
+                  const Icon(Icons.chevron_right, color: Palette.gold, size: 28),
+                ],
+              ),
+            ),
+          ),
         ),
         _QuickFights(playerLevel: s.character.level),
         SectionTitle(tr('Spedizioni')),

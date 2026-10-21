@@ -32,6 +32,7 @@ class HomeTab extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       children: [
         Card(
+          shape: const GildedBorder(ornate: true),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             child: Column(

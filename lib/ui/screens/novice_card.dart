@@ -60,10 +60,7 @@ class NoviceCard extends StatelessWidget {
     final have = state.stat(q.stat).clamp(0, q.target);
     final ready = state.noviceReady;
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: ready ? Palette.goldBright : Palette.gold, width: ready ? 2 : 1),
-      ),
+      shape: GildedBorder(ornate: true, color: ready ? Palette.goldBright : Palette.gold),
       child: InkWell(
         onTap: () => ready ? _claim(context, state) : _go(context, state, q),
         child: Padding(
