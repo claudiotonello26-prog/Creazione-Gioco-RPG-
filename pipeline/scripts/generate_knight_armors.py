@@ -189,6 +189,8 @@ def generate_tier3_piastre(gender='male'):
     base_b64 = B64_MALE_IDLE if is_male else B64_FEMALE_IDLE
     hero_title = "Male Hero" if is_male else "Female Hero"
 
+    male_specific = """  * STEEL CUIRASS COVERS CHEST AND ENTIRE ABDOMEN: A rugged, battle-worn steel plate breastplate/cuirass that COVERS BOTH THE PECTORALS AND THE ABDOMEN down to the belt/waistline (protecting both chest and belly together with forged steel plates). The heavy riveted chainmail hauberk is prominent underneath: visible on the arms/sleeves, shoulders, neck, ribs, and hanging below the belt.""" if is_male else """  * STEEL PLATE CUIRASS COVERS CHEST AND ABDOMEN: Fitted steel cuirass covering both chest and abdomen down to the waistline, with alluring athletic curves. Heavy riveted chainmail visible on shoulders, sleeves, and under the belt."""
+
     prompt = f"""{STYLE_DIRECTIVE}
 
 Reference 1 (Broken Monk) demonstrates the inking line weight, graphic shadow blocks, and dark fantasy comic aesthetic.
@@ -198,8 +200,8 @@ Reference 3 shows the EXACT TARGET INSPIRATION: Classic Spartan Dark Souls Knigh
 TASK:
 Generate the full-body character sprite for the {hero_title} wearing Tier 3 RUDIMENTARY SPARTAN SOULS-STYLE KNIGHT ARMOR in 'Gym Oath':
 - SUBJECT: Rudimentary, basic early-game medieval knight armor inspired by Dark Souls / Demon's Souls:
-  * CHAINMAIL IS PRIMARY & PROMINENT: A heavy, rugged, riveted chainmail hauberk covering the torso, shoulders, arms, and groin.
-  * SMALLER CENTER CHEST PLATE: The steel breastplate over the chest and abdomen is SMALLER and more compact, so that the chainmail is CLEARLY VISIBLE AND PROMINENT around the chestplate, on the ribs, shoulders, neck, and lower torso. Less solid full plate, more exposed battle chainmail!
+{male_specific}
+  * CHAINMAIL IS PRIMARY & PROMINENT: A heavy, rugged, riveted chainmail hauberk covering the shoulders, arms, collar/neck, and lower waist skirt.
   * HELMET (MANDATORY - CLOSED VISOR / A VISO COPERTO): Classic Souls knight fluted helmet / bascinet with a CLOSED STEEL VISOR, narrow horizontal eye slit, and neck gorget. Face is fully covered.
   * LIMBS & WAIST: Asymmetrical battle-worn steel shoulder pauldron strapped over chainmail, articulated steel vambraces, tattered dark green cloth/chainmail skirt beneath the belt, and steel greaves over chainmail legs and sabatons.
   * AESTHETIC: Rudimentary, spartan, gritty battle-worn steel and chainmail (siamo ancora a livelli bassi!).
@@ -218,7 +220,7 @@ Generate the full-body character sprite for the {hero_title} wearing Tier 3 RUDI
     parts.append({'text': prompt})
 
     out_name = f"{gender}_tier3_piastre"
-    print(f"Generating Tier 3 Rudimentary Spartan Souls Knight for {gender} (Chainmail Prominent, Small Plate, Closed Visor)...")
+    print(f"Generating Tier 3 Rudimentary Spartan Souls Knight for {gender} (Cuirass covers Chest & Abdomen, Chainmail Prominent, Closed Visor)...")
     img_data = call_gemini(parts)
     if img_data:
         raw_p = os.path.join(OUTPUT_DIR, f"{out_name}_raw.png")

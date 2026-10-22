@@ -11,15 +11,12 @@ GLOBAL_STYLE_INSTRUCTION = (
     "gritty painterly brushwork, and souls-like mood (Dark Souls, Elden Ring, Gym Oath) of these reference characters.\n"
     "CRITICAL FORMAT & COMPOSITION RULES:\n"
     "- Exactly ONE circular medallion/crest/seal, perfectly centered, filling about 92% of the canvas.\n"
-    "- Background OUTSIDE the circular medallion: pure flat solid black #000000 filling the entire canvas outside the circle. No shapes, no colors, no vignettes outside the circle.\n"
+    "- Background OUTSIDE the circular medallion: pure flat solid black #000000 filling the entire canvas outside the circle.\n"
     "- Medallion rim: thick round rim of dark worn metal with small rivets or simple carved runes, matching the format reference.\n"
-    "- Inside the rim: ONE bold central symbol of the station, big and simple, with strong graphic contrast between the pale symbol and the dark field.\n"
+    "- DEDICATED COLORED BACKGROUND: Inside the circular rim, the background field behind the central symbol is bathed in a rich, luminous, moody atmospheric wash of the station's accent colour.\n"
+    "- Central symbol: ONE bold central symbol of the station, big and simple, with strong graphic contrast between the pale/dark symbol and the luminous colored background field.\n"
     "- Lighting strictly from the upper left.\n"
-    "- Soft inner atmospheric glow in the station's accent colour behind or inside the central symbol.\n"
-    "- STRICT COLOR PALETTE: MONOCHROME BASE ONLY. The entire emblem base is made only of black, charcoal, dark grey, mid grey, light grey, and off-white (like old iron, dark steel, and pale stone). "
-    "ABSOLUTELY NO gold, NO yellow, NO bronze, NO brown, NO rust, NO rainbow hues.\n"
-    "- The ONLY color allowed is the station's own accent colour, used for the glow, the hot/magic parts, and thin highlights.\n"
-    "- Readable as a small icon: few big shapes, strong contrast, no tiny details that turn into noise when scaled to 128x128.\n"
+    "- Inked outlines, hand-painted dark fantasy souls-like feel, strong bold icon readability.\n"
     "- NO text, NO words, NO letters, NO numbers, NO UI frame, NO drop shadow plate."
 )
 
@@ -34,13 +31,11 @@ records = [
             "SUBJECT: Crafting Station Emblem - Carpentry (Woodworking & Bowcraft)\n"
             "STATION ACCENT COLOR: Warm Orange #D9893A (like warm wood and sawdust in lamplight).\n"
             "DETAILS:\n"
-            "- A circular worn dark metal medallion seal with a thick circular rim of dark pitted iron and simple carved runes, identical in size and shape to the set reference.\n"
+            "- A circular worn dark metal medallion seal with a thick circular rim of dark pitted iron and simple carved runes.\n"
+            "- Dedicated colored background: rich warm orange atmospheric wash filling the inner circular field behind the tools.\n"
             "- Central symbol: A traditional carpenter's hand saw crossed with a heavy woodworking axe over a cut tree log round ring (growth rings clearly visible).\n"
-            "- The sharp saw teeth and the concentric log rings catch the warm orange light (#D9893A).\n"
-            "- A few curled wood shavings resting near the bottom inner rim, catching the warm orange glow.\n"
-            "- Everything else (axe head, metal saw blade body, dark iron rim, background field) is strictly monochrome dark charcoal, steel grey, and black. NO brown, NO yellow, NO rust.\n"
-            "- Soft inner glow in warm orange (#D9893A) radiating from behind the central symbol.\n"
-            "- Inked outlines, hand-painted dark fantasy souls-like feel, strong bold icon readability."
+            "- Saw teeth and log rings catch warm orange light, curled wood shavings near the rim.\n"
+            "- Inked outlines, hand-painted dark fantasy souls-like feel."
         ),
         "references": [
             "anvil_golem_idle.png",
@@ -60,20 +55,17 @@ records = [
             "SUBJECT: Crafting Station Emblem - Furnace (Smelting & Refining)\n"
             "STATION ACCENT COLOR: Glowing Molten Red #D2452F (like molten metal, fire and embers).\n"
             "DETAILS:\n"
-            "- A circular worn dark metal medallion seal with a thick circular rim of dark iron and small rivets, identical in size and shape to the set reference.\n"
-            "- Central symbol: A stone smelting furnace mouth (arched opening) with a heavy crucible tilted and pouring a thin stream of glowing red molten metal into an ingot mould below.\n"
-            "- The molten metal stream, ingot mould fill, and furnace arched mouth interior glow vibrant molten red (#D2452F).\n"
-            "- Tiny glowing red embers rise softly into the dark field above the furnace.\n"
-            "- The furnace stones, crucible, ingot mould, and rim are strictly monochrome dark charcoal, grey, and black.\n"
-            "- Soft inner glow in glowing molten red (#D2452F) radiating from inside the furnace mouth.\n"
-            "- Inked outlines, hand-painted dark fantasy souls-like feel, strong bold icon readability."
+            "- A circular worn dark metal medallion seal with a thick circular rim of dark iron and small rivets.\n"
+            "- Dedicated colored background: rich glowing molten red firelight haze and smoke wash filling the inner circular field behind the furnace and crucible.\n"
+            "- Central symbol: A stone smelting furnace mouth (arched opening) with a heavy dark iron crucible tilted and pouring a stream of glowing red molten metal into an ingot mould below.\n"
+            "- Molten metal stream, ingot mould fill, and furnace arched mouth interior glow vibrant molten red with tiny rising embers.\n"
+            "- Inked outlines, hand-painted dark fantasy souls-like feel."
         ),
         "references": [
-            "anvil_golem_idle.png",
-            "living_bellows_idle.png",
-            "station_anvil.png"
+            "station_carpentry.png",
+            "living_bellows_idle.png"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "status": "done"
     },
     {
@@ -87,17 +79,16 @@ records = [
             "STATION ACCENT COLOR: Cold Steel Blue #6E9BC9 and blue-white glowing light.\n"
             "DETAILS:\n"
             "- A circular forged iron medallion seal with a thick circular rim of dark pitted iron and subtle hammered rivets.\n"
-            "- Central symbol: A massive blacksmith anvil seen from the side, with a smith's hammer raised angled above it, "
-            "and a sword blade lying horizontally on the anvil with a blue-white hot glowing line along its cutting edge.\n"
-            "- Steel parts have cold blue highlights (#6E9BC9). The rest is strictly monochrome dark grey, charcoal, and black.\n"
-            "- Soft inner glow in cold steel blue (#6E9BC9) behind and inside the central symbol.\n"
+            "- Dedicated colored background: rich luminous cold steel blue atmospheric quench wash filling the inner circular field behind the anvil and hammer.\n"
+            "- Central symbol: A heavy blacksmith anvil seen from the side, smith's hammer raised angled above it, and a sword blade on the anvil with a blue-white glowing hot cutting edge.\n"
+            "- Strong silhouette contrast against the cold blue background wash.\n"
             "- Inked outlines, hand-painted dark fantasy souls-like feel."
         ),
         "references": [
-            "anvil_golem_idle.png",
-            "living_bellows_idle.png"
+            "station_carpentry.png",
+            "anvil_golem_idle.png"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "status": "done"
     },
     {
@@ -108,27 +99,24 @@ records = [
         "prompt": (
             f"{GLOBAL_STYLE_INSTRUCTION}\n\n"
             "SUBJECT: Crafting Station Emblem - Enchanting (Awakening Weapon Auras)\n"
-            "STATION ACCENT COLOR: Mystic Violet #A77BE0 (mysterious, ethereal magic, not evil or corrupted).\n"
+            "STATION ACCENT COLOR: Mystic Violet #A77BE0 (mysterious, ethereal magic).\n"
             "DETAILS:\n"
-            "- A circular worn dark metal medallion seal with a thick circular rim of dark iron and carved runes, identical in size and shape to the set reference.\n"
+            "- A circular worn dark metal medallion seal with a thick circular rim of dark iron and carved runes.\n"
+            "- Dedicated colored background: rich deep mystic violet arcane nebula wash and ethereal magic haze filling the inner circular field.\n"
             "- Central symbol: A straight knight sword pointing vertically upward, its blade passing cleanly through the center of a faceted cut gemstone or rune stone.\n"
-            "- A ring of small mystical violet runes and delicate four-pointed star sparks floating around the sword blade and gemstone.\n"
-            "- The faceted gemstone, the floating runes, and the star sparks glow ethereal violet (#A77BE0).\n"
-            "- The sword blade, crossguard, hilt, rim, and field are strictly monochrome dark steel, charcoal, and black.\n"
-            "- Soft inner glow in mystic violet (#A77BE0) radiating from the enchanted gemstone.\n"
-            "- Inked outlines, hand-painted dark fantasy souls-like feel, strong bold icon readability."
+            "- Ring of glowing violet runes and four-pointed star sparks around the blade.\n"
+            "- Inked outlines, hand-painted dark fantasy souls-like feel."
         ),
         "references": [
-            "anvil_golem_idle.png",
-            "living_bellows_idle.png",
-            "station_anvil.png"
+            "station_carpentry.png",
+            "living_bellows_idle.png"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "status": "done"
     }
 ]
 
-# 1. Update root manifest.json (dict)
+# Update root manifest.json
 with open(MANIFEST_ROOT, "r", encoding="utf-8") as f:
     root_dict = json.load(f)
 
@@ -139,7 +127,7 @@ with open(MANIFEST_ROOT, "w", encoding="utf-8") as f:
     json.dump(root_dict, f, indent=2)
 print(f"Updated {MANIFEST_ROOT} ({len(root_dict)} entries)")
 
-# 2. Update assets/art/manifest.json (list)
+# Update assets/art/manifest.json
 with open(MANIFEST_ART, "r", encoding="utf-8") as f:
     art_list = json.load(f)
 
@@ -152,7 +140,7 @@ with open(MANIFEST_ART, "w", encoding="utf-8") as f:
     json.dump(new_art_list, f, indent=2)
 print(f"Updated {MANIFEST_ART} ({len(new_art_list)} entries)")
 
-# 3. Update iron-oath-art/manifest.json if exists
+# Update iron-oath-art/manifest.json
 if os.path.exists(MANIFEST_IRON):
     with open(MANIFEST_IRON, "r", encoding="utf-8") as f:
         iron_list = json.load(f)
