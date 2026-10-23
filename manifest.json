@@ -799,7 +799,7 @@
     "file": "assets/art/animals/ash_hare_idle.png",
     "type": "cutout",
     "size": 512,
-    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a lean wild hare with ash-grey fur dusted with soot, long alert ears, one ear slightly torn, crouched ready to bolt. Colours: ash grey, pale bone belly, dark brown eyes.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "prompt": "Animal: a lean wild hare with ash-grey fur dusted with soot, long alert ears, one ear slightly torn, crouched ready to bolt. Colours: ash grey, pale bone belly, dark brown eyes.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
@@ -846,7 +846,7 @@
     "file": "assets/art/animals/red_fox_idle.png",
     "type": "cutout",
     "size": 512,
-    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a cunning red fox with a thick russet coat, white chest and tail tip, black legs, low sneaking stance, sharp narrow eyes. Colours: rust red, cream white, charcoal legs.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "prompt": "Animal: a cunning red fox with a thick russet coat, white chest and tail tip, black legs, low sneaking stance, sharp narrow eyes. Colours: rust red, cream white, charcoal legs.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
@@ -862,7 +862,7 @@
     "file": "assets/art/animals/grey_badger_idle.png",
     "type": "cutout",
     "size": 512,
-    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a stocky grey badger with the black and white striped face, coarse silver-grey fur, short powerful legs with digging claws, head low and stubborn. Colours: silver grey, black, white stripes.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "prompt": "Animal: a stocky grey badger with the black and white striped face, coarse silver-grey fur, short powerful legs with digging claws, head low and stubborn. Colours: silver grey, black, white stripes.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
@@ -878,7 +878,7 @@
     "file": "assets/art/animals/carrion_crow_idle.png",
     "type": "cutout",
     "size": 512,
-    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a big black carrion crow standing on the ground, wings half open, ragged glossy feathers with a faint blue-green sheen, heavy beak open in a caw. Colours: glossy black, dark blue-green sheen, grey beak.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "prompt": "Animal: a big black carrion crow standing on the ground, wings half open, ragged glossy feathers with a faint blue-green sheen, heavy beak open in a caw. Colours: glossy black, dark blue-green sheen, grey beak.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
@@ -894,7 +894,7 @@
     "file": "assets/art/animals/wild_goat_idle.png",
     "type": "cutout",
     "size": 512,
-    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a shaggy wild mountain goat with long curved ridged horns, a scruffy beard, brown-grey coat with a darker stripe on the back, standing firmly. Colours: grey-brown, dark umber, horn beige.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "prompt": "Animal: a shaggy wild mountain goat with long curved ridged horns, a scruffy beard, brown-grey coat with a darker stripe on the back, standing firmly. Colours: grey-brown, dark umber, horn beige.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
@@ -976,7 +976,7 @@
     "file": "assets/art/items/gale_silver.png",
     "type": "cutout",
     "size": 256,
-    "prompt": "Dark fantasy medieval mobile game item icon, souls-like atmosphere (Dark Souls, Elden Ring, Gym Oath). STYLE REFERENCES: Same painted icon style as silver_ingot.png and gold_ingot.png in the repository (passed as style reference). Match the painting technique, crisp metallic facets, bold inked outlines, and lighting.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, readable even as a small inventory icon. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink.\n\nSUBJECT: Item: a twisted bar of wind silver, pale silver metal with soft blue-white sheen, a thin mint-green ribbon of wind wrapped around it in a spiral, two small engraved swirl runes. Colours: silver, pale blue, mint green. No pink anywhere.\nCOMPOSITION: One object, centred, slightly from above at three-quarter view, filling about 85% of the canvas, same painted icon style as silver_ingot.png and gold_ingot.png. Crisp metallic facets, bold dark ink contour lines, hand-painted dark fantasy illustration. Flat solid uniform magenta background #FF00FF filling entire canvas with no gradients or ground shadow.",
+    "prompt": "Item: a twisted bar of wind silver, pale silver metal with soft blue-white sheen, a thin mint-green ribbon of wind wrapped around it in a spiral, two small engraved swirl runes. Colours: silver, pale blue, mint green. No pink anywhere.",
     "references": [
       "silver_ingot.png",
       "gold_ingot.png"
@@ -991,12 +991,12 @@
     "file": "assets/art/items/godforge_steel.png",
     "type": "cutout",
     "size": 256,
-    "prompt": "Dark fantasy medieval mobile game item icon, souls-like atmosphere (Dark Souls, Elden Ring, Gym Oath). STYLE REFERENCES: Same painted icon style as silver_ingot.png and gold_ingot.png in the repository (passed as style reference). Match the painting technique, crisp metallic facets, bold inked outlines, and lighting.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, readable even as a small inventory icon. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink.\n\nSUBJECT: Item: a heavy ingot of godforged steel, bright polished blue-white steel, a line of glowing antique-gold runes engraved along the top face, faint warm light inside the runes. Colours: steel blue-white, antique gold.\nCOMPOSITION: One object, centred, slightly from above at three-quarter view, filling about 85% of the canvas, same painted icon style as silver_ingot.png and gold_ingot.png. Crisp metallic facets, bold dark ink contour lines, hand-painted dark fantasy illustration. Flat solid uniform magenta background #FF00FF filling entire canvas with no gradients or ground shadow.",
+    "prompt": "Item: a heavy ingot of godforged steel, bright polished blue-white steel, a line of glowing antique-gold runes engraved along the top face, faint warm light inside the runes. Colours: steel blue-white, antique gold.",
     "references": [
       "silver_ingot.png",
       "gold_ingot.png"
     ],
-    "attempts": 2,
+    "attempts": 1,
     "pink_pixels": 0,
     "light_rim_pixels": 0,
     "status": "done"
@@ -1059,6 +1059,22 @@
       "hollow_goblin_idle.png"
     ],
     "attempts": 1,
+    "status": "done"
+  },
+  "trainer_crossed": {
+    "id": "trainer_crossed",
+    "file": "assets/art/trainer/trainer_crossed.png",
+    "type": "cutout",
+    "size": "640x800",
+    "prompt": "Commander Reynard, arms crossed over his chest...",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
     "status": "done"
   }
 }
