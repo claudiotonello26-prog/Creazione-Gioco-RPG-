@@ -793,5 +793,272 @@
     ],
     "attempts": 2,
     "status": "done"
+  },
+  "ash_hare_idle": {
+    "id": "ash_hare_idle",
+    "file": "assets/art/animals/ash_hare_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a lean wild hare with ash-grey fur dusted with soot, long alert ears, one ear slightly torn, crouched ready to bolt. Colours: ash grey, pale bone belly, dark brown eyes.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "map_buried_forges": {
+    "id": "map_buried_forges",
+    "file": "assets/art/maps/buried_forges.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Le Forge Sepolte): extinct furnaces in vaults under a city, black stone, cold slag, faint orange embers in cracks; boss lair at the top: a huge dead smithy with a giant anvil. Dominant palette: ember orange and soot black.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "chest_wood": {
+    "id": "chest_wood",
+    "file": "assets/art/chests/chest_wood.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Chest: a rotten wooden treasure chest, dark damp planks, crude iron bands (not rusty), slightly open lid with a faint warm glow inside, moss in the corners. Colours: dark brown wood, dull iron.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "red_fox_idle": {
+    "id": "red_fox_idle",
+    "file": "assets/art/animals/red_fox_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a cunning red fox with a thick russet coat, white chest and tail tip, black legs, low sneaking stance, sharp narrow eyes. Colours: rust red, cream white, charcoal legs.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "grey_badger_idle": {
+    "id": "grey_badger_idle",
+    "file": "assets/art/animals/grey_badger_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a stocky grey badger with the black and white striped face, coarse silver-grey fur, short powerful legs with digging claws, head low and stubborn. Colours: silver grey, black, white stripes.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "carrion_crow_idle": {
+    "id": "carrion_crow_idle",
+    "file": "assets/art/animals/carrion_crow_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a big black carrion crow standing on the ground, wings half open, ragged glossy feathers with a faint blue-green sheen, heavy beak open in a caw. Colours: glossy black, dark blue-green sheen, grey beak.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "wild_goat_idle": {
+    "id": "wild_goat_idle",
+    "file": "assets/art/animals/wild_goat_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nSUBJECT: Animal: a shaggy wild mountain goat with long curved ridged horns, a scruffy beard, brown-grey coat with a darker stripe on the back, standing firmly. Colours: grey-brown, dark umber, horn beige.\nCOMPOSITION: Real wild animal of a grim world, level 1 prey: believable, a little ragged and wary, NOT a monster, NOT corrupted, no glowing eyes. Whole body visible, side three-quarter view, FACING LEFT, standing on nothing (no ground plate), filling about 80% of the canvas. Bold inked dark contours, dark fantasy souls-like painting style. Flat solid uniform magenta background #FF00FF filling entire canvas.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "chest_iron": {
+    "id": "chest_iron",
+    "file": "assets/art/chests/chest_iron.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Chest: a heavy iron-bound chest, riveted dark steel plates over oak, a big padlock hanging open, lid slightly open with a warm glow inside. Colours: dark steel grey, brown oak.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png",
+      "chest_wood.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "chest_silver": {
+    "id": "chest_silver",
+    "file": "assets/art/chests/chest_silver.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Chest: an ornate silver chest with engraved moon and star patterns, cold blue-white sheen, lid slightly open with a pale silver glow inside. Colours: silver, pale blue.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png",
+      "chest_wood.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "chest_gold": {
+    "id": "chest_gold",
+    "file": "assets/art/chests/chest_gold.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Chest: a grand golden chest of the Oath, antique gold with a sword-and-oath sigil on the lid, small red gems at the corners, lid slightly open with bright warm golden light pouring out. Colours: antique gold, deep red.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png",
+      "chest_wood.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "map_iron_bastion": {
+    "id": "map_iron_bastion",
+    "file": "assets/art/maps/iron_bastion.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Il Bastione di Ferro): the walls and inner courtyards of an iron-plated fortress never conquered, steel gates, ramparts; boss lair at the top: the keep's great iron gate. Dominant palette: ember orange and soot black.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "gale_silver": {
+    "id": "gale_silver",
+    "file": "assets/art/items/gale_silver.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Dark fantasy medieval mobile game item icon, souls-like atmosphere (Dark Souls, Elden Ring, Gym Oath). STYLE REFERENCES: Same painted icon style as silver_ingot.png and gold_ingot.png in the repository (passed as style reference). Match the painting technique, crisp metallic facets, bold inked outlines, and lighting.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, readable even as a small inventory icon. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink.\n\nSUBJECT: Item: a twisted bar of wind silver, pale silver metal with soft blue-white sheen, a thin mint-green ribbon of wind wrapped around it in a spiral, two small engraved swirl runes. Colours: silver, pale blue, mint green. No pink anywhere.\nCOMPOSITION: One object, centred, slightly from above at three-quarter view, filling about 85% of the canvas, same painted icon style as silver_ingot.png and gold_ingot.png. Crisp metallic facets, bold dark ink contour lines, hand-painted dark fantasy illustration. Flat solid uniform magenta background #FF00FF filling entire canvas with no gradients or ground shadow.",
+    "references": [
+      "silver_ingot.png",
+      "gold_ingot.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "godforge_steel": {
+    "id": "godforge_steel",
+    "file": "assets/art/items/godforge_steel.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Dark fantasy medieval mobile game item icon, souls-like atmosphere (Dark Souls, Elden Ring, Gym Oath). STYLE REFERENCES: Same painted icon style as silver_ingot.png and gold_ingot.png in the repository (passed as style reference). Match the painting technique, crisp metallic facets, bold inked outlines, and lighting.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, readable even as a small inventory icon. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink.\n\nSUBJECT: Item: a heavy ingot of godforged steel, bright polished blue-white steel, a line of glowing antique-gold runes engraved along the top face, faint warm light inside the runes. Colours: steel blue-white, antique gold.\nCOMPOSITION: One object, centred, slightly from above at three-quarter view, filling about 85% of the canvas, same painted icon style as silver_ingot.png and gold_ingot.png. Crisp metallic facets, bold dark ink contour lines, hand-painted dark fantasy illustration. Flat solid uniform magenta background #FF00FF filling entire canvas with no gradients or ground shadow.",
+    "references": [
+      "silver_ingot.png",
+      "gold_ingot.png"
+    ],
+    "attempts": 2,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "map_giants_furnace": {
+    "id": "map_giants_furnace",
+    "file": "assets/art/maps/giants_furnace.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (La Fornace dei Giganti): enormous furnaces built for giants, rivers of glowing molten iron, red-hot walls; boss lair at the top: a colossal furnace mouth. Dominant palette: ember orange and soot black.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_godforge": {
+    "id": "map_godforge",
+    "file": "assets/art/maps/godforge.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (La Fucina degli Dei): a divine forge on a mountaintop of black basalt and gold veins, broken colossal hammer, holy embers; boss lair at the top: a giant golden anvil under a burning sky. Dominant palette: ember orange and soot black.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_ash_wood_forest": {
+    "id": "map_ash_wood_forest",
+    "file": "assets/art/maps/ash_wood_forest.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Il Bosco di Cenere): a forest of burned ash-grey trees that never fall, grey ash on the ground, thin mist; boss lair at the top: a clearing around a huge dead tree. Dominant palette: moss green and earth brown.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_hunters_marsh": {
+    "id": "map_hunters_marsh",
+    "file": "assets/art/maps/hunters_marsh.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (La Palude dei Cacciatori): a dark marsh with black oak trees, rotten boardwalks, hunting traps, green mist; boss lair at the top: a witch's hut on stilts. Dominant palette: moss green and earth brown.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
   }
 }
