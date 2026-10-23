@@ -1149,7 +1149,7 @@
     "file": "assets/art/demos/push_up_a.png",
     "type": "demo",
     "size": 512,
-    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a push-up: high plank on straight arms, body in a straight line.",
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a push-up: high plank on straight arms, body in a straight line.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
@@ -1180,9 +1180,9 @@
     "file": "assets/art/demos/push_up_b.png",
     "type": "demo",
     "size": 512,
-    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of the push-up: chest just above the floor, elbows bent at about 45 degrees.",
+    "prompt": "Second position of the same exercise: the bottom of the push-up: chest just above the floor, elbows bent at about 45 degrees.",
     "references": [
-      "demo_push_up_a.png"
+      "demo_push_up_a"
     ],
     "attempts": 1,
     "pink_pixels": 0,
@@ -1382,6 +1382,762 @@
       "hollow_goblin_idle.png"
     ],
     "attempts": 1,
+    "status": "done"
+  },
+  "demo_knee_push_up_a": {
+    "id": "demo_knee_push_up_a",
+    "file": "assets/art/demos/knee_push_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a knee push-up: knees on the floor, arms straight, body straight from knees to head.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_knee_push_up_b": {
+    "id": "demo_knee_push_up_b",
+    "file": "assets/art/demos/knee_push_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the bottom of the knee push-up: chest near the floor, elbows bent.",
+    "references": [
+      "demo_knee_push_up_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_incline_push_up_a": {
+    "id": "demo_incline_push_up_a",
+    "file": "assets/art/demos/incline_push_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: an incline push-up with hands on a wooden chair seat, arms straight, body straight.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_incline_push_up_b": {
+    "id": "demo_incline_push_up_b",
+    "file": "assets/art/demos/incline_push_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the bottom of the incline push-up: chest close to the chair edge, elbows bent.",
+    "references": [
+      "demo_incline_push_up_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_pike_push_up_a": {
+    "id": "demo_pike_push_up_a",
+    "file": "assets/art/demos/pike_push_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a pike push-up start: hips high in an inverted V, arms straight.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_pike_push_up_b": {
+    "id": "demo_pike_push_up_b",
+    "file": "assets/art/demos/pike_push_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the bottom of the pike push-up: elbows bent, top of the head close to the floor, hips still high.",
+    "references": [
+      "demo_pike_push_up_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_dip_a": {
+    "id": "demo_dip_a",
+    "file": "assets/art/demos/dip_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a chair dip: hands on the edge of a wooden chair behind him, arms straight, legs extended forward.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_dip_b": {
+    "id": "demo_dip_b",
+    "file": "assets/art/demos/dip_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the bottom of the chair dip: elbows bent to 90 degrees, hips lowered.",
+    "references": [
+      "demo_dip_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_floor_press_a": {
+    "id": "demo_floor_press_a",
+    "file": "assets/art/demos/floor_press_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a dumbbell floor press: lying on his back, knees bent, two dumbbells pressed up with straight arms.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_floor_press_b": {
+    "id": "demo_floor_press_b",
+    "file": "assets/art/demos/floor_press_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the bottom of the floor press: upper arms resting on the floor, dumbbells at chest level.",
+    "references": [
+      "demo_floor_press_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_row_a": {
+    "id": "demo_row_a",
+    "file": "assets/art/demos/row_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a one-arm dumbbell row: torso bent forward and flat, knees soft, dumbbell hanging from a straight arm.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_row_b": {
+    "id": "demo_row_b",
+    "file": "assets/art/demos/row_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the top of the row: dumbbell pulled to the hip, elbow high behind the back.",
+    "references": [
+      "demo_row_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_superman_a": {
+    "id": "demo_superman_a",
+    "file": "assets/art/demos/superman_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying face down, arms stretched forward on the floor, legs straight.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_superman_b": {
+    "id": "demo_superman_b",
+    "file": "assets/art/demos/superman_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the superman hold: arms, chest and legs lifted off the floor.",
+    "references": [
+      "demo_superman_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_crunch_a": {
+    "id": "demo_crunch_a",
+    "file": "assets/art/demos/crunch_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying on his back, knees bent, feet flat, hands touching the sides of his helmet.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_crunch_b": {
+    "id": "demo_crunch_b",
+    "file": "assets/art/demos/crunch_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the crunch: shoulders and upper back curled off the floor.",
+    "references": [
+      "demo_crunch_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_leg_raise_a": {
+    "id": "demo_leg_raise_a",
+    "file": "assets/art/demos/leg_raise_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying on his back, legs straight and together just above the floor, hands under the hips.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_leg_raise_b": {
+    "id": "demo_leg_raise_b",
+    "file": "assets/art/demos/leg_raise_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the leg raise: straight legs lifted to vertical.",
+    "references": [
+      "demo_leg_raise_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_plank_a": {
+    "id": "demo_plank_a",
+    "file": "assets/art/demos/plank_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a forearm plank: forearms on the floor, body in a perfect straight line.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_plank_b": {
+    "id": "demo_plank_b",
+    "file": "assets/art/demos/plank_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the same forearm plank, core braced, shown from the same angle (very small difference: slightly tighter, gaze down).",
+    "references": [
+      "demo_plank_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_v_up_a": {
+    "id": "demo_v_up_a",
+    "file": "assets/art/demos/v_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying flat on his back, arms stretched overhead, legs straight.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_v_up_b": {
+    "id": "demo_v_up_b",
+    "file": "assets/art/demos/v_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the V-up: torso and straight legs lifted together, hands reaching the shins in a V shape.",
+    "references": [
+      "demo_v_up_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_russian_twist_a": {
+    "id": "demo_russian_twist_a",
+    "file": "assets/art/demos/russian_twist_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a Russian twist: seated, leaning back, feet off the floor, hands together turned to his left side.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_russian_twist_b": {
+    "id": "demo_russian_twist_b",
+    "file": "assets/art/demos/russian_twist_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the Russian twist turned to his right side.",
+    "references": [
+      "demo_russian_twist_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_squat_a": {
+    "id": "demo_squat_a",
+    "file": "assets/art/demos/squat_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, feet shoulder width apart, arms relaxed.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_squat_b": {
+    "id": "demo_squat_b",
+    "file": "assets/art/demos/squat_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the bottom of a deep bodyweight squat: thighs parallel to the floor, arms forward for balance, back straight.",
+    "references": [
+      "demo_squat_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_lunge_a": {
+    "id": "demo_lunge_a",
+    "file": "assets/art/demos/lunge_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, feet together, hands on hips.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_lunge_b": {
+    "id": "demo_lunge_b",
+    "file": "assets/art/demos/lunge_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the bottom of a forward lunge: front knee at 90 degrees, back knee just above the floor, torso upright.",
+    "references": [
+      "demo_lunge_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_glute_bridge_a": {
+    "id": "demo_glute_bridge_a",
+    "file": "assets/art/demos/glute_bridge_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying on his back, knees bent, feet flat, arms on the floor.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_glute_bridge_b": {
+    "id": "demo_glute_bridge_b",
+    "file": "assets/art/demos/glute_bridge_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the glute bridge: hips lifted so knees, hips and shoulders form a straight line.",
+    "references": [
+      "demo_glute_bridge_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_step_up_a": {
+    "id": "demo_step_up_a",
+    "file": "assets/art/demos/step_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: in front of a sturdy wooden box, one foot placed on top of it.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_step_up_b": {
+    "id": "demo_step_up_b",
+    "file": "assets/art/demos/step_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: standing on top of the wooden box on one leg, the other knee lifted.",
+    "references": [
+      "demo_step_up_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_jumping_jack_a": {
+    "id": "demo_jumping_jack_a",
+    "file": "assets/art/demos/jumping_jack_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing with feet together and arms at his sides.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_jumping_jack_b": {
+    "id": "demo_jumping_jack_b",
+    "file": "assets/art/demos/jumping_jack_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: mid jumping jack: feet wide apart and arms raised overhead.",
+    "references": [
+      "demo_jumping_jack_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_high_knees_a": {
+    "id": "demo_high_knees_a",
+    "file": "assets/art/demos/high_knees_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: running on the spot: left knee driven up to hip height, right arm forward.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_high_knees_b": {
+    "id": "demo_high_knees_b",
+    "file": "assets/art/demos/high_knees_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: running on the spot: right knee driven up to hip height, left arm forward.",
+    "references": [
+      "demo_high_knees_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_mountain_climber_a": {
+    "id": "demo_mountain_climber_a",
+    "file": "assets/art/demos/mountain_climber_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a mountain climber: high plank, left knee pulled toward the chest.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_mountain_climber_b": {
+    "id": "demo_mountain_climber_b",
+    "file": "assets/art/demos/mountain_climber_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: a mountain climber: high plank, right knee pulled toward the chest.",
+    "references": [
+      "demo_mountain_climber_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_burpee_a": {
+    "id": "demo_burpee_a",
+    "file": "assets/art/demos/burpee_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, ready to drop.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_burpee_b": {
+    "id": "demo_burpee_b",
+    "file": "assets/art/demos/burpee_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the burpee floor phase: high plank on straight arms.",
+    "references": [
+      "demo_burpee_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_jump_squat_a": {
+    "id": "demo_jump_squat_a",
+    "file": "assets/art/demos/jump_squat_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: the bottom of a squat, arms swung back, ready to jump.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_jump_squat_b": {
+    "id": "demo_jump_squat_b",
+    "file": "assets/art/demos/jump_squat_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: mid jump: body fully extended in the air, feet off the ground, arms overhead.",
+    "references": [
+      "demo_jump_squat_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_forward_fold_a": {
+    "id": "demo_forward_fold_a",
+    "file": "assets/art/demos/forward_fold_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, feet hip width apart, arms relaxed at his sides.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_forward_fold_b": {
+    "id": "demo_forward_fold_b",
+    "file": "assets/art/demos/forward_fold_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the standing forward fold: hinged at the hips, legs almost straight, torso hanging down, hands reaching the shins or the floor.",
+    "references": [
+      "demo_forward_fold_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_lunge_hold_a": {
+    "id": "demo_lunge_hold_a",
+    "file": "assets/art/demos/lunge_hold_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, feet together, hands on hips.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_lunge_hold_b": {
+    "id": "demo_lunge_hold_b",
+    "file": "assets/art/demos/lunge_hold_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the lunge hold: deep static lunge, front knee at 90 degrees, back knee just above the floor, torso upright, hands on hips, calm and steady.",
+    "references": [
+      "demo_lunge_hold_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_butterfly_a": {
+    "id": "demo_butterfly_a",
+    "file": "assets/art/demos/butterfly_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: seated on the floor, back straight, legs stretched forward, hands on the knees.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_butterfly_b": {
+    "id": "demo_butterfly_b",
+    "file": "assets/art/demos/butterfly_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the butterfly stretch: seated, soles of the feet pressed together, knees open toward the floor, hands holding the feet, back straight.",
+    "references": [
+      "demo_butterfly_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_cobra_a": {
+    "id": "demo_cobra_a",
+    "file": "assets/art/demos/cobra_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying face down, hands flat on the floor under the shoulders, legs straight.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_cobra_b": {
+    "id": "demo_cobra_b",
+    "file": "assets/art/demos/cobra_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the cobra stretch: hips on the floor, arms pushing the chest up, back arched, gaze forward.",
+    "references": [
+      "demo_cobra_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_child_pose_a": {
+    "id": "demo_child_pose_a",
+    "file": "assets/art/demos/child_pose_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: kneeling on the floor, sitting on his heels, back straight, hands on the thighs.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_child_pose_b": {
+    "id": "demo_child_pose_b",
+    "file": "assets/art/demos/child_pose_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the child's pose: kneeling, sitting back on the heels, torso folded forward over the thighs, forehead near the floor, arms stretched forward on the floor.",
+    "references": [
+      "demo_child_pose_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_seated_twist_a": {
+    "id": "demo_seated_twist_a",
+    "file": "assets/art/demos/seated_twist_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "A hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: seated on the floor, back straight, legs stretched forward.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_seated_twist_b": {
+    "id": "demo_seated_twist_b",
+    "file": "assets/art/demos/seated_twist_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Second position of the same exercise: the seated spinal twist: one knee bent with the foot crossed over the other leg, torso turned toward the bent knee, opposite elbow pressing against it, the other hand on the floor behind.",
+    "references": [
+      "demo_seated_twist_a"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
     "status": "done"
   }
 }
