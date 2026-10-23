@@ -2,9 +2,13 @@
   "hollow_goblin_idle": {
     "id": "hollow_goblin_idle",
     "file": "assets/art/enemies/hollow_goblin_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "carrion_hound_idle": {
     "id": "carrion_hound_idle",
@@ -16,9 +20,13 @@
   "fallen_knight_idle": {
     "id": "fallen_knight_idle",
     "file": "assets/art/enemies/fallen_knight_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "ash_wyrm_idle": {
     "id": "ash_wyrm_idle",
@@ -30,23 +38,35 @@
   "keep_sentinel_idle": {
     "id": "keep_sentinel_idle",
     "file": "assets/art/enemies/keep_sentinel_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 3,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "wall_archer_idle": {
     "id": "wall_archer_idle",
     "file": "assets/art/enemies/wall_archer_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 1,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "keep_brute_idle": {
     "id": "keep_brute_idle",
     "file": "assets/art/enemies/keep_brute_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "lord_of_the_keep_idle": {
     "id": "lord_of_the_keep_idle",
@@ -58,72 +78,112 @@
   "marsh_matron_idle": {
     "id": "marsh_matron_idle",
     "file": "assets/art/bosses/marsh_matron_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 1,
-    "size": 1536
+    "size": 1536,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "slag_goblin_idle": {
     "id": "slag_goblin_idle",
     "file": "assets/art/enemies/slag_goblin_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "hollow_apprentice_idle": {
     "id": "hollow_apprentice_idle",
     "file": "assets/art/enemies/hollow_apprentice_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "hollow_smith_idle": {
     "id": "hollow_smith_idle",
     "file": "assets/art/bosses/hollow_smith_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1536
+    "size": 1536,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "iron_castellan_idle": {
     "id": "iron_castellan_idle",
     "file": "assets/art/bosses/iron_castellan_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 1,
-    "size": 1536
+    "size": 1536,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "ember_giant_idle": {
     "id": "ember_giant_idle",
-    "file": "assets/art/bosses/ember_giant_idle.png",
-    "status": "kept",
+    "file": "assets/art/enemies/ember_giant_idle.png",
+    "status": "done",
     "pink_pixels": 2,
-    "size": 1536
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "chained_stoker_idle": {
     "id": "chained_stoker_idle",
     "file": "assets/art/enemies/chained_stoker_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "living_bellows_idle": {
     "id": "living_bellows_idle",
     "file": "assets/art/bosses/living_bellows_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 3,
-    "size": 1536
+    "size": 1536,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "forge_servant_idle": {
     "id": "forge_servant_idle",
     "file": "assets/art/enemies/forge_servant_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "anvil_golem_idle": {
     "id": "anvil_golem_idle",
     "file": "assets/art/enemies/anvil_golem_idle.png",
-    "status": "kept",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "fallen_smith_god_idle": {
     "id": "fallen_smith_god_idle",
@@ -170,16 +230,24 @@
   "weightless_knight_idle": {
     "id": "weightless_knight_idle",
     "file": "assets/art/bosses/weightless_knight_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1536
+    "size": 1536,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "wind_sentinel_idle": {
     "id": "wind_sentinel_idle",
     "file": "assets/art/enemies/wind_sentinel_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 4,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "thunder_ram_idle": {
     "id": "thunder_ram_idle",
@@ -191,9 +259,13 @@
   "storm_king_idle": {
     "id": "storm_king_idle",
     "file": "assets/art/bosses/storm_king_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1536
+    "size": 1536,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "bronze_skeleton_idle": {
     "id": "bronze_skeleton_idle",
@@ -205,9 +277,13 @@
   "tomb_crawler_idle": {
     "id": "tomb_crawler_idle",
     "file": "assets/art/enemies/tomb_crawler_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 541,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "crypt_keeper_idle": {
     "id": "crypt_keeper_idle",
@@ -275,23 +351,35 @@
   "spectral_archer_idle": {
     "id": "spectral_archer_idle",
     "file": "assets/art/enemies/spectral_archer_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 13,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "lunar_wisp_idle": {
     "id": "lunar_wisp_idle",
     "file": "assets/art/enemies/lunar_wisp_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "moon_moth_idle": {
     "id": "moon_moth_idle",
     "file": "assets/art/bosses/moon_moth_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1536
+    "size": 1536,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "drowned_scribe_idle": {
     "id": "drowned_scribe_idle",
@@ -324,9 +412,13 @@
   "brass_automaton_idle": {
     "id": "brass_automaton_idle",
     "file": "assets/art/enemies/brass_automaton_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "star_eye_idle": {
     "id": "star_eye_idle",
@@ -401,9 +493,13 @@
   "steam_nymph_idle": {
     "id": "steam_nymph_idle",
     "file": "assets/art/enemies/steam_nymph_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "bath_serpent_idle": {
     "id": "bath_serpent_idle",
@@ -422,9 +518,13 @@
   "dreamer_idle": {
     "id": "dreamer_idle",
     "file": "assets/art/enemies/dreamer_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "sleepwalker_idle": {
     "id": "sleepwalker_idle",
@@ -443,9 +543,13 @@
   "ash_deer_idle": {
     "id": "ash_deer_idle",
     "file": "assets/art/animals/ash_deer_idle.png",
-    "status": "redone",
+    "status": "done",
     "pink_pixels": 0,
-    "size": 1024
+    "size": 1024,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "tusk_boar_idle": {
     "id": "tusk_boar_idle",
@@ -532,9 +636,9 @@
   },
   "ash_wood": {
     "id": "ash_wood",
-    "file": "assets/art/nodes/ash_wood.png",
+    "file": "assets/art/items/ash_wood.png",
     "type": "cutout",
-    "size": 512,
+    "size": 256,
     "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Ash Tree Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (ash-covered soil and stones) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Ash tree woodcutting node. Whole small gnarled ash tree with a twisted pale grey-white bark trunk and branches, sparse delicate ashen grey foliage leaves, sitting on a small isolated circular mound of earth dusted with powdery pale grey ash. Inked outlines, dark fantasy painterly style. Colours strictly: ash grey, pale bone white, weathered stone grey, charcoal.",
     "references": [
       "anvil_golem_idle.png",
@@ -543,14 +647,18 @@
     ],
     "attempts": 2,
     "pink_pixels": 0,
-    "status": "approved_clean",
-    "final_prompt": "Ash tree: pale desaturated sage/ash-green leaves, twisted grey-white bark, pale grey ash ground, 0 pink pixels"
+    "status": "done",
+    "final_prompt": "Ash tree: pale desaturated sage/ash-green leaves, twisted grey-white bark, pale grey ash ground, 0 pink pixels",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "oak_wood": {
     "id": "oak_wood",
-    "file": "assets/art/nodes/oak_wood.png",
+    "file": "assets/art/items/oak_wood.png",
     "type": "cutout",
-    "size": 512,
+    "size": 256,
     "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Black Oak Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (dark loam soil and moss) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Black oak woodcutting node. Thick gnarled very dark brown ancient trunk with heavy muscular bark ridges, dense dark forest-green canopy crown, powerful thick roots sprawling over a small patch of mossy dark forest loam ground. Bold inked outlines, dark fantasy style. Colours strictly: very dark timber brown, deep dark green, moss green, earthy loam.",
     "references": [
       "anvil_golem_idle.png",
@@ -559,13 +667,17 @@
     ],
     "attempts": 1,
     "pink_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "yew_wood": {
     "id": "yew_wood",
-    "file": "assets/art/nodes/yew_wood.png",
+    "file": "assets/art/items/yew_wood.png",
     "type": "cutout",
-    "size": 512,
+    "size": 256,
     "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Yew of the Dead Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (graveyard soil and dead grass) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Yew of the dead woodcutting node. Ancient twisted reddish-brown trunk with fluted fibrous bark, dense dark green yew needle crown dotted with small bright red poisonous berries. A small leaning cracked old weathered stone gravestone nestled at its foot among tangled roots. Inked outlines, grim souls-like cemetery mood. Colours strictly: reddish-brown trunk, dark needle green, bright red berries, mossy tombstone grey.",
     "references": [
       "anvil_golem_idle.png",
@@ -574,7 +686,11 @@
     ],
     "attempts": 1,
     "pink_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "storm_resin": {
     "id": "storm_resin",
@@ -981,7 +1097,10 @@
     "attempts": 1,
     "pink_pixels": 0,
     "light_rim_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "godforge_steel": {
     "id": "godforge_steel",
@@ -996,7 +1115,10 @@
     "attempts": 1,
     "pink_pixels": 0,
     "light_rim_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "haze_pixels": 0
   },
   "map_giants_furnace": {
     "id": "map_giants_furnace",
@@ -2138,6 +2260,36 @@
     "attempts": 1,
     "pink_pixels": 0,
     "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "hallowed_gold": {
+    "id": "hallowed_gold",
+    "file": "assets/art/items/hallowed_gold.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  "holy_shard": {
+    "id": "holy_shard",
+    "file": "assets/art/items/holy_shard.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  "amulet_holy_amulet": {
+    "id": "amulet_holy_amulet",
+    "file": "assets/art/items/amulet_holy_amulet.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
     "status": "done"
   }
 }

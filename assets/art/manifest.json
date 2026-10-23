@@ -518,7 +518,11 @@
     ],
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "hollow_goblin_attack",
@@ -570,7 +574,11 @@
     ],
     "status": "done",
     "note": "In attesa di rigenerazione con Color Variety V2",
-    "version": 2
+    "version": 2,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "fallen_knight_attack",
@@ -622,7 +630,11 @@
     ],
     "status": "done",
     "note": "In attesa di rigenerazione con Color Variety V2",
-    "version": 2
+    "version": 2,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "keep_sentinel_attack",
@@ -648,7 +660,11 @@
     ],
     "status": "done",
     "note": "In attesa di rigenerazione con Color Variety V2",
-    "version": 2
+    "version": 2,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "wall_archer_attack",
@@ -674,7 +690,11 @@
     ],
     "status": "done",
     "note": "In attesa di rigenerazione con Color Variety V2",
-    "version": 2
+    "version": 2,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "keep_brute_attack",
@@ -726,7 +746,11 @@
     ],
     "status": "done",
     "note": "In attesa di rigenerazione con Color Variety V2",
-    "version": 2
+    "version": 2,
+    "method": "re-cut",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "marsh_matron_attack",
@@ -1888,7 +1912,12 @@
     "prompt": "Enemy: small hunched goblin crusted with black slag and soot, cracked grey skin with thin glowing ember seams, a burned-through leather apron, holding a dented pair of iron forge tongs like a weapon, mean toothy grin, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "hollow_apprentice_idle",
@@ -1897,7 +1926,12 @@
     "prompt": "Enemy: thin hollow undead blacksmith apprentice, sunken pale glowing eyes, scorched leather apron and soot-stained rags, dragging a heavy rusted forge hammer, iron rings hanging from his belt, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "hollow_smith_idle",
@@ -1906,7 +1940,12 @@
     "prompt": "Boss: hulking hollow undead blacksmith with skin like cooled grey slag, one forearm fused with a fragment of red-hot anvil, a giant two-handed forge hammer, smouldering leather apron, a faint furnace glow from cracks in his chest, epic low angle, imposing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "iron_castellan_idle",
@@ -1915,7 +1954,12 @@
     "prompt": "Boss: massive castellan in thick layered iron plate scarred by a hundred sieges, a tower shield bolted to his left arm, a giant flanged mace, a ring of huge iron keys at his belt, a visor shaped like a fortress portcullis, epic low angle, imposing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "ember_giant_idle",
@@ -1924,7 +1968,12 @@
     "prompt": "Enemy: hulking giant (whole body visible) with skin of cracked black rock and molten orange seams, a broken iron collar with chains, carrying a slab of furnace brick as a club, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "chained_stoker_idle",
@@ -1933,7 +1982,12 @@
     "prompt": "Enemy: gaunt undead stoker chained to a small iron coal cart, holding a shovel heaped with glowing coals, face wrapped in burned cloth, ember eyes, scorched bare arms, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "living_bellows_idle",
@@ -1942,7 +1996,12 @@
     "prompt": "Boss: colossal living forge-bellows creature: a body of stitched black leather and iron bands that heaves like lungs, wooden ribs, a glowing furnace mouth breathing fire, several long iron arms ending in forge tongs, epic low angle, imposing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "forge_servant_idle",
@@ -1951,7 +2010,12 @@
     "prompt": "Enemy: towering animated construct of dark god-forged steel with gold rivets, a faceless mask with a single slit of white-gold light, carrying an enormous chisel-like blade, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "anvil_golem_idle",
@@ -1960,7 +2024,12 @@
     "prompt": "Enemy: squat massive golem whose torso is a giant ancient anvil, arms built from stacked iron ingots, small head of riveted iron, faint gold runes on the anvil face, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "fallen_smith_god_idle",
@@ -2023,7 +2092,12 @@
     "prompt": "Boss: slender knight in elegant tarnished silver armor with green-grey patina, floating just above the ground, long tattered scarves flowing in the wind, a thin long rapier, epic low angle, imposing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "wind_sentinel_idle",
@@ -2032,7 +2106,12 @@
     "prompt": "Enemy: tall weathered stone-and-bronze statue sentinel come alive, folded wings of steel feathers, a long spear, a cracked face with storm-grey eyes, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "thunder_ram_idle",
@@ -2050,7 +2129,12 @@
     "prompt": "Boss: gigantic storm king, a gaunt bearded giant in ancient bronze-and-steel armor, a crown of jagged steel feathers, a cloak made of storm clouds, a great spear, lit by lightning, epic low angle, imposing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "bronze_skeleton_idle",
@@ -2068,7 +2152,12 @@
     "prompt": "Enemy: long segmented crypt crawler, centipede-like, with a skull-shaped head, bronze funeral rings embedded in its pale carapace, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "crypt_keeper_idle",
@@ -2158,7 +2247,12 @@
     "prompt": "Enemy: translucent pale-blue ghostly archer in a tattered hood, a silver bow, faint mist trailing below the knees, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "lunar_wisp_idle",
@@ -2167,7 +2261,12 @@
     "prompt": "Enemy: small floating will-o-the-wisp spirit: a pale silver-blue flame with a tiny skull-like face inside, trailing two ragged moth wings, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "moon_moth_idle",
@@ -2176,7 +2275,12 @@
     "prompt": "Boss: giant moth with huge silver-white wings patterned like the phases of the moon, a furry pale body, glowing pale blue eyes, silver dust falling from the wings, epic low angle, imposing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "drowned_scribe_idle",
@@ -2221,7 +2325,12 @@
     "prompt": "Enemy: tall clockwork brass automaton with a telescope lens for one eye, exposed gear joints, a small blue crystal core in its chest, long thin limbs, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "star_eye_idle",
@@ -2320,7 +2429,12 @@
     "prompt": "Enemy: graceful nymph formed of swirling steam and pale stone, small gems on her forehead, a long veil of vapour covering her body, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "bath_serpent_idle",
@@ -2347,7 +2461,12 @@
     "prompt": "Enemy: sleeping figure floating upright inside a cocoon of pale sheets, eyes closed, peaceful face, dark violet dream mist around, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "sleepwalker_idle",
@@ -2374,7 +2493,12 @@
     "prompt": "Wild animal: wild deer with ash-grey fur and short burned-looking antlers, alert stance, a few embers caught in its fur, menacing idle stance, facing left.",
     "status": "done",
     "version": 2,
-    "note": "In attesa di rigenerazione con Color Variety V2"
+    "note": "In attesa di rigenerazione con Color Variety V2",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "tusk_boar_idle",
@@ -2567,9 +2691,9 @@
   },
   {
     "id": "ash_wood",
-    "file": "assets/art/nodes/ash_wood.png",
+    "file": "assets/art/items/ash_wood.png",
     "type": "cutout",
-    "size": 512,
+    "size": 256,
     "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Ash Tree Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (ash-covered soil and stones) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Ash tree woodcutting node. Whole small gnarled ash tree with a twisted pale grey-white bark trunk and branches, sparse delicate ashen grey foliage leaves, sitting on a small isolated circular mound of earth dusted with powdery pale grey ash. Inked outlines, dark fantasy painterly style. Colours strictly: ash grey, pale bone white, weathered stone grey, charcoal.",
     "references": [
       "anvil_golem_idle.png",
@@ -2578,14 +2702,18 @@
     ],
     "attempts": 2,
     "pink_pixels": 0,
-    "status": "approved_clean",
-    "final_prompt": "Ash tree: pale desaturated sage/ash-green leaves, twisted grey-white bark, pale grey ash ground, 0 pink pixels"
+    "status": "done",
+    "final_prompt": "Ash tree: pale desaturated sage/ash-green leaves, twisted grey-white bark, pale grey ash ground, 0 pink pixels",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "oak_wood",
-    "file": "assets/art/nodes/oak_wood.png",
+    "file": "assets/art/items/oak_wood.png",
     "type": "cutout",
-    "size": 512,
+    "size": 256,
     "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Black Oak Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (dark loam soil and moss) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Black oak woodcutting node. Thick gnarled very dark brown ancient trunk with heavy muscular bark ridges, dense dark forest-green canopy crown, powerful thick roots sprawling over a small patch of mossy dark forest loam ground. Bold inked outlines, dark fantasy style. Colours strictly: very dark timber brown, deep dark green, moss green, earthy loam.",
     "references": [
       "anvil_golem_idle.png",
@@ -2594,13 +2722,17 @@
     ],
     "attempts": 1,
     "pink_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "yew_wood",
-    "file": "assets/art/nodes/yew_wood.png",
+    "file": "assets/art/items/yew_wood.png",
     "type": "cutout",
-    "size": 512,
+    "size": 256,
     "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Yew of the Dead Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (graveyard soil and dead grass) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Yew of the dead woodcutting node. Ancient twisted reddish-brown trunk with fluted fibrous bark, dense dark green yew needle crown dotted with small bright red poisonous berries. A small leaning cracked old weathered stone gravestone nestled at its foot among tangled roots. Inked outlines, grim souls-like cemetery mood. Colours strictly: reddish-brown trunk, dark needle green, bright red berries, mossy tombstone grey.",
     "references": [
       "anvil_golem_idle.png",
@@ -2609,7 +2741,11 @@
     ],
     "attempts": 1,
     "pink_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "storm_resin",
@@ -3016,7 +3152,10 @@
     "attempts": 1,
     "pink_pixels": 0,
     "light_rim_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "godforge_steel",
@@ -3031,7 +3170,10 @@
     "attempts": 1,
     "pink_pixels": 0,
     "light_rim_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "method": "regenerated",
+    "pink_rim_pixels": 0,
+    "haze_pixels": 0
   },
   {
     "id": "map_giants_furnace",
@@ -4143,6 +4285,36 @@
     "attempts": 1,
     "pink_pixels": 0,
     "light_rim_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "hallowed_gold",
+    "file": "assets/art/items/hallowed_gold.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "holy_shard",
+    "file": "assets/art/items/holy_shard.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "amulet_holy_amulet",
+    "file": "assets/art/items/amulet_holy_amulet.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
     "status": "done"
   }
 ]
