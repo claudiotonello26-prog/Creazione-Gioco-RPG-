@@ -1,0 +1,1059 @@
+[
+  {
+    "id": "ember_ore",
+    "file": "assets/art/items/ember_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of black volcanic rock split by glowing molten orange veins, like a vein of ember inside the stone."
+  },
+  {
+    "id": "copper_ore",
+    "file": "assets/art/items/copper_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of grey rock with veins of raw copper, warm orange-brown with a few green verdigris spots."
+  },
+  {
+    "id": "gold_ore",
+    "file": "assets/art/items/gold_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of pale stone with thick veins and nuggets of raw antique gold."
+  },
+  {
+    "id": "abyss_geode",
+    "file": "assets/art/items/abyss_geode.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a broken round geode, rough dark outer shell, the open half full of deep blue-black crystals with a faint cold blue gleam."
+  },
+  {
+    "id": "living_obsidian",
+    "file": "assets/art/items/living_obsidian.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a sharp glossy black obsidian chunk with thin pulsing dark red cracks, as if it still had a heartbeat."
+  },
+  {
+    "id": "storm_resin",
+    "file": "assets/art/items/storm_resin.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a large drop of hardened amber pine resin with a tiny frozen pale-green lightning bolt trapped inside, a sliver of scorched bark still attached."
+  },
+  {
+    "id": "star_pickaxe",
+    "file": "assets/art/items/star_pickaxe.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a masterwork pickaxe with a dark star-metal head flecked with tiny azure sparks and a jet-black ebony handle with gold rivets, same shape family as the steel pickaxe."
+  },
+  {
+    "id": "star_axe",
+    "file": "assets/art/items/star_axe.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a masterwork woodcutter axe with a dark star-metal head flecked with tiny azure sparks and a jet-black ebony handle, same shape family as the steel axe."
+  },
+  {
+    "id": "amulet_bane_fire",
+    "file": "assets/art/items/amulet_bane_fire.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Rime Gem, a faceted oval gem of icy white-blue frost with tiny frozen crystals on its surface, set in a small iron claw mount with a short slot stub, made to quench fire."
+  },
+  {
+    "id": "amulet_bane_wind",
+    "file": "assets/art/items/amulet_bane_wind.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Bedrock Gem, a faceted oval gem of heavy dark brown-grey stone with gold flecks, solid and immovable, set in a small iron claw mount with a short slot stub."
+  },
+  {
+    "id": "amulet_bane_holy",
+    "file": "assets/art/items/amulet_bane_holy.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Shadow Gem, a faceted oval gem of smoky black glass with a dim cold grey inner light, set in a small iron claw mount with a short slot stub."
+  },
+  {
+    "id": "amulet_bane_arcane",
+    "file": "assets/art/items/amulet_bane_arcane.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Seal Gem, a faceted oval gem of opaque red sealing wax colour engraved with a tiny closed-lock rune, set in a small iron claw mount with a short slot stub."
+  },
+  {
+    "id": "amulet_ward_fire",
+    "file": "assets/art/items/amulet_ward_fire.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Rime Talisman, a round iron medallion on a short dark chain, frosted white-blue enamel with a snowflake emblem and a small icy stone in the centre."
+  },
+  {
+    "id": "amulet_ward_wind",
+    "file": "assets/art/items/amulet_ward_wind.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Bedrock Talisman, a round medallion of dark carved stone on a short dark chain, with a mountain emblem and a small brown-grey stone in the centre."
+  },
+  {
+    "id": "amulet_ward_holy",
+    "file": "assets/art/items/amulet_ward_holy.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Shadow Talisman, a round blackened iron medallion on a short dark chain, with an eclipse emblem (a dark disc covering a thin gold ring) and a small smoky stone in the centre."
+  },
+  {
+    "id": "amulet_ward_arcane",
+    "file": "assets/art/items/amulet_ward_arcane.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: Seal Talisman, a round bronze medallion on a short dark chain, shaped like a wax seal with a closed-lock rune, a small dark red stone in the centre."
+  },
+  {
+    "id": "ash_hare_idle",
+    "file": "assets/art/animals/ash_hare_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Animal: a lean wild hare with ash-grey fur dusted with soot, long alert ears, one ear slightly torn, crouched ready to bolt. Colours: ash grey, pale bone belly, dark brown eyes."
+  },
+  {
+    "id": "red_fox_idle",
+    "file": "assets/art/animals/red_fox_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Animal: a cunning red fox with a thick russet coat, white chest and tail tip, black legs, low sneaking stance, sharp narrow eyes. Colours: rust red, cream white, charcoal legs."
+  },
+  {
+    "id": "grey_badger_idle",
+    "file": "assets/art/animals/grey_badger_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Animal: a stocky grey badger with the black and white striped face, coarse silver-grey fur, short powerful legs with digging claws, head low and stubborn. Colours: silver grey, black, white stripes."
+  },
+  {
+    "id": "carrion_crow_idle",
+    "file": "assets/art/animals/carrion_crow_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Animal: a big black carrion crow standing on the ground, wings half open, ragged glossy feathers with a faint blue-green sheen, heavy beak open in a caw. Colours: glossy black, dark blue-green sheen, grey beak."
+  },
+  {
+    "id": "wild_goat_idle",
+    "file": "assets/art/animals/wild_goat_idle.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Animal: a shaggy wild mountain goat with long curved ridged horns, a scruffy beard, brown-grey coat with a darker stripe on the back, standing firmly. Colours: grey-brown, dark umber, horn beige."
+  },
+  {
+    "id": "gale_silver",
+    "file": "assets/art/items/gale_silver.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Item: a twisted bar of wind silver, pale silver metal with soft blue-white sheen, a thin mint-green ribbon of wind wrapped around it in a spiral, two small engraved swirl runes. Colours: silver, pale blue, mint green. No pink anywhere."
+  },
+  {
+    "id": "godforge_steel",
+    "file": "assets/art/items/godforge_steel.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Item: a heavy ingot of godforged steel, bright polished blue-white steel, a line of glowing antique-gold runes engraved along the top face, faint warm light inside the runes. Colours: steel blue-white, antique gold."
+  },
+  {
+    "id": "chest_wood",
+    "file": "assets/art/chests/chest_wood.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Chest: a rotten wooden treasure chest, dark damp planks, crude iron bands (not rusty), slightly open lid with a faint warm glow inside, moss in the corners. Colours: dark brown wood, dull iron."
+  },
+  {
+    "id": "chest_iron",
+    "file": "assets/art/chests/chest_iron.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Chest: a heavy iron-bound chest, riveted dark steel plates over oak, a big padlock hanging open, lid slightly open with a warm glow inside. Colours: dark steel grey, brown oak."
+  },
+  {
+    "id": "chest_silver",
+    "file": "assets/art/chests/chest_silver.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Chest: an ornate silver chest with engraved moon and star patterns, cold blue-white sheen, lid slightly open with a pale silver glow inside. Colours: silver, pale blue."
+  },
+  {
+    "id": "chest_gold",
+    "file": "assets/art/chests/chest_gold.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "Chest: a grand golden chest of the Oath, antique gold with a sword-and-oath sigil on the lid, small red gems at the corners, lid slightly open with bright warm golden light pouring out. Colours: antique gold, deep red."
+  },
+  {
+    "id": "map_buried_forges",
+    "file": "assets/art/maps/buried_forges.png",
+    "type": "background",
+    "prompt": "Map background (Le Forge Sepolte): extinct furnaces in vaults under a city, black stone, cold slag, faint orange embers in cracks; boss lair at the top: a huge dead smithy with a giant anvil. Dominant palette: ember orange and soot black."
+  },
+  {
+    "id": "map_iron_bastion",
+    "file": "assets/art/maps/iron_bastion.png",
+    "type": "background",
+    "prompt": "Map background (Il Bastione di Ferro): the walls and inner courtyards of an iron-plated fortress never conquered, steel gates, ramparts; boss lair at the top: the keep's great iron gate. Dominant palette: ember orange and soot black."
+  },
+  {
+    "id": "map_giants_furnace",
+    "file": "assets/art/maps/giants_furnace.png",
+    "type": "background",
+    "prompt": "Map background (La Fornace dei Giganti): enormous furnaces built for giants, rivers of glowing molten iron, red-hot walls; boss lair at the top: a colossal furnace mouth. Dominant palette: ember orange and soot black."
+  },
+  {
+    "id": "map_godforge",
+    "file": "assets/art/maps/godforge.png",
+    "type": "background",
+    "prompt": "Map background (La Fucina degli Dei): a divine forge on a mountaintop of black basalt and gold veins, broken colossal hammer, holy embers; boss lair at the top: a giant golden anvil under a burning sky. Dominant palette: ember orange and soot black."
+  },
+  {
+    "id": "map_ash_wood_forest",
+    "file": "assets/art/maps/ash_wood_forest.png",
+    "type": "background",
+    "prompt": "Map background (Il Bosco di Cenere): a forest of burned ash-grey trees that never fall, grey ash on the ground, thin mist; boss lair at the top: a clearing around a huge dead tree. Dominant palette: moss green and earth brown."
+  },
+  {
+    "id": "map_hunters_marsh",
+    "file": "assets/art/maps/hunters_marsh.png",
+    "type": "background",
+    "prompt": "Map background (La Palude dei Cacciatori): a dark marsh with black oak trees, rotten boardwalks, hunting traps, green mist; boss lair at the top: a witch's hut on stilts. Dominant palette: moss green and earth brown."
+  },
+  {
+    "id": "map_wind_gorge",
+    "file": "assets/art/maps/wind_gorge.png",
+    "type": "background",
+    "prompt": "Map background (Le Gole del Vento): narrow rocky gorges with rope bridges, harpy nests on the cliffs, wind-torn banners; boss lair at the top: a high nest on a rock pinnacle. Dominant palette: moss green and earth brown."
+  },
+  {
+    "id": "map_storm_peak",
+    "file": "assets/art/maps/storm_peak.png",
+    "type": "background",
+    "prompt": "Map background (La Vetta della Bufera): a mountain path climbing to a stormy peak, snow and lightning, broken watchtowers; boss lair at the top: a ruined throne on the summit under lightning. Dominant palette: moss green and earth brown."
+  },
+  {
+    "id": "map_bronze_crypt",
+    "file": "assets/art/maps/bronze_crypt.png",
+    "type": "background",
+    "prompt": "Map background (La Cripta di Bronzo): underground tombs closed by great bronze doors, sarcophagi, green patina, candles; boss lair at the top: the sealed bronze gate of the main tomb. Dominant palette: antique gold and dark stone."
+  },
+  {
+    "id": "map_golden_temple",
+    "file": "assets/art/maps/golden_temple.png",
+    "type": "background",
+    "prompt": "Map background (Il Tempio Dorato): a temple with gilded columns, gold leaf peeling, bones of priests in alcoves, incense smoke; boss lair at the top: a golden altar. Dominant palette: antique gold and dark stone."
+  },
+  {
+    "id": "map_hallowed_sanctum",
+    "file": "assets/art/maps/hallowed_sanctum.png",
+    "type": "background",
+    "prompt": "Map background (Il Santuario Consacrato): a blinding holy sanctum, weeping statues with golden tears, white marble, harsh light beams; boss lair at the top: a radiant reliquary. Dominant palette: antique gold and dark stone."
+  },
+  {
+    "id": "map_martyr_cathedral",
+    "file": "assets/art/maps/martyr_cathedral.png",
+    "type": "background",
+    "prompt": "Map background (La Cattedrale del Martire): a black and gold gothic cathedral nave, kneeling statues, red candles; boss lair at the top: the high altar with a huge martyr statue. Dominant palette: antique gold and dark stone."
+  },
+  {
+    "id": "map_lunar_ruins",
+    "file": "assets/art/maps/lunar_ruins.png",
+    "type": "background",
+    "prompt": "Map background (Le Rovine Lunari): moonlit ruins on a hill, stones silvered by a huge full moon, pale blue light; boss lair at the top: a broken moon altar. Dominant palette: cold blue and silver."
+  },
+  {
+    "id": "map_flooded_library",
+    "file": "assets/art/maps/flooded_library.png",
+    "type": "background",
+    "prompt": "Map background (La Biblioteca Allagata): a flooded library, black water, floating books, tall shelves, living ink swirling in the water; boss lair at the top: a reading hall with a giant open tome. Dominant palette: cold blue and silver."
+  },
+  {
+    "id": "map_fallen_observatory",
+    "file": "assets/art/maps/fallen_observatory.png",
+    "type": "background",
+    "prompt": "Map background (L'Osservatorio Crollato): a collapsed observatory, a fallen brass telescope, star charts, a cracked dome open to a starry sky; boss lair at the top: an armillary sphere. Dominant palette: cold blue and silver."
+  },
+  {
+    "id": "map_star_well",
+    "file": "assets/art/maps/star_well.png",
+    "type": "background",
+    "prompt": "Map background (Il Pozzo delle Stelle): a bottomless stone well spiral with falling stars glowing deep below, cosmic blue light; boss lair at the top: the rim of the abyss with a coiled shape of stars. Dominant palette: cold blue and silver."
+  },
+  {
+    "id": "map_silent_garden",
+    "file": "assets/art/maps/silent_garden.png",
+    "type": "background",
+    "prompt": "Map background (Il Giardino del Silenzio): a still overgrown garden, stone lanterns, pale flowers, calm ghostly mist; boss lair at the top: a moss-covered shrine. Dominant palette: soft violet and grey."
+  },
+  {
+    "id": "map_hanging_monastery",
+    "file": "assets/art/maps/hanging_monastery.png",
+    "type": "background",
+    "prompt": "Map background (Il Monastero Sospeso): a monastery hanging on a cliff face, wooden walkways, prayer flags, deep chasm; boss lair at the top: the abbot's hall. Dominant palette: soft violet and grey."
+  },
+  {
+    "id": "map_ancient_baths",
+    "file": "assets/art/maps/ancient_baths.png",
+    "type": "background",
+    "prompt": "Map background (Le Terme degli Antichi): ancient roman-like baths, warm steam, cracked mosaics, turquoise water; boss lair at the top: the great central pool. Dominant palette: soft violet and grey."
+  },
+  {
+    "id": "map_dream_cloister",
+    "file": "assets/art/maps/dream_cloister.png",
+    "type": "background",
+    "prompt": "Map background (Il Chiostro del Sogno): a dreamlike cloister, violet haze, floating petals, sleeping statues, impossible arches; boss lair at the top: a bed of stone under a giant moth-wing window. Dominant palette: soft violet and grey."
+  },
+  {
+    "id": "trainer_crossed",
+    "file": "assets/art/trainer/trainer_crossed.png",
+    "type": "cutout",
+    "pose": "arms crossed over his chest, weight on one leg, helmet slightly lowered as if studying the viewer with a mix of severity and amusement."
+  },
+  {
+    "id": "trainer_pointing",
+    "file": "assets/art/trainer/trainer_pointing.png",
+    "type": "cutout",
+    "pose": "pointing forward at the viewer with the right gauntlet, the left hand on the sword pommel at his hip, giving an order."
+  },
+  {
+    "id": "trainer_cheering",
+    "file": "assets/art/trainer/trainer_cheering.png",
+    "type": "cutout",
+    "pose": "right fist raised high in triumph, the left hand on his belt, chest out, proud of the viewer."
+  },
+  {
+    "id": "trainer_facepalm",
+    "file": "assets/art/trainer/trainer_facepalm.png",
+    "type": "cutout",
+    "pose": "the right gauntlet pressed against the faceplate of his helmet in a facepalm, shoulders slumped, exasperated but amused."
+  },
+  {
+    "id": "trainer_thinking",
+    "file": "assets/art/trainer/trainer_thinking.png",
+    "type": "cutout",
+    "pose": "the right hand rubbing the chin of the helmet's faceplate, the left arm across the waist supporting the right elbow, head tilted, pondering."
+  },
+  {
+    "id": "trainer_goofy",
+    "file": "assets/art/trainer/trainer_goofy.png",
+    "type": "cutout",
+    "pose": "a goofy joking bodybuilder flex with both arms, the half-cape tangled around one arm, clearly fooling around."
+  },
+  {
+    "id": "demo_push_up_a",
+    "file": "assets/art/demos/push_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a push-up: high plank on straight arms, body in a straight line."
+  },
+  {
+    "id": "demo_push_up_b",
+    "file": "assets/art/demos/push_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of the push-up: chest just above the floor, elbows bent at about 45 degrees."
+  },
+  {
+    "id": "demo_knee_push_up_a",
+    "file": "assets/art/demos/knee_push_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a knee push-up: knees on the floor, arms straight, body straight from knees to head."
+  },
+  {
+    "id": "demo_knee_push_up_b",
+    "file": "assets/art/demos/knee_push_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of the knee push-up: chest near the floor, elbows bent."
+  },
+  {
+    "id": "demo_incline_push_up_a",
+    "file": "assets/art/demos/incline_push_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: an incline push-up with hands on a wooden chair seat, arms straight, body straight."
+  },
+  {
+    "id": "demo_incline_push_up_b",
+    "file": "assets/art/demos/incline_push_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of the incline push-up: chest close to the chair edge, elbows bent."
+  },
+  {
+    "id": "demo_pike_push_up_a",
+    "file": "assets/art/demos/pike_push_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a pike push-up start: hips high in an inverted V, arms straight."
+  },
+  {
+    "id": "demo_pike_push_up_b",
+    "file": "assets/art/demos/pike_push_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of the pike push-up: elbows bent, top of the head close to the floor, hips still high."
+  },
+  {
+    "id": "demo_dip_a",
+    "file": "assets/art/demos/dip_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a chair dip: hands on the edge of a wooden chair behind him, arms straight, legs extended forward."
+  },
+  {
+    "id": "demo_dip_b",
+    "file": "assets/art/demos/dip_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of the chair dip: elbows bent to 90 degrees, hips lowered."
+  },
+  {
+    "id": "demo_floor_press_a",
+    "file": "assets/art/demos/floor_press_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a dumbbell floor press: lying on his back, knees bent, two dumbbells pressed up with straight arms."
+  },
+  {
+    "id": "demo_floor_press_b",
+    "file": "assets/art/demos/floor_press_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of the floor press: upper arms resting on the floor, dumbbells at chest level."
+  },
+  {
+    "id": "demo_row_a",
+    "file": "assets/art/demos/row_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a one-arm dumbbell row: torso bent forward and flat, knees soft, dumbbell hanging from a straight arm."
+  },
+  {
+    "id": "demo_row_b",
+    "file": "assets/art/demos/row_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the top of the row: dumbbell pulled to the hip, elbow high behind the back."
+  },
+  {
+    "id": "demo_superman_a",
+    "file": "assets/art/demos/superman_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying face down, arms stretched forward on the floor, legs straight."
+  },
+  {
+    "id": "demo_superman_b",
+    "file": "assets/art/demos/superman_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the superman hold: arms, chest and legs lifted off the floor."
+  },
+  {
+    "id": "demo_crunch_a",
+    "file": "assets/art/demos/crunch_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying on his back, knees bent, feet flat, hands touching the sides of his helmet."
+  },
+  {
+    "id": "demo_crunch_b",
+    "file": "assets/art/demos/crunch_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the crunch: shoulders and upper back curled off the floor."
+  },
+  {
+    "id": "demo_leg_raise_a",
+    "file": "assets/art/demos/leg_raise_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying on his back, legs straight and together just above the floor, hands under the hips."
+  },
+  {
+    "id": "demo_leg_raise_b",
+    "file": "assets/art/demos/leg_raise_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the leg raise: straight legs lifted to vertical."
+  },
+  {
+    "id": "demo_plank_a",
+    "file": "assets/art/demos/plank_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a forearm plank: forearms on the floor, body in a perfect straight line."
+  },
+  {
+    "id": "demo_plank_b",
+    "file": "assets/art/demos/plank_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the same forearm plank, core braced, shown from the same angle (very small difference: slightly tighter, gaze down)."
+  },
+  {
+    "id": "demo_v_up_a",
+    "file": "assets/art/demos/v_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying flat on his back, arms stretched overhead, legs straight."
+  },
+  {
+    "id": "demo_v_up_b",
+    "file": "assets/art/demos/v_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the V-up: torso and straight legs lifted together, hands reaching the shins in a V shape."
+  },
+  {
+    "id": "demo_russian_twist_a",
+    "file": "assets/art/demos/russian_twist_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a Russian twist: seated, leaning back, feet off the floor, hands together turned to his left side."
+  },
+  {
+    "id": "demo_russian_twist_b",
+    "file": "assets/art/demos/russian_twist_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the Russian twist turned to his right side."
+  },
+  {
+    "id": "demo_squat_a",
+    "file": "assets/art/demos/squat_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, feet shoulder width apart, arms relaxed."
+  },
+  {
+    "id": "demo_squat_b",
+    "file": "assets/art/demos/squat_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of a deep bodyweight squat: thighs parallel to the floor, arms forward for balance, back straight."
+  },
+  {
+    "id": "demo_lunge_a",
+    "file": "assets/art/demos/lunge_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, feet together, hands on hips."
+  },
+  {
+    "id": "demo_lunge_b",
+    "file": "assets/art/demos/lunge_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of a forward lunge: front knee at 90 degrees, back knee just above the floor, torso upright."
+  },
+  {
+    "id": "demo_glute_bridge_a",
+    "file": "assets/art/demos/glute_bridge_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying on his back, knees bent, feet flat, arms on the floor."
+  },
+  {
+    "id": "demo_glute_bridge_b",
+    "file": "assets/art/demos/glute_bridge_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the glute bridge: hips lifted so knees, hips and shoulders form a straight line."
+  },
+  {
+    "id": "demo_step_up_a",
+    "file": "assets/art/demos/step_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: in front of a sturdy wooden box, one foot placed on top of it."
+  },
+  {
+    "id": "demo_step_up_b",
+    "file": "assets/art/demos/step_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: standing on top of the wooden box on one leg, the other knee lifted."
+  },
+  {
+    "id": "demo_jumping_jack_a",
+    "file": "assets/art/demos/jumping_jack_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing with feet together and arms at his sides."
+  },
+  {
+    "id": "demo_jumping_jack_b",
+    "file": "assets/art/demos/jumping_jack_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: mid jumping jack: feet wide apart and arms raised overhead."
+  },
+  {
+    "id": "demo_high_knees_a",
+    "file": "assets/art/demos/high_knees_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: running on the spot: left knee driven up to hip height, right arm forward."
+  },
+  {
+    "id": "demo_high_knees_b",
+    "file": "assets/art/demos/high_knees_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: running on the spot: right knee driven up to hip height, left arm forward."
+  },
+  {
+    "id": "demo_mountain_climber_a",
+    "file": "assets/art/demos/mountain_climber_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a mountain climber: high plank, left knee pulled toward the chest."
+  },
+  {
+    "id": "demo_mountain_climber_b",
+    "file": "assets/art/demos/mountain_climber_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: a mountain climber: high plank, right knee pulled toward the chest."
+  },
+  {
+    "id": "demo_burpee_a",
+    "file": "assets/art/demos/burpee_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, ready to drop."
+  },
+  {
+    "id": "demo_burpee_b",
+    "file": "assets/art/demos/burpee_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the burpee floor phase: high plank on straight arms."
+  },
+  {
+    "id": "demo_jump_squat_a",
+    "file": "assets/art/demos/jump_squat_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: the bottom of a squat, arms swung back, ready to jump."
+  },
+  {
+    "id": "demo_jump_squat_b",
+    "file": "assets/art/demos/jump_squat_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: mid jump: body fully extended in the air, feet off the ground, arms overhead."
+  },
+  {
+    "id": "demo_forward_fold_a",
+    "file": "assets/art/demos/forward_fold_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, feet hip width apart, arms relaxed at his sides."
+  },
+  {
+    "id": "demo_forward_fold_b",
+    "file": "assets/art/demos/forward_fold_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the standing forward fold: hinged at the hips, legs almost straight, torso hanging down, hands reaching the shins or the floor."
+  },
+  {
+    "id": "demo_lunge_hold_a",
+    "file": "assets/art/demos/lunge_hold_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: standing tall, feet together, hands on hips."
+  },
+  {
+    "id": "demo_lunge_hold_b",
+    "file": "assets/art/demos/lunge_hold_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the lunge hold: deep static lunge, front knee at 90 degrees, back knee just above the floor, torso upright, hands on hips, calm and steady."
+  },
+  {
+    "id": "demo_butterfly_a",
+    "file": "assets/art/demos/butterfly_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: seated on the floor, back straight, legs stretched forward, hands on the knees."
+  },
+  {
+    "id": "demo_butterfly_b",
+    "file": "assets/art/demos/butterfly_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the butterfly stretch: seated, soles of the feet pressed together, knees open toward the floor, hands holding the feet, back straight."
+  },
+  {
+    "id": "demo_cobra_a",
+    "file": "assets/art/demos/cobra_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: lying face down, hands flat on the floor under the shoulders, legs straight."
+  },
+  {
+    "id": "demo_cobra_b",
+    "file": "assets/art/demos/cobra_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the cobra stretch: hips on the floor, arms pushing the chest up, back arched, gaze forward."
+  },
+  {
+    "id": "demo_child_pose_a",
+    "file": "assets/art/demos/child_pose_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: kneeling on the floor, sitting on his heels, back straight, hands on the thighs."
+  },
+  {
+    "id": "demo_child_pose_b",
+    "file": "assets/art/demos/child_pose_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the child's pose: kneeling, sitting back on the heels, torso folded forward over the thighs, forehead near the floor, arms stretched forward on the floor."
+  },
+  {
+    "id": "demo_seated_twist_a",
+    "file": "assets/art/demos/seated_twist_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nKeep exactly the same character, armour, camera angle, framing, scale and lighting as the identity reference.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: seated on the floor, back straight, legs stretched forward."
+  },
+  {
+    "id": "demo_seated_twist_b",
+    "file": "assets/art/demos/seated_twist_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the seated spinal twist: one knee bent with the foot crossed over the other leg, torso turned toward the bent knee, opposite elbow pressing against it, the other hand on the floor behind."
+  },
+  {
+    "id": "marsh_matron_idle",
+    "file": "assets/art/bosses/marsh_matron_idle.png",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "living_bellows_idle",
+    "file": "assets/art/bosses/living_bellows_idle.png",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "hollow_smith_idle",
+    "file": "assets/art/bosses/hollow_smith_idle.png",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "iron_castellan_idle",
+    "file": "assets/art/bosses/iron_castellan_idle.png",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "storm_king_idle",
+    "file": "assets/art/bosses/storm_king_idle.png",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "hollow_goblin_idle",
+    "file": "assets/art/enemies/hollow_goblin_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "slag_goblin_idle",
+    "file": "assets/art/enemies/slag_goblin_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "wall_archer_idle",
+    "file": "assets/art/enemies/wall_archer_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "ember_giant_idle",
+    "file": "assets/art/enemies/ember_giant_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "keep_brute_idle",
+    "file": "assets/art/enemies/keep_brute_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "fallen_knight_idle",
+    "file": "assets/art/enemies/fallen_knight_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "chained_stoker_idle",
+    "file": "assets/art/enemies/chained_stoker_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "hollow_apprentice_idle",
+    "file": "assets/art/enemies/hollow_apprentice_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "keep_sentinel_idle",
+    "file": "assets/art/enemies/keep_sentinel_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "anvil_golem_idle",
+    "file": "assets/art/enemies/anvil_golem_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "forge_servant_idle",
+    "file": "assets/art/enemies/forge_servant_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "lunar_wisp_idle",
+    "file": "assets/art/enemies/lunar_wisp_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "dreamer_idle",
+    "file": "assets/art/enemies/dreamer_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "tomb_crawler_idle",
+    "file": "assets/art/enemies/tomb_crawler_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "ash_deer_idle",
+    "file": "assets/art/animals/ash_deer_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "moon_moth_idle",
+    "file": "assets/art/bosses/moon_moth_idle.png",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "weightless_knight_idle",
+    "file": "assets/art/bosses/weightless_knight_idle.png",
+    "method": "re-cut",
+    "size": 1536,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "wind_sentinel_idle",
+    "file": "assets/art/enemies/wind_sentinel_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "brass_automaton_idle",
+    "file": "assets/art/enemies/brass_automaton_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "spectral_archer_idle",
+    "file": "assets/art/enemies/spectral_archer_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "steam_nymph_idle",
+    "file": "assets/art/enemies/steam_nymph_idle.png",
+    "method": "re-cut",
+    "size": 1024,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "hallowed_gold",
+    "file": "assets/art/items/hallowed_gold.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "holy_shard",
+    "file": "assets/art/items/holy_shard.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "yew_wood",
+    "file": "assets/art/items/yew_wood.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "ash_wood",
+    "file": "assets/art/items/ash_wood.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "oak_wood",
+    "file": "assets/art/items/oak_wood.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "amulet_holy_amulet",
+    "file": "assets/art/items/amulet_holy_amulet.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  }
+]
