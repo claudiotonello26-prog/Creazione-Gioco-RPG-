@@ -100,14 +100,27 @@ CHESTS_DATA = [
         "file": "assets/art/chests/chest_wood.png",
         "type": "cutout",
         "size": 512,
-        "prompt": "Chest: a rotten wooden treasure chest, dark damp planks, crude iron bands (not rusty), slightly open lid with a faint warm glow inside, moss in the corners. Colours: dark brown wood, dull iron."
+        "prompt": (
+            "Chest (Rotten Wood): A rustic, decayed wooden treasure chest constructed entirely of dark damp timber planks. "
+            "Prominent natural cracked wood grain, rotting weathered oak boards, soft green moss and lichen clinging to the damp lower edges and corners. "
+            "Only simple crude thin iron brackets on the corners holding the wood together. "
+            "Slightly open lid revealing a faint warm ember glow inside. "
+            "Colours strictly: rich weathered timber brown, damp earth brown, mossy green (#4A6B35), dark aged iron brackets. Must look unmistakably like rough decaying wood."
+        )
     },
     {
         "id": "chest_iron",
         "file": "assets/art/chests/chest_iron.png",
         "type": "cutout",
         "size": 512,
-        "prompt": "Chest: a heavy iron-bound chest, riveted dark steel plates over oak, a big padlock hanging open, lid slightly open with a warm glow inside. Colours: dark steel grey, brown oak."
+        "prompt": (
+            "Chest (Heavy Iron Bastion): A heavily armored fortress chest completely encased in thick, riveted dark steel and iron armor plates. "
+            "Prominent forged iron rivets and heavy industrial steel bands criss-crossing the front and lid. "
+            "A large heavy forged iron padlock hanging open from the central latch. "
+            "Cold metallic iron sheen, specular highlights on dark steel edges, looking heavy, industrial and fortified like a medieval safe. "
+            "Slightly open lid with a warm orange forge glow visible inside. "
+            "Colours strictly: cold dark steel grey, charcoal iron, metallic gunmetal (#5C636E, #3D4148), with tiny hints of dark wood visible only between the heavy metal plates. Must look unmistakably metallic and heavily iron-armored."
+        )
     },
     {
         "id": "chest_silver",
@@ -121,7 +134,13 @@ CHESTS_DATA = [
         "file": "assets/art/chests/chest_gold.png",
         "type": "cutout",
         "size": 512,
-        "prompt": "Chest: a grand golden chest of the Oath, antique gold with a sword-and-oath sigil on the lid, small red gems at the corners, lid slightly open with bright warm golden light pouring out. Colours: antique gold, deep red."
+        "prompt": (
+            "Chest (Grand Radiant Gold of the Oath): A lavish, magnificent treasure chest made entirely of solid, brilliant antique gold and pure yellow gold leaf. "
+            "Intensely and radiantly golden: ornate baroque and gothic filigree reliefs, sculpted golden lion/sword oath emblem on the lid, polished gold surfaces catching bright light. "
+            "Four glowing deep ruby red gems set into the ornate golden corners. "
+            "Lid slightly open with intense, dazzling warm golden rays and bright holy amber-gold light pouring out from within. "
+            "Colours strictly: radiant antique gold (#E5B842), brilliant polished yellow gold (#FFD700, #F5C542), warm amber highlights, rich crimson-ruby gems (#A81C1C). Overwhelmingly golden, opulent, and shining."
+        )
     }
 ]
 
@@ -683,30 +702,25 @@ if __name__ == "__main__":
     all_batch = CHESTS_DATA + MAPS_DATA
     update_assets_list(all_batch)
     
-    if mode in ["test", "chests", "all"]:
+    if mode in ["test", "chests", "fix-chests", "all"]:
         print("\n=== STEP 2: Processing Chests ===")
+        # If in fix-chests or all, remove outdated raw files for wood, iron, gold
+        if mode in ["fix-chests", "all"]:
+            for fix_id in ["chest_wood", "chest_iron", "chest_gold"]:
+                old_raw = os.path.join(RAW_DIR, f"{fix_id}.png")
+                if os.path.exists(old_raw):
+                    print(f"Removing outdated raw {old_raw} for regeneration...")
+                    try:
+                        os.remove(old_raw)
+                    except Exception as e:
+                        print(f"Warning: {e}")
+                        
         chest_records = []
-        extra_refs = []
-        wood_raw = os.path.join(RAW_DIR, "chest_wood.png")
-        if os.path.exists(wood_raw):
-            extra_refs.append({
-                "name": "chest_wood.png",
-                "b64": load_ref_b64(wood_raw)
-            })
-            
         for c in CHESTS_DATA:
             cid = c["id"]
-            c_extra = extra_refs if cid != "chest_wood" else None
-            rec = run_asset(c, extra_refs=c_extra)
+            rec = run_asset(c, extra_refs=None)
             chest_records.append(rec)
             update_all_manifests([rec])
-            
-            # If we just processed chest_wood, use it as reference for subsequent chests
-            if cid == "chest_wood" and not extra_refs:
-                extra_refs.append({
-                    "name": "chest_wood.png",
-                    "b64": load_ref_b64(wood_raw)
-                })
                 
         # Build check sheet for chests
         build_chests_check_sheet()
@@ -722,5 +736,6 @@ if __name__ == "__main__":
         print("Maps batch completed.")
         
     print("\n=== All requested assets processed successfully! ===")
+
 
 

@@ -830,7 +830,7 @@
     "file": "assets/art/chests/chest_wood.png",
     "type": "cutout",
     "size": 512,
-    "prompt": "Chest: a rotten wooden treasure chest, dark damp planks, crude iron bands (not rusty), slightly open lid with a faint warm glow inside, moss in the corners. Colours: dark brown wood, dull iron.",
+    "prompt": "Chest (Rotten Wood): A rustic, decayed wooden treasure chest constructed entirely of dark damp timber planks. Prominent natural cracked wood grain, rotting weathered oak boards, soft green moss and lichen clinging to the damp lower edges and corners. Only simple crude thin iron brackets on the corners holding the wood together. Slightly open lid revealing a faint warm ember glow inside. Colours strictly: rich weathered timber brown, damp earth brown, mossy green (#4A6B35), dark aged iron brackets. Must look unmistakably like rough decaying wood.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
@@ -910,12 +910,11 @@
     "file": "assets/art/chests/chest_iron.png",
     "type": "cutout",
     "size": 512,
-    "prompt": "Chest: a heavy iron-bound chest, riveted dark steel plates over oak, a big padlock hanging open, lid slightly open with a warm glow inside. Colours: dark steel grey, brown oak.",
+    "prompt": "Chest (Heavy Iron Bastion): A heavily armored fortress chest completely encased in thick, riveted dark steel and iron armor plates. Prominent forged iron rivets and heavy industrial steel bands criss-crossing the front and lid. A large heavy forged iron padlock hanging open from the central latch. Cold metallic iron sheen, specular highlights on dark steel edges, looking heavy, industrial and fortified like a medieval safe. Slightly open lid with a warm orange forge glow visible inside. Colours strictly: cold dark steel grey, charcoal iron, metallic gunmetal (#5C636E, #3D4148), with tiny hints of dark wood visible only between the heavy metal plates. Must look unmistakably metallic and heavily iron-armored.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
-      "hollow_goblin_idle.png",
-      "chest_wood.png"
+      "hollow_goblin_idle.png"
     ],
     "attempts": 1,
     "pink_pixels": 0,
@@ -931,8 +930,7 @@
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
-      "hollow_goblin_idle.png",
-      "chest_wood.png"
+      "hollow_goblin_idle.png"
     ],
     "attempts": 1,
     "pink_pixels": 0,
@@ -944,12 +942,11 @@
     "file": "assets/art/chests/chest_gold.png",
     "type": "cutout",
     "size": 512,
-    "prompt": "Chest: a grand golden chest of the Oath, antique gold with a sword-and-oath sigil on the lid, small red gems at the corners, lid slightly open with bright warm golden light pouring out. Colours: antique gold, deep red.",
+    "prompt": "Chest (Grand Radiant Gold of the Oath): A lavish, magnificent treasure chest made entirely of solid, brilliant antique gold and pure yellow gold leaf. Intensely and radiantly golden: ornate baroque and gothic filigree reliefs, sculpted golden lion/sword oath emblem on the lid, polished gold surfaces catching bright light. Four glowing deep ruby red gems set into the ornate golden corners. Lid slightly open with intense, dazzling warm golden rays and bright holy amber-gold light pouring out from within. Colours strictly: radiant antique gold (#E5B842), brilliant polished yellow gold (#FFD700, #F5C542), warm amber highlights, rich crimson-ruby gems (#A81C1C). Overwhelmingly golden, opulent, and shining.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
-      "hollow_goblin_idle.png",
-      "chest_wood.png"
+      "hollow_goblin_idle.png"
     ],
     "attempts": 1,
     "pink_pixels": 0,
@@ -1145,6 +1142,246 @@
     "attempts": 1,
     "pink_pixels": 0,
     "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "demo_push_up_a": {
+    "id": "demo_push_up_a",
+    "file": "assets/art/demos/push_up_a.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nSUBJECT: Exercise Demonstration.\nA hero in basic worn armor: padded brown gambeson, simple open-face steel helm, leather boots and gloves. Seen from a 45-degree camera angle (three-quarter view from the front-side), whole body visible, clean readable silhouette for an exercise guide. Exercise demonstration, first position: a push-up: high plank on straight arms, body in a straight line.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "map_wind_gorge": {
+    "id": "map_wind_gorge",
+    "file": "assets/art/maps/wind_gorge.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Le Gole del Vento): narrow rocky gorges with rope bridges, harpy nests on the cliffs, wind-torn banners; boss lair at the top: a high nest on a rock pinnacle. Dominant palette: moss green and earth brown.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "demo_push_up_b": {
+    "id": "demo_push_up_b",
+    "file": "assets/art/demos/push_up_b.png",
+    "type": "demo",
+    "size": 512,
+    "prompt": "Edit this exact image. Keep the character, armour, camera angle, framing, scale, lighting, floor line and magenta background identical. Change only the body pose to the one described below.\n\nGym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\nCOMPOSITION & ALIGNMENT RULE: The hero stands or lies on an imaginary floor line at about 90% of the image height, so all demos line up across the game. Absolutely NO floor drawn, no ground line drawn, no shadows on the background.\nARMOR & PROPS: Base gear is worn but never rusty. When props (chair, box, dumbbells) are used, keep them sturdy, worn dark wood and forged iron.\nONE subject per generation, no sheets, no variants side by side.\n\nEXERCISE POSE: Second position of the same exercise: the bottom of the push-up: chest just above the floor, elbows bent at about 45 degrees.",
+    "references": [
+      "demo_push_up_a.png"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  "map_storm_peak": {
+    "id": "map_storm_peak",
+    "file": "assets/art/maps/storm_peak.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (La Vetta della Bufera): a mountain path climbing to a stormy peak, snow and lightning, broken watchtowers; boss lair at the top: a ruined throne on the summit under lightning. Dominant palette: moss green and earth brown.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_bronze_crypt": {
+    "id": "map_bronze_crypt",
+    "file": "assets/art/maps/bronze_crypt.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (La Cripta di Bronzo): underground tombs closed by great bronze doors, sarcophagi, green patina, candles; boss lair at the top: the sealed bronze gate of the main tomb. Dominant palette: antique gold and dark stone.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_golden_temple": {
+    "id": "map_golden_temple",
+    "file": "assets/art/maps/golden_temple.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Il Tempio Dorato): a temple with gilded columns, gold leaf peeling, bones of priests in alcoves, incense smoke; boss lair at the top: a golden altar. Dominant palette: antique gold and dark stone.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_hallowed_sanctum": {
+    "id": "map_hallowed_sanctum",
+    "file": "assets/art/maps/hallowed_sanctum.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Il Santuario Consacrato): a blinding holy sanctum, weeping statues with golden tears, white marble, harsh light beams; boss lair at the top: a radiant reliquary. Dominant palette: antique gold and dark stone.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_martyr_cathedral": {
+    "id": "map_martyr_cathedral",
+    "file": "assets/art/maps/martyr_cathedral.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (La Cattedrale del Martire): a black and gold gothic cathedral nave, kneeling statues, red candles; boss lair at the top: the high altar with a huge martyr statue. Dominant palette: antique gold and dark stone.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_lunar_ruins": {
+    "id": "map_lunar_ruins",
+    "file": "assets/art/maps/lunar_ruins.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Le Rovine Lunari): moonlit ruins on a hill, stones silvered by a huge full moon, pale blue light; boss lair at the top: a broken moon altar. Dominant palette: cold blue and silver.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_flooded_library": {
+    "id": "map_flooded_library",
+    "file": "assets/art/maps/flooded_library.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (La Biblioteca Allagata): a flooded library, black water, floating books, tall shelves, living ink swirling in the water; boss lair at the top: a reading hall with a giant open tome. Dominant palette: cold blue and silver.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_fallen_observatory": {
+    "id": "map_fallen_observatory",
+    "file": "assets/art/maps/fallen_observatory.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (L'Osservatorio Crollato): a collapsed observatory, a fallen brass telescope, star charts, a cracked dome open to a starry sky; boss lair at the top: an armillary sphere. Dominant palette: cold blue and silver.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_star_well": {
+    "id": "map_star_well",
+    "file": "assets/art/maps/star_well.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Il Pozzo delle Stelle): a bottomless stone well spiral with falling stars glowing deep below, cosmic blue light; boss lair at the top: the rim of the abyss with a coiled shape of stars. Dominant palette: cold blue and silver.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_silent_garden": {
+    "id": "map_silent_garden",
+    "file": "assets/art/maps/silent_garden.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Il Giardino del Silenzio): a still overgrown garden, stone lanterns, pale flowers, calm ghostly mist; boss lair at the top: a moss-covered shrine. Dominant palette: soft violet and grey.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_hanging_monastery": {
+    "id": "map_hanging_monastery",
+    "file": "assets/art/maps/hanging_monastery.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Il Monastero Sospeso): a monastery hanging on a cliff face, wooden walkways, prayer flags, deep chasm; boss lair at the top: the abbot's hall. Dominant palette: soft violet and grey.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_ancient_baths": {
+    "id": "map_ancient_baths",
+    "file": "assets/art/maps/ancient_baths.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Le Terme degli Antichi): ancient roman-like baths, warm steam, cracked mosaics, turquoise water; boss lair at the top: the great central pool. Dominant palette: soft violet and grey.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
+    "status": "done"
+  },
+  "map_dream_cloister": {
+    "id": "map_dream_cloister",
+    "file": "assets/art/maps/dream_cloister.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Map background (Il Chiostro del Sogno): a dreamlike cloister, violet haze, floating petals, sleeping statues, impossible arches; boss lair at the top: a bed of stone under a giant moth-wing window. Dominant palette: soft violet and grey.",
+    "references": [
+      "anvil_golem_idle.png",
+      "living_bellows_idle.png",
+      "hollow_goblin_idle.png"
+    ],
+    "attempts": 1,
     "status": "done"
   }
 }
