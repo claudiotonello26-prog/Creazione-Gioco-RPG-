@@ -1856,7 +1856,7 @@
     "file": "assets/art/trainer/trainer_crossed.png",
     "type": "cutout",
     "size": "640x800",
-    "prompt": "Commander Reynard, arms crossed over his chest...",
+    "prompt": "Gym Oath is a dark fantasy medieval fitness RPG for phones, souls-like style (Dark Souls, Elden Ring): ruined gothic world, ash, stone, iron, warm antique gold as the only bright colour.\nSTYLE REFERENCES: Match the painting technique, inked outlines, level of detail and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nHand-painted dark fantasy illustration, bold inked outlines, rich but muted colours, soft rim light, readable even as a small thumbnail. No text, no letters, no frame, no UI, no watermark.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the whole canvas: no shadows, gradients, floor, smoke, particles or glow spreading on the background. Nothing of the subject is magenta or pink. Glows and smoke stay tight and opaque around the subject.\n\nCHARACTER: Commander Reynard, a veteran templar master-at-arms, tall and broad-shouldered, an old soldier who is stern but secretly kind and a little mystical. Three-quarter figure from the top of the helmet plume down to mid-thigh, the legs cut by the bottom edge of the image, body in front three-quarter view, centred, with a little empty space above the plume. Helmet (key feature): a fully closed great bascinet of blackened steel with thin antique-gold trim on every edge, rising to a tall pointed ogee peak; one raised vertical ridge down the middle of the face and two thinner curved ridges on each side of the dome; a gold-trimmed brow band; two narrow eye slits angled down toward the centre like a stern frown, with a faint warm golden glow deep inside (his only mystical light); a pointed beak faceplate pierced by a neat grid of small round breathing holes; riveted pivot bosses on the temples; a rounded riveted gorget; one small dent on the left of the dome. From the top peak rises a single long plume of dark crimson and bone-white feathers curving backward and down over the back of the helmet, slightly ragged at the tips. Armor: old, worn but cared-for blackened steel plate with thin antique-gold edging, scratched, never rusty. Large rounded pauldrons, articulated gauntlets. A long templar tabard of faded bone-white linen, frayed and soot-stained at the hem, with a large faded dark-red cross on the chest. A heavy dark crimson half-cape from the left shoulder, torn at the edges. A wide leather belt with a sheathed longsword at the hip. A rosary of small bone beads wrapped around the right gauntlet, two parchment prayer strips with red wax seals pinned on the right pauldron. Personality at a glance: serious, imposing and trustworthy, but likeable, with dry humour in his posture.\n\nPOSE: arms crossed over his chest, weight on one leg, helmet slightly lowered as if studying the viewer with a mix of severity and amusement.\nCOMPOSITION: Generate portrait 4:5 aspect ratio (1024x1280), three-quarter figure centered with empty space above the helmet plume, cut by bottom edge at mid-thigh. Flat solid magenta #FF00FF background.",
     "references": [
       "anvil_golem_idle.png",
       "living_bellows_idle.png",
@@ -1871,7 +1871,14 @@
     "id": "trainer_goofy",
     "file": "assets/art/trainer/trainer_goofy.png",
     "type": "cutout",
-    "prompt": "The same character as the reference image. Dark souls-like knight trainer named Ser Corvino: tall, lean, very stylish black plate armor with fluted edges and subtle dark-gold filigree, armet helm with a black raven-feather crest, long tattered black cape with a high collar, charismatic and confident presence. Full body, front three-quarter view, centered. Goofy funny pose: doing an awkward flexing bodybuilder pose, one leg raised, cape tangled, clearly joking around.",
+    "size": "640x800",
+    "prompt": "Edit this exact image. Keep the character, helmet, plume, armour, tabard, colours, size, position on the canvas, lighting and magenta background identical. Change only the pose of the arms and body to: a goofy joking bodybuilder flex with both arms, the half-cape tangled around one arm, clearly fooling around..\nCRITICAL: Keep flat solid magenta background #FF00FF filling the entire canvas. No text, no watermark, no frame, no UI.",
+    "references": [
+      "trainer_crossed (mother)"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
     "status": "done"
   },
   {
@@ -3087,6 +3094,62 @@
       "hollow_goblin_idle.png"
     ],
     "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "trainer_pointing",
+    "file": "assets/art/trainer/trainer_pointing.png",
+    "type": "cutout",
+    "size": "640x800",
+    "prompt": "Edit this exact image. Keep the character, helmet, plume, armour, tabard, colours, size, position on the canvas, lighting and magenta background identical. Change only the pose of the arms and body to: pointing forward at the viewer with the right gauntlet, the left hand on the sword pommel at his hip, giving an order..\nCRITICAL: Keep flat solid magenta background #FF00FF filling the entire canvas. No text, no watermark, no frame, no UI.",
+    "references": [
+      "trainer_crossed (mother)"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "trainer_cheering",
+    "file": "assets/art/trainer/trainer_cheering.png",
+    "type": "cutout",
+    "size": "640x800",
+    "prompt": "Edit this exact image. Keep the character, helmet, plume, armour, tabard, colours, size, position on the canvas, lighting and magenta background identical. Change only the pose of the arms and body to: right fist raised high in triumph, the left hand on his belt, chest out, proud of the viewer..\nCRITICAL: Keep flat solid magenta background #FF00FF filling the entire canvas. No text, no watermark, no frame, no UI.",
+    "references": [
+      "trainer_crossed (mother)"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "trainer_facepalm",
+    "file": "assets/art/trainer/trainer_facepalm.png",
+    "type": "cutout",
+    "size": "640x800",
+    "prompt": "Edit this exact image. Keep the character, helmet, plume, armour, tabard, colours, size, position on the canvas, lighting and magenta background identical. Change only the pose of the arms and body to: the right gauntlet pressed against the faceplate of his helmet in a facepalm, shoulders slumped, exasperated but amused..\nCRITICAL: Keep flat solid magenta background #FF00FF filling the entire canvas. No text, no watermark, no frame, no UI.",
+    "references": [
+      "trainer_crossed (mother)"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "trainer_thinking",
+    "file": "assets/art/trainer/trainer_thinking.png",
+    "type": "cutout",
+    "size": "640x800",
+    "prompt": "Edit this exact image. Keep the character, helmet, plume, armour, tabard, colours, size, position on the canvas, lighting and magenta background identical. Change only the pose of the arms and body to: the right hand rubbing the chin of the helmet's faceplate, the left arm across the waist supporting the right elbow, head tilted, pondering..\nCRITICAL: Keep flat solid magenta background #FF00FF filling the entire canvas. No text, no watermark, no frame, no UI.",
+    "references": [
+      "trainer_crossed (mother)"
+    ],
+    "attempts": 1,
+    "pink_pixels": 0,
+    "light_rim_pixels": 0,
     "status": "done"
   }
 ]
