@@ -76,6 +76,7 @@ flutter:
     - assets/art/animals/
     - assets/art/maps/
     - assets/art/chests/
+    - assets/art/demos/
     - assets/art/items/
     # Cosa si raccoglie (albero o filone): <id risorsa>.png.
     - assets/art/nodes/
