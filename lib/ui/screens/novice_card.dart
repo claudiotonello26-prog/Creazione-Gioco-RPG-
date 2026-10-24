@@ -71,7 +71,7 @@ class NoviceCard extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                const TrainerFigure(pose: TrainerPose.pointing, height: 84),
+                const TrainerFigure(pose: TrainerPose.pointing, height: 96, bust: true),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(

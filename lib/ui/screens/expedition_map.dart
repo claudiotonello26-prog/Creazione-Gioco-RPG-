@@ -265,15 +265,15 @@ class _ExpeditionMapScreenState extends State<ExpeditionMapScreen> {
                   },
                 ),
               ),
-              // Il Comandante Reynard in basso a sinistra, a braccia conserte.
+              // Il Comandante Reynard in basso a sinistra, dalla vita in su, a braccia conserte.
               Positioned(
                 left: 0,
                 bottom: 0,
-                child: TrainerFigure(pose: TrainerPose.crossed, height: h * 0.26),
+                child: TrainerFigure(pose: TrainerPose.crossed, height: h * 0.3, bust: true),
               ),
               Positioned(
                 left: 8,
-                bottom: h * 0.26 + 4,
+                bottom: h * 0.3 + 4,
                 width: min(210, w * 0.5),
                 child: _Bubble(_reynard(progress, under)),
               ),
