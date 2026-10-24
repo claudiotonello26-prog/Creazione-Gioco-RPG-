@@ -1276,9 +1276,19 @@ class TrainerPainter extends KnightPainter {
 }
 
 class TrainerFigure extends StatelessWidget {
-  const TrainerFigure({super.key, required this.pose, this.height = 170});
+  const TrainerFigure({super.key, required this.pose, this.height = 170, this.bust = false});
   final TrainerPose pose;
   final double height;
+
+  /// Solo dalla vita in su, grande: per i dialoghi e le schede.
+  final bool bust;
+
+  // Le illustrazioni sono 640x800; dalla vita in su è il riquadro centrale
+  // largo 480 e alto 440 (la cintura cade intorno a 380).
+  static const _artW = 640.0, _artH = 800.0, _bustW = 480.0, _bustH = 440.0;
+
+  /// Larghezza del busto per una data altezza.
+  static double bustWidth(double height) => height * _bustW / _bustH;
 
   @override
   Widget build(BuildContext context) {
@@ -1290,12 +1300,36 @@ class TrainerFigure extends StatelessWidget {
     };
     final exact = 'assets/art/trainer/trainer_${pose.name}.png';
     final art = Art.has(exact) ? exact : 'assets/art/trainer/trainer_$nearest.png';
+    if (!bust) {
+      return SizedBox(
+        width: height * 0.8,
+        height: height,
+        child: Art.has(art)
+            ? Image.asset(art, fit: BoxFit.contain)
+            : CustomPaint(size: Size(height * 0.8, height), painter: TrainerPainter(pose)),
+      );
+    }
+    // Busto: l'immagine intera, ingrandita, tagliata sotto la cintura.
+    final scale = height / _bustH;
+    final full = Size(_artW * scale, _artH * scale);
     return SizedBox(
-      width: height * 0.8,
+      width: bustWidth(height),
       height: height,
-      child: Art.has(art)
-          ? Image.asset(art, fit: BoxFit.contain)
-          : CustomPaint(size: Size(height * 0.8, height), painter: TrainerPainter(pose)),
+      child: ClipRect(
+        child: OverflowBox(
+          alignment: Alignment.topCenter,
+          minWidth: full.width,
+          maxWidth: full.width,
+          minHeight: full.height,
+          maxHeight: full.height,
+          child: Art.has(art)
+              ? Image.asset(art, fit: BoxFit.fill)
+              : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: full.width * 0.1),
+                  child: CustomPaint(size: full, painter: TrainerPainter(pose)),
+                ),
+        ),
+      ),
     );
   }
 }

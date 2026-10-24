@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -293,82 +295,107 @@ class _TrainerOverlayState extends State<_TrainerOverlay> {
   Widget build(BuildContext context) {
     final line = widget.lines[_i];
     final last = _i == widget.lines.length - 1;
-    return SafeArea(
-      child: Material(
-        type: MaterialType.transparency,
-        child: GestureDetector(
-          onTap: _next,
-          behavior: HitTestBehavior.opaque,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Nuvoletta.
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                    // Oro pieno con testo nero: stacca dal resto dell'app.
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Palette.goldBright, Palette.gold],
-                      ),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFF6B5320), width: 1.5),
-                      boxShadow: [
-                        BoxShadow(color: Palette.gold.withValues(alpha: 0.35), blurRadius: 18)
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(tr(trainerName).toUpperCase(),
-                            style:
-                                titleStyle(size: 13, spacing: 3, color: const Color(0xFF3A2A10))),
-                        const SizedBox(height: 6),
-                        Text(tr(line.text),
-                            style: const TextStyle(
-                                fontSize: 17,
-                                color: Color(0xFF14100A),
-                                height: 1.3,
-                                fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 8),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            last ? tr('HO CAPITO') : tr('AVANTI  {i}/{n}', {'i': _i + 1, 'n': widget.lines.length}),
-                            style: titleStyle(size: 12, color: const Color(0xFF3A2A10)),
-                          ),
-                        ),
-                      ],
-                    ),
+    return Material(
+      type: MaterialType.transparency,
+      child: GestureDetector(
+        onTap: _next,
+        behavior: HitTestBehavior.opaque,
+        child: LayoutBuilder(builder: (context, box) {
+          // Reynard dalla vita in su, grande quanto lo schermo permette,
+          // appoggiato al bordo in basso; la nuvoletta sopra la testa.
+          final h = min(box.maxHeight * 0.5, box.maxWidth * 440 / 480);
+          return Stack(
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Center(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: TrainerFigure(key: ValueKey(line.pose), pose: line.pose, height: h, bust: true),
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: CustomPaint(
-                        size: const Size(24, 14),
-                        painter: _Tail(),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      child: TrainerFigure(key: ValueKey(line.pose), pose: line.pose, height: 150),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
+              // Il taglio sotto la cintura sfuma nel nero.
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                height: h * 0.18,
+                child: const IgnorePointer(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0x00000000), Color(0xE6000000)],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 12,
+                right: 12,
+                bottom: h * 0.97,
+                child: SafeArea(
+                  bottom: false,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Nuvoletta.
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                        // Oro pieno con testo nero: stacca dal resto dell'app.
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Palette.goldBright, Palette.gold],
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: const Color(0xFF6B5320), width: 1.5),
+                          boxShadow: [
+                            BoxShadow(color: Palette.gold.withValues(alpha: 0.35), blurRadius: 18)
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(tr(trainerName).toUpperCase(),
+                                style:
+                                    titleStyle(size: 13, spacing: 3, color: const Color(0xFF3A2A10))),
+                            const SizedBox(height: 6),
+                            Text(tr(line.text),
+                                style: const TextStyle(
+                                    fontSize: 17,
+                                    color: Color(0xFF14100A),
+                                    height: 1.3,
+                                    fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 8),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                last ? tr('HO CAPITO') : tr('AVANTI  {i}/{n}', {'i': _i + 1, 'n': widget.lines.length}),
+                                style: titleStyle(size: 12, color: const Color(0xFF3A2A10)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // La punta scende verso la testa di Reynard.
+                      Center(
+                        child: CustomPaint(size: const Size(28, 16), painter: _Tail()),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -380,7 +407,7 @@ class _Tail extends CustomPainter {
     final p = Path()
       ..moveTo(0, 0)
       ..lineTo(size.width, 0)
-      ..lineTo(size.width * 0.3, size.height)
+      ..lineTo(size.width * 0.5, size.height)
       ..close();
     canvas.drawPath(p, Paint()..color = Palette.gold);
   }
