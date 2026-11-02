@@ -221,7 +221,9 @@ class _CelebrationView extends StatelessWidget {
     // L'emblema arriva da grande e si posa con un colpo, poi pulsa piano.
     final slam = 1.5 - 0.5 * Curves.easeOutCubic.transform((t / 0.16).clamp(0.0, 1.0));
     final pulse = 1 + 0.04 * math.sin(t * math.pi * 6) * (t > 0.16 ? 1 : 0);
-    final emblem = math.min(240.0, MediaQuery.sizeOf(context).width * 0.6);
+    // Grande, ma con posto per le scritte anche su schermi bassi.
+    final screen = MediaQuery.sizeOf(context);
+    final emblem = math.min(240.0, math.min(screen.width * 0.6, screen.height * 0.28));
     final art = c.art;
     return Opacity(
       opacity: opacity,
@@ -233,7 +235,9 @@ class _CelebrationView extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: Transform.scale(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Transform.scale(
             scale: scale,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -334,6 +338,7 @@ class _CelebrationView extends StatelessWidget {
                 ),
               ],
             ),
+          ),
           ),
         ),
       ),
