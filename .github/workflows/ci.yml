@@ -101,6 +101,8 @@ jobs:
 
   # Avvia l'APK vero su emulatori Android (vecchio e recente) e fallisce se
   # l'app si chiude all'avvio. Il logcat resta come artefatto.
+  # Immagini "default" per tutti: quella google_apis di Android 14 arrivava
+  # corrotta da Google ("Error on ZipFile unknown archive", 2026-11-02).
   android-smoke:
     if: (github.event_name == 'workflow_dispatch' && inputs.emulatori) || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     needs: android
@@ -123,7 +125,7 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86_64
-          target: ${{ matrix.api-level == 34 && 'google_apis' || 'default' }}
+          target: default
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-front emulated
           script: |
