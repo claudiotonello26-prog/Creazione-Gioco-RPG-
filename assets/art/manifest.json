@@ -1285,27 +1285,23 @@
   },
   {
     "id": "bg_forge",
-    "file": "assets/art/backgrounds/bg_forge.png",
-    "size": "1080x1920",
-    "cutout": false,
-    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Vertical 9:16 mobile game background: blacksmith forge inside a crumbling chapel, glowing furnace, anvil, hanging chains, sparks and embers. Empty ground in the lower third for characters, no characters, slightly dark so the interface stays readable.",
-    "references": [
-      "knight_s1_idle.png"
-    ],
-    "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "file": "assets/art/backgrounds/forge.png",
+    "prompt": "Background: a vast ruined underground forge hall, a huge stone furnace mouth glowing deep orange at the top, sparks drifting up, anvils and hanging chains in silhouette, red-orange light on soot-black walls.",
+    "status": "done",
+    "type": "background",
+    "attempts": 1,
+    "width": 1080,
+    "height": 1920
   },
   {
     "id": "bg_home",
-    "file": "assets/art/backgrounds/bg_home.png",
-    "size": "1080x1920",
-    "cutout": false,
-    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Vertical 9:16 mobile game background: small bonfire camp at the edge of a ruined kingdom, a sword planted beside the fire, a giant golden tree glowing on the far horizon. Empty ground in the lower third for characters, no characters, slightly dark so the interface stays readable.",
-    "references": [
-      "knight_s1_idle.png"
-    ],
-    "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "file": "assets/art/backgrounds/home.png",
+    "prompt": "Background: a quiet ruined chapel used as a knight's resting place, a small bonfire with a sword planted in it at the top of the image, soft warm gold light on broken pillars and stained glass shards.",
+    "status": "done",
+    "type": "background",
+    "attempts": 1,
+    "width": 1080,
+    "height": 1920
   },
   {
     "id": "logo",
@@ -2528,11 +2524,71 @@
     "note": "In attesa di rigenerazione con Color Variety V2"
   },
   {
+    "id": "ember_ore",
+    "file": "assets/art/items/ember_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of black volcanic rock split by glowing molten orange veins, like a vein of ember inside the stone.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
     "id": "amulet_bane_fire",
     "file": "assets/art/items/amulet_bane_fire.png",
     "type": "cutout",
     "size": 256,
     "prompt": "Inventory icon: Rime Gem, a faceted oval gem of icy white-blue frost with tiny frozen crystals on its surface, set in a small iron claw mount with a short slot stub, made to quench fire.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "copper_ore",
+    "file": "assets/art/items/copper_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of grey rock with veins of raw copper, warm orange-brown with a few green verdigris spots.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "gold_ore",
+    "file": "assets/art/items/gold_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of pale stone with thick veins and nuggets of raw antique gold.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "abyss_geode",
+    "file": "assets/art/items/abyss_geode.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a broken round geode, rough dark outer shell, the open half full of deep blue-black crystals with a faint cold blue gleam.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "living_obsidian",
+    "file": "assets/art/items/living_obsidian.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a sharp glossy black obsidian chunk with thin pulsing dark red cracks, as if it still had a heartbeat.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "storm_resin",
+    "file": "assets/art/items/storm_resin.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a large drop of hardened amber pine resin with a tiny frozen pale-green lightning bolt trapped inside, a sliver of scorched bark still attached.",
     "status": "done",
     "pink_pixels": 0,
     "attempts": 1
@@ -2626,291 +2682,6 @@
     "status": "done",
     "pink_pixels": 0,
     "attempts": 1
-  },
-  {
-    "id": "smith",
-    "file": "assets/art/npc/smith.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Master Gorran the Blacksmith\nFraming: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). Front-facing towards the camera/viewer (or very slight three-quarter angle), eyes looking straight into the camera / at the player with a hearty, friendly, warm and jovial warrior smile. Head positioned in the upper half of the canvas with a little space above the head, broad powerful shoulders filling the canvas width. Light source from the upper left, plus warm forge glow from below on one side. Weathered, believable craftsman, hearty and friendly. Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted.\nDETAILS: Master Gorran the Blacksmith. Big bald man in his forties, hearty friendly smile, warm kind eyes looking directly into the camera / at the viewer, thick braided red-brown beard with a few singed hairs. Black soot smudges on his forehead and rugged cheeks, thick powerful neck. Heavy leather apron over a sleeveless sweat-darkened coarse grey shirt. His thick muscular, hairy, soot-stained arm and hand is raised to firmly grip and hold the heavy iron blacksmith tongs resting securely over his shoulder. Glow of the forge lighting him warm orange from below on one side. Welcoming master craftsman greeting the player warmly. Colours strictly: steel grey, leather brown, forge orange, natural ruddy skin tones. Bold inked outlines.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 2,
-    "pink_pixels": 0,
-    "status": "approved_clean",
-    "final_prompt": "Master Gorran: large close-up bust matching other NPC scales, holding tongs over shoulder with hand, warm friendly smile looking into camera, height 502px, top y=10"
-  },
-  {
-    "id": "general_store",
-    "file": "assets/art/npc/general_store.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Berta of the General Store\nFraming: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). Front-facing towards the camera/viewer (or very slight three-quarter angle), eyes looking straight into the camera / at the player with a warm, friendly and welcoming smile. Head positioned in the upper half of the canvas with a little space above the head, shoulders broad and filling the canvas width. Light source from the upper left. Weathered, believable person of a grim medieval world, warm and inviting shopkeeper, not a hero, not a monster. Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted.\nDETAILS: Berta of the General Store. Woman in her fifties, very warm and friendly welcoming smile, kind friendly eyes looking directly at the viewer/screen. Smooth natural weathered medieval skin tones, completely solid and fully painted skin with no white specks, no glitter, and no unpainted spots. Grey-streaked chestnut hair tied in a loose bun under a solid faded red cloth headscarf. Small circular brass spectacles perched neatly on her nose. Wearing a practical cream linen blouse, a coarse brown wool shawl draped around her, a leather apron strap over one shoulder, a pencil tucked behind her ear, and a small ring of brass keys hanging at the collar. Warm, friendly shopkeeper greeting the player warmly. Warm weathered colours strictly: faded red cloth, cream linen, brown wool, brass metal, natural warm skin tones. Bold crisp black inked outlines, clean smooth cel-shading, completely solid painted surfaces with NO white specks, NO uncolored patches, NO noise artifacts.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 2,
-    "pink_pixels": 0,
-    "status": "approved_clean",
-    "final_prompt": "Berta: solid rustic red bandana without uncolored spots, warm friendly smile looking into camera, spectacles, clean skin"
-  },
-  {
-    "id": "hunter",
-    "file": "assets/art/npc/hunter.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Edda the Huntress\nFraming: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). Front-facing towards the camera/viewer (or very slight three-quarter angle), eyes looking straight into the camera / at the player with a friendly, welcoming, gentle smile and kind eyes. Head positioned in the upper half of the canvas with a little space above the head, shoulders filling the canvas width. Light source from the upper left. Weathered, believable person of a grim medieval world, friendly and trustworthy ally. Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted.\nDETAILS: Edda the Huntress. Lean woman in her thirties, sharp weathered hawk-like face softened by a warm, friendly smile and kind welcoming eyes looking straight at the viewer, a thin pale scar across one cheek. Dark blonde hair braided in a practical side braid over one shoulder. Wearing a forest green-brown hooded cloak with the hood down around her neck, a rough grey wolf fur collar, a sturdy oiled leather jerkin, a thick leather quiver strap across the chest with fletched feathered arrows visible behind her shoulder, and a carved bone talisman hanging from a leather cord. Friendly, welcoming demeanor. Colours strictly: forest green, wolf fur grey, weathered leather brown, bone white. Bold inked outlines.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "mage",
-    "file": "assets/art/npc/mage.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Velthar the Mage\nFraming: head and upper chest bust only (cut cleanly at mid-chest, just under the shoulders). Front-facing towards the camera/viewer (or very slight three-quarter angle), eyes looking straight into the camera / at the player with a warm, friendly, benevolent smile and kind wise eyes. Head positioned in the upper half of the canvas with a little space above the head, shoulders filling the canvas width. Light source from the upper left. Weathered, believable person of a grim medieval world, mysterious but kind, gentle and welcoming, NOT evil, NOT corrupted. Clothes are worn and practical: no shiny armour, no rust, nothing dark or corrupted.\nDETAILS: Velthar the Mage. Old thin weathered scholar man, warm gentle benevolent smile, wise kind eyes with a faint subtle violet sparkle looking straight into the camera / at the viewer, long flowing silver beard and mustache. Wearing a tall soft pointed scholar hood of deep indigo cloth embroidered with small faded antique silver runes, high collar robes. The carved top of an ancient wooden staff with an embedded pale crystal visible beside his shoulder, and a few small glass potion vials with pale liquids hanging from a shoulder strap. Colours strictly: deep indigo cloth, subtle violet glow, antique silver, weathered aged parchment skin tones. Gentle, warm, kind mentor demeanor. Bold inked outlines.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "ash_wood",
-    "file": "assets/art/items/ash_wood.png",
-    "type": "cutout",
-    "size": 256,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Ash Tree Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (ash-covered soil and stones) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Ash tree woodcutting node. Whole small gnarled ash tree with a twisted pale grey-white bark trunk and branches, sparse delicate ashen grey foliage leaves, sitting on a small isolated circular mound of earth dusted with powdery pale grey ash. Inked outlines, dark fantasy painterly style. Colours strictly: ash grey, pale bone white, weathered stone grey, charcoal.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 2,
-    "pink_pixels": 0,
-    "status": "done",
-    "final_prompt": "Ash tree: pale desaturated sage/ash-green leaves, twisted grey-white bark, pale grey ash ground, 0 pink pixels",
-    "method": "regenerated",
-    "pink_rim_pixels": 0,
-    "light_rim_pixels": 0,
-    "haze_pixels": 0
-  },
-  {
-    "id": "oak_wood",
-    "file": "assets/art/items/oak_wood.png",
-    "type": "cutout",
-    "size": 256,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Black Oak Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (dark loam soil and moss) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Black oak woodcutting node. Thick gnarled very dark brown ancient trunk with heavy muscular bark ridges, dense dark forest-green canopy crown, powerful thick roots sprawling over a small patch of mossy dark forest loam ground. Bold inked outlines, dark fantasy style. Colours strictly: very dark timber brown, deep dark green, moss green, earthy loam.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done",
-    "method": "regenerated",
-    "pink_rim_pixels": 0,
-    "light_rim_pixels": 0,
-    "haze_pixels": 0
-  },
-  {
-    "id": "yew_wood",
-    "file": "assets/art/items/yew_wood.png",
-    "type": "cutout",
-    "size": 256,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Yew of the Dead Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (graveyard soil and dead grass) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Yew of the dead woodcutting node. Ancient twisted reddish-brown trunk with fluted fibrous bark, dense dark green yew needle crown dotted with small bright red poisonous berries. A small leaning cracked old weathered stone gravestone nestled at its foot among tangled roots. Inked outlines, grim souls-like cemetery mood. Colours strictly: reddish-brown trunk, dark needle green, bright red berries, mossy tombstone grey.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done",
-    "method": "regenerated",
-    "pink_rim_pixels": 0,
-    "light_rim_pixels": 0,
-    "haze_pixels": 0
-  },
-  {
-    "id": "storm_resin",
-    "file": "assets/art/nodes/storm_resin.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Storm Pine Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (scorched pine needles and rock) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Storm pine woodcutting node. Tall weathered mountain pine split down the middle by a lightning strike, thick golden-amber resin dripping and glowing from the deep burned fissure crack, faint delicate blue electric sparks dancing along the scorched black scar. Dark needle branches, sitting on a small patch of stony earth. Colours strictly: charred black bark, golden-amber resin, electric pale blue sparks, pine green, rocky grey. Bold inked outlines.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "ebony_wood",
-    "file": "assets/art/nodes/ebony_wood.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Twilight Ebony Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (dark violet-tinted stone soil) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Twilight ebony woodcutting node. Smooth elegant jet-black tree trunk with subtle wood grain, dark crown with purple-violet dusk twilight lighting illuminating the leaf edges, tiny ethereal glowing pale-violet motes of dust drifting gently around the canopy. Sitting on a small circular patch of dark rock. Colours strictly: jet-black, deep dusk purple, soft violet glow, dark obsidian earth. Bold inked outlines.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "coal",
-    "file": "assets/art/nodes/coal.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Coal Seam Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (rock and rubble) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Coal seam mining node. A rugged rock outcrop of matte dark grey slate rock embedded with jagged chunks of shiny jet-black coal, a dusting of fine black coal powder and small crushed coal chips scattered around the base on a small patch of grey quarry ground. Bold inked outlines, crisp rock facets. Colours strictly: dark slate grey, glossy pitch black, charcoal dust.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "iron_ore",
-    "file": "assets/art/nodes/iron_ore.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Iron Vein Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (rock and rocky dirt) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Iron vein mining node. A rugged dark fantasy rock outcrop with the raw iron vein heavily exposed and protruding: rough textured grey-brown bedrock embedded with thick bands of reddish-brown raw iron ore deposits and streaks of dull metallic silver-grey iron. Sitting on a small mound of stony gravel. Inked black outlines, faceted stone surfaces. Colours strictly: grey-brown rock, rusty reddish-brown, dull silver iron, gravel.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "copper_ore",
-    "file": "assets/art/nodes/copper_ore.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Copper Vein Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (rocky dirt) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Copper vein mining node. A rugged grey stone rock outcrop with thick veins and metallic nuggets of bright fiery orange-bronze raw copper metal exposed, accented by several small spots and patches of turquoise-green oxidized verdigris patina along the stone seams. Sitting on a small patch of rocky earth. Inked outlines, painterly mineral facets. Colours strictly: neutral stone grey, bright fiery orange copper, turquoise verdigris patina.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "moon_silver",
-    "file": "assets/art/nodes/moon_silver.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Moon Silver Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (dark cavern rock) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Moon silver mining node. Bluish-grey cavern rock formation with bright pale silver-blue crystals and veins glowing softly with an ethereal moonlight luminescence. Geometric crystalline clusters erupting from the dark rock, sitting on a small mound of cave bedrock. Inked outlines, luminous painterly highlights. Colours strictly: dark blue-grey rock, radiant pale silver-blue crystals, soft cyan-silver glow.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "gold_ore",
-    "file": "assets/art/nodes/gold_ore.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Cathedral Gold Vein Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (cathedral flagstone and pale rock) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Cathedral gold vein mining node. Ancient pale limestone bedrock outcrop embedded with thick, lustrous veins and heavy nuggets of gleaming raw cathedral gold. Beside the outcrop lies a weathered fallen carved cathedral stone fragment (ornate gothic relief chunk) half-buried in the pale stone rubble. Inked outlines, opulent medieval relic feel. Colours strictly: pale limestone, radiant rich yellow gold, worn gothic stone grey.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "ember_ore",
-    "file": "assets/art/nodes/ember_ore.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Ember Vein Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (volcanic ash and basalt) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Ember vein mining node. Jagged black porous volcanic basalt rock outcrop split by intensely glowing molten orange-red fire cracks, molten lava veins pulsing within the fissures, and tiny hot red ember motes drifting upwards from the stone. Sitting on a small circular patch of dark volcanic slag and black ash. Inked outlines, incandescent souls-like flame glow. Colours strictly: pitch-black basalt, glowing molten orange-red, incandescent yellow sparks, ash grey.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "star_ore",
-    "file": "assets/art/nodes/star_ore.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Fallen Star Ore Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (small impact crater rim) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Fallen star ore mining node. A meteorite stone resting in a small raised impact crater rim: deep cosmic midnight-blue metallic meteorite rock dusted with tiny sparkling white star-like specks, radiating a faint cold celestial blue-white inner glow. Sitting on a small circular patch of fused glassy impact crater earth. Inked outlines, cosmic celestial fantasy style. Colours strictly: deep midnight blue, astral white specks, cold faint blue glow, charcoal crater rim.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "abyss_geode",
-    "file": "assets/art/nodes/abyss_geode.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Abyss Geode Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (corrupted dark stone) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Abyss geode mining node. A large ancient stone geode cracked open on one side: rough weathered dark rocky outer shell, the hollow hollow cavity packed with razor-sharp deep purple-black crystalline amethyst spears with a pulsing eerie dark violet glow. Sitting on a small mound of cracked cavern ground. Inked outlines, dark void fantasy style. Colours strictly: rough dark slate shell, deep royal purple-black crystals, soft eerie violet glow.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
-  },
-  {
-    "id": "living_obsidian",
-    "file": "assets/art/nodes/living_obsidian.png",
-    "type": "cutout",
-    "size": 512,
-    "prompt": "STYLE REFERENCES: Match the painting technique, inked outlines, level of detail, textural brushwork, and lighting of these reference images, but draw a completely different subject and use ONLY the colours written in this prompt.\nAesthetic: Hand-painted dark fantasy illustration, souls-like mobile game art style (Dark Souls, Elden Ring, Gym Oath). Bold expressive black ink outlines defining the outer silhouette and internal anatomy/folds/crevices. Painterly cel-shading with rich but muted weathered colours, deep charcoal shadows (#0D0B09), warm antique gold rim light (#C9A24A), high contrast, sharp graphic readability even when scaled down to a small thumbnail. NO 3D CGI, no photographic skin, no smooth airbrushing, no flat cartoon, no anime, no modern elements.\nCRITICAL BACKGROUND RULE: Flat solid magenta background #FF00FF filling the entire canvas from edge to edge. Pure solid uniform magenta #FF00FF background only. Absolutely NEVER use any magenta, fuchsia, or pink on the subject, skin, clothes, props, or effects. No text, no watermark, no frame, no borders, no ground shadow plate, no UI.\n\nSUBJECT: Living Obsidian Node\nFraming: ONE gathering node object, whole and centered, slightly from the side, filling about 85% of the canvas. Sitting on a small circular patch of its own ground (glassy volcanic shards) that fades out naturally at the edges with no hard square frame. No wide landscape, no horizon. Entire object surrounded by solid magenta #FF00FF background.\nDETAILS: Living obsidian mining node. Clusters of glossy razor-sharp pitch-black obsidian spikes and volcanic glass spires jutting from a rock base, with a slow-moving organic deep red-orange light pulsing softly inside the translucent black glass as if the mineral were breathing with a heart. Sitting on a small mound of black volcanic glass shards. Inked outlines, menacing dark fantasy style. Colours strictly: glossy mirror-like pitch black, pulsing internal blood-orange/crimson light, charcoal base.",
-    "references": [
-      "anvil_golem_idle.png",
-      "living_bellows_idle.png",
-      "hollow_goblin_idle.png"
-    ],
-    "attempts": 1,
-    "pink_pixels": 0,
-    "status": "done"
   },
   {
     "id": "station_carpentry",
@@ -4308,6 +4079,36 @@
     "status": "done"
   },
   {
+    "id": "yew_wood",
+    "file": "assets/art/items/yew_wood.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "ash_wood",
+    "file": "assets/art/items/ash_wood.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "oak_wood",
+    "file": "assets/art/items/oak_wood.png",
+    "method": "regenerated",
+    "size": 256,
+    "pink_rim_pixels": 0,
+    "light_rim_pixels": 0,
+    "haze_pixels": 0,
+    "status": "done"
+  },
+  {
     "id": "amulet_holy_amulet",
     "file": "assets/art/items/amulet_holy_amulet.png",
     "method": "regenerated",
@@ -4315,6 +4116,146 @@
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "nav_home",
+    "file": "assets/art/nav/home.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Icon: a small gothic castle keep with a single tower.",
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "bg_training",
+    "file": "assets/art/backgrounds/training.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Background: an ancient training courtyard of a fallen fortress, wooden training dummies, weapon racks and worn stone steps under a dim red dusk sky, ember-red light from braziers at the top.",
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "bg_gathering",
+    "file": "assets/art/backgrounds/gathering.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Background: a misty dead forest of ash-grey trees on the left and the dark mouth of an old mine with wooden supports on the right, a faint green-grey dawn light at the top.",
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "bg_market",
+    "file": "assets/art/backgrounds/market.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Background: a cramped medieval night market in a ruined city square, hooded stalls with hanging lanterns, crates and sacks, a cold teal moonlight mixed with small warm lantern glows at the top.",
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "bg_guild",
+    "file": "assets/art/backgrounds/guild.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Background: the great hall of a knightly order in a ruined keep, a long oak table, guild banners with a sword-and-oath sigil hanging from the beams, a big hearth glowing warm at the top, cold blue light through tall broken windows.",
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "bg_station_carpentry",
+    "file": "assets/art/backgrounds/station_carpentry.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Background: an old woodworking workshop and sawmill, a big saw blade and workbench, stacked planks and logs, warm amber-orange light through cracked shutters at the top.",
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "bg_station_furnace",
+    "file": "assets/art/backgrounds/station_furnace.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Background: a smelting furnace room, a tall brick furnace with molten metal pouring into moulds, crucibles and coal heaps, intense deep red light at the top.",
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "bg_station_anvil",
+    "file": "assets/art/backgrounds/station_anvil.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Background: a blacksmith's anvil corner, a massive anvil, hammers and tongs on the wall, finished blades on racks, cold steel-blue light from a high window mixed with a small warm forge glow.",
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "bg_station_enchant",
+    "file": "assets/art/backgrounds/station_enchant.png",
+    "type": "background",
+    "width": 1080,
+    "height": 1920,
+    "prompt": "Background: an arcane enchanting sanctum, a stone altar with floating runes, crystals and old tomes, a soft violet glow at the top.",
+    "attempts": 1,
+    "status": "done"
+  },
+  {
+    "id": "nav_training",
+    "file": "assets/art/nav/training.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Icon: a clenched armoured gauntlet fist.",
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "nav_gathering",
+    "file": "assets/art/nav/gathering.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Icon: a crossed woodcutter axe and miner pickaxe.",
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "nav_forge",
+    "file": "assets/art/nav/forge.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Icon: a blacksmith hammer resting on an anvil.",
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "nav_market",
+    "file": "assets/art/nav/market.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Icon: a tied coin pouch with a rune coin.",
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "nav_guild",
+    "file": "assets/art/nav/guild.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Icon: a heater shield with a hanging banner and a small crown above it.",
+    "attempts": 1,
+    "pink_pixels": 0,
     "status": "done"
   }
 ]
