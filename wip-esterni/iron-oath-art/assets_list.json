@@ -1055,5 +1055,26 @@
     "light_rim_pixels": 0,
     "haze_pixels": 0,
     "status": "done"
+  },
+  {
+    "id": "level_up",
+    "file": "assets/art/celebrations/level_up.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "A golden laurel wreath around an upright knight's longsword with the point down, the blade crossing a small round shield of dark engraved iron, a bright warm gold glow from the centre of the shield, embers rising inside the wreath, triumphant and solemn, the main colour is antique gold."
+  },
+  {
+    "id": "skill_up",
+    "file": "assets/art/celebrations/skill_up.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "A round engraved medallion of dark iron and silver with three crossed tools behind it (a pickaxe, a woodcutter's axe and a smith's hammer), a cold pale blue-silver light (#7FA7C9) glowing from runes along the rim, a small four-pointed star at the top, the accent colour is pale blue-silver instead of gold."
+  },
+  {
+    "id": "stat_up",
+    "file": "assets/art/celebrations/stat_up.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "A kite shield of dark iron with a raised gauntlet fist in the centre clenching upward, an upward-pointing chevron engraved above the fist, ember orange light (#E0662B) glowing from the cracks of the metal like a forge, a few sparks around the rim, the accent colour is ember orange instead of gold."
   }
 ]

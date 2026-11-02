@@ -510,7 +510,7 @@
   {
     "id": "hollow_goblin_idle",
     "file": "assets/art/enemies/hollow_goblin_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: small emaciated hollow goblin with grey cracked skin, empty glowing ember eyes, rusty jagged dagger, hunched feral pose, rags, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -566,7 +566,7 @@
   {
     "id": "fallen_knight_idle",
     "file": "assets/art/enemies/fallen_knight_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: fallen knight in corroded black plate armor, cracked helm leaking faint red light, broken greatsword, tattered cape, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -622,7 +622,7 @@
   {
     "id": "keep_sentinel_idle",
     "file": "assets/art/enemies/keep_sentinel_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: armored keep sentinel with a tall rectangular tower shield and a spear, visored kettle helm, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -652,7 +652,7 @@
   {
     "id": "wall_archer_idle",
     "file": "assets/art/enemies/wall_archer_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: hooded archer in rotting leather armor with a longbow and a quiver of black-fletched arrows, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -682,7 +682,7 @@
   {
     "id": "keep_brute_idle",
     "file": "assets/art/enemies/keep_brute_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: hulking brute jailer with massive bare arms, iron mask, huge spiked club, chains wrapped around his torso, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -738,7 +738,7 @@
   {
     "id": "marsh_matron_idle",
     "file": "assets/art/bosses/marsh_matron_idle.png",
-    "size": 1536,
+    "size": 768,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Boss: Marsh Matron, enormous bloated hag-like creature rising from black swamp water, drowned corpses tangled in her moss hair, long clawed arms, sickly green glow, lantern hanging from a bone staff, epic low angle, imposing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -1910,7 +1910,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1924,7 +1924,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1938,7 +1938,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1952,7 +1952,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1966,7 +1966,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1980,7 +1980,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1994,7 +1994,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2008,7 +2008,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2022,7 +2022,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2090,7 +2090,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2104,7 +2104,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2127,7 +2127,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2150,7 +2150,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2245,7 +2245,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2259,7 +2259,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2273,7 +2273,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2323,7 +2323,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2427,7 +2427,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2459,7 +2459,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2491,7 +2491,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -4254,6 +4254,36 @@
     "type": "cutout",
     "size": 256,
     "prompt": "Icon: a heater shield with a hanging banner and a small crown above it.",
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "level_up",
+    "file": "assets/art/celebrations/level_up.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "A golden laurel wreath around an upright knight's longsword with the point down, the blade crossing a small round shield of dark engraved iron, a bright warm gold glow from the centre of the shield, embers rising inside the wreath, triumphant and solemn, the main colour is antique gold.",
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "skill_up",
+    "file": "assets/art/celebrations/skill_up.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "A round engraved medallion of dark iron and silver with three crossed tools behind it (a pickaxe, a woodcutter's axe and a smith's hammer), a cold pale blue-silver light (#7FA7C9) glowing from runes along the rim, a small four-pointed star at the top, the accent colour is pale blue-silver instead of gold.",
+    "attempts": 1,
+    "pink_pixels": 0,
+    "status": "done"
+  },
+  {
+    "id": "stat_up",
+    "file": "assets/art/celebrations/stat_up.png",
+    "type": "cutout",
+    "size": 512,
+    "prompt": "A kite shield of dark iron with a raised gauntlet fist in the centre clenching upward, an upward-pointing chevron engraved above the fist, ember orange light (#E0662B) glowing from the cracks of the metal like a forge, a few sparks around the rim, the accent colour is ember orange instead of gold.",
     "attempts": 1,
     "pink_pixels": 0,
     "status": "done"
