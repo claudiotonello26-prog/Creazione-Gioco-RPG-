@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es5", "es2015.core"],
+    "outFile": "./build/index.js",
+    "module": "none",
+    "strict": true,
+    "noImplicitReturns": true,
+    "removeComments": false,
+    "typeRoots": []
+  },
+  "files": [
+    "src/nakama.d.ts",
+    "src/arena_rules.ts",
+    "src/arena_match.ts",
+    "src/guild.ts",
+    "src/main.ts"
+  ]
+}

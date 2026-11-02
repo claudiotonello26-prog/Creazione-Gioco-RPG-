@@ -1,0 +1,5 @@
+# HTTPS davanti a Nakama: API e socket dell'app passano tutti da qui.
+{$SERVER_HOST} {
+	encode gzip
+	reverse_proxy nakama:7350
+}

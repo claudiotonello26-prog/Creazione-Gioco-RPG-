@@ -1,0 +1,14 @@
+{
+  "name": "iron-oath-server",
+  "version": "1.0.0",
+  "description": "Modulo Nakama di Iron Oath: Arena Pura live e classifiche",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "npm run build && node --test test/arena.test.js test/integration.test.js"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "private": true
+}

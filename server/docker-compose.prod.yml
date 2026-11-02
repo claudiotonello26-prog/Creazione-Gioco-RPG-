@@ -1,0 +1,27 @@
+# Produzione: come docker-compose.yml, ma il server si raggiunge solo in
+# HTTPS da Caddy, che prende da solo il certificato (Let's Encrypt).
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# Le password stanno nel file .env accanto (lo scrive deploy/install.sh).
+services:
+  nakama:
+    ports: !override
+      - "127.0.0.1:7351:7351"   # console di amministrazione, solo dal server
+
+  caddy:
+    image: caddy:2.10-alpine
+    depends_on:
+      - nakama
+    environment:
+      SERVER_HOST: ${SERVER_HOST:?imposta SERVER_HOST nel file .env}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

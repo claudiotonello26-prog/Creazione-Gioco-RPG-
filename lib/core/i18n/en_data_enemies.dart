@@ -1,0 +1,203 @@
+/// Traduzioni inglesi (chiave: il testo italiano usato nel codice).
+/// Nomi canonici di mostri, boss, animali, regioni, spedizioni, forzieri ed
+/// esercizi delle tappe (lib/domain/enemies.dart e lib/domain/hunting.dart).
+const Map<String, String> enDataEnemies = {
+  // Veterano.
+  '{name} (Veterano)': '{name} (Veteran)',
+
+  // Spedizioni e regioni.
+  'Le Forge Sepolte': 'The Buried Forges',
+  'Il Bastione di Ferro': 'The Iron Bastion',
+  'La Fornace dei Giganti': 'The Giants\' Furnace',
+  'La Fucina degli Dei': 'The Godforge',
+  'Il Bosco di Cenere': 'The Ashen Wood',
+  'La Palude dei Cacciatori': 'The Hunters\' Mire',
+  'Le Gole del Vento': 'The Wind Gorges',
+  'La Vetta della Bufera': 'The Tempest Peak',
+  'La Cripta di Bronzo': 'The Bronze Crypt',
+  'Il Tempio Dorato': 'The Gilded Temple',
+  'Il Santuario Consacrato': 'The Hallowed Sanctuary',
+  'La Cattedrale del Martire': 'The Martyr\'s Cathedral',
+  'Le Rovine Lunari': 'The Lunar Ruins',
+  'La Biblioteca Allagata': 'The Drowned Library',
+  'L\'Osservatorio Crollato': 'The Fallen Observatory',
+  'Il Pozzo delle Stelle': 'The Starwell',
+  'Il Giardino del Silenzio': 'The Garden of Silence',
+  'Il Monastero Sospeso': 'The Hanging Monastery',
+  'Le Terme degli Antichi': 'The Ancients\' Baths',
+  'Il Chiostro del Sogno': 'The Cloister of Dreams',
+  'La Rocca (Prova del Giuramento)': 'The Keep (Trial of the Oath)',
+  // Zone di caccia.
+  'Bosco di frassino': 'Ashtree Grove',
+  'Querceto nero': 'Blackoak Grove',
+  'Cimitero dei tassi': 'Yew Graveyard',
+  'Selva del crepuscolo': 'Dusk Forest',
+
+  // Descrizioni delle spedizioni.
+  'Fornaci spente sotto la città. Qui si comincia a battere il ferro.':
+      'Cold furnaces beneath the city. Here is where you first strike iron.',
+  'Le mura che nessuno ha mai preso. Acciaio in ogni pietra.':
+      'Walls no one has ever taken. Steel in every stone.',
+  'La brace qui non si spegne mai. Il ferro diventa rosso e resta rosso.':
+      'The embers here never die. Iron turns red, and stays red.',
+  'Dove un dio batteva le sue lame. Ne è rimasto il martello, e lui.':
+      'Where a god once beat his blades. His hammer remains, and so does he.',
+  'Alberi bruciati che non cadono. Legna e pelli per chi le sa prendere.':
+      'Burnt trees that will not fall. Wood and hides for those who can take them.',
+  'Chi caccia qui finisce cacciato. Cuoio buono, quercia nera.':
+      'Who hunts here ends up hunted. Fine leather, black oak.',
+  'Un vento che taglia la pelle. Le arpie ci fanno il nido.':
+      'A wind that cuts the skin. The harpies nest here.',
+  'In cima non si respira. Chi ci arriva vola.':
+      'At the top there is no air. Those who reach it fly.',
+  'Tombe chiuse da porte di bronzo. I morti non le hanno aperte, finora.':
+      'Tombs sealed by bronze doors. The dead have not opened them. Yet.',
+  'Oro sulle colonne, oro nelle ossa dei sacerdoti.':
+      'Gold on the columns, gold in the bones of the priests.',
+  'La luce qui brucia. L\'oro benedetto si raccoglie dalle lacrime delle statue.':
+      'The light here burns. Blessed gold is gathered from the tears of statues.',
+  'Nera e oro. Il Martire prega ancora, e non per te.':
+      'Black and gold. The Martyr still prays, and not for you.',
+  'Di notte la luna si posa sulle pietre e le lascia d\'argento.':
+      'At night the moon settles on the stones and leaves them silver.',
+  'I libri galleggiano. L\'inchiostro, nell\'acqua nera, è ancora vivo.':
+      'The books float. In the black water, the ink still lives.',
+  'Il telescopio è caduto, ma qualcuno guarda ancora le stelle.':
+      'The telescope has fallen, yet someone still watches the stars.',
+  'Un pozzo senza fondo. In fondo, cadono stelle.':
+      'A bottomless well. At the bottom, stars are falling.',
+  'Gli spiriti qui non si combattono: si calmano. Tieni la posa e svaniscono.':
+      'The spirits here are not fought, they are calmed. Hold the pose and they fade.',
+  'Monaci piegati dal tempo. Chi resta immobile più di loro passa.':
+      'Monks bent by time. Whoever stays still longer than they do may pass.',
+  'Vapore e pietra calda. Qui le gemme si puliscono da sole.':
+      'Steam and hot stone. Here the gems cleanse themselves.',
+  'Chi dorme qui sogna per sempre. Tu resta sveglio e fermo.':
+      'Who sleeps here dreams forever. Stay awake, and stay still.',
+
+  // Forzieri.
+  'Forziere di legno marcito': 'Rotten Wooden Chest',
+  'Forziere di ferro': 'Iron Chest',
+  'Forziere d\'argento': 'Silver Chest',
+  'Forziere d\'oro del Giuramento': 'Golden Chest of the Oath',
+
+  // Mostri e boss.
+  'Goblin delle Scorie': 'Slag Goblin',
+  'Garzone Svuotato': 'Hollow Apprentice',
+  'Il Fabbro Svuotato': 'The Hollow Smith',
+  'Cavaliere Caduto': 'Fallen Knight',
+  'Sentinella del Bastione': 'Bastion Sentinel',
+  'Arciere delle Mura': 'Wall Archer',
+  'Carceriere del Bastione': 'Bastion Jailer',
+  'Il Castellano di Ferro': 'The Iron Castellan',
+  'Gigante di Brace': 'Ember Giant',
+  'Fuochista Incatenato': 'Chained Stoker',
+  'Il Mantice Vivente': 'The Living Bellows',
+  'Servo della Fucina': 'Forge Servant',
+  'Golem dell\'Incudine': 'Anvil Golem',
+  'Il Dio Fabbro Decaduto': 'The Fallen Smith God',
+  'Goblin Svuotato': 'Hollow Goblin',
+  'Spaventapasseri di Cenere': 'Ashen Scarecrow',
+  'Il Cervo Cavo': 'The Hollow Stag',
+  'Viverna di Cenere': 'Ashen Wyvern',
+  'Annegato della Palude': 'Mire Drowned',
+  'Segugio della Carogna': 'Carrion Hound',
+  'La Matrona della Palude': 'The Mire Matron',
+  'Cacciatore del Vuoto': 'Void Hunter',
+  'Arpia delle Gole': 'Gorge Harpy',
+  'Predone delle Gole': 'Gorge Raider',
+  'Sentinella del Vento': 'Wind Sentinel',
+  'Ariete del Tuono': 'Thunder Ram',
+  'Il Re della Tempesta': 'The Storm King',
+  'Il Cavaliere Senza Peso': 'The Weightless Knight',
+  'Scheletro di Bronzo': 'Bronze Skeleton',
+  'Strisciante delle Tombe': 'Tomb Crawler',
+  'Il Custode della Cripta': 'The Crypt Warden',
+  'Accolito Dorato': 'Gilded Acolyte',
+  'Automa d\'Ottone': 'Brass Automaton',
+  'Il Sacerdote d\'Oro': 'The Golden Priest',
+  'Portaturibolo': 'Censer Bearer',
+  'Gargoyle della Cattedrale': 'Cathedral Gargoyle',
+  'Inquisitore Nero': 'Black Inquisitor',
+  'Il Penitente': 'The Penitent',
+  'La Vergine Incatenata': 'The Chained Maiden',
+  'Il Martire Eterno': 'The Eternal Martyr',
+  'Arciere Spettrale': 'Spectral Archer',
+  'Fuoco Fatuo Lunare': 'Moon Wisp',
+  'La Falena di Luna': 'The Moon Moth',
+  'Scriba Annegato': 'Drowned Scribe',
+  'Tomo Vivente': 'Living Tome',
+  'Il Bibliotecario Senz\'Occhi': 'The Eyeless Librarian',
+  'Astrologo Folle': 'Mad Astrologer',
+  'L\'Occhio delle Stelle': 'The Eye of the Stars',
+  'Frammento Stellare': 'Star Shard',
+  'Il Divoratore di Stelle': 'The Star Devourer',
+  'Spirito Inquieto': 'Restless Spirit',
+  'Lanterna Vagante': 'Wandering Lantern',
+  'Il Giardiniere Muto': 'The Mute Gardener',
+  'Monaco Spezzato': 'Broken Monk',
+  'Spettro della Campana': 'Bell Wraith',
+  'L\'Abate Contorto': 'The Twisted Abbot',
+  'Ninfa di Vapore': 'Steam Nymph',
+  'Serpe delle Terme': 'Bathhouse Serpent',
+  'La Regina delle Terme': 'The Queen of the Baths',
+  'Il Sognatore': 'The Dreamer',
+  'Il Sonnambulo': 'The Sleepwalker',
+  'Colui che Non Dorme': 'The Sleepless One',
+  'Il Signore della Rocca': 'The Lord of the Keep',
+
+  // Animali da caccia.
+  'Lepre di cenere': 'Ash Hare',
+  'Volpe rossa': 'Red Fox',
+  'Tasso grigio': 'Grey Badger',
+  'Corvo carogna': 'Carrion Crow',
+  'Capra selvatica': 'Wild Goat',
+  'Cervo di Cenere': 'Ashen Stag',
+  'Cinghiale Zannuto': 'Tusked Boar',
+  'Lupo delle Tombe': 'Grave Wolf',
+  'Orso del Crepuscolo': 'Dusk Bear',
+
+  // Esercizi delle tappe.
+  'Push-up': 'Push-up',
+  'Push-up inclinati': 'Incline push-ups',
+  'Push-up sulle ginocchia': 'Knee push-up',
+  'Push-up larghi': 'Wide push-ups',
+  'Push-up diamante': 'Diamond push-ups',
+  'Push-up arciere': 'Archer push-ups',
+  'Push-up esplosivi': 'Explosive push-ups',
+  'Pike push-up': 'Pike push-ups',
+  'Pike push-up piedi sulla sedia': 'Feet-elevated pike push-ups',
+  'Dip su sedia': 'Chair dips',
+  'Squat': 'Squat',
+  'Squat veloci': 'Fast squats',
+  'Jump squat': 'Jump squat',
+  'Squat bulgaro sulla sedia': 'Bulgarian split squat on a chair',
+  'Pistol squat assistito': 'Assisted pistol squat',
+  'Affondi': 'Lunges',
+  'Affondo statico': 'Static lunge',
+  'Affondi saltati': 'Jumping lunges',
+  'Step-up sulla sedia': 'Chair step-ups',
+  'Ponte per glutei': 'Glute bridge',
+  'Crunch': 'Crunch',
+  'Crunch a bicicletta': 'Bicycle crunches',
+  'Leg raise': 'Leg raise',
+  'V-up': 'V-up',
+  'Russian twist': 'Russian twist',
+  'Plank': 'Plank',
+  'Plank laterale': 'Side plank',
+  'Mountain climber': 'Mountain climber',
+  'Superman': 'Superman',
+  'Jumping jack': 'Jumping jack',
+  'High knees': 'High knees',
+  'Burpee': 'Burpee',
+  'Skater jump': 'Skater jump',
+  'Cobra': 'Cobra',
+  'Gatto-mucca': 'Cat-cow',
+  'Farfalla': 'Butterfly stretch',
+  'Posizione del bambino': 'Child\'s pose',
+  'Posizione del piccione': 'Pigeon pose',
+  'Piegamento in avanti': 'Forward fold',
+  'Piegamento a gambe larghe': 'Wide-legged forward fold',
+  'Torsione da seduto': 'Seated twist',
+  'Mezza spaccata': 'Half splits',
+};
