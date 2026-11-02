@@ -510,7 +510,7 @@
   {
     "id": "hollow_goblin_idle",
     "file": "assets/art/enemies/hollow_goblin_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: small emaciated hollow goblin with grey cracked skin, empty glowing ember eyes, rusty jagged dagger, hunched feral pose, rags, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -566,7 +566,7 @@
   {
     "id": "fallen_knight_idle",
     "file": "assets/art/enemies/fallen_knight_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: fallen knight in corroded black plate armor, cracked helm leaking faint red light, broken greatsword, tattered cape, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -622,7 +622,7 @@
   {
     "id": "keep_sentinel_idle",
     "file": "assets/art/enemies/keep_sentinel_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: armored keep sentinel with a tall rectangular tower shield and a spear, visored kettle helm, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -652,7 +652,7 @@
   {
     "id": "wall_archer_idle",
     "file": "assets/art/enemies/wall_archer_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: hooded archer in rotting leather armor with a longbow and a quiver of black-fletched arrows, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -682,7 +682,7 @@
   {
     "id": "keep_brute_idle",
     "file": "assets/art/enemies/keep_brute_idle.png",
-    "size": 1024,
+    "size": 512,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: hulking brute jailer with massive bare arms, iron mask, huge spiked club, chains wrapped around his torso, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -738,7 +738,7 @@
   {
     "id": "marsh_matron_idle",
     "file": "assets/art/bosses/marsh_matron_idle.png",
-    "size": 1536,
+    "size": 768,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Boss: Marsh Matron, enormous bloated hag-like creature rising from black swamp water, drowned corpses tangled in her moss hair, long clawed arms, sickly green glow, lantern hanging from a bone staff, epic low angle, imposing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -1922,7 +1922,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1936,7 +1936,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1950,7 +1950,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1964,7 +1964,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1978,7 +1978,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1992,7 +1992,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2006,7 +2006,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2020,7 +2020,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2034,7 +2034,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2102,7 +2102,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2116,7 +2116,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2139,7 +2139,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2162,7 +2162,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2257,7 +2257,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2271,7 +2271,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2285,7 +2285,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1536,
+    "size": 768,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2335,7 +2335,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2439,7 +2439,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2471,7 +2471,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2503,7 +2503,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 1024,
+    "size": 512,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
