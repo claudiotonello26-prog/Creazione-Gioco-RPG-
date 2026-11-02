@@ -510,7 +510,7 @@
   {
     "id": "hollow_goblin_idle",
     "file": "assets/art/enemies/hollow_goblin_idle.png",
-    "size": 512,
+    "size": 1024,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: small emaciated hollow goblin with grey cracked skin, empty glowing ember eyes, rusty jagged dagger, hunched feral pose, rags, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -566,7 +566,7 @@
   {
     "id": "fallen_knight_idle",
     "file": "assets/art/enemies/fallen_knight_idle.png",
-    "size": 512,
+    "size": 1024,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: fallen knight in corroded black plate armor, cracked helm leaking faint red light, broken greatsword, tattered cape, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -622,7 +622,7 @@
   {
     "id": "keep_sentinel_idle",
     "file": "assets/art/enemies/keep_sentinel_idle.png",
-    "size": 512,
+    "size": 1024,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: armored keep sentinel with a tall rectangular tower shield and a spear, visored kettle helm, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -652,7 +652,7 @@
   {
     "id": "wall_archer_idle",
     "file": "assets/art/enemies/wall_archer_idle.png",
-    "size": 512,
+    "size": 1024,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: hooded archer in rotting leather armor with a longbow and a quiver of black-fletched arrows, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -682,7 +682,7 @@
   {
     "id": "keep_brute_idle",
     "file": "assets/art/enemies/keep_brute_idle.png",
-    "size": 512,
+    "size": 1024,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Enemy: hulking brute jailer with massive bare arms, iron mask, huge spiked club, chains wrapped around his torso, menacing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -738,7 +738,7 @@
   {
     "id": "marsh_matron_idle",
     "file": "assets/art/bosses/marsh_matron_idle.png",
-    "size": 768,
+    "size": 1536,
     "cutout": true,
     "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Boss: Marsh Matron, enormous bloated hag-like creature rising from black swamp water, drowned corpses tangled in her moss hair, long clawed arms, sickly green glow, lantern hanging from a bone staff, epic low angle, imposing idle stance, facing left. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
     "references": [
@@ -1073,51 +1073,63 @@
   },
   {
     "id": "amulet_fervent",
-    "file": "assets/art/amulets/fervent.png",
-    "size": 512,
+    "file": "assets/art/items/amulet_fervent.png",
+    "size": 256,
     "cutout": true,
-    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Ornate amulet on a chain, close-up: gold sun pendant with a burning holy core. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "prompt": "Inventory icon: an amulet: iron chain with a flame-shaped bronze pendant.",
     "references": [
       "knight_s1_idle.png"
     ],
-    "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "status": "done",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane).",
+    "type": "cutout",
+    "pink_pixels": 0,
+    "attempts": 1
   },
   {
     "id": "amulet_colossus_seal",
-    "file": "assets/art/amulets/colossus_seal.png",
-    "size": 512,
+    "file": "assets/art/items/amulet_colossus_seal.png",
+    "size": 256,
     "cutout": true,
-    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Ornate amulet on a chain, close-up: heavy iron seal pendant engraved with a giant's fist. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "prompt": "Inventory icon: an amulet: heavy iron seal ring pendant engraved with a giant fist.",
     "references": [
       "knight_s1_idle.png"
     ],
-    "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "status": "done",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane).",
+    "type": "cutout",
+    "pink_pixels": 0,
+    "attempts": 2
   },
   {
     "id": "amulet_hunter_heart",
-    "file": "assets/art/amulets/hunter_heart.png",
-    "size": 512,
+    "file": "assets/art/items/amulet_hunter_heart.png",
+    "size": 256,
     "cutout": true,
-    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Ornate amulet on a chain, close-up: dried beast heart in a silver cage, wrapped in leather. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "prompt": "Inventory icon: an amulet: leather cord with a carved bone wolf fang pendant.",
     "references": [
       "knight_s1_idle.png"
     ],
-    "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "status": "done",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane).",
+    "type": "cutout",
+    "pink_pixels": 0,
+    "attempts": 1
   },
   {
     "id": "amulet_martyr_relic",
-    "file": "assets/art/amulets/martyr_relic.png",
-    "size": 512,
+    "file": "assets/art/items/amulet_martyr_relic.png",
+    "size": 256,
     "cutout": true,
-    "prompt": "Dark fantasy medieval mobile game art, souls-like atmosphere, painterly digital illustration with a crisp readable silhouette, strong rim light in warm antique gold (#C9A24A), deep charcoal shadows (#0D0B09), muted iron (#3A332B) and stone tones, subtle ember particles (#E0662B), high contrast, consistent art style across the whole set, no text unless explicitly requested, no watermark, no signature, no modern elements. Ornate amulet on a chain, close-up: cracked reliquary holding a bloodied finger bone, faint red glow. Single subject, full figure visible, centered, nothing cropped, on a perfectly flat solid magenta background (#FF00FF) with no shadows, gradients or floor on the background.",
+    "prompt": "Inventory icon: an amulet: small gold reliquary pendant with a red gem.",
     "references": [
       "knight_s1_idle.png"
     ],
-    "status": "pending",
-    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane)."
+    "status": "done",
+    "note": "Quota model gemini-3.1-flash-image esaurita (429 RESOURCE_EXHAUSTED). Reset stimato dopo le 14:55:56 UTC (16:55 italiane).",
+    "type": "cutout",
+    "pink_pixels": 0,
+    "attempts": 1
   },
   {
     "id": "material_iron_ore",
@@ -1910,7 +1922,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1924,7 +1936,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1938,7 +1950,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 768,
+    "size": 1536,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1952,7 +1964,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 768,
+    "size": 1536,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1966,7 +1978,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1980,7 +1992,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -1994,7 +2006,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1536,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2008,7 +2020,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2022,7 +2034,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2090,7 +2102,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 768,
+    "size": 1536,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2104,7 +2116,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2127,7 +2139,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 768,
+    "size": 1536,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2150,7 +2162,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2245,7 +2257,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2259,7 +2271,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2273,7 +2285,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 768,
+    "size": 1536,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2323,7 +2335,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2427,7 +2439,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2459,7 +2471,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2491,7 +2503,7 @@
     "version": 2,
     "note": "In attesa di rigenerazione con Color Variety V2",
     "method": "re-cut",
-    "size": 512,
+    "size": 1024,
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0
@@ -2915,7 +2927,7 @@
     "file": "assets/art/items/gale_silver.png",
     "type": "cutout",
     "size": 256,
-    "prompt": "Item: a twisted bar of wind silver, pale silver metal with soft blue-white sheen, a thin mint-green ribbon of wind wrapped around it in a spiral, two small engraved swirl runes. Colours: silver, pale blue, mint green. No pink anywhere.",
+    "prompt": "Inventory icon: a twisted silver bar with pale green wind swirls around it.",
     "references": [
       "silver_ingot.png",
       "gold_ingot.png"
@@ -2933,7 +2945,7 @@
     "file": "assets/art/items/godforge_steel.png",
     "type": "cutout",
     "size": 256,
-    "prompt": "Item: a heavy ingot of godforged steel, bright polished blue-white steel, a line of glowing antique-gold runes engraved along the top face, faint warm light inside the runes. Colours: steel blue-white, antique gold.",
+    "prompt": "Inventory icon: a bar of divine steel with engraved gold runes and a white-gold glow.",
     "references": [
       "silver_ingot.png",
       "gold_ingot.png"
@@ -4066,7 +4078,11 @@
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "type": "cutout",
+    "prompt": "Inventory icon: a small gold nugget shaped like a sun, radiating holy light.",
+    "pink_pixels": 0,
+    "attempts": 1
   },
   {
     "id": "holy_shard",
@@ -4076,7 +4092,11 @@
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "type": "cutout",
+    "prompt": "Inventory icon: a jagged crystal shard glowing with warm holy golden light.",
+    "pink_pixels": 0,
+    "attempts": 1
   },
   {
     "id": "yew_wood",
@@ -4086,7 +4106,11 @@
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "type": "cutout",
+    "prompt": "Inventory icon: a twisted log of graveyard yew, reddish wood, a few dark needles still attached.",
+    "pink_pixels": 0,
+    "attempts": 1
   },
   {
     "id": "ash_wood",
@@ -4096,7 +4120,11 @@
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "type": "cutout",
+    "prompt": "Inventory icon: a short bundle of three split ash-grey logs tied with a frayed rope, pale bark flecked with soot.",
+    "pink_pixels": 0,
+    "attempts": 1
   },
   {
     "id": "oak_wood",
@@ -4106,7 +4134,11 @@
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "type": "cutout",
+    "prompt": "Inventory icon: a thick log of black oak, dark furrowed bark, cut face showing tight rings.",
+    "pink_pixels": 0,
+    "attempts": 1
   },
   {
     "id": "amulet_holy_amulet",
@@ -4116,7 +4148,11 @@
     "pink_rim_pixels": 0,
     "light_rim_pixels": 0,
     "haze_pixels": 0,
-    "status": "done"
+    "status": "done",
+    "type": "cutout",
+    "prompt": "Inventory icon: an amulet: gold chain with a radiant sun disc pendant.",
+    "pink_pixels": 0,
+    "attempts": 1
   },
   {
     "id": "nav_home",
@@ -4287,5 +4323,495 @@
     "attempts": 1,
     "pink_pixels": 0,
     "status": "done"
+  },
+  {
+    "id": "iron_ingot",
+    "file": "assets/art/items/iron_ingot.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a single trapezoid iron ingot, dull grey metal with hammer marks.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "ebony_wood",
+    "file": "assets/art/items/ebony_wood.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a heavy log of jet-black ebony with a faint violet sheen on the cut face.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "coal",
+    "file": "assets/art/items/coal.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a small heap of glossy black coal lumps with one faintly glowing ember.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "iron_ore",
+    "file": "assets/art/items/iron_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rough chunk of grey rock with rusty red-brown iron veins.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "moon_silver",
+    "file": "assets/art/items/moon_silver.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a pale rock with veins of glowing silver-blue moon metal.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "star_ore",
+    "file": "assets/art/items/star_ore.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a dark meteorite fragment with azure crystalline sparks inside.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "ash_plank",
+    "file": "assets/art/items/ash_plank.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: two neat pale ash-wood planks stacked crosswise.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "oak_plank",
+    "file": "assets/art/items/oak_plank.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: two neat dark oak planks stacked crosswise.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "yew_plank",
+    "file": "assets/art/items/yew_plank.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: two neat reddish yew planks stacked crosswise.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "ebony_plank",
+    "file": "assets/art/items/ebony_plank.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: two neat jet-black ebony planks stacked crosswise with violet sheen.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "steel_ingot",
+    "file": "assets/art/items/steel_ingot.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a single trapezoid steel ingot, bright bluish-grey polished metal.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "silver_ingot",
+    "file": "assets/art/items/silver_ingot.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a single trapezoid ingot of moon silver, pale glowing silver-blue.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "star_ingot",
+    "file": "assets/art/items/star_ingot.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a single trapezoid ingot of star metal, dark with azure glints like stars.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "bronze_ingot",
+    "file": "assets/art/items/bronze_ingot.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a single trapezoid bronze ingot, warm orange-brown metal.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "gold_ingot",
+    "file": "assets/art/items/gold_ingot.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a single trapezoid gold ingot, antique warm gold with a stamped rune.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "ash_pickaxe",
+    "file": "assets/art/items/ash_pickaxe.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a crude pickaxe with an ash-wood handle and a sharpened stone head lashed with rope.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "iron_pickaxe",
+    "file": "assets/art/items/iron_pickaxe.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: an iron pickaxe with a dark oak handle.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "steel_pickaxe",
+    "file": "assets/art/items/steel_pickaxe.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a fine steel pickaxe with a yew handle and gold rivets.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "iron_axe",
+    "file": "assets/art/items/iron_axe.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a woodcutter hatchet with an iron head and ash handle.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "steel_axe",
+    "file": "assets/art/items/steel_axe.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a woodcutter axe with a polished steel head and oak handle.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "reinforced_grip",
+    "file": "assets/art/items/reinforced_grip.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a wooden weapon grip wrapped in dark leather strips with iron bands.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "raw_hide",
+    "file": "assets/art/items/raw_hide.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a folded rough animal hide with fur on one side.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "tanned_leather",
+    "file": "assets/art/items/tanned_leather.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a rolled piece of brown tanned leather tied with a thong.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "bone",
+    "file": "assets/art/items/bone.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: two crossed ancient yellowed bones, cracked.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "beast_essence",
+    "file": "assets/art/items/beast_essence.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a small corked glass vial with swirling dark red-amber essence.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "ancient_stone",
+    "file": "assets/art/items/ancient_stone.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a smooth grey river stone carved with a faint ancient rune.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "somber_stone",
+    "file": "assets/art/items/somber_stone.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a dark smooth stone with a pale violet glowing rune.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "forge_stone_1",
+    "file": "assets/art/items/forge_stone_1.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a square whetstone-like forge stone, grey, one gold rune notch (rank I).",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "forge_stone_2",
+    "file": "assets/art/items/forge_stone_2.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a square forge stone, darker steel tone, two gold rune notches (rank II).",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "forge_stone_3",
+    "file": "assets/art/items/forge_stone_3.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a square forge stone, black with molten gold seams, three gold rune notches (rank III).",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "abyss_ink",
+    "file": "assets/art/items/abyss_ink.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a small black glass ink bottle with violet ink dripping down the side.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "ember_iron",
+    "file": "assets/art/items/ember_iron.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a chunk of black iron with glowing molten orange cracks.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "steel_feather",
+    "file": "assets/art/items/steel_feather.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a single large feather made of polished steel, sharp edges.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "martyr_obsidian",
+    "file": "assets/art/items/martyr_obsidian.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a sharp black obsidian shard with a thin red vein like a tear of blood.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "abyss_crystal",
+    "file": "assets/art/items/abyss_crystal.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a violet-black crystal cluster with a faint dark glow.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "ember_heart",
+    "file": "assets/art/items/ember_heart.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a fist-sized glowing heart of molten rock, rare boss core, intense orange glow.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "storm_eye",
+    "file": "assets/art/items/storm_eye.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a pale green-blue orb with a tiny swirling storm inside, rare boss core.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "martyr_tear",
+    "file": "assets/art/items/martyr_tear.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a large teardrop-shaped gem of holy gold light, rare boss core.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "star_core",
+    "file": "assets/art/items/star_core.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a small azure star trapped in a dark iron cage, rare boss core.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "dream_pearl",
+    "file": "assets/art/items/dream_pearl.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a large iridescent violet pearl with a sleeping eye reflected inside, rare boss core.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "star_iron",
+    "file": "assets/art/items/star_iron.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a chunk of dark iron studded with tiny azure star sparks.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "gem_rough",
+    "file": "assets/art/items/gem_rough.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: an uncut rough dull gem stone, cloudy.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "gem_cut",
+    "file": "assets/art/items/gem_cut.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a faceted cut gem, clear with gold reflections.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "gem_pure",
+    "file": "assets/art/items/gem_pure.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a brilliant pure faceted gem with inner light.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "gem_perfect",
+    "file": "assets/art/items/gem_perfect.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: a perfect radiant faceted gem with a gold halo of light.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_ember_amulet",
+    "file": "assets/art/items/amulet_ember_amulet.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: an amulet: blackened chain with a glowing orange ember stone pendant.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_gale_amulet",
+    "file": "assets/art/items/amulet_gale_amulet.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: an amulet: silver chain with a pale green feather-shaped pendant.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
+  },
+  {
+    "id": "amulet_abyss_amulet",
+    "file": "assets/art/items/amulet_abyss_amulet.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: an amulet: black chain with a violet abyss crystal pendant.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 2
+  },
+  {
+    "id": "amulet_sleepless_seal",
+    "file": "assets/art/items/amulet_sleepless_seal.png",
+    "type": "cutout",
+    "size": 256,
+    "prompt": "Inventory icon: an amulet: silver seal with an open eye engraving, violet glow.",
+    "status": "done",
+    "pink_pixels": 0,
+    "attempts": 1
   }
 ]
