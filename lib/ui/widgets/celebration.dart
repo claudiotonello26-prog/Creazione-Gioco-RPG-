@@ -14,21 +14,35 @@ import '../../domain/skills.dart';
 enum CelebrationKind { level, skill, attribute }
 
 class Celebration {
-  const Celebration(this.kind, this.title, this.subtitle, {this.from, this.to});
+  const Celebration(this.kind, this.title, this.subtitle, {this.id = '', this.from, this.to});
   final CelebrationKind kind;
+
+  /// Quale abilità o attributo è salito (`Skill.name` / `Attribute.name`).
+  final String id;
   final String title;
   final String subtitle;
   final int? from;
   final int? to;
 
-  /// Illustrazione dell'emblema, se Antigravity l'ha già disegnata:
-  /// `assets/art/celebrations/level_up.png`, `skill_up.png`, `stat_up.png`.
-  String get art =>
-      'assets/art/celebrations/${switch (kind) {
-        CelebrationKind.level => 'level_up',
-        CelebrationKind.skill => 'skill_up',
-        CelebrationKind.attribute => 'stat_up',
-      }}.png';
+  /// Emblema dedicato a quell'abilità o attributo, se Antigravity l'ha già
+  /// disegnato: `assets/art/celebrations/skill_<id>.png`, `attr_<id>.png`.
+  /// Altrimenti l'emblema generico (`level_up`, `skill_up`, `stat_up`);
+  /// null se manca anche quello e si disegna il rombo.
+  String? get art {
+    String path(String f) => 'assets/art/celebrations/$f.png';
+    final dedicated = switch (kind) {
+      CelebrationKind.level => null,
+      CelebrationKind.skill => path('skill_$id'),
+      CelebrationKind.attribute => path('attr_$id'),
+    };
+    if (dedicated != null && Art.has(dedicated)) return dedicated;
+    final generic = path(switch (kind) {
+      CelebrationKind.level => 'level_up',
+      CelebrationKind.skill => 'skill_up',
+      CelebrationKind.attribute => 'stat_up',
+    });
+    return Art.has(generic) ? generic : null;
+  }
 
   Color get color => switch (kind) {
     CelebrationKind.level => Palette.goldBright,
@@ -120,6 +134,7 @@ class _CelebrationLayerState extends State<CelebrationLayer> with SingleTickerPr
           Celebration(
             CelebrationKind.skill,
             k.label.toUpperCase(),
+            id: k.name,
             tr('Guarda nella Guida cosa sblocca questo livello'),
             from: before,
             to: now,
@@ -135,6 +150,7 @@ class _CelebrationLayerState extends State<CelebrationLayer> with SingleTickerPr
           Celebration(
             CelebrationKind.attribute,
             a.label.toUpperCase(),
+            id: a.name,
             a.description,
             from: before,
             to: now,
@@ -202,7 +218,13 @@ class _CelebrationView extends StatelessWidget {
     final exit = Curves.easeIn.transform(((t - 0.8) / 0.2).clamp(0.0, 1.0));
     final opacity = (t / 0.12).clamp(0.0, 1.0) * (1 - exit);
     final scale = 0.6 + 0.4 * enter + 0.08 * exit;
-    final emblem = 150.0;
+    // L'emblema arriva da grande e si posa con un colpo, poi pulsa piano.
+    final slam = 1.5 - 0.5 * Curves.easeOutCubic.transform((t / 0.16).clamp(0.0, 1.0));
+    final pulse = 1 + 0.04 * math.sin(t * math.pi * 6) * (t > 0.16 ? 1 : 0);
+    // Grande, ma con posto per le scritte anche su schermi bassi.
+    final screen = MediaQuery.sizeOf(context);
+    final emblem = math.min(240.0, math.min(screen.width * 0.6, screen.height * 0.28));
+    final art = c.art;
     return Opacity(
       opacity: opacity,
       child: DecoratedBox(
@@ -213,20 +235,25 @@ class _CelebrationView extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: Transform.scale(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Transform.scale(
             scale: scale,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  width: emblem * 1.8,
-                  height: emblem * 1.8,
+                  width: emblem * 1.6,
+                  height: emblem * 1.6,
                   child: CustomPaint(
                     painter: _RaysPainter(color: c.color, turn: t),
                     child: Center(
-                      child: Art.has(c.art)
-                          ? Image.asset(c.art, width: emblem, height: emblem)
-                          : _Emblem(c, size: emblem),
+                      child: Transform.scale(
+                        scale: slam * pulse,
+                        child: art != null
+                            ? Image.asset(art, width: emblem, height: emblem)
+                            : _Emblem(c, size: emblem),
+                      ),
                     ),
                   ),
                 ),
@@ -311,6 +338,7 @@ class _CelebrationView extends StatelessWidget {
                 ),
               ],
             ),
+          ),
           ),
         ),
       ),
